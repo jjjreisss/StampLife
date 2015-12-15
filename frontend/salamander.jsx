@@ -6,6 +6,7 @@ var Salamander = React.createClass({
     return(
       <div>
         SALAMANDER
+        <Canvas/>
       </div>
     );
   }

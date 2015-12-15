@@ -54,7 +54,8 @@
 	    return React.createElement(
 	      'div',
 	      null,
-	      'SALAMANDER'
+	      'SALAMANDER',
+	      React.createElement(Canvas, null)
 	    );
 	  }
 	});
