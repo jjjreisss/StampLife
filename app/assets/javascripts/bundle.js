@@ -19674,7 +19674,9 @@
 	    while (this.state.squares.length < 10000) {
 	      this.state.squares.push(React.createElement("div", { key: i,
 	        className: "square",
-	        onMouseOver: this.mouseOverHandler }));
+	        onMouseOver: this.mouseOverHandler,
+	        onMouseDown: this.mouseDownHandler,
+	        onMouseUp: this.mouseUpHandler }));
 	      i += 1;
 	    }
 	  },
@@ -19683,7 +19685,8 @@
 	      e.target.className = "drawn";
 	    }
 	  },
-	  mouseDownHandler: function () {
+	  mouseDownHandler: function (e) {
+	    e.target.className = "drawn";
 	    this.setState({ drawing: true });
 	  },
 	  mouseUpHandler: function () {
@@ -19692,9 +19695,7 @@
 	  render: function () {
 	    return React.createElement(
 	      "div",
-	      { className: "canvas",
-	        onMouseDown: this.mouseDownHandler,
-	        onMouseUp: this.mouseUpHandler },
+	      { className: "canvas" },
 	      this.state.squares
 	    );
 	  }

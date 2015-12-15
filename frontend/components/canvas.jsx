@@ -15,8 +15,9 @@ var Canvas = React.createClass({
       this.state.squares.push(
         <div key={i}
              className="square"
-             onMouseOver={this.mouseOverHandler}>
-
+             onMouseOver={this.mouseOverHandler}
+             onMouseDown={this.mouseDownHandler}
+             onMouseUp={this.mouseUpHandler}>
         </div>
       );
       i += 1;
@@ -27,7 +28,8 @@ var Canvas = React.createClass({
       e.target.className = "drawn";
     }
   },
-  mouseDownHandler: function(){
+  mouseDownHandler: function(e){
+    e.target.className = "drawn";
     this.setState({drawing: true})
   },
   mouseUpHandler: function(){
@@ -35,9 +37,7 @@ var Canvas = React.createClass({
   },
   render: function() {
     return(
-      <div className="canvas"
-           onMouseDown={this.mouseDownHandler}
-           onMouseUp={this.mouseUpHandler}>
+      <div className="canvas">
         {this.state.squares}
       </div>
     )
