@@ -19679,12 +19679,22 @@
 	    }
 	  },
 	  mouseOverHandler: function (e) {
-	    e.target.className = "drawn";
+	    if (this.state.drawing) {
+	      e.target.className = "drawn";
+	    }
+	  },
+	  mouseDownHandler: function () {
+	    this.setState({ drawing: true });
+	  },
+	  mouseUpHandler: function () {
+	    this.setState({ drawing: false });
 	  },
 	  render: function () {
 	    return React.createElement(
 	      "div",
-	      { className: "canvas" },
+	      { className: "canvas",
+	        onMouseDown: this.mouseDownHandler,
+	        onMouseUp: this.mouseUpHandler },
 	      this.state.squares
 	    );
 	  }
