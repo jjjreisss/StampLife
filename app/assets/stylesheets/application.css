@@ -13,3 +13,27 @@
  *= require_tree .
  *= require_self
  */
+
+body {
+  background: orange;
+}
+
+.canvas {
+  width: 500px;
+  height: 500px;
+  margin: auto;
+}
+
+.square {
+  width: 5px;
+  height: 5px;
+  background: white;
+  float: left;
+}
+
+.drawn {
+  background: black;
+  width: 5px;
+  height: 5px;
+  float: left;
+}

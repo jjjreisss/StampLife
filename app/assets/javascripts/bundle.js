@@ -46,6 +46,7 @@
 
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(158);
+	var Canvas = __webpack_require__(159);
 
 	var Salamander = React.createClass({
 	  displayName: 'Salamander',
@@ -19650,6 +19651,46 @@
 
 	module.exports = __webpack_require__(3);
 
+
+/***/ },
+/* 159 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+
+	var Canvas = React.createClass({
+	  displayName: "Canvas",
+
+	  getInitialState: function () {
+	    return {
+	      squares: []
+	    };
+	  },
+	  componentWillMount: function () {
+	    this._buildCanvas();
+	  },
+	  _buildCanvas: function () {
+	    i = 0;
+	    while (this.state.squares.length < 10000) {
+	      this.state.squares.push(React.createElement("div", { key: i,
+	        className: "square",
+	        onMouseOver: this.mouseOverHandler }));
+	      i += 1;
+	    }
+	  },
+	  mouseOverHandler: function (e) {
+	    e.target.className = "drawn";
+	  },
+	  render: function () {
+	    return React.createElement(
+	      "div",
+	      { className: "canvas" },
+	      this.state.squares
+	    );
+	  }
+	});
+
+	module.exports = Canvas;
 
 /***/ }
 /******/ ]);
