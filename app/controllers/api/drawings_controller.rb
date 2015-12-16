@@ -1,12 +1,14 @@
 class Api::DrawingsController < ApplicationController
 
   def new
-    content = Array.new(10000){"#eee"}.join
+    content = Array.new(10000){"#eee"}.join(",");
 
     @drawing = Drawing.new(
       content: content,
       user_id: current_user.id
     )
+
+    render json: @drawing
   end
 
   def create

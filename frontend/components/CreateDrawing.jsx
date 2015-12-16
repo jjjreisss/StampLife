@@ -1,4 +1,6 @@
 var React = require('react');
+var Canvas = require('./canvas');
+var ApiUtil = require('../util/apiUtil');
 
 var CreateDrawing = React.createClass({
   getInitialState: function() {
@@ -9,16 +11,15 @@ var CreateDrawing = React.createClass({
     })
   },
   componentDidMount: function() {
-    DrawingStore.addListener(this.loadDrawing);
     ApiUtil.fetchNewDrawing();
   },
-  loadDrawing: function() {
-    var drawing = DrawingStore.all();
-    var contentString = drawing.content;
-    var contentArray = contentString.split(",");
-    this.setCanvas(contentArray)
-    this.setState({
-      content: contentArray
-    })
+  render: function() {
+    return(
+      <div>
+        <Canvas/>
+      </div>
+    )
   }
 })
+
+module.exports = CreateDrawing;

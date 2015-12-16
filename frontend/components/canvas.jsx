@@ -17,8 +17,8 @@ var Canvas = React.createClass({
     // this._buildCanvas();
   },
   componentDidMount: function() {
+    console.log('listener')
     DrawingStore.addListener(this.loadDrawing);
-    ApiUtil.fetchDrawing(this.props.params.drawingId);
   },
   loadDrawing: function() {
     var drawing = DrawingStore.all();
@@ -59,7 +59,8 @@ var Canvas = React.createClass({
       this.squares[idx],
       {style: {background: "#000"}}
     );
-    this.forceUpdate();
+    this.setState({userId: 1});
+    // this.forceUpdate();
   },
   mouseDownHandler: function(e){
     this.addStroke(e);
