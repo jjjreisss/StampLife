@@ -52,20 +52,18 @@
 	var Index = __webpack_require__(239);
 	var CreateDrawing = __webpack_require__(240);
 	var EditDrawing = __webpack_require__(241);
+	var DrawingIndex = __webpack_require__(242);
+	var CanvasTest = __webpack_require__(243);
 
 	var routes = React.createElement(
 	  Route,
 	  { path: '/', component: Index },
 	  React.createElement(Route, { path: '/new', component: CreateDrawing }),
-	  React.createElement(Route, { path: '/drawings/drawingId', component: EditDrawing })
+	  React.createElement(Route, { path: '/drawings/:drawingId', component: EditDrawing })
 	);
 
 	document.addEventListener("DOMContentLoaded", function () {
-	  ReactDOM.render(React.createElement(
-	    Router,
-	    null,
-	    routes
-	  ), document.getElementById('root'));
+	  ReactDOM.render(React.createElement(CanvasTest, null), document.getElementById('root'));
 	});
 
 	// document.addEventListener("DOMContentLoaded", function () {
@@ -31657,6 +31655,94 @@
 	});
 
 	module.exports = EditDrawing;
+
+/***/ },
+/* 242 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var DrawingStore = __webpack_require__(221);
+	var ApiActions = __webpack_require__(215);
+
+	var DrawingIndex = React.createClass({
+	  displayName: 'DrawingIndex',
+
+	  render: function () {}
+
+	});
+
+	module.exports = DrawingIndex;
+
+/***/ },
+/* 243 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+
+	var CanvasTest = React.createClass({
+	  displayName: 'CanvasTest',
+
+	  getInitialState: function () {
+	    return {};
+	  },
+	  componentDidMount: function () {
+	    canvas = document.getElementById('drawing');
+	    canvas.width = 500;
+	    canvas.height = 500;
+	    this.ctx = canvas.getContext('2d');
+	    this.prevX = 0;
+	    this.prevY = 0;
+	    this.currX = 0;
+	    this.currY = 0;
+	    this.drawing = false;
+	  },
+	  mouseDownHandler: function (e) {
+	    this.drawing = true;
+	  },
+	  mouseUpHandler: function (e) {
+	    this.drawing = false;
+	  },
+	  mouseMoveHandler: function (e) {
+	    this.prevX = this.currX;
+	    this.prevY = this.currY;
+
+	    this.currX = e.clientX - canvas.offsetLeft;
+	    this.currY = e.clientY - canvas.offsetTop;
+
+	    if (this.drawing) {
+	      this.draw();
+	    }
+	  },
+	  mouseOutHandler: function (e) {},
+
+	  draw: function () {
+	    this.ctx.beginPath();
+	    this.ctx.moveTo(this.prevX, this.prevY);
+	    this.ctx.lineTo(this.currX, this.currY);
+	    console.log('prev');
+	    console.log([this.prevX, this.prevY]);
+	    console.log('curr');
+	    console.log([this.currX, this.currY]);
+	    this.ctx.strokeStyle = "black";
+	    this.ctx.lineWidth = 5;
+	    this.ctx.stroke();
+	    this.ctx.closePath();
+	  },
+
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      null,
+	      'Outside Canvas',
+	      React.createElement('canvas', { id: 'drawing',
+	        onMouseDown: this.mouseDownHandler,
+	        onMouseUp: this.mouseUpHandler,
+	        onMouseMove: this.mouseMoveHandler })
+	    );
+	  }
+	});
+
+	module.exports = CanvasTest;
 
 /***/ }
 /******/ ]);
