@@ -6,8 +6,9 @@ var Canvas = require('./components/canvas');
 
 
 var routes = (
-  <Route path="/drawings/:drawingId" component={Canvas}>
-
+  <Route path="/" component={CreateDrawing}>
+  </Route>
+  <Route path="/drawings/:drawingId" component={EditDrawing}>
   </Route>
 );
 

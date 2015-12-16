@@ -50,7 +50,11 @@
 	var Route = __webpack_require__(188).Route;
 	var Canvas = __webpack_require__(159);
 
-	var routes = React.createElement(Route, { path: '/drawings/:drawingId', component: Canvas });
+	var routes = React.createElement(
+	  Route,
+	  null,
+	  React.createElement(Route, { path: '/drawings/:drawingId', component: Canvas })
+	);
 
 	document.addEventListener("DOMContentLoaded", function () {
 	  ReactDOM.render(React.createElement(

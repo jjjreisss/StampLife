@@ -20,6 +20,16 @@ var ApiUtil = {
         ApiActions.receiveSingleDrawing(drawing);
       }
     })
+  },
+
+  fetchNewDrawing: function() {
+    $.ajax({
+      url: "api/drawings/new",
+      method: "GET",
+      success: function(drawing) {
+        ApiActions.receiveSingleDrawing(drawing);
+      }
+    })
   }
 }
 
