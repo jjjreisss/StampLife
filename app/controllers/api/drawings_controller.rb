@@ -1,7 +1,7 @@
 class Api::DrawingsController < ApplicationController
 
   def new
-    content = Array.new(10000){"#eee"}.join(",");
+    content = Array.new(25600){"#eee"}.join(",");
 
     @drawing = Drawing.new(
       content: content,

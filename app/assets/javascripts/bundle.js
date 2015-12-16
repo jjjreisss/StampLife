@@ -49,9 +49,9 @@
 	var Router = __webpack_require__(159).Router;
 	var Route = __webpack_require__(159).Route;
 	var Canvas = __webpack_require__(210);
-	var Index = __webpack_require__(238);
-	var CreateDrawing = __webpack_require__(239);
-	var EditDrawing = __webpack_require__(240);
+	var Index = __webpack_require__(239);
+	var CreateDrawing = __webpack_require__(240);
+	var EditDrawing = __webpack_require__(241);
 
 	var routes = React.createElement(
 	  Route,
@@ -24433,6 +24433,7 @@
 	var LinkedStateMixin = __webpack_require__(211);
 	var ApiUtil = __webpack_require__(215);
 	var DrawingStore = __webpack_require__(221);
+	var Square = __webpack_require__(238);
 
 	var Canvas = React.createClass({
 	  displayName: 'Canvas',
@@ -24443,14 +24444,14 @@
 	    return {
 	      content: [],
 	      caption: "whatever dude",
-	      userId: 1
+	      userId: 1,
+	      drawing: false
 	    };
 	  },
 	  componentWillMount: function () {
 	    // this._buildCanvas();
 	  },
 	  componentDidMount: function () {
-	    console.log('listener');
 	    DrawingStore.addListener(this.loadDrawing);
 	  },
 	  loadDrawing: function () {
@@ -24465,36 +24466,28 @@
 	  setCanvas: function (contentArray) {
 	    this.squares = [];
 
-	    contentArray.forEach((function (color, idx) {
-	      var divStyle = { background: color };
-	      this.squares.push(React.createElement('div', { key: idx,
-	        className: 'square',
-	        'data-idx': idx,
-	        style: divStyle,
-	        onMouseOver: this.mouseOverHandler,
-	        onMouseDown: this.mouseDownHandler,
-	        onMouseUp: this.mouseUpHandler }));
+	    contentArray.forEach((function (background, idx) {
+	      this.squares.push(React.createElement(Square, { background: background,
+	        drawing: false,
+	        key: idx,
+	        'data-idx': idx }));
 	    }).bind(this));
 	  },
-	  mouseOverHandler: function (e) {
-	    if (this.state.drawing) {
-	      this.addStroke(e);
-	    }
-	  },
-	  addStroke: function (e) {
-	    var idx = parseInt(e.target.attributes["data-idx"].value);
-	    this.state.content[idx] = "#000";
-	    console.log("Painting");
-	    this.squares[idx] = React.cloneElement(this.squares[idx], { style: { background: "#000" } });
-	    this.setState({ userId: 1 });
-	    // this.forceUpdate();
-	  },
 	  mouseDownHandler: function (e) {
-	    this.addStroke(e);
 	    this.setState({ drawing: true });
+	    for (var i = 0; i < this.squares.length; i++) {
+	      this.squares[i] = React.cloneElement(this.squares[i], { drawing: true });
+	    }
+	    console.log("down");
+	    console.log(this.squares[0]);
 	  },
 	  mouseUpHandler: function () {
 	    this.setState({ drawing: false });
+	    for (var i = 0; i < this.squares.length; i++) {
+	      this.squares[i] = React.cloneElement(this.squares[i], { drawing: false });
+	    }
+	    console.log("up");
+	    console.log(this.squares[0]);
 	  },
 	  saveHandler: function () {
 	    var content = String(this.state.content);
@@ -24509,7 +24502,9 @@
 
 	    return React.createElement(
 	      'div',
-	      { className: 'canvas' },
+	      { className: 'canvas',
+	        onMouseDown: this.mouseDownHandler,
+	        onMouseUp: this.mouseUpHandler },
 	      this.squares,
 	      React.createElement(
 	        'button',
@@ -31549,6 +31544,40 @@
 
 	var React = __webpack_require__(1);
 
+	var Square = React.createClass({
+	  displayName: "Square",
+
+	  getInitialState: function () {
+	    return {
+	      background: this.props.background,
+	      drawing: true
+	    };
+	  },
+	  mouseOverHandler: function () {
+	    console.log("over");
+	    if (this.state.drawing) {
+	      this.setState({ background: "#000" });
+	    }
+	  },
+	  componentWillReceiveProps: function () {
+	    this.setState({ drawing: this.props.drawing });
+	  },
+
+	  render: function () {
+	    return React.createElement("div", { className: "square",
+	      style: { background: this.state.background },
+	      onMouseOver: this.mouseOverHandler });
+	  }
+	});
+
+	module.exports = Square;
+
+/***/ },
+/* 239 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+
 	var Index = React.createClass({
 	  displayName: 'Index',
 
@@ -31565,7 +31594,7 @@
 	module.exports = Index;
 
 /***/ },
-/* 239 */
+/* 240 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -31597,7 +31626,7 @@
 	module.exports = CreateDrawing;
 
 /***/ },
-/* 240 */
+/* 241 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);

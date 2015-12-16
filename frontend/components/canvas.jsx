@@ -2,6 +2,7 @@ var React = require('react');
 var LinkedStateMixin = require('react-addons-linked-state-mixin');
 var ApiUtil = require('../util/apiUtil');
 var DrawingStore = require('../stores/drawingStore');
+var Square = require('./square');
 
 var Canvas = React.createClass({
   mixins: [LinkedStateMixin],
@@ -10,14 +11,14 @@ var Canvas = React.createClass({
     return({
       content: [],
       caption: "whatever dude",
-      userId: 1
+      userId: 1,
+      drawing: false
     })
   },
   componentWillMount: function() {
     // this._buildCanvas();
   },
   componentDidMount: function() {
-    console.log('listener')
     DrawingStore.addListener(this.loadDrawing);
   },
   loadDrawing: function() {
@@ -32,42 +33,37 @@ var Canvas = React.createClass({
   setCanvas: function(contentArray) {
     this.squares = [];
 
-    contentArray.forEach(function(color, idx){
-      var divStyle = {background: color}
+    contentArray.forEach(function(background, idx){
       this.squares.push(
-        <div key={idx}
-             className="square"
-             data-idx={idx}
-             style={divStyle}
-             onMouseOver={this.mouseOverHandler}
-             onMouseDown={this.mouseDownHandler}
-             onMouseUp={this.mouseUpHandler}>
-        </div>
+        <Square background={background}
+                drawing={false}
+                key={idx}
+                data-idx={idx} />
       )
     }.bind(this))
   },
-  mouseOverHandler: function(e) {
-    if (this.state.drawing) {
-      this.addStroke(e)
-    }
-  },
-  addStroke: function(e) {
-    var idx = parseInt(e.target.attributes["data-idx"].value);
-    this.state.content[idx] = "#000";
-    console.log("Painting");
-    this.squares[idx] = React.cloneElement(
-      this.squares[idx],
-      {style: {background: "#000"}}
-    );
-    this.setState({userId: 1});
-    // this.forceUpdate();
-  },
   mouseDownHandler: function(e){
-    this.addStroke(e);
     this.setState({drawing: true})
+    for (var i = 0; i < this.squares.length; i++) {
+      this.squares[i] = React.cloneElement(
+        this.squares[i],
+        {drawing: true}
+      )
+    }
+    console.log("down");
+    console.log(this.squares[0])
   },
   mouseUpHandler: function(){
     this.setState({drawing: false})
+    for (var i = 0; i < this.squares.length; i++) {
+      this.squares[i] = React.cloneElement(
+        this.squares[i],
+        {drawing: false}
+      )
+    }
+    console.log("up");
+    console.log(this.squares[0]);
+
   },
   saveHandler: function() {
     var content = String(this.state.content);
@@ -81,7 +77,9 @@ var Canvas = React.createClass({
   render: function() {
 
     return(
-      <div className="canvas">
+      <div className="canvas"
+           onMouseDown={this.mouseDownHandler}
+           onMouseUp={this.mouseUpHandler}>
         {this.squares}
         <button onClick={this.saveHandler}>Save</button>
       </div>

@@ -19,20 +19,20 @@ body {
 }
 
 .canvas {
-  width: 500px;
-  height: 500px;
+  width: 480px;
+  height: 480px;
   margin: auto;
 }
 
 .square {
-  width: 5px;
-  height: 5px;
+  width: 3px;
+  height: 3px;
   float: left;
 }
 
 .drawn {
   background: black;
-  width: 5px;
-  height: 5px;
+  width: 3px;
+  height: 3px;
   float: left;
 }
