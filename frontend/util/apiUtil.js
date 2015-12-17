@@ -30,6 +30,27 @@ var ApiUtil = {
         ApiActions.receiveSingleDrawing(drawing);
       }
     })
+  },
+
+  fetchAllDrawings: function() {
+    $.ajax({
+      url: "api/drawings",
+      method: "GET",
+      success: function(drawings) {
+        ApiActions.receiveAllDrawings(drawings);
+      }
+    })
+  },
+
+  storeImage: function(img) {
+    $.ajax({
+      url: "api/images",
+      method: "POST",
+      data: {img: img},
+      success: function(image_url) {
+
+      }
+    })
   }
 }
 

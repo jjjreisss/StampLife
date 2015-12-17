@@ -1,5 +1,11 @@
 class Api::DrawingsController < ApplicationController
 
+  def index
+    @drawings = Drawing.all
+
+    render json: @drawings
+  end
+
   def new
     content = Array.new(25600){"#eee"}.join(",");
 
@@ -12,6 +18,8 @@ class Api::DrawingsController < ApplicationController
   end
 
   def create
+    puts('XXXXXXXXXXX')
+    puts(drawing_params)
     @drawing = Drawing.new(drawing_params)
 
     @drawing.save!
@@ -25,6 +33,6 @@ class Api::DrawingsController < ApplicationController
 
   private
   def drawing_params
-    params.require(:drawing).permit(:content, :caption, :user_id);
+    params.require(:drawing).permit(:content, :caption, :user_id, :image_url);
   end
 end

@@ -3,24 +3,26 @@ var ReactDOM = require('react-dom');
 var Router = require('react-router').Router;
 var Route = require('react-router').Route;
 var Canvas = require('./components/canvas');
-var Index = require('./components/index');
+var App = require('./components/app');
 var CreateDrawing = require('./components/createDrawing');
 var EditDrawing = require('./components/editDrawing');
 var DrawingIndex = require('./components/drawingIndex');
 var CanvasTest = require('./components/canvasTest');
+var DrawingDetail = require('./components/drawingDetail');
 
 
 var routes = (
-  <Route path="/" component={Index}>
-    <Route path="/new" component={CreateDrawing}/>
-    <Route path="/drawings/:drawingId" component={EditDrawing}/>
+  <Route path="/" component={App}>
+    <Route path="/new" component={CanvasTest}/>
+    <Route path="/index" component={DrawingIndex}/>
+    <Route path="/drawing/:drawingId" component={DrawingDetail}/>
   </Route>
 );
 
 
 
 document.addEventListener("DOMContentLoaded", function () {
-  ReactDOM.render(<CanvasTest/>, document.getElementById('root'));
+  ReactDOM.render(<Router>{routes}</Router>, document.getElementById('root'));
 });
 
 

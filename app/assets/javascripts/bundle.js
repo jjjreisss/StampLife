@@ -49,21 +49,27 @@
 	var Router = __webpack_require__(159).Router;
 	var Route = __webpack_require__(159).Route;
 	var Canvas = __webpack_require__(210);
-	var Index = __webpack_require__(239);
+	var App = __webpack_require__(239);
 	var CreateDrawing = __webpack_require__(240);
 	var EditDrawing = __webpack_require__(241);
 	var DrawingIndex = __webpack_require__(242);
 	var CanvasTest = __webpack_require__(243);
+	var DrawingDetail = __webpack_require__(244);
 
 	var routes = React.createElement(
 	  Route,
-	  { path: '/', component: Index },
-	  React.createElement(Route, { path: '/new', component: CreateDrawing }),
-	  React.createElement(Route, { path: '/drawings/:drawingId', component: EditDrawing })
+	  { path: '/', component: App },
+	  React.createElement(Route, { path: '/new', component: CanvasTest }),
+	  React.createElement(Route, { path: '/index', component: DrawingIndex }),
+	  React.createElement(Route, { path: '/drawing/:drawingId', component: DrawingDetail })
 	);
 
 	document.addEventListener("DOMContentLoaded", function () {
-	  ReactDOM.render(React.createElement(CanvasTest, null), document.getElementById('root'));
+	  ReactDOM.render(React.createElement(
+	    Router,
+	    null,
+	    routes
+	  ), document.getElementById('root'));
 	});
 
 	// document.addEventListener("DOMContentLoaded", function () {
@@ -24781,6 +24787,25 @@
 	        ApiActions.receiveSingleDrawing(drawing);
 	      }
 	    });
+	  },
+
+	  fetchAllDrawings: function () {
+	    $.ajax({
+	      url: "api/drawings",
+	      method: "GET",
+	      success: function (drawings) {
+	        ApiActions.receiveAllDrawings(drawings);
+	      }
+	    });
+	  },
+
+	  storeImage: function (img) {
+	    $.ajax({
+	      url: "api/images",
+	      method: "POST",
+	      data: { img: img },
+	      success: function (image_url) {}
+	    });
 	  }
 	};
 
@@ -24797,6 +24822,13 @@
 	    Dispatcher.dispatch({
 	      actionType: "DRAWING_RECEIVED",
 	      drawing: drawing
+	    });
+	  },
+
+	  receiveAllDrawings: function (drawings) {
+	    Dispatcher.dispatch({
+	      actionType: "DRAWINGS_RECEIVED",
+	      drawings: drawings
 	    });
 	  }
 	};
@@ -25126,20 +25158,32 @@
 	var AppDispatcher = __webpack_require__(217);
 
 	var DrawingStore = new Store(AppDispatcher);
-	var _drawings = {};
+	var _drawings = [];
+
+	var resetDrawings = function (drawings) {
+	  _drawings = drawings;
+	};
 
 	var resetDrawing = function (drawing) {
-	  _drawings = drawing;
+	  _drawings = [drawing];
+	};
+
+	var receiveDrawing = function (drawing) {
+	  _drawings.push(drawing);
 	};
 
 	DrawingStore.all = function () {
-	  return _drawings;
+	  return _drawings.slice();
 	};
 
 	DrawingStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
 	    case "DRAWING_RECEIVED":
 	      resetDrawing(payload.drawing);
+	      DrawingStore.__emitChange();
+	      break;
+	    case "DRAWINGS_RECEIVED":
+	      resetDrawings(payload.drawings);
 	      DrawingStore.__emitChange();
 	      break;
 	  }
@@ -31576,20 +31620,36 @@
 
 	var React = __webpack_require__(1);
 
-	var Index = React.createClass({
-	  displayName: 'Index',
+	var App = React.createClass({
+	  displayName: 'App',
+
+	  goToIndex: function () {
+	    this.props.history.push('index');
+	  },
+	  goToNew: function () {
+	    this.props.history.push('new');
+	  },
 
 	  render: function () {
 	    return React.createElement(
 	      'div',
 	      null,
-	      'Index',
+	      React.createElement(
+	        'div',
+	        { onClick: this.goToIndex },
+	        'All Drawings'
+	      ),
+	      React.createElement(
+	        'div',
+	        { onClick: this.goToNew },
+	        'New Drawing'
+	      ),
 	      this.props.children
 	    );
 	  }
 	});
 
-	module.exports = Index;
+	module.exports = App;
 
 /***/ },
 /* 240 */
@@ -31662,28 +31722,69 @@
 
 	var React = __webpack_require__(1);
 	var DrawingStore = __webpack_require__(221);
-	var ApiActions = __webpack_require__(215);
+	var ApiUtil = __webpack_require__(215);
 
 	var DrawingIndex = React.createClass({
 	  displayName: 'DrawingIndex',
 
-	  render: function () {}
+	  getInitialState: function () {
+	    return {
+	      drawings: DrawingStore.all()
+	    };
+	  },
+	  componentDidMount: function () {
+	    this.listener = DrawingStore.addListener(this._onChange);
+	    ApiUtil.fetchAllDrawings();
+	  },
+	  componentWillUnmount: function () {
+	    this.listener.remove();
+	  },
+	  _onChange: function () {
+	    this.setState({ drawings: DrawingStore.all() });
+	  },
+	  goToShow: function (e) {
+	    var id = e.target.attributes["data-idx"].value;
+	    console.log(id);
+	    this.props.history.push('drawing/' + id);
+	  },
+	  render: function () {
+	    that = this;
+	    return React.createElement(
+	      'div',
+	      null,
+	      this.state.drawings.map((function (drawing, idx) {
+	        var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_150,h_150/" + drawing.image_url + ".png";
+	        return React.createElement(
+	          'div',
+	          { key: drawing.id },
+	          React.createElement('img', { src: url,
+	            'data-idx': drawing.id,
+	            onClick: this.goToShow })
+	        );
+	      }).bind(this))
+	    );
+	  }
 
 	});
 
 	module.exports = DrawingIndex;
+	"http://res.cloudinary.com/ddhru3qpb/image/upload/v1450330681/a1tgeenaicrcsmlfemdr.png";
 
 /***/ },
 /* 243 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
+	var ApiUtil = __webpack_require__(215);
 
 	var CanvasTest = React.createClass({
 	  displayName: 'CanvasTest',
 
 	  getInitialState: function () {
-	    return {};
+	    return {
+	      caption: "whatever dude",
+	      user_id: 1
+	    };
 	  },
 	  componentDidMount: function () {
 	    this.canvas = document.getElementById('drawing');
@@ -31747,6 +31848,20 @@
 
 	  saveHandler: function () {
 	    var img = this.canvas.toDataURL("image/png");
+	    $.ajax({
+	      url: "api/images",
+	      method: "POST",
+	      data: { img: img },
+	      success: (function (image_received) {
+	        console.log(image_received);
+	        ApiUtil.createDrawing({
+	          caption: this.state.caption,
+	          user_id: this.state.user_id,
+	          image_url: image_received.public_id
+	        });
+	        this.props.history.push('index');
+	      }).bind(this)
+	    });
 	  },
 
 	  render: function () {
@@ -31777,6 +31892,49 @@
 	//   api_key: 146894146738463,
 	//   api_secret: "5y7HbBXImnBzHQsL8SrkL72qW2Q"
 	// })
+
+/***/ },
+/* 244 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var DrawingStore = __webpack_require__(221);
+	var ApiUtil = __webpack_require__(215);
+
+	var DrawingDetail = React.createClass({
+	  displayName: 'DrawingDetail',
+
+	  getInitialState: function () {
+	    return {
+	      drawing: DrawingStore.all()[0]
+	    };
+	  },
+	  componentWillMount: function () {
+	    this.token = DrawingStore.addListener(this._onChange);
+	    ApiUtil.fetchDrawing(parseInt(this.props.params.drawingId));
+	  },
+	  componentWillUnmount: function () {
+	    this.token.remove();
+	  },
+	  _onChange: function () {
+	    this.setState({ drawing: DrawingStore.all()[0] });
+	  },
+	  render: function () {
+	    var contents = "";
+	    if (this.state.drawing) {
+	      var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + this.state.drawing.image_url + ".png";
+	      contents = React.createElement('img', { src: url });
+	    }
+	    return React.createElement(
+	      'div',
+	      null,
+	      contents
+	    );
+	  }
+
+	});
+
+	module.exports = DrawingDetail;
 
 /***/ }
 /******/ ]);

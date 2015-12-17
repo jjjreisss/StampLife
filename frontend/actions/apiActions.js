@@ -6,6 +6,13 @@ var ApiActions = {
       actionType: "DRAWING_RECEIVED",
       drawing: drawing
     });
+  },
+
+  receiveAllDrawings: function(drawings) {
+    Dispatcher.dispatch({
+      actionType: "DRAWINGS_RECEIVED",
+      drawings: drawings
+    })
   }
 }
 

@@ -1,9 +1,11 @@
 var React = require('react');
+var ApiUtil = require('../util/apiUtil');
 
 var CanvasTest = React.createClass({
   getInitialState: function() {
     return({
-
+      caption: "whatever dude",
+      user_id: 1,
     })
   },
   componentDidMount: function() {
@@ -69,7 +71,20 @@ var CanvasTest = React.createClass({
 
   saveHandler: function() {
     var img = this.canvas.toDataURL("image/png");
-
+    $.ajax({
+      url: "api/images",
+      method: "POST",
+      data: {img: img},
+      success: function(image_received) {
+        console.log(image_received)
+        ApiUtil.createDrawing({
+          caption: this.state.caption,
+          user_id: this.state.user_id,
+          image_url: image_received.public_id
+        })
+        this.props.history.push('index')
+      }.bind(this)
+    })
   },
 
   render: function() {
