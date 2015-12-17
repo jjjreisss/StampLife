@@ -5,8 +5,8 @@ var ApiUtil = require('../util/apiUtil');
 var DrawingDetail = React.createClass({
   getInitialState: function() {
     return({
-      drawing: DrawingStore.all()[0]
-    })
+      drawing: null
+    });
   },
   componentWillMount: function() {
     this.token = DrawingStore.addListener(this._onChange);
@@ -16,21 +16,21 @@ var DrawingDetail = React.createClass({
     this.token.remove();
   },
   _onChange: function() {
-    this.setState({drawing: DrawingStore.all()[0]})
+    this.setState({drawing: DrawingStore.all()[0]});
   },
   render: function() {
     var contents = "";
     if (this.state.drawing){
-      var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + this.state.drawing.image_url + ".png"
+      var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + this.state.drawing.image_url + ".png";
       contents = (
         <img src={url}/>
-      )
+      );
     }
     return(
       <div>
         {contents}
       </div>
-    )
+    );
   }
 
 });

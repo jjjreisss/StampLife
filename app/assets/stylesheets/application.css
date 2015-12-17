@@ -16,6 +16,7 @@
 
 body {
   background: orange;
+  width: 600px;
 }
 
 
@@ -32,6 +33,25 @@ body {
   float: left;
 }
 
-#drawing {
+#drawing{
   background: white;
+  outline: 1px solid black;
+}
+
+#color-picker {
+  outline: 1px solid black;
+}
+
+#size-picker {
+  background: white;
+  position: relative;
+  top: -4px;
+  outline: 1px solid black;
+}
+
+#stroke-sample {
+  background: white;
+  position: relative;
+  top: -4px;
+  outline: 1px solid black;
 }
