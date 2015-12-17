@@ -31749,12 +31749,13 @@
 	  render: function () {
 	    return React.createElement(
 	      'div',
-	      null,
+	      { className: 'drawings-index' },
 	      this.state.drawings.map((function (drawing, idx) {
 	        var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_150,h_150/" + drawing.image_url + ".png";
 	        return React.createElement(
 	          'div',
-	          { key: drawing.id },
+	          { key: drawing.id,
+	            className: 'drawing-index-element' },
 	          React.createElement('img', { src: url,
 	            'data-idx': drawing.id,
 	            onClick: this.goToShow })
@@ -31774,6 +31775,10 @@
 
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(215);
+	var DrawingCanvas = __webpack_require__(245);
+	var ColorPicker = __webpack_require__(246);
+	var SizePicker = __webpack_require__(247);
+	var StrokeSample = __webpack_require__(248);
 
 	var CanvasTest = React.createClass({
 	  displayName: 'CanvasTest',
@@ -31785,99 +31790,32 @@
 	    };
 	  },
 	  componentDidMount: function () {
-	    this.canvas = document.getElementById('drawing');
-	    this.canvas.width = 500;
-	    this.canvas.height = 500;
-	    this.ctx = this.canvas.getContext('2d');
-	    this.prevX = 0;
-	    this.prevY = 0;
-	    this.currX = 0;
-	    this.currY = 0;
-	    this.drawing = false;
-	    this.rgbString = "black";
-
-	    this.setColorPicker();
-	    this.setSizePicker();
-	    this.setStrokeSample();
-	  },
-	  setSizePicker: function () {
-	    this.sizePickerCanvas = document.getElementById('size-picker');
-	    this.sizePickerContext = this.sizePickerCanvas.getContext('2d');
-	    var pickerImg = new Image();
-	    pickerImg.src = '../assets/triangle.png';
-	    pickerImg.onload = (function () {
-	      this.sizePickerContext.drawImage(pickerImg, 0, 0);
-	    }).bind(this);
-	  },
-	  setColorPicker: function () {
-	    this.colorPickerCanvas = document.getElementById('color-picker');
-	    this.colorPickerContext = this.colorPickerCanvas.getContext('2d');
-	    var pickerImg = new Image();
-	    pickerImg.src = '../assets/color-picker-80-500.png';
-	    pickerImg.onload = (function () {
-	      this.colorPickerContext.drawImage(pickerImg, 0, 0);
-	    }).bind(this);
-	  },
-	  setStrokeSample: function () {
-	    this.strokeSampleCanvas = document.getElementById('stroke-sample');
-	    this.strokeSampleContext = this.strokeSampleCanvas.getContext('2d');
+	    this.drawingCanvas = new DrawingCanvas('drawing-canvas');
+	    this.sizePicker = new SizePicker('size-picker');
+	    this.colorPicker = new ColorPicker('color-picker');
+	    this.strokeSample = new StrokeSample('stroke-sample');
 	  },
 	  pickSize: function (e) {
-	    var x = e.pageX - this.sizePickerCanvas.offsetLeft;
-	    this.ctx.lineWidth = (x - 35) * 52 / 423;
-	    this.pickSample();
+	    this.size = this.sizePicker.pickSize(e);
+	    this.strokeSample.pickSample(this.color, this.size);
 	  },
 	  pickColor: function (e) {
-	    var x = e.pageX - this.colorPickerCanvas.offsetLeft;
-	    var y = e.pageY - this.colorPickerCanvas.offsetTop;
-	    var imgData = this.colorPickerContext.getImageData(x, y, 1, 1).data;
-	    var rgbArray = imgData.slice(0, 3);
-	    this.rgbString = "rgb(" + rgbArray.join(",") + ")";
-	    this.pickSample();
-	  },
-	  pickSample: function () {
-	    this.strokeSampleContext.clearRect(0, 0, 80, 80);
-	    var centerX = 40;
-	    var centerY = 40;
-	    var width = this.ctx.lineWidth;
-	    var left = centerX - width / 2;
-	    var top = centerY - width / 2;
-	    this.strokeSampleContext.fillStyle = this.rgbString;
-
-	    this.strokeSampleContext.fillRect(top, left, width, width);
+	    this.color = this.colorPicker.pickColor(e);
+	    this.strokeSample.pickSample(this.color, this.size);
 	  },
 	  mouseDownHandler: function (e) {
-	    console.log(this.ctx.lineWidth);
-	    this.drawing = true;
+	    this.drawingCanvas.mouseDown(e, this.color, this.size);
 	  },
 	  mouseUpHandler: function (e) {
-	    this.drawing = false;
+	    this.drawingCanvas.mouseUp(e);
 	  },
 	  mouseMoveHandler: function (e) {
-	    this.prevX = this.currX;
-	    this.prevY = this.currY;
-
-	    this.currX = e.clientX - this.canvas.offsetLeft;
-	    this.currY = e.clientY - this.canvas.offsetTop;
-
-	    if (this.drawing) {
-	      this.draw();
-	    }
+	    this.drawingCanvas.mouseMove(e);
 	  },
 	  mouseOutHandler: function (e) {},
 
-	  draw: function () {
-	    this.ctx.beginPath();
-	    this.ctx.moveTo(this.prevX, this.prevY);
-	    this.ctx.lineTo(this.currX, this.currY);
-
-	    this.ctx.strokeStyle = this.rgbString;
-	    this.ctx.stroke();
-	    this.ctx.closePath();
-	  },
-
 	  saveHandler: function () {
-	    var img = this.canvas.toDataURL("image/png");
+	    var img = this.drawingCanvas.toData();
 	    $.ajax({
 	      url: "api/images",
 	      method: "POST",
@@ -31896,8 +31834,8 @@
 	  render: function () {
 	    return React.createElement(
 	      'div',
-	      null,
-	      React.createElement('canvas', { id: 'drawing',
+	      { id: 'drawing' },
+	      React.createElement('canvas', { id: 'drawing-canvas',
 	        onMouseDown: this.mouseDownHandler,
 	        onMouseUp: this.mouseUpHandler,
 	        onMouseMove: this.mouseMoveHandler }),
@@ -31972,6 +31910,133 @@
 	});
 
 	module.exports = DrawingDetail;
+
+/***/ },
+/* 245 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ApiUtil = __webpack_require__(215);
+
+	var DrawingCanvas = function (id) {
+	  this.drawingCanvas = document.getElementById(id);
+	  this.drawingCanvas.width = 500;
+	  this.drawingCanvas.height = 500;
+	  this.ctx = this.drawingCanvas.getContext('2d');
+	  this.prevX = 0;
+	  this.prevY = 0;
+	  this.currX = 0;
+	  this.currY = 0;
+	  this.drawing = false;
+	  this.rgbString = "black";
+	};
+
+	DrawingCanvas.prototype.mouseDown = function (e, color, size) {
+	  this.color = color;
+	  this.size = size;
+	  this.drawing = true;
+	};
+
+	DrawingCanvas.prototype.mouseUp = function (e) {
+	  this.drawing = false;
+	};
+
+	DrawingCanvas.prototype.mouseMove = function (e) {
+	  this.prevX = this.currX;
+	  this.prevY = this.currY;
+
+	  this.currX = e.clientX - this.drawingCanvas.offsetLeft;
+	  this.currY = e.clientY - this.drawingCanvas.offsetTop;
+
+	  if (this.drawing) {
+	    this.draw();
+	  }
+	};
+
+	DrawingCanvas.prototype.draw = function () {
+	  this.ctx.beginPath();
+	  this.ctx.moveTo(this.prevX, this.prevY);
+	  this.ctx.lineTo(this.currX, this.currY);
+
+	  this.ctx.strokeStyle = this.color;
+	  this.ctx.lineWidth = this.size;
+	  this.ctx.stroke();
+	  this.ctx.closePath();
+	};
+
+	DrawingCanvas.prototype.toData = function () {
+	  return this.drawingCanvas.toDataURL("image/png");
+	};
+
+	module.exports = DrawingCanvas;
+
+/***/ },
+/* 246 */
+/***/ function(module, exports) {
+
+	var ColorPicker = function (id) {
+	  this.colorPickerCanvas = document.getElementById(id);
+	  this.colorPickerContext = this.colorPickerCanvas.getContext('2d');
+	  var pickerImg = new Image();
+	  pickerImg.src = '../assets/color-picker-80-500.png';
+	  pickerImg.onload = (function () {
+	    this.colorPickerContext.drawImage(pickerImg, 0, 0);
+	  }).bind(this);
+	};
+
+	ColorPicker.prototype.pickColor = function (e) {
+	  var x = e.pageX - this.colorPickerCanvas.offsetLeft;
+	  var y = e.pageY - this.colorPickerCanvas.offsetTop;
+	  var imgData = this.colorPickerContext.getImageData(x, y, 1, 1).data;
+	  var rgbArray = imgData.slice(0, 3);
+	  this.rgbString = "rgb(" + rgbArray.join(",") + ")";
+	  // this.pickSample();
+	  return this.rgbString;
+	};
+
+	module.exports = ColorPicker;
+
+/***/ },
+/* 247 */
+/***/ function(module, exports) {
+
+	var SizePicker = function (id) {
+	  this.sizePickerCanvas = document.getElementById(id);
+	  this.sizePickerContext = this.sizePickerCanvas.getContext('2d');
+	  var pickerImg = new Image();
+	  pickerImg.src = '../assets/triangle.png';
+	  pickerImg.onload = (function () {
+	    this.sizePickerContext.drawImage(pickerImg, 0, 0);
+	  }).bind(this);
+	};
+
+	SizePicker.prototype.pickSize = function (e) {
+	  var x = e.pageX - this.sizePickerCanvas.offsetLeft;
+	  return (x - 35) * 52 / 423;
+	};
+
+	module.exports = SizePicker;
+
+/***/ },
+/* 248 */
+/***/ function(module, exports) {
+
+	var StrokeSample = function () {
+	  this.strokeSampleCanvas = document.getElementById('stroke-sample');
+	  this.strokeSampleContext = this.strokeSampleCanvas.getContext('2d');
+	};
+
+	StrokeSample.prototype.pickSample = function (color, size) {
+	  this.strokeSampleContext.clearRect(0, 0, 80, 80);
+	  var centerX = 40;
+	  var centerY = 40;
+	  var left = centerX - size / 2;
+	  var top = centerY - size / 2;
+	  this.strokeSampleContext.fillStyle = color;
+
+	  this.strokeSampleContext.fillRect(top, left, size, size);
+	};
+
+	module.exports = StrokeSample;
 
 /***/ }
 /******/ ]);

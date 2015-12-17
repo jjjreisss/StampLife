@@ -17,8 +17,16 @@
 body {
   background: orange;
   width: 600px;
+  margin: auto;
 }
 
+.drawings-index {
+  background: black;
+}
+
+.drawing-index-element{
+  float: left;
+}
 
 .square {
   width: 3px;
@@ -35,6 +43,11 @@ body {
 
 #drawing{
   background: white;
+  width: 580px;
+  height: 580px;
+}
+
+#drawing-canvas{
   outline: 1px solid black;
 }
 
@@ -43,14 +56,12 @@ body {
 }
 
 #size-picker {
-  background: white;
   position: relative;
   top: -4px;
   outline: 1px solid black;
 }
 
 #stroke-sample {
-  background: white;
   position: relative;
   top: -4px;
   outline: 1px solid black;

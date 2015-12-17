@@ -24,12 +24,13 @@ var DrawingIndex = React.createClass({
   },
   render: function() {
     return(
-      <div>
+      <div className="drawings-index">
         {this.state.drawings.map(
           function(drawing, idx){
             var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_150,h_150/" + drawing.image_url + ".png";
             return (
-              <div key={drawing.id}>
+              <div key={drawing.id}
+                   className="drawing-index-element">
                 <img src={url}
                   data-idx={drawing.id}
                   onClick={this.goToShow}/>
