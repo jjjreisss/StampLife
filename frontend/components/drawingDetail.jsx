@@ -16,7 +16,7 @@ var DrawingDetail = React.createClass({
     this.token.remove();
   },
   _onChange: function() {
-    this.setState({drawing: DrawingStore.all()[0]});
+    this.setState({drawing: DrawingStore.single(this.props.params.drawingId)});
   },
   render: function() {
     var contents = "";

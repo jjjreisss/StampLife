@@ -9,7 +9,7 @@ var ApiUtil = {
       success: function (drawing) {
         ApiActions.receiveSingleDrawing(drawing);
       }
-    })
+    });
   },
 
   fetchDrawing: function(id) {
@@ -19,7 +19,7 @@ var ApiUtil = {
       success: function(drawing) {
         ApiActions.receiveSingleDrawing(drawing);
       }
-    })
+    });
   },
 
   fetchNewDrawing: function() {
@@ -29,7 +29,7 @@ var ApiUtil = {
       success: function(drawing) {
         ApiActions.receiveSingleDrawing(drawing);
       }
-    })
+    });
   },
 
   fetchAllDrawings: function() {
@@ -39,7 +39,7 @@ var ApiUtil = {
       success: function(drawings) {
         ApiActions.receiveAllDrawings(drawings);
       }
-    })
+    });
   },
 
   storeImage: function(img) {
@@ -50,8 +50,8 @@ var ApiUtil = {
       success: function(image_url) {
 
       }
-    })
+    });
   }
-}
+};
 
 module.exports = ApiUtil;

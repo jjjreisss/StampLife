@@ -25159,17 +25159,22 @@
 
 	var DrawingStore = new Store(AppDispatcher);
 	var _drawings = [];
+	var _drawing;
 
 	var resetDrawings = function (drawings) {
 	  _drawings = drawings;
 	};
 
 	var resetDrawing = function (drawing) {
-	  _drawings = [drawing];
+	  _drawing = drawing;
 	};
 
 	var receiveDrawing = function (drawing) {
 	  _drawings.push(drawing);
+	};
+
+	DrawingStore.single = function () {
+	  return _drawing;
 	};
 
 	DrawingStore.all = function () {
@@ -31779,13 +31784,16 @@
 	var ColorPicker = __webpack_require__(246);
 	var SizePicker = __webpack_require__(247);
 	var StrokeSample = __webpack_require__(248);
+	var LinkedStateMixin = __webpack_require__(211);
 
 	var CanvasTest = React.createClass({
 	  displayName: 'CanvasTest',
 
+	  mixins: [LinkedStateMixin],
+
 	  getInitialState: function () {
 	    return {
-	      caption: "whatever dude",
+	      caption: "caption",
 	      user_id: 1
 	    };
 	  },
@@ -31886,6 +31894,11 @@
 	        'Toggle Stamping'
 	      ),
 	      React.createElement(
+	        'div',
+	        { id: 'drawing-form' },
+	        React.createElement('input', { type: 'text', valueLink: this.linkState('caption') })
+	      ),
+	      React.createElement(
 	        'button',
 	        { onClick: this.saveHandler },
 	        'Save'
@@ -31926,7 +31939,7 @@
 	    this.token.remove();
 	  },
 	  _onChange: function () {
-	    this.setState({ drawing: DrawingStore.all()[0] });
+	    this.setState({ drawing: DrawingStore.single(this.props.params.drawingId) });
 	  },
 	  render: function () {
 	    var contents = "";
@@ -31973,6 +31986,7 @@
 	  this.color = color;
 	  this.size = size;
 	  this.drawing = true;
+	  this.draw();
 	};
 
 	DrawingCanvas.prototype.mouseUp = function (e) {
@@ -31999,8 +32013,10 @@
 	  }
 	};
 
-	DrawingCanvas.prototype.toggleStamping = function () {
-	  this.stamping = !this.stamping;
+	DrawingCanvas.prototype.drawStamp = function () {
+	  var img = new Image();
+	  img.src = this.stampImg;
+	  this.ctx.drawImage(img, this.currX - 75, this.currY - 75);
 	};
 
 	DrawingCanvas.prototype.drawStroke = function () {
@@ -32013,14 +32029,12 @@
 	  this.ctx.closePath();
 	};
 
-	DrawingCanvas.prototype.toData = function () {
-	  return this.drawingCanvas.toDataURL("image/png");
+	DrawingCanvas.prototype.toggleStamping = function () {
+	  this.stamping = !this.stamping;
 	};
 
-	DrawingCanvas.prototype.drawStamp = function () {
-	  var img = new Image();
-	  img.src = this.stampImg;
-	  this.ctx.drawImage(img, this.currX - 75, this.currY - 75);
+	DrawingCanvas.prototype.toData = function () {
+	  return this.drawingCanvas.toDataURL("image/png");
 	};
 
 	DrawingCanvas.prototype.setStamp = function (stampImg) {

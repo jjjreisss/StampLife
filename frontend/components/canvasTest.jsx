@@ -4,11 +4,14 @@ var DrawingCanvas = require('../util/drawingCanvas');
 var ColorPicker = require('../util/colorPicker');
 var SizePicker = require('../util/sizePicker');
 var StrokeSample = require('../util/strokeSample');
+var LinkedStateMixin = require('react-addons-linked-state-mixin');
 
 var CanvasTest = React.createClass({
+  mixins: [LinkedStateMixin],
+
   getInitialState: function() {
     return({
-      caption: "whatever dude",
+      caption: "caption",
       user_id: 1,
     });
   },
@@ -115,11 +118,14 @@ var CanvasTest = React.createClass({
              onMouseDown={this.toggleStamping}>
           Toggle Stamping
         </div>
+        <div id="drawing-form">
+          <input type="text" valueLink={this.linkState('caption')}/>
+        </div>
         <button onClick={this.saveHandler}>
           Save
         </button>
       </div>
-          )
+    );
   }
 });
 

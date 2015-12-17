@@ -22,6 +22,7 @@ DrawingCanvas.prototype.mouseDown = function (e, color, size) {
   this.color = color;
   this.size = size;
   this.drawing = true;
+  this.draw();
 };
 
 DrawingCanvas.prototype.mouseUp = function (e) {
@@ -48,8 +49,10 @@ DrawingCanvas.prototype.draw = function () {
   }
 };
 
-DrawingCanvas.prototype.toggleStamping = function () {
-  this.stamping = !this.stamping;
+DrawingCanvas.prototype.drawStamp = function () {
+  var img = new Image();
+  img.src = this.stampImg;
+  this.ctx.drawImage(img, this.currX-75, this.currY-75);
 };
 
 DrawingCanvas.prototype.drawStroke = function () {
@@ -62,14 +65,12 @@ DrawingCanvas.prototype.drawStroke = function () {
   this.ctx.closePath();
 };
 
-DrawingCanvas.prototype.toData = function () {
-  return this.drawingCanvas.toDataURL("image/png");
+DrawingCanvas.prototype.toggleStamping = function () {
+  this.stamping = !this.stamping;
 };
 
-DrawingCanvas.prototype.drawStamp = function () {
-    var img = new Image();
-    img.src = this.stampImg;
-    this.ctx.drawImage(img, this.currX-75, this.currY-75);
+DrawingCanvas.prototype.toData = function () {
+  return this.drawingCanvas.toDataURL("image/png");
 };
 
 DrawingCanvas.prototype.setStamp = function (stampImg) {
