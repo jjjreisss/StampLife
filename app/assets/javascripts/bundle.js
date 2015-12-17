@@ -31790,10 +31790,12 @@
 	    };
 	  },
 	  componentDidMount: function () {
-	    this.drawingCanvas = new DrawingCanvas('drawing-canvas');
+	    this.drawingCanvas = new DrawingCanvas('drawing-canvas', 500, 500);
 	    this.sizePicker = new SizePicker('size-picker');
 	    this.colorPicker = new ColorPicker('color-picker');
 	    this.strokeSample = new StrokeSample('stroke-sample');
+	    this.stampCanvas = new DrawingCanvas('stamp-canvas', 150, 150);
+	    this.stamping = false;
 	  },
 	  pickSize: function (e) {
 	    this.size = this.sizePicker.pickSize(e);
@@ -31804,15 +31806,40 @@
 	    this.strokeSample.pickSample(this.color, this.size);
 	  },
 	  mouseDownHandler: function (e) {
-	    this.drawingCanvas.mouseDown(e, this.color, this.size);
+	    if (e.target.id === "drawing-canvas") {
+	      if (this.stamping) {
+	        this.drawingCanvas.mouseDown(e, this.color, this.size);
+	        this.drawingCanvas.stamp(e, this.stampImg);
+	      } else {
+	        this.drawingCanvas.mouseDown(e, this.color, this.size);
+	      }
+	    } else if (e.target.id === "stamp-canvas") {
+	      this.stampCanvas.mouseDown(e, this.color, this.size);
+	    }
 	  },
 	  mouseUpHandler: function (e) {
-	    this.drawingCanvas.mouseUp(e);
+	    if (e.target.id === "drawing-canvas") {
+	      this.drawingCanvas.mouseUp(e, this.color, this.size);
+	    } else if (e.target.id === "stamp-canvas") {
+	      this.stampCanvas.mouseUp(e, this.color, this.size);
+	    }
 	  },
 	  mouseMoveHandler: function (e) {
-	    this.drawingCanvas.mouseMove(e);
+	    if (e.target.id === "drawing-canvas") {
+	      if (this.stamping) {
+	        this.drawingCanvas.stamp(e, this.stampImg);
+	      } else {
+	        this.drawingCanvas.mouseMove(e, this.color, this.size);
+	      }
+	    } else if (e.target.id === "stamp-canvas") {
+	      this.stampCanvas.mouseMove(e, this.color, this.size);
+	    }
 	  },
 	  mouseOutHandler: function (e) {},
+	  toggleStamping: function () {
+	    this.stamping = !this.stamping;
+	    this.stampImg = this.stampCanvas.toData();
+	  },
 
 	  saveHandler: function () {
 	    var img = this.drawingCanvas.toData();
@@ -31851,6 +31878,18 @@
 	        width: '80',
 	        height: '80'
 	      }),
+	      React.createElement('canvas', { id: 'stamp-canvas',
+	        width: '150',
+	        height: '150',
+	        onMouseDown: this.mouseDownHandler,
+	        onMouseUp: this.mouseUpHandler,
+	        onMouseMove: this.mouseMoveHandler }),
+	      React.createElement(
+	        'div',
+	        { id: 'toggle-stamping',
+	          onMouseDown: this.toggleStamping },
+	        'Toggle Stamping'
+	      ),
 	      React.createElement(
 	        'button',
 	        { onClick: this.saveHandler },
@@ -31917,10 +31956,12 @@
 
 	var ApiUtil = __webpack_require__(215);
 
-	var DrawingCanvas = function (id) {
+	var DrawingCanvas = function (id, length, width) {
+	  this.length = length;
+	  this.width = width;
 	  this.drawingCanvas = document.getElementById(id);
-	  this.drawingCanvas.width = 500;
-	  this.drawingCanvas.height = 500;
+	  this.drawingCanvas.width = length;
+	  this.drawingCanvas.height = width;
 	  this.ctx = this.drawingCanvas.getContext('2d');
 	  this.prevX = 0;
 	  this.prevY = 0;
@@ -31928,6 +31969,7 @@
 	  this.currY = 0;
 	  this.drawing = false;
 	  this.rgbString = "black";
+	  this.ctx.lineJoin = this.ctx.lineCap = 'round';
 	};
 
 	DrawingCanvas.prototype.mouseDown = function (e, color, size) {
@@ -31965,6 +32007,22 @@
 
 	DrawingCanvas.prototype.toData = function () {
 	  return this.drawingCanvas.toDataURL("image/png");
+	};
+
+	DrawingCanvas.prototype.toImgData = function () {
+	  return this.ctx.getImageData(0, 0, this.length, this.width);
+	};
+
+	DrawingCanvas.prototype.stamp = function (e, stampImg) {
+	  if (this.drawing) {
+	    this.currX = e.clientX - this.drawingCanvas.offsetLeft;
+	    this.currY = e.clientY - this.drawingCanvas.offsetTop;
+
+	    var img = new Image();
+	    img.src = stampImg;
+	    this.ctx.drawImage(img, this.currX - 75, this.currY - 75);
+	    // this.ctx.putImageData(stampImg, this.currX, this.currY);
+	  }
 	};
 
 	module.exports = DrawingCanvas;

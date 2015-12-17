@@ -42,27 +42,35 @@ body {
 }
 
 #drawing{
-  background: white;
   width: 580px;
-  height: 580px;
+  height: 800px;
+  margin: auto;
 }
 
 #drawing-canvas{
+  background: white;
   outline: 1px solid black;
 }
 
 #color-picker {
+  background: white;
   outline: 1px solid black;
 }
 
 #size-picker {
+  background: white;
   position: relative;
   top: -4px;
   outline: 1px solid black;
 }
 
 #stroke-sample {
+  background: white;
   position: relative;
   top: -4px;
   outline: 1px solid black;
+}
+
+#stamp-canvas {
+  background: white;
 }

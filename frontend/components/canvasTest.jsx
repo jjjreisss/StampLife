@@ -13,10 +13,12 @@ var CanvasTest = React.createClass({
     });
   },
   componentDidMount: function() {
-    this.drawingCanvas = new DrawingCanvas('drawing-canvas');
+    this.drawingCanvas = new DrawingCanvas('drawing-canvas', 500, 500);
     this.sizePicker = new SizePicker('size-picker');
     this.colorPicker = new ColorPicker('color-picker');
     this.strokeSample = new StrokeSample('stroke-sample');
+    this.stampCanvas = new DrawingCanvas('stamp-canvas', 150, 150);
+    this.stamping = false;
   },
   pickSize: function(e) {
     this.size = this.sizePicker.pickSize(e);
@@ -27,15 +29,40 @@ var CanvasTest = React.createClass({
     this.strokeSample.pickSample(this.color, this.size);
   },
   mouseDownHandler: function(e) {
-    this.drawingCanvas.mouseDown(e, this.color, this.size);
+    if (e.target.id === "drawing-canvas"){
+      if (this.stamping) {
+        this.drawingCanvas.mouseDown(e, this.color, this.size);
+        this.drawingCanvas.stamp(e, this.stampImg);
+      } else {
+        this.drawingCanvas.mouseDown(e, this.color, this.size);
+      }
+    } else if (e.target.id === "stamp-canvas"){
+      this.stampCanvas.mouseDown(e, this.color, this.size);
+    }
   },
   mouseUpHandler: function(e) {
-    this.drawingCanvas.mouseUp(e);
+    if (e.target.id === "drawing-canvas"){
+      this.drawingCanvas.mouseUp(e, this.color, this.size);
+    } else if (e.target.id === "stamp-canvas"){
+      this.stampCanvas.mouseUp(e, this.color, this.size);
+    }
   },
   mouseMoveHandler: function(e) {
-    this.drawingCanvas.mouseMove(e);
+    if (e.target.id === "drawing-canvas"){
+      if (this.stamping) {
+        this.drawingCanvas.stamp(e, this.stampImg);
+      } else {
+        this.drawingCanvas.mouseMove(e, this.color, this.size);
+      }
+    } else if (e.target.id === "stamp-canvas"){
+      this.stampCanvas.mouseMove(e, this.color, this.size);
+    }
   },
   mouseOutHandler: function(e) {
+  },
+  toggleStamping: function() {
+    this.stamping = !this.stamping;
+    this.stampImg = this.stampCanvas.toData();
   },
 
   saveHandler: function() {
@@ -82,6 +109,17 @@ var CanvasTest = React.createClass({
                 >
 
         </canvas>
+        <canvas id="stamp-canvas"
+                width="150"
+                height="150"
+                onMouseDown={this.mouseDownHandler}
+                onMouseUp={this.mouseUpHandler}
+                onMouseMove={this.mouseMoveHandler}>
+        </canvas>
+        <div id="toggle-stamping"
+             onMouseDown={this.toggleStamping}>
+          Toggle Stamping
+        </div>
         <button onClick={this.saveHandler}>
           Save
         </button>
