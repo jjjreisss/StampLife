@@ -18,7 +18,6 @@ var CanvasTest = React.createClass({
     this.colorPicker = new ColorPicker('color-picker');
     this.strokeSample = new StrokeSample('stroke-sample');
     this.stampCanvas = new DrawingCanvas('stamp-canvas', 150, 150);
-    this.stamping = false;
   },
   pickSize: function(e) {
     this.size = this.sizePicker.pickSize(e);
@@ -30,12 +29,7 @@ var CanvasTest = React.createClass({
   },
   mouseDownHandler: function(e) {
     if (e.target.id === "drawing-canvas"){
-      if (this.stamping) {
         this.drawingCanvas.mouseDown(e, this.color, this.size);
-        this.drawingCanvas.stamp(e, this.stampImg);
-      } else {
-        this.drawingCanvas.mouseDown(e, this.color, this.size);
-      }
     } else if (e.target.id === "stamp-canvas"){
       this.stampCanvas.mouseDown(e, this.color, this.size);
     }
@@ -45,15 +39,12 @@ var CanvasTest = React.createClass({
       this.drawingCanvas.mouseUp(e, this.color, this.size);
     } else if (e.target.id === "stamp-canvas"){
       this.stampCanvas.mouseUp(e, this.color, this.size);
+      this.setStamp();
     }
   },
   mouseMoveHandler: function(e) {
     if (e.target.id === "drawing-canvas"){
-      if (this.stamping) {
-        this.drawingCanvas.stamp(e, this.stampImg);
-      } else {
         this.drawingCanvas.mouseMove(e, this.color, this.size);
-      }
     } else if (e.target.id === "stamp-canvas"){
       this.stampCanvas.mouseMove(e, this.color, this.size);
     }
@@ -61,8 +52,12 @@ var CanvasTest = React.createClass({
   mouseOutHandler: function(e) {
   },
   toggleStamping: function() {
-    this.stamping = !this.stamping;
+    this.drawingCanvas.toggleStamping();
+    this.setStamp();
+  },
+  setStamp: function() {
     this.stampImg = this.stampCanvas.toData();
+    this.drawingCanvas.setStamp(this.stampImg);
   },
 
   saveHandler: function() {
