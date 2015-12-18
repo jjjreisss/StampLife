@@ -51,6 +51,17 @@ var ApiUtil = {
 
       }
     });
+  },
+
+  fetchUserDrawings: function(userId) {
+    $.ajax({
+      url: "api/drawings",
+      method: "GET",
+      data: {user_id: userId},
+      success: function(drawings){
+        ApiActions.receiveAllDrawings(drawings);
+      }
+    });
   }
 };
 

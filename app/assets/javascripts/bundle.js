@@ -48,20 +48,19 @@
 	var ReactDOM = __webpack_require__(158);
 	var Router = __webpack_require__(159).Router;
 	var Route = __webpack_require__(159).Route;
-	var Canvas = __webpack_require__(210);
 	var App = __webpack_require__(239);
-	var CreateDrawing = __webpack_require__(240);
-	var EditDrawing = __webpack_require__(241);
 	var DrawingIndex = __webpack_require__(242);
 	var CanvasTest = __webpack_require__(243);
 	var DrawingDetail = __webpack_require__(244);
+	var ProfilePage = __webpack_require__(250);
 
 	var routes = React.createElement(
 	  Route,
 	  { path: '/', component: App },
 	  React.createElement(Route, { path: '/new', component: CanvasTest }),
 	  React.createElement(Route, { path: '/index', component: DrawingIndex }),
-	  React.createElement(Route, { path: '/drawing/:drawingId', component: DrawingDetail })
+	  React.createElement(Route, { path: '/drawing/:drawingId', component: DrawingDetail }),
+	  React.createElement(Route, { path: 'users/:userId', component: ProfilePage })
 	);
 
 	document.addEventListener("DOMContentLoaded", function () {
@@ -24430,98 +24429,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 210 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var LinkedStateMixin = __webpack_require__(211);
-	var ApiUtil = __webpack_require__(215);
-	var DrawingStore = __webpack_require__(221);
-	var Square = __webpack_require__(238);
-
-	var Canvas = React.createClass({
-	  displayName: 'Canvas',
-
-	  mixins: [LinkedStateMixin],
-
-	  getInitialState: function () {
-	    return {
-	      content: [],
-	      caption: "whatever dude",
-	      userId: 1,
-	      drawing: false
-	    };
-	  },
-	  componentWillMount: function () {
-	    // this._buildCanvas();
-	  },
-	  componentDidMount: function () {
-	    DrawingStore.addListener(this.loadDrawing);
-	  },
-	  loadDrawing: function () {
-	    var drawing = DrawingStore.all();
-	    var contentString = drawing.content;
-	    var contentArray = contentString.split(",");
-	    this.setCanvas(contentArray);
-	    this.setState({
-	      content: contentArray
-	    });
-	  },
-	  setCanvas: function (contentArray) {
-	    this.squares = [];
-
-	    contentArray.forEach((function (background, idx) {
-	      this.squares.push(React.createElement(Square, { background: background,
-	        drawing: false,
-	        key: idx,
-	        'data-idx': idx }));
-	    }).bind(this));
-	  },
-	  mouseDownHandler: function (e) {
-	    this.setState({ drawing: true });
-	    for (var i = 0; i < this.squares.length; i++) {
-	      this.squares[i] = React.cloneElement(this.squares[i], { drawing: true });
-	    }
-	    console.log("down");
-	    console.log(this.squares[0]);
-	  },
-	  mouseUpHandler: function () {
-	    this.setState({ drawing: false });
-	    for (var i = 0; i < this.squares.length; i++) {
-	      this.squares[i] = React.cloneElement(this.squares[i], { drawing: false });
-	    }
-	    console.log("up");
-	    console.log(this.squares[0]);
-	  },
-	  saveHandler: function () {
-	    var content = String(this.state.content);
-	    var drawing = {
-	      content: content,
-	      caption: this.state.caption,
-	      user_id: this.state.userId
-	    };
-	    ApiUtil.createDrawing(drawing);
-	  },
-	  render: function () {
-
-	    return React.createElement(
-	      'div',
-	      { className: 'canvas',
-	        onMouseDown: this.mouseDownHandler,
-	        onMouseUp: this.mouseUpHandler },
-	      this.squares,
-	      React.createElement(
-	        'button',
-	        { onClick: this.saveHandler },
-	        'Save'
-	      )
-	    );
-	  }
-	});
-
-	module.exports = Canvas;
-
-/***/ },
+/* 210 */,
 /* 211 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -24805,6 +24713,17 @@
 	      method: "POST",
 	      data: { img: img },
 	      success: function (image_url) {}
+	    });
+	  },
+
+	  fetchUserDrawings: function (userId) {
+	    $.ajax({
+	      url: "api/drawings",
+	      method: "GET",
+	      data: { user_id: userId },
+	      success: function (drawings) {
+	        ApiActions.receiveAllDrawings(drawings);
+	      }
 	    });
 	  }
 	};
@@ -31586,40 +31505,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 238 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-
-	var Square = React.createClass({
-	  displayName: "Square",
-
-	  getInitialState: function () {
-	    return {
-	      background: this.props.background,
-	      drawing: true
-	    };
-	  },
-	  mouseOverHandler: function () {
-	    console.log("over");
-	    if (this.state.drawing) {
-	      this.setState({ background: "#000" });
-	    }
-	  },
-	  componentWillReceiveProps: function () {
-	    this.setState({ drawing: this.props.drawing });
-	  },
-
-	  render: function () {
-	    return React.createElement("div", { className: "square",
-	      style: { background: this.state.background },
-	      onMouseOver: this.mouseOverHandler });
-	  }
-	});
-
-	module.exports = Square;
-
-/***/ },
+/* 238 */,
 /* 239 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -31657,71 +31543,8 @@
 	module.exports = App;
 
 /***/ },
-/* 240 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var Canvas = __webpack_require__(210);
-	var ApiUtil = __webpack_require__(215);
-
-	var CreateDrawing = React.createClass({
-	  displayName: 'CreateDrawing',
-
-	  getInitialState: function () {
-	    return {
-	      content: [],
-	      caption: "whatever dude",
-	      userId: 1
-	    };
-	  },
-	  componentDidMount: function () {
-	    ApiUtil.fetchNewDrawing();
-	  },
-	  render: function () {
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(Canvas, null)
-	    );
-	  }
-	});
-
-	module.exports = CreateDrawing;
-
-/***/ },
-/* 241 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var Canvas = __webpack_require__(210);
-	var ApiUtil = __webpack_require__(215);
-
-	var EditDrawing = React.createClass({
-	  displayName: 'EditDrawing',
-
-	  getInitialState: function () {
-	    return {
-	      content: [],
-	      caption: "whatever dude",
-	      userId: 1
-	    };
-	  },
-	  componentDidMount: function () {
-	    ApiUtil.fetchDrawing(this.props.params.drawingId);
-	  },
-
-	  render: function () {
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(Canvas, null)
-	    );
-	  }
-	});
-
-	module.exports = EditDrawing;
-
-/***/ },
+/* 240 */,
+/* 241 */,
 /* 242 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -32111,6 +31934,59 @@
 	};
 
 	module.exports = StrokeSample;
+
+/***/ },
+/* 249 */,
+/* 250 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var DrawingStore = __webpack_require__(221);
+	var ApiUtil = __webpack_require__(215);
+
+	var ProfilePage = React.createClass({
+	  displayName: 'ProfilePage',
+
+	  getInitialState: function () {
+	    return {
+	      drawings: null
+	    };
+	  },
+	  componentDidMount: function () {
+	    this.token = DrawingStore.addListener(this._onChange);
+	    ApiUtil.fetchUserDrawings(this.props.params.userId);
+	  },
+	  componentWillUnmount: function () {
+	    this.token.remove();
+	  },
+	  _onChange: function () {
+	    this.setState({
+	      drawings: DrawingStore.all()
+	    });
+	  },
+
+	  render: function () {
+	    var drawingListItems = "";
+	    if (this.state.drawings) {
+	      drawingListItems = this.state.drawings.map(function (drawing, idx) {
+	        var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_150,h_150/" + drawing.image_url + ".png";
+	        return React.createElement(
+	          'div',
+	          { key: idx },
+	          React.createElement('img', { src: url })
+	        );
+	      });
+	    }
+
+	    return React.createElement(
+	      'div',
+	      null,
+	      drawingListItems
+	    );
+	  }
+	});
+
+	module.exports = ProfilePage;
 
 /***/ }
 /******/ ]);

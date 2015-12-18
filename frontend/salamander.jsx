@@ -2,13 +2,11 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var Router = require('react-router').Router;
 var Route = require('react-router').Route;
-var Canvas = require('./components/canvas');
 var App = require('./components/app');
-var CreateDrawing = require('./components/createDrawing');
-var EditDrawing = require('./components/editDrawing');
 var DrawingIndex = require('./components/drawingIndex');
 var CanvasTest = require('./components/canvasTest');
 var DrawingDetail = require('./components/drawingDetail');
+var ProfilePage = require('./components/profilePage');
 
 
 var routes = (
@@ -16,6 +14,7 @@ var routes = (
     <Route path="/new" component={CanvasTest}/>
     <Route path="/index" component={DrawingIndex}/>
     <Route path="/drawing/:drawingId" component={DrawingDetail}/>
+    <Route path="users/:userId" component={ProfilePage}/>
   </Route>
 );
 

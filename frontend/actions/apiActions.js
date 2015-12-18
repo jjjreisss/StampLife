@@ -12,8 +12,8 @@ var ApiActions = {
     Dispatcher.dispatch({
       actionType: "DRAWINGS_RECEIVED",
       drawings: drawings
-    })
+    });
   }
-}
+};
 
 module.exports = ApiActions;

@@ -1,7 +1,11 @@
 class Api::DrawingsController < ApplicationController
 
   def index
-    @drawings = Drawing.all
+    if params[:user_id]
+      @drawings = Drawing.all.where(user_id: params[:user_id])
+    else
+      @drawings = Drawing.all
+    end
 
     render json: @drawings
   end
@@ -18,8 +22,6 @@ class Api::DrawingsController < ApplicationController
   end
 
   def create
-    puts('XXXXXXXXXXX')
-    puts(drawing_params)
     @drawing = Drawing.new(drawing_params)
 
     @drawing.save!
