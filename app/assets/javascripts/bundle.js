@@ -58,9 +58,10 @@
 	  Route,
 	  { path: '/', component: App },
 	  React.createElement(Route, { path: '/new', component: CanvasTest }),
-	  React.createElement(Route, { path: '/index', component: DrawingIndex }),
+	  React.createElement(Route, { path: '/drawings', component: DrawingIndex }),
 	  React.createElement(Route, { path: '/drawings/:drawingId', component: DrawingDetail }),
-	  React.createElement(Route, { path: '/users/:username', component: ProfilePage })
+	  React.createElement(Route, { path: '/users/:username', component: ProfilePage }),
+	  React.createElement(Route, { path: '/stamps', component: StampIndex })
 	);
 
 	document.addEventListener("DOMContentLoaded", function () {
@@ -24437,11 +24438,14 @@
 	var App = React.createClass({
 	  displayName: 'App',
 
-	  goToIndex: function () {
-	    this.props.history.push('index');
+	  goToDrawingsIndex: function () {
+	    this.props.history.push('drawings');
 	  },
 	  goToNew: function () {
 	    this.props.history.push('new');
+	  },
+	  goToStampsIndex: function () {
+	    this.props.history.push('stamps');
 	  },
 
 	  render: function () {
@@ -24450,13 +24454,18 @@
 	      null,
 	      React.createElement(
 	        'div',
-	        { onClick: this.goToIndex },
+	        { onClick: this.goToDrawingsIndex },
 	        'All Drawings'
 	      ),
 	      React.createElement(
 	        'div',
 	        { onClick: this.goToNew },
 	        'New Drawing'
+	      ),
+	      React.createElement(
+	        'div',
+	        { onClick: this.goToStampsIndex },
+	        'All Stamps'
 	      ),
 	      this.props.children
 	    );
@@ -31303,6 +31312,17 @@
 	    });
 	  },
 
+	  createStamp: function (img) {
+	    $.ajax({
+	      url: "api/stamps",
+	      method: "POST",
+	      data: { stamp: stamp },
+	      success: function (stamp) {
+	        ApiActions.receiveSingleStamp(stamp);
+	      }
+	    });
+	  },
+
 	  fetchDrawing: function (id) {
 	    $.ajax({
 	      url: "api/drawings/" + id,
@@ -31352,6 +31372,7 @@
 	      }
 	    });
 	  }
+
 	};
 
 	module.exports = ApiUtil;
@@ -31374,6 +31395,13 @@
 	    Dispatcher.dispatch({
 	      actionType: "DRAWINGS_RECEIVED",
 	      drawings: drawings
+	    });
+	  },
+
+	  receiveSingleStamp: function (stamp) {
+	    Dispatcher.dispatch({
+	      actionType: "STAMP_RECEIVED",
+	      stamp: stamp
 	    });
 	  }
 	};
@@ -31428,6 +31456,7 @@
 
 	  mixins: [LinkedStateMixin],
 
+	  // Methods that set state
 	  getInitialState: function () {
 	    return {
 	      caption: "caption",
@@ -31445,19 +31474,6 @@
 	    this.colorPicking = false;
 	    this.sizePicking = false;
 	  },
-
-	  addRecentColor: function () {
-	    recentColors = this.state.recentColors.slice(1, 10);
-	    recentColors.push(this.color);
-	    this.setState({ recentColors: recentColors });
-	  },
-	  clearDrawingCanvas: function () {
-	    this.drawingCanvas.clear();
-	  },
-	  clearStamp: function () {
-	    this.stampCanvas.clear();
-	    this.setStamp();
-	  },
 	  colorBar: function () {
 	    return this.state.recentColors.map((function (color, idx) {
 	      return React.createElement('div', {
@@ -31467,35 +31483,50 @@
 	        onClick: this.pickRecentColor });
 	    }).bind(this));
 	  },
-	  mouseDownHandler: function (e) {
-	    if (e.target.id === "drawing-canvas") {
-	      this.drawingCanvas.mouseDown(e, this.color, this.size);
-	    } else if (e.target.id === "stamp-canvas") {
-	      this.stampCanvas.mouseDown(e, this.color, this.size);
-	    }
+	  saveDrawing: function () {
+	    var img = this.drawingCanvas.toData();
+	    $.ajax({
+	      url: "api/images",
+	      method: "POST",
+	      data: { img: img },
+	      success: (function (imageReceived) {
+	        ApiUtil.createDrawing({
+	          caption: this.state.caption,
+	          image_url: imageReceived.public_id
+	        });
+	        this.props.history.push('index');
+	      }).bind(this)
+	    });
 	  },
-	  mouseUpHandler: function (e) {
-	    if (e.target.id === "drawing-canvas") {
-	      this.drawingCanvas.mouseUp(e, this.color, this.size);
-	    } else if (e.target.id === "stamp-canvas") {
-	      this.stampCanvas.mouseUp(e, this.color, this.size);
-	      this.setStamp();
-	    }
+	  saveStamp: function () {
+	    img = this.stampCanvas.toData();
+	    $.ajax({
+	      url: "api/images",
+	      method: "POST",
+	      data: { img: img },
+	      success: function (imageReceived) {
+	        ApiUtil.createStamp({
+	          name: "default name",
+	          image_url: imageReceived.public_id
+	        });
+	      }
+	    });
 	  },
-	  mouseMoveHandler: function (e) {
-	    if (e.target.id === "drawing-canvas") {
-	      this.drawingCanvas.mouseMove(e, this.color, this.size);
-	    } else if (e.target.id === "stamp-canvas") {
-	      this.stampCanvas.mouseMove(e, this.color, this.size);
-	    }
+	  setStamp: function () {
+	    this.stampImg = this.stampCanvas.toData();
+	    this.drawingCanvas.setStamp(this.stampImg);
 	  },
-	  onSizePicking: function (e) {
-	    this.sizePicking = true;
-	    this.pickSize(e);
+	  stampingText: function () {
+	    text = this.state.stamping ? "Turn Stamping Off" : "Turn Stamping On";
+	    return text;
 	  },
-	  offSizePicking: function () {
-	    this.sizePicking = false;
+	  toggleStamping: function () {
+	    this.drawingCanvas.toggleStamping();
+	    this.setState({ stamping: !this.state.stamping });
+	    this.setStamp();
 	  },
+
+	  // Methods for changing Color
 	  downColorPicker: function (e) {
 	    this.colorPicking = true;
 	    color = this.colorPicker.pickColor(e);
@@ -31528,55 +31559,57 @@
 	  pickRecentColor: function (e) {
 	    this.color = e.target.style.background;
 	  },
+	  addRecentColor: function () {
+	    recentColors = this.state.recentColors.slice(1, 10);
+	    recentColors.push(this.color);
+	    this.setState({ recentColors: recentColors });
+	  },
+
+	  // Methods for picking size
+	  onSizePicking: function (e) {
+	    this.sizePicking = true;
+	    this.pickSize(e);
+	  },
+	  offSizePicking: function () {
+	    this.sizePicking = false;
+	  },
 	  pickSize: function (e) {
 	    if (this.sizePicking) {
 	      this.size = this.sizePicker.pickSize(e);
 	      this.strokeSample.pickSample(this.color, this.size);
 	    }
 	  },
-	  saveDrawing: function () {
-	    var img = this.drawingCanvas.toData();
-	    $.ajax({
-	      url: "api/images",
-	      method: "POST",
-	      data: { img: img },
-	      success: (function (imageReceived) {
-	        ApiUtil.createDrawing({
-	          caption: this.state.caption,
-	          image_url: imageReceived.public_id
-	        });
-	        this.props.history.push('index');
-	      }).bind(this)
-	    });
+
+	  // Methods for drawing
+	  clearDrawingCanvas: function () {
+	    this.drawingCanvas.clear();
 	  },
-	  setStamp: function () {
-	    this.stampImg = this.stampCanvas.toData();
-	    this.drawingCanvas.setStamp(this.stampImg);
-	  },
-	  stampingText: function () {
-	    text = this.state.stamping ? "Turn Stamping Off" : "Turn Stamping On";
-	    return text;
-	  },
-	  toggleStamping: function () {
-	    this.drawingCanvas.toggleStamping();
-	    this.setState({ stamping: !this.state.stamping });
+	  clearStamp: function () {
+	    this.stampCanvas.clear();
 	    this.setStamp();
 	  },
-
-	  // saveStamp: function() {
-	  //   img = this.stampCanvas.toData();
-	  //   $.ajax({
-	  //     url: "api/images",
-	  //     method: "POST",
-	  //     data: {img: img},
-	  //     success: function(imageReceived) {
-	  //       ApiUtil.createStamp({
-	  //         name: "default name",
-	  //         user_
-	  //       })
-	  //     }
-	  //   })
-	  // }
+	  mouseDownHandler: function (e) {
+	    if (e.target.id === "drawing-canvas") {
+	      this.drawingCanvas.mouseDown(e, this.color, this.size);
+	    } else if (e.target.id === "stamp-canvas") {
+	      this.stampCanvas.mouseDown(e, this.color, this.size);
+	    }
+	  },
+	  mouseUpHandler: function (e) {
+	    if (e.target.id === "drawing-canvas") {
+	      this.drawingCanvas.mouseUp(e, this.color, this.size);
+	    } else if (e.target.id === "stamp-canvas") {
+	      this.stampCanvas.mouseUp(e, this.color, this.size);
+	      this.setStamp();
+	    }
+	  },
+	  mouseMoveHandler: function (e) {
+	    if (e.target.id === "drawing-canvas") {
+	      this.drawingCanvas.mouseMove(e, this.color, this.size);
+	    } else if (e.target.id === "stamp-canvas") {
+	      this.stampCanvas.mouseMove(e, this.color, this.size);
+	    }
+	  },
 
 	  render: function () {
 	    return React.createElement(

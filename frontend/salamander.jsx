@@ -12,9 +12,10 @@ var ProfilePage = require('./components/profilePage');
 var routes = (
   <Route path="/" component={App}>
     <Route path="/new" component={CanvasTest}/>
-    <Route path="/index" component={DrawingIndex}/>
+    <Route path="/drawings" component={DrawingIndex}/>
     <Route path="/drawings/:drawingId" component={DrawingDetail}/>
     <Route path="/users/:username" component={ProfilePage}/>
+    <Route path="/stamps" component={StampIndex}/>
   </Route>
 );
 

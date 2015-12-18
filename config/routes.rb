@@ -6,5 +6,6 @@ Rails.application.routes.draw do
   namespace :api, defaults: {format: :json} do
     resources :drawings, only: [:index, :new, :create, :destroy, :edit, :show]
     resources :images
+    resources :stamps, only: [:index, :new, :create, :destroy, :show]
   end
 end

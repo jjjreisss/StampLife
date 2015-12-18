@@ -12,6 +12,17 @@ var ApiUtil = {
     });
   },
 
+  createStamp: function(img) {
+    $.ajax({
+      url: "api/stamps",
+      method: "POST",
+      data: {stamp: stamp},
+      success: function(stamp) {
+        ApiActions.receiveSingleStamp(stamp);
+      }
+    })
+  },
+
   fetchDrawing: function(id) {
     $.ajax({
       url: "api/drawings/" + id,
@@ -62,7 +73,8 @@ var ApiUtil = {
         ApiActions.receiveAllDrawings(drawings);
       }
     });
-  }
+  },
+
 };
 
 module.exports = ApiUtil;
