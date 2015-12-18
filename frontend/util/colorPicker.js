@@ -2,7 +2,7 @@ var ColorPicker = function(id) {
   this.colorPickerCanvas = document.getElementById(id);
   this.colorPickerContext = this.colorPickerCanvas.getContext('2d');
   var pickerImg = new Image();
-  pickerImg.src = '../assets/color-picker-80-500.png';
+  pickerImg.src = './color-picker-80-500.png';
   pickerImg.onload = function() {
     this.colorPickerContext.drawImage(pickerImg, 0, 0);
   }.bind(this);
