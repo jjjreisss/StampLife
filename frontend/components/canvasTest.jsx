@@ -75,14 +75,6 @@ var CanvasTest = React.createClass({
       this.stampCanvas.mouseMove(e, this.color, this.size);
     }
   },
-  onColorPicking: function(e) {
-    this.colorPicking = true;
-    this.pickColor(e);
-  },
-  offColorPicking: function() {
-    this.colorPicking = false;
-    this.addRecentColor();
-  },
   onSizePicking: function(e) {
     this.sizePicking = true;
     this.pickSize(e);
@@ -90,10 +82,33 @@ var CanvasTest = React.createClass({
   offSizePicking: function() {
     this.sizePicking = false;
   },
+  downColorPicker: function(e) {
+    this.colorPicking = true;
+    color = this.colorPicker.pickColor(e);
+    this.strokeSample.pickSample(color, this.size);
+  },
+  upColorPicker: function(e) {
+    if (this.colorPicking) {
+      this.pickColor();
+    }
+    this.colorPicking = false;
+  },
+  moveColorPicker: function(e) {
+    if(this.colorPicking) {
+      color = this.colorPicker.pickColor(e);
+      this.strokeSample.pickSample(color, this.size);
+    }
+  },
+  outColorPicker: function(e) {
+    if (this.colorPicking) {
+      this.pickColor();
+    }
+    this.colorPicking = false;
+  },
   pickColor: function(e) {
     if (this.colorPicking) {
-      this.color = this.colorPicker.pickColor(e);
-      this.strokeSample.pickSample(this.color, this.size);
+      this.color = this.colorPicker.color();
+      this.addRecentColor();
     }
   },
   pickRecentColor: function(e) {
@@ -167,10 +182,10 @@ var CanvasTest = React.createClass({
           id="color-picker"
           width="80"
           height="500"
-          onMouseDown={this.onColorPicking}
-          onMouseUp={this.offColorPicking}
-          onMouseMove={this.pickColor}
-          onMouseOut={this.offColorPicking}>
+          onMouseDown={this.downColorPicker}
+          onMouseUp={this.upColorPicker}
+          onMouseMove={this.moveColorPicker}
+          onMouseOut={this.outColorPicker}>
 
         </canvas>
         <canvas

@@ -17,5 +17,9 @@ ColorPicker.prototype.pickColor = function (e) {
   return this.rgbString;
 };
 
+ColorPicker.prototype.color = function () {
+  return this.rgbString;
+};
+
 
 module.exports = ColorPicker;
