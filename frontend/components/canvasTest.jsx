@@ -12,7 +12,6 @@ var CanvasTest = React.createClass({
   getInitialState: function() {
     return({
       caption: "caption",
-      user_id: 1,
     });
   },
   componentDidMount: function() {
@@ -62,6 +61,13 @@ var CanvasTest = React.createClass({
     this.stampImg = this.stampCanvas.toData();
     this.drawingCanvas.setStamp(this.stampImg);
   },
+  clearDrawingCanvas: function() {
+    this.drawingCanvas.clear();
+  },
+  clearStamp: function() {
+    this.stampCanvas.clear();
+    this.setStamp();
+  },
 
   saveHandler: function() {
     var img = this.drawingCanvas.toData();
@@ -92,7 +98,8 @@ var CanvasTest = React.createClass({
         <canvas id="color-picker"
                 width="80"
                 height="500"
-                onClick={this.pickColor}>
+                onClick={this.pickColor}
+                >
 
         </canvas>
         <canvas id="size-picker"
@@ -121,6 +128,16 @@ var CanvasTest = React.createClass({
         <div id="drawing-form">
           <input type="text" valueLink={this.linkState('caption')}/>
         </div>
+        <button
+          className="clear-drawing-canvas"
+          onClick={this.clearDrawingCanvas}>
+          Clear Canvas
+        </button>
+        <button
+          className="clear-button"
+          onClick={this.clearStamp}>
+          Clear Stamp
+        </button>
         <button onClick={this.saveHandler}>
           Save
         </button>

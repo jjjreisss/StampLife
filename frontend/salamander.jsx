@@ -13,8 +13,8 @@ var routes = (
   <Route path="/" component={App}>
     <Route path="/new" component={CanvasTest}/>
     <Route path="/index" component={DrawingIndex}/>
-    <Route path="/drawing/:drawingId" component={DrawingDetail}/>
-    <Route path="users/:userId" component={ProfilePage}/>
+    <Route path="/drawings/:drawingId" component={DrawingDetail}/>
+    <Route path="/users/:username" component={ProfilePage}/>
   </Route>
 );
 

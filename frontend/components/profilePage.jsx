@@ -1,6 +1,7 @@
 var React = require('react');
 var DrawingStore = require('../stores/drawingStore');
 var ApiUtil = require('../util/apiUtil');
+var DrawingListItem = require('./drawingListItem');
 
 var ProfilePage = React.createClass({
   getInitialState: function() {
@@ -10,7 +11,7 @@ var ProfilePage = React.createClass({
   },
   componentDidMount: function() {
     this.token = DrawingStore.addListener(this._onChange);
-    ApiUtil.fetchUserDrawings(this.props.params.userId);
+    ApiUtil.fetchUserDrawings(this.props.params.username);
   },
   componentWillUnmount: function() {
     this.token.remove();
@@ -22,21 +23,20 @@ var ProfilePage = React.createClass({
   },
 
   render: function() {
-    var drawingListItems = "";
-    if(this.state.drawings) {
-      drawingListItems = this.state.drawings.map(function(drawing, idx){
-        var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_150,h_150/" + drawing.image_url + ".png";
+    var drawingsList = "";
+    if (this.state.drawings) {
+      drawingsList = this.state.drawings.map(function(drawing, idx){
         return (
-          <div key={idx}>
-            <img src={url} />
-          </div>
+          <DrawingListItem
+            key={idx}
+            drawingId={drawing.id}
+            imageUrl={drawing.image_url}/>
         );
       });
     }
-
-    return (
-      <div>
-        {drawingListItems}
+    return(
+      <div className="drawings-index">
+        {drawingsList}
       </div>
     );
   }

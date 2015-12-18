@@ -1,6 +1,7 @@
 var React = require('react');
 var DrawingStore = require('../stores/drawingStore');
 var ApiUtil = require('../util/apiUtil');
+var DrawingListItem = require('./drawingListItem');
 
 var DrawingIndex = React.createClass({
   getInitialState: function() {
@@ -18,32 +19,26 @@ var DrawingIndex = React.createClass({
   _onChange: function() {
     this.setState({drawings: DrawingStore.all()});
   },
-  goToShow: function(e) {
-    var id = e.target.attributes["data-idx"].value;
-    this.props.history.push('drawing/' + id);
-  },
+
   render: function() {
+    var drawingsList = "";
+    if (this.state.drawings) {
+      drawingsList = this.state.drawings.map(function(drawing, idx){
+        return (
+          <DrawingListItem
+            key={idx}
+            drawingId={drawing.id}
+            imageUrl={drawing.image_url}/>
+        );
+      });
+    }
     return(
       <div className="drawings-index">
-        {this.state.drawings.map(
-          function(drawing, idx){
-            var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_150,h_150/" + drawing.image_url + ".png";
-            return (
-              <div key={drawing.id}
-                   className="drawing-index-element">
-                <img src={url}
-                  data-idx={drawing.id}
-                  onClick={this.goToShow}/>
-              </div>
-            );
-          }.bind(this))
-        }
+        {drawingsList}
       </div>
     );
-
   }
 
 });
 
 module.exports = DrawingIndex;
-"http://res.cloudinary.com/ddhru3qpb/image/upload/v1450330681/a1tgeenaicrcsmlfemdr.png"

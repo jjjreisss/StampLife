@@ -1,8 +1,8 @@
 class Api::DrawingsController < ApplicationController
 
   def index
-    if params[:user_id]
-      @drawings = Drawing.all.where(user_id: params[:user_id])
+    if params[:username]
+      @drawings = User.where(username: params[:username]).first.drawings
     else
       @drawings = Drawing.all
     end
@@ -10,19 +10,9 @@ class Api::DrawingsController < ApplicationController
     render json: @drawings
   end
 
-  def new
-    content = Array.new(25600){"#eee"}.join(",");
-
-    @drawing = Drawing.new(
-      content: content,
-      user_id: current_user.id
-    )
-
-    render json: @drawing
-  end
-
   def create
     @drawing = Drawing.new(drawing_params)
+    @drawing.user_id = current_user.id
 
     @drawing.save!
 
@@ -35,6 +25,6 @@ class Api::DrawingsController < ApplicationController
 
   private
   def drawing_params
-    params.require(:drawing).permit(:content, :caption, :user_id, :image_url);
+    params.require(:drawing).permit(:content, :caption, :image_url);
   end
 end

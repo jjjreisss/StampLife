@@ -77,4 +77,9 @@ DrawingCanvas.prototype.setStamp = function (stampImg) {
   this.stampImg = stampImg;
 };
 
+DrawingCanvas.prototype.clear = function () {
+  this.ctx.clearRect(0, 0, this.width, this.length);
+};
+
+
 module.exports = DrawingCanvas;

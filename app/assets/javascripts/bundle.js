@@ -59,8 +59,8 @@
 	  { path: '/', component: App },
 	  React.createElement(Route, { path: '/new', component: CanvasTest }),
 	  React.createElement(Route, { path: '/index', component: DrawingIndex }),
-	  React.createElement(Route, { path: '/drawing/:drawingId', component: DrawingDetail }),
-	  React.createElement(Route, { path: 'users/:userId', component: ProfilePage })
+	  React.createElement(Route, { path: '/drawings/:drawingId', component: DrawingDetail }),
+	  React.createElement(Route, { path: '/users/:username', component: ProfilePage })
 	);
 
 	document.addEventListener("DOMContentLoaded", function () {
@@ -24716,11 +24716,11 @@
 	    });
 	  },
 
-	  fetchUserDrawings: function (userId) {
+	  fetchUserDrawings: function (username) {
 	    $.ajax({
 	      url: "api/drawings",
 	      method: "GET",
-	      data: { user_id: userId },
+	      data: { username: username },
 	      success: function (drawings) {
 	        ApiActions.receiveAllDrawings(drawings);
 	      }
@@ -31551,6 +31551,7 @@
 	var React = __webpack_require__(1);
 	var DrawingStore = __webpack_require__(221);
 	var ApiUtil = __webpack_require__(215);
+	var DrawingListItem = __webpack_require__(251);
 
 	var DrawingIndex = React.createClass({
 	  displayName: 'DrawingIndex',
@@ -31570,32 +31571,27 @@
 	  _onChange: function () {
 	    this.setState({ drawings: DrawingStore.all() });
 	  },
-	  goToShow: function (e) {
-	    var id = e.target.attributes["data-idx"].value;
-	    this.props.history.push('drawing/' + id);
-	  },
+
 	  render: function () {
+	    var drawingsList = "";
+	    if (this.state.drawings) {
+	      drawingsList = this.state.drawings.map(function (drawing, idx) {
+	        return React.createElement(DrawingListItem, {
+	          key: idx,
+	          drawingId: drawing.id,
+	          imageUrl: drawing.image_url });
+	      });
+	    }
 	    return React.createElement(
 	      'div',
 	      { className: 'drawings-index' },
-	      this.state.drawings.map((function (drawing, idx) {
-	        var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_150,h_150/" + drawing.image_url + ".png";
-	        return React.createElement(
-	          'div',
-	          { key: drawing.id,
-	            className: 'drawing-index-element' },
-	          React.createElement('img', { src: url,
-	            'data-idx': drawing.id,
-	            onClick: this.goToShow })
-	        );
-	      }).bind(this))
+	      drawingsList
 	    );
 	  }
 
 	});
 
 	module.exports = DrawingIndex;
-	"http://res.cloudinary.com/ddhru3qpb/image/upload/v1450330681/a1tgeenaicrcsmlfemdr.png";
 
 /***/ },
 /* 243 */
@@ -31616,8 +31612,7 @@
 
 	  getInitialState: function () {
 	    return {
-	      caption: "caption",
-	      user_id: 1
+	      caption: "caption"
 	    };
 	  },
 	  componentDidMount: function () {
@@ -31666,6 +31661,13 @@
 	    this.stampImg = this.stampCanvas.toData();
 	    this.drawingCanvas.setStamp(this.stampImg);
 	  },
+	  clearDrawingCanvas: function () {
+	    this.drawingCanvas.clear();
+	  },
+	  clearStamp: function () {
+	    this.stampCanvas.clear();
+	    this.setStamp();
+	  },
 
 	  saveHandler: function () {
 	    var img = this.drawingCanvas.toData();
@@ -31695,7 +31697,8 @@
 	      React.createElement('canvas', { id: 'color-picker',
 	        width: '80',
 	        height: '500',
-	        onClick: this.pickColor }),
+	        onClick: this.pickColor
+	      }),
 	      React.createElement('canvas', { id: 'size-picker',
 	        width: '500',
 	        height: '80',
@@ -31720,6 +31723,20 @@
 	        'div',
 	        { id: 'drawing-form' },
 	        React.createElement('input', { type: 'text', valueLink: this.linkState('caption') })
+	      ),
+	      React.createElement(
+	        'button',
+	        {
+	          className: 'clear-drawing-canvas',
+	          onClick: this.clearDrawingCanvas },
+	        'Clear Canvas'
+	      ),
+	      React.createElement(
+	        'button',
+	        {
+	          className: 'clear-button',
+	          onClick: this.clearStamp },
+	        'Clear Stamp'
 	      ),
 	      React.createElement(
 	        'button',
@@ -31864,6 +31881,10 @@
 	  this.stampImg = stampImg;
 	};
 
+	DrawingCanvas.prototype.clear = function () {
+	  this.ctx.clearRect(0, 0, this.width, this.length);
+	};
+
 	module.exports = DrawingCanvas;
 
 /***/ },
@@ -31943,6 +31964,7 @@
 	var React = __webpack_require__(1);
 	var DrawingStore = __webpack_require__(221);
 	var ApiUtil = __webpack_require__(215);
+	var DrawingListItem = __webpack_require__(251);
 
 	var ProfilePage = React.createClass({
 	  displayName: 'ProfilePage',
@@ -31954,7 +31976,7 @@
 	  },
 	  componentDidMount: function () {
 	    this.token = DrawingStore.addListener(this._onChange);
-	    ApiUtil.fetchUserDrawings(this.props.params.userId);
+	    ApiUtil.fetchUserDrawings(this.props.params.username);
 	  },
 	  componentWillUnmount: function () {
 	    this.token.remove();
@@ -31966,27 +31988,55 @@
 	  },
 
 	  render: function () {
-	    var drawingListItems = "";
+	    var drawingsList = "";
 	    if (this.state.drawings) {
-	      drawingListItems = this.state.drawings.map(function (drawing, idx) {
-	        var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_150,h_150/" + drawing.image_url + ".png";
-	        return React.createElement(
-	          'div',
-	          { key: idx },
-	          React.createElement('img', { src: url })
-	        );
+	      drawingsList = this.state.drawings.map(function (drawing, idx) {
+	        return React.createElement(DrawingListItem, {
+	          key: idx,
+	          drawingId: drawing.id,
+	          imageUrl: drawing.image_url });
 	      });
 	    }
-
 	    return React.createElement(
 	      'div',
-	      null,
-	      drawingListItems
+	      { className: 'drawings-index' },
+	      drawingsList
 	    );
 	  }
 	});
 
 	module.exports = ProfilePage;
+
+/***/ },
+/* 251 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var History = __webpack_require__(159).History;
+
+	var DrawingListItem = React.createClass({
+	  displayName: 'DrawingListItem',
+
+	  mixins: [History],
+
+	  getInitialState: function () {
+	    return {};
+	  },
+	  goToShow: function () {
+	    this.history.push('drawings/' + this.props.drawingId);
+	  },
+	  render: function () {
+	    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_150,h_150/" + this.props.imageUrl + ".png";
+	    return React.createElement(
+	      'div',
+	      { className: 'drawing-index-element' },
+	      React.createElement('img', { src: url,
+	        onClick: this.goToShow })
+	    );
+	  }
+	});
+
+	module.exports = DrawingListItem;
 
 /***/ }
 /******/ ]);

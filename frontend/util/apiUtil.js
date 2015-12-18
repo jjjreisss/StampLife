@@ -53,11 +53,11 @@ var ApiUtil = {
     });
   },
 
-  fetchUserDrawings: function(userId) {
+  fetchUserDrawings: function(username) {
     $.ajax({
       url: "api/drawings",
       method: "GET",
-      data: {user_id: userId},
+      data: {username: username},
       success: function(drawings){
         ApiActions.receiveAllDrawings(drawings);
       }
