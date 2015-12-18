@@ -73,3 +73,18 @@ body {
 #stamp-canvas {
   background: white;
 }
+
+.color-square {
+  background: white;
+  width: 58px;
+  height: 58px;
+  outline: 1px solid black;
+  float: left
+}
+
+#color-bar {
+  position: relative;
+  top: -7px;
+  width: 580px;
+  height: 58px;
+}

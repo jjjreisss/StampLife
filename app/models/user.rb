@@ -13,6 +13,11 @@ class User < ActiveRecord::Base
 
   has_many :drawings
 
+  has_many :stamp_uses
+
+  has_many :stamps,
+    through: :stamp_uses
+
   after_initialize :ensure_session_token
 
   def self.find_by_credentials(username, password)
