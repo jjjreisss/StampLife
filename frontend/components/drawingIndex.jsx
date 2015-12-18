@@ -33,7 +33,7 @@ var DrawingIndex = React.createClass({
       });
     }
     return(
-      <div className="drawings-index">
+      <div className="index">
         {drawingsList}
       </div>
     );
@@ -44,7 +44,7 @@ var DrawingIndex = React.createClass({
 module.exports = DrawingIndex;
 
 
-// function draw() {	
+// function draw() {
 //     	// Erasing line
 //     	var canvas = document.getElementById("eraseLine");
 //     	if (canvas.getContext) {

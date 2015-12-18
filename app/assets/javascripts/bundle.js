@@ -54,6 +54,7 @@
 	var DrawingDetail = __webpack_require__(245);
 	var ProfilePage = __webpack_require__(246);
 	var StampIndex = __webpack_require__(247);
+	var StampDetail = __webpack_require__(249);
 
 	var routes = React.createElement(
 	  Route,
@@ -62,7 +63,8 @@
 	  React.createElement(Route, { path: '/drawings', component: DrawingIndex }),
 	  React.createElement(Route, { path: '/drawings/:drawingId', component: DrawingDetail }),
 	  React.createElement(Route, { path: '/users/:username', component: ProfilePage }),
-	  React.createElement(Route, { path: '/stamps', component: StampIndex })
+	  React.createElement(Route, { path: '/stamps', component: StampIndex }),
+	  React.createElement(Route, { path: 'stamps/:stampId', component: StampDetail })
 	);
 
 	document.addEventListener("DOMContentLoaded", function () {
@@ -24515,7 +24517,7 @@
 	    }
 	    return React.createElement(
 	      'div',
-	      { className: 'drawings-index' },
+	      { className: 'index' },
 	      drawingsList
 	    );
 	  }
@@ -24524,7 +24526,7 @@
 
 	module.exports = DrawingIndex;
 
-	// function draw() {	
+	// function draw() {
 	//     	// Erasing line
 	//     	var canvas = document.getElementById("eraseLine");
 	//     	if (canvas.getContext) {
@@ -31313,7 +31315,7 @@
 	    });
 	  },
 
-	  createStamp: function (img) {
+	  createStamp: function (stamp) {
 	    $.ajax({
 	      url: "api/stamps",
 	      method: "POST",
@@ -31334,12 +31336,12 @@
 	    });
 	  },
 
-	  fetchNewDrawing: function () {
+	  fetchStamp: function (id) {
 	    $.ajax({
-	      url: "api/drawings/new",
+	      url: "api/stamps/" + id,
 	      method: "GET",
-	      success: function (drawing) {
-	        ApiActions.receiveSingleDrawing(drawing);
+	      success: function (stamp) {
+	        ApiActions.receiveSingleStamp(stamp);
 	      }
 	    });
 	  },
@@ -31350,6 +31352,16 @@
 	      method: "GET",
 	      success: function (drawings) {
 	        ApiActions.receiveAllDrawings(drawings);
+	      }
+	    });
+	  },
+
+	  fetchAllStamps: function () {
+	    $.ajax({
+	      url: "api/stamps",
+	      method: "GET",
+	      success: function (stamps) {
+	        ApiActions.receiveAllStamps(stamps);
 	      }
 	    });
 	  },
@@ -31404,6 +31416,13 @@
 	      actionType: "STAMP_RECEIVED",
 	      stamp: stamp
 	    });
+	  },
+
+	  receiveAllStamps: function (stamps) {
+	    Dispatcher.dispatch({
+	      actionType: "STAMPS_RECEIVED",
+	      stamps: stamps
+	    });
 	  }
 	};
 
@@ -31428,10 +31447,10 @@
 	    this.history.push('drawings/' + this.props.drawingId);
 	  },
 	  render: function () {
-	    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_150,h_150/" + this.props.imageUrl + ".png";
+	    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_200,h_200/" + this.props.imageUrl + ".png";
 	    return React.createElement(
 	      'div',
-	      { className: 'drawing-index-element' },
+	      { className: 'index-element' },
 	      React.createElement('img', { src: url,
 	        onClick: this.goToShow })
 	    );
@@ -31495,7 +31514,7 @@
 	          caption: this.state.caption,
 	          image_url: imageReceived.public_id
 	        });
-	        this.props.history.push('index');
+	        this.props.history.push('drawings');
 	      }).bind(this)
 	    });
 	  },
@@ -32233,9 +32252,9 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var DrawingStore = __webpack_require__(212);
 	var ApiUtil = __webpack_require__(233);
-	var StampListItem = __webpack_require__(235);
+	var StampListItem = __webpack_require__(250);
+	var StampStore = __webpack_require__(248);
 
 	var StampIndex = React.createClass({
 	  displayName: 'StampIndex',
@@ -32268,14 +32287,151 @@
 	    }
 	    return React.createElement(
 	      'div',
-	      { className: 'stamps-index' },
-	      drawingsList
+	      { className: 'index' },
+	      stampsList
 	    );
 	  }
 
 	});
 
 	module.exports = StampIndex;
+
+/***/ },
+/* 248 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(213).Store;
+	var AppDispatcher = __webpack_require__(230);
+
+	var StampStore = new Store(AppDispatcher);
+	var _stamps = [];
+	var stamp;
+
+	var resetStamps = function (stamps) {
+	  _stamps = stamps;
+	};
+
+	var resetStamp = function (stamp) {
+	  _stamp = stamp;
+	};
+
+	var receiveStamp = function (stamp) {
+	  _stamps.push(stamp);
+	};
+
+	StampStore.single = function () {
+	  return _stamp;
+	};
+
+	StampStore.all = function () {
+	  return _stamps.slice();
+	};
+
+	StampStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case "STAMP_RECEIVED":
+	      resetStamp(payload.stamp);
+	      StampStore.__emitChange();
+	      break;
+	    case "STAMPS_RECEIVED":
+	      resetStamps(payload.stamps);
+	      StampStore.__emitChange();
+	      break;
+	  }
+	};
+
+	module.exports = StampStore;
+
+/***/ },
+/* 249 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var StampStore = __webpack_require__(248);
+	var ApiUtil = __webpack_require__(233);
+	var History = __webpack_require__(159).History;
+
+	var StampDetail = React.createClass({
+	  displayName: 'StampDetail',
+
+	  mixins: [History],
+
+	  getInitialState: function () {
+	    return {
+	      stamp: null
+	    };
+	  },
+	  componentWillMount: function () {
+	    this.token = StampStore.addListener(this._onChange);
+	    ApiUtil.fetchStamp(parseInt(this.props.params.stampId));
+	  },
+	  componentWillUnmount: function () {
+	    this.token.remove();
+	  },
+	  _onChange: function () {
+	    this.setState({ stamp: StampStore.single(this.props.params.stampId) });
+	  },
+	  goToProfile: function () {
+	    this.history.push('/users/' + this.state.stamp.username);
+	  },
+	  render: function () {
+	    var contents = "";
+	    if (this.state.stamp) {
+	      var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + this.state.stamp.image_url + ".png";
+	      contents = React.createElement(
+	        'div',
+	        null,
+	        React.createElement('img', { src: url }),
+	        React.createElement(
+	          'div',
+	          {
+	            className: 'username',
+	            onClick: this.goToProfile },
+	          this.state.stamp.username
+	        )
+	      );
+	    }
+	    return React.createElement(
+	      'div',
+	      null,
+	      contents
+	    );
+	  }
+
+	});
+
+	module.exports = StampDetail;
+
+/***/ },
+/* 250 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var History = __webpack_require__(159).History;
+
+	var StampListItem = React.createClass({
+	  displayName: 'StampListItem',
+
+	  mixins: [History],
+
+	  getInitialState: function () {
+	    return {};
+	  },
+	  goToShow: function () {
+	    this.history.push('stamps/' + this.props.stampId);
+	  },
+	  render: function () {
+	    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_150,h_150/" + this.props.imageUrl + ".png";
+	    return React.createElement(
+	      'div',
+	      { className: 'index-element' },
+	      React.createElement('img', { src: url,
+	        onClick: this.goToShow })
+	    );
+	  }
+	});
+
+	module.exports = StampListItem;
 
 /***/ }
 /******/ ]);

@@ -52,7 +52,7 @@ var CanvasTest = React.createClass({
           caption: this.state.caption,
           image_url: imageReceived.public_id
         });
-        this.props.history.push('index');
+        this.props.history.push('drawings');
       }.bind(this)
     });
   },

@@ -20,6 +20,13 @@ var ApiActions = {
       actionType: "STAMP_RECEIVED",
       stamp: stamp
     })
+  },
+
+  receiveAllStamps: function(stamps) {
+    Dispatcher.dispatch({
+      actionType: "STAMPS_RECEIVED",
+      stamps: stamps
+    })
   }
 };
 

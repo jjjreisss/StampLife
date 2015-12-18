@@ -8,6 +8,7 @@ var CanvasTest = require('./components/canvasTest');
 var DrawingDetail = require('./components/drawingDetail');
 var ProfilePage = require('./components/profilePage');
 var StampIndex = require('./components/stampIndex');
+var StampDetail = require('./components/stampDetail');
 
 
 var routes = (
@@ -17,6 +18,7 @@ var routes = (
     <Route path="/drawings/:drawingId" component={DrawingDetail}/>
     <Route path="/users/:username" component={ProfilePage}/>
     <Route path="/stamps" component={StampIndex}/>
+    <Route path="stamps/:stampId" component={StampDetail}/>
   </Route>
 );
 

@@ -1,7 +1,7 @@
 var React = require('react');
-var DrawingStore = require('../stores/drawingStore');
 var ApiUtil = require('../util/apiUtil');
-var StampListItem = require('./drawingListItem');
+var StampListItem = require('./StampListItem');
+var StampStore = require('../stores/stampStore');
 
 var StampIndex = React.createClass({
   getInitialState: function() {
@@ -33,8 +33,8 @@ var StampIndex = React.createClass({
       });
     }
     return(
-      <div className="stamps-index">
-        {drawingsList}
+      <div className="index">
+        {stampsList}
       </div>
     );
   }

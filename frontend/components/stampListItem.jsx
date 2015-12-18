@@ -1,7 +1,7 @@
 var React = require('react');
 var History = require('react-router').History;
 
-var DrawingListItem = React.createClass({
+var StampListItem = React.createClass({
   mixins: [History],
 
   getInitialState: function() {
@@ -10,10 +10,10 @@ var DrawingListItem = React.createClass({
     });
   },
   goToShow: function() {
-    this.history.push('drawings/' + this.props.drawingId);
+    this.history.push('stamps/' + this.props.stampId);
   },
   render: function() {
-    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_200,h_200/" + this.props.imageUrl + ".png";
+    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_150,h_150/" + this.props.imageUrl + ".png";
     return (
       <div className="index-element">
         <img src={url}
@@ -23,4 +23,4 @@ var DrawingListItem = React.createClass({
   }
 });
 
-module.exports = DrawingListItem;
+module.exports = StampListItem;

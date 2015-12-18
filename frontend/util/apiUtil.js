@@ -12,7 +12,7 @@ var ApiUtil = {
     });
   },
 
-  createStamp: function(img) {
+  createStamp: function(stamp) {
     $.ajax({
       url: "api/stamps",
       method: "POST",
@@ -33,12 +33,12 @@ var ApiUtil = {
     });
   },
 
-  fetchNewDrawing: function() {
+  fetchStamp: function(id) {
     $.ajax({
-      url: "api/drawings/new",
+      url: "api/stamps/" + id,
       method: "GET",
-      success: function(drawing) {
-        ApiActions.receiveSingleDrawing(drawing);
+      success: function(stamp) {
+        ApiActions.receiveSingleStamp(stamp);
       }
     });
   },
@@ -49,6 +49,16 @@ var ApiUtil = {
       method: "GET",
       success: function(drawings) {
         ApiActions.receiveAllDrawings(drawings);
+      }
+    });
+  },
+
+  fetchAllStamps: function() {
+    $.ajax({
+      url: "api/stamps",
+      method: "GET",
+      success: function(stamps) {
+        ApiActions.receiveAllStamps(stamps);
       }
     });
   },

@@ -37,3 +37,5 @@ StampStore.__onDispatch = function(payload) {
       break;
   }
 }
+
+module.exports = StampStore;
