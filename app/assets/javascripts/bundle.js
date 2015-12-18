@@ -31621,14 +31621,36 @@
 	    this.colorPicker = new ColorPicker('color-picker');
 	    this.strokeSample = new StrokeSample('stroke-sample');
 	    this.stampCanvas = new DrawingCanvas('stamp-canvas', 150, 150);
+
+	    this.colorPicking = false;
+	    this.sizePicking = false;
 	  },
 	  pickSize: function (e) {
-	    this.size = this.sizePicker.pickSize(e);
-	    this.strokeSample.pickSample(this.color, this.size);
+	    if (this.sizePicking) {
+	      this.size = this.sizePicker.pickSize(e);
+	      this.strokeSample.pickSample(this.color, this.size);
+	    }
 	  },
 	  pickColor: function (e) {
-	    this.color = this.colorPicker.pickColor(e);
-	    this.strokeSample.pickSample(this.color, this.size);
+	    if (this.colorPicking) {
+	      this.color = this.colorPicker.pickColor(e);
+	      this.strokeSample.pickSample(this.color, this.size);
+	    }
+	  },
+	  onColorPicking: function (e) {
+	    this.colorPicking = true;
+	    this.pickColor(e);
+	  },
+	  offColorPicking: function () {
+	    this.colorPicking = false;
+	  },
+	  onSizePicking: function (e) {
+	    console.log('hi');
+	    this.sizePicking = true;
+	    this.pickSize(e);
+	  },
+	  offSizePicking: function () {
+	    this.sizePicking = false;
 	  },
 	  mouseDownHandler: function (e) {
 	    if (e.target.id === "drawing-canvas") {
@@ -31693,16 +31715,23 @@
 	      React.createElement('canvas', { id: 'drawing-canvas',
 	        onMouseDown: this.mouseDownHandler,
 	        onMouseUp: this.mouseUpHandler,
-	        onMouseMove: this.mouseMoveHandler }),
+	        onMouseMove: this.mouseMoveHandler,
+	        onMouseOut: this.mouseUpHandler }),
 	      React.createElement('canvas', { id: 'color-picker',
 	        width: '80',
 	        height: '500',
-	        onClick: this.pickColor
-	      }),
+	        onMouseDown: this.onColorPicking,
+	        onMouseUp: this.offColorPicking,
+	        onMouseMove: this.pickColor,
+	        onMouseOut: this.offColorPicking }),
 	      React.createElement('canvas', { id: 'size-picker',
 	        width: '500',
 	        height: '80',
-	        onClick: this.pickSize }),
+	        onClick: this.pickSize,
+	        onMouseDown: this.onSizePicking,
+	        onMouseUp: this.offSizePicking,
+	        onMouseMove: this.pickSize,
+	        onMouseOut: this.offSizePicking }),
 	      React.createElement('canvas', { id: 'stroke-sample',
 	        width: '80',
 	        height: '80'
@@ -31762,9 +31791,12 @@
 	var React = __webpack_require__(1);
 	var DrawingStore = __webpack_require__(221);
 	var ApiUtil = __webpack_require__(215);
+	var History = __webpack_require__(159).History;
 
 	var DrawingDetail = React.createClass({
 	  displayName: 'DrawingDetail',
+
+	  mixins: [History],
 
 	  getInitialState: function () {
 	    return {
@@ -31781,11 +31813,25 @@
 	  _onChange: function () {
 	    this.setState({ drawing: DrawingStore.single(this.props.params.drawingId) });
 	  },
+	  goToProfile: function () {
+	    this.history.push('/users/' + this.state.drawing.username);
+	  },
 	  render: function () {
 	    var contents = "";
 	    if (this.state.drawing) {
 	      var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + this.state.drawing.image_url + ".png";
-	      contents = React.createElement('img', { src: url });
+	      contents = React.createElement(
+	        'div',
+	        null,
+	        React.createElement('img', { src: url }),
+	        React.createElement(
+	          'div',
+	          {
+	            className: 'username',
+	            onClick: this.goToProfile },
+	          this.state.drawing.username
+	        )
+	      );
 	    }
 	    return React.createElement(
 	      'div',
@@ -31907,7 +31953,6 @@
 	  var imgData = this.colorPickerContext.getImageData(x, y, 1, 1).data;
 	  var rgbArray = imgData.slice(0, 3);
 	  this.rgbString = "rgb(" + rgbArray.join(",") + ")";
-	  // this.pickSample();
 	  return this.rgbString;
 	};
 
@@ -31949,9 +31994,16 @@
 	  var centerY = 40;
 	  var left = centerX - size / 2;
 	  var top = centerY - size / 2;
-	  this.strokeSampleContext.fillStyle = color;
+	  this.strokeSampleContext.lineJoin = this.strokeSampleContext.lineCap = 'round';
+	  this.strokeSampleContext.beginPath();
+	  this.strokeSampleContext.moveTo(centerX, centerY);
+	  this.strokeSampleContext.lineTo(centerX + 1, centerY + 1);
+	  this.strokeSampleContext.strokeStyle = color;
+	  this.strokeSampleContext.lineWidth = size;
+	  this.strokeSampleContext.stroke();
+	  this.strokeSampleContext.closePath();
 
-	  this.strokeSampleContext.fillRect(top, left, size, size);
+	  // this.strokeSampleContext.fillRect(top, left, size, size);
 	};
 
 	module.exports = StrokeSample;
@@ -32000,6 +32052,11 @@
 	    return React.createElement(
 	      'div',
 	      { className: 'drawings-index' },
+	      React.createElement(
+	        'h2',
+	        null,
+	        this.props.params.username + "'s Drawings"
+	      ),
 	      drawingsList
 	    );
 	  }

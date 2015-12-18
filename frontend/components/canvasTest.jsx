@@ -20,14 +20,36 @@ var CanvasTest = React.createClass({
     this.colorPicker = new ColorPicker('color-picker');
     this.strokeSample = new StrokeSample('stroke-sample');
     this.stampCanvas = new DrawingCanvas('stamp-canvas', 150, 150);
+
+    this.colorPicking = false;
+    this.sizePicking = false;
   },
   pickSize: function(e) {
-    this.size = this.sizePicker.pickSize(e);
-    this.strokeSample.pickSample(this.color, this.size);
+    if (this.sizePicking) {
+      this.size = this.sizePicker.pickSize(e);
+      this.strokeSample.pickSample(this.color, this.size);
+    }
   },
   pickColor: function(e) {
-    this.color = this.colorPicker.pickColor(e);
-    this.strokeSample.pickSample(this.color, this.size);
+    if (this.colorPicking) {
+      this.color = this.colorPicker.pickColor(e);
+      this.strokeSample.pickSample(this.color, this.size);
+    }
+  },
+  onColorPicking: function(e) {
+    this.colorPicking = true;
+    this.pickColor(e);
+  },
+  offColorPicking: function() {
+    this.colorPicking = false;
+  },
+  onSizePicking: function(e) {
+    console.log('hi');
+    this.sizePicking = true;
+    this.pickSize(e);
+  },
+  offSizePicking: function() {
+    this.sizePicking = false;
   },
   mouseDownHandler: function(e) {
     if (e.target.id === "drawing-canvas"){
@@ -92,20 +114,27 @@ var CanvasTest = React.createClass({
         <canvas id="drawing-canvas"
                 onMouseDown={this.mouseDownHandler}
                 onMouseUp={this.mouseUpHandler}
-                onMouseMove={this.mouseMoveHandler}>
+                onMouseMove={this.mouseMoveHandler}
+                onMouseOut={this.mouseUpHandler}>
 
         </canvas>
         <canvas id="color-picker"
                 width="80"
                 height="500"
-                onClick={this.pickColor}
-                >
+                onMouseDown={this.onColorPicking}
+                onMouseUp={this.offColorPicking}
+                onMouseMove={this.pickColor}
+                onMouseOut={this.offColorPicking}>
 
         </canvas>
         <canvas id="size-picker"
                 width="500"
                 height="80"
-                onClick={this.pickSize}>
+                onClick={this.pickSize}
+                onMouseDown={this.onSizePicking}
+                onMouseUp={this.offSizePicking}
+                onMouseMove={this.pickSize}
+                onMouseOut={this.offSizePicking}>
 
         </canvas>
         <canvas id="stroke-sample"

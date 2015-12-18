@@ -1,1 +1,3 @@
-json.extract! @drawing, :id, :content, :caption, :user_id, :image_url
+json.extract! @drawing, :id, :content, :caption, :image_url
+
+json.username @drawing.user.username

@@ -14,7 +14,6 @@ ColorPicker.prototype.pickColor = function (e) {
   var imgData = this.colorPickerContext.getImageData(x, y, 1, 1).data;
   var rgbArray = imgData.slice(0,3);
   this.rgbString = "rgb(" + rgbArray.join(",") + ")";
-  // this.pickSample();
   return this.rgbString;
 };
 

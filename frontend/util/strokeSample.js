@@ -9,9 +9,16 @@ StrokeSample.prototype.pickSample = function (color, size) {
   var centerY = 40;
   var left = centerX - size / 2;
   var top = centerY - size / 2;
-  this.strokeSampleContext.fillStyle = color;
+  this.strokeSampleContext.lineJoin = this.strokeSampleContext.lineCap = 'round';
+  this.strokeSampleContext.beginPath();
+  this.strokeSampleContext.moveTo(centerX, centerY);
+  this.strokeSampleContext.lineTo(centerX+1, centerY+1);
+  this.strokeSampleContext.strokeStyle = color;
+  this.strokeSampleContext.lineWidth = size;
+  this.strokeSampleContext.stroke();
+  this.strokeSampleContext.closePath();
 
-  this.strokeSampleContext.fillRect(top, left, size, size);
+  // this.strokeSampleContext.fillRect(top, left, size, size);
 };
 
 module.exports = StrokeSample;
