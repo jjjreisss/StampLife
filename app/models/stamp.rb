@@ -6,6 +6,6 @@ class Stamp < ActiveRecord::Base
 
   has_many :stamp_uses
 
-  has_many: :users,
+  has_many :users,
     through: :stamp_uses
 end
