@@ -1,6 +1,6 @@
 var React = require('react');
 var ApiUtil = require('../util/apiUtil');
-var StampListItem = require('./StampListItem');
+var StampListItem = require('./stampListItem');
 var StampStore = require('../stores/stampStore');
 
 var StampIndex = React.createClass({

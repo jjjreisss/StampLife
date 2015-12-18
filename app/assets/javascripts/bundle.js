@@ -32253,7 +32253,7 @@
 
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(233);
-	var StampListItem = __webpack_require__(250);
+	var StampListItem = __webpack_require__(251);
 	var StampStore = __webpack_require__(248);
 
 	var StampIndex = React.createClass({
@@ -32403,7 +32403,8 @@
 	module.exports = StampDetail;
 
 /***/ },
-/* 250 */
+/* 250 */,
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
