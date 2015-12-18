@@ -7,6 +7,7 @@ var DrawingIndex = require('./components/drawingIndex');
 var CanvasTest = require('./components/canvasTest');
 var DrawingDetail = require('./components/drawingDetail');
 var ProfilePage = require('./components/profilePage');
+var StampIndex = require('./components/stampIndex');
 
 
 var routes = (

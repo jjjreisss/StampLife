@@ -53,6 +53,7 @@
 	var CanvasTest = __webpack_require__(236);
 	var DrawingDetail = __webpack_require__(245);
 	var ProfilePage = __webpack_require__(246);
+	var StampIndex = __webpack_require__(247);
 
 	var routes = React.createElement(
 	  Route,
@@ -32226,6 +32227,55 @@
 	});
 
 	module.exports = ProfilePage;
+
+/***/ },
+/* 247 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var DrawingStore = __webpack_require__(212);
+	var ApiUtil = __webpack_require__(233);
+	var StampListItem = __webpack_require__(235);
+
+	var StampIndex = React.createClass({
+	  displayName: 'StampIndex',
+
+	  getInitialState: function () {
+	    return {
+	      stamps: StampStore.all()
+	    };
+	  },
+	  componentDidMount: function () {
+	    this.listener = StampStore.addListener(this._onChange);
+	    ApiUtil.fetchAllStamps();
+	  },
+	  componentWillUnmount: function () {
+	    this.listener.remove();
+	  },
+	  _onChange: function () {
+	    this.setState({ stamps: StampStore.all() });
+	  },
+
+	  render: function () {
+	    var stampsList = "";
+	    if (this.state.stamps) {
+	      stampsList = this.state.stamps.map(function (stamp, idx) {
+	        return React.createElement(StampListItem, {
+	          key: idx,
+	          stampId: stamp.id,
+	          imageUrl: stamp.image_url });
+	      });
+	    }
+	    return React.createElement(
+	      'div',
+	      { className: 'stamps-index' },
+	      drawingsList
+	    );
+	  }
+
+	});
+
+	module.exports = StampIndex;
 
 /***/ }
 /******/ ]);

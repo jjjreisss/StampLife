@@ -2,7 +2,7 @@ class Stamp < ActiveRecord::Base
   validates :name, :image_url, :author_id, presence: true
 
   belongs_to :author,
-    classname: "User"
+    class_name: "User"
 
   has_many :stamp_uses
 
