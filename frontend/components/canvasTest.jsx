@@ -187,6 +187,7 @@ var CanvasTest = React.createClass({
 
   render: function() {
     return(
+    <div>
       <div id="drawing-page">
         ATTN: Don't scroll down! Just zoom out your page instead.
         <div id="drawing">
@@ -236,7 +237,8 @@ var CanvasTest = React.createClass({
           <StampIndex/>
         </div>
 
-        <div className="drawing-toolbar">
+        <div
+          className="stamp-canvas">
           <canvas
             id="stamp-canvas"
             width="150"
@@ -245,42 +247,44 @@ var CanvasTest = React.createClass({
             onMouseUp={this.mouseUpHandler}
             onMouseMove={this.mouseMoveHandler}>
           </canvas>
-          <div
-            id="toggle-stamping"
-            onMouseDown={this.toggleStamping}>
-            {this.stampingText()}
-          </div>
-          <div
-            id="undo"
-            onClick={this.undo}>
-            Undo
-          </div>
-          <div id="drawing-form">
-            <input type="text" valueLink={this.linkState('caption')}/>
-          </div>
-          <button
-            className="clear-drawing-canvas"
-            onClick={this.clearDrawingCanvas}>
-            Clear Canvas
-          </button>
-          <button
-            className="clear-button"
-            onClick={this.clearStamp}>
-            Clear Stamp
-          </button>
-          <button
-            className="save-drawing"
-            onClick={this.saveDrawing}>
-            Save Drawing
-          </button>
-          <button
-            className="save-stamp"
-            onClick={this.saveStamp}>
-            Save Stamp
-          </button>
         </div>
-
       </div>
+      <div className="drawing-toolbar">
+        <div
+          id="toggle-stamping"
+          onMouseDown={this.toggleStamping}>
+          {this.stampingText()}
+        </div>
+        <div
+          id="undo"
+          onClick={this.undo}>
+          Undo
+        </div>
+        <div id="drawing-form">
+          <input type="text" valueLink={this.linkState('caption')}/>
+        </div>
+        <button
+          className="clear-drawing-canvas"
+          onClick={this.clearDrawingCanvas}>
+          Clear Canvas
+        </button>
+        <button
+          className="clear-button"
+          onClick={this.clearStamp}>
+          Clear Stamp
+        </button>
+        <button
+          className="save-drawing"
+          onClick={this.saveDrawing}>
+          Save Drawing
+        </button>
+        <button
+          className="save-stamp"
+          onClick={this.saveStamp}>
+          Save Stamp
+        </button>
+      </div>
+    </div>
     );
   }
 });

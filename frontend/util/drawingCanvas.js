@@ -34,8 +34,8 @@ DrawingCanvas.prototype.mouseMove = function (e) {
   this.prevX = this.currX;
   this.prevY = this.currY;
 
-  this.currX = (e.clientX - this.drawingCanvas.offsetLeft);
-  this.currY = (e.clientY-this.drawingCanvas.offsetTop);
+  this.currX = (e.clientX - this.drawingCanvas.offsetLeft - this.drawingCanvas.offsetParent.offsetParent.offsetLeft);
+  this.currY = (e.clientY - this.drawingCanvas.offsetTop - this.drawingCanvas.offsetParent.offsetParent.offsetTop);
 
   if (this.drawing) {
     this.draw();
@@ -57,6 +57,7 @@ DrawingCanvas.prototype.drawStamp = function () {
 };
 
 DrawingCanvas.prototype.drawStroke = function () {
+  console.log([this.prevX, this.prevY]);
   this.ctx.beginPath();
   this.ctx.moveTo(this.prevX, this.prevY);
   this.ctx.lineTo(this.currX, this.currY);

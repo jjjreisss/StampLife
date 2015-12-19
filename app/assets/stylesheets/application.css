@@ -16,7 +16,8 @@
 
 body {
   background: orange;
-  width: 850px;
+  width: 790px;
+  height: 655px;
   margin: auto;
 }
 
@@ -41,10 +42,6 @@ body {
   float: left;
 }
 
-#drawing{
-  width: 580px;
-  height: 650px;
-}
 
 #drawing-canvas{
   background: white;
@@ -74,6 +71,7 @@ body {
   background: white;
 }
 
+
 .color-square {
   background: white;
   width: 58px;
@@ -83,24 +81,44 @@ body {
 }
 
 #color-bar {
-  position: relative;
   top: -7px;
   width: 580px;
   height: 58px;
 }
 
 #drawing-page {
-  width: 1000px;
+  width: 800px;
+  height: 650px;
+  position: relative;
+}
+
+#drawing{
+  width: 580px;
+  height: 650px;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.stamp-canvas {
+  width: 150px;
+  height: 150px;
+  position: absolute;
+  bottom: 0;
+  right: 0;
 }
 
 .stamp-sidebar {
   width: 200px;
+  height: 500px;
+  overflow: scroll;
   position: absolute;
-  right: 100px;
-  top: 100px;
+  top: 0;
+  right: 0;
 }
 
 .drawing-toolbar {
   width: 580px;
-  height: 240px;
+  height: 150px;
+
 }

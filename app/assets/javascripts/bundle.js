@@ -31649,61 +31649,70 @@
 	  render: function () {
 	    return React.createElement(
 	      'div',
-	      { id: 'drawing-page' },
-	      'ATTN: Don\'t scroll down! Just zoom out your page instead.',
+	      null,
 	      React.createElement(
 	        'div',
-	        { id: 'drawing' },
-	        React.createElement('canvas', {
-	          id: 'drawing-canvas',
-	          onMouseDown: this.mouseDownHandler,
-	          onMouseUp: this.mouseUpHandler,
-	          onMouseMove: this.mouseMoveHandler,
-	          onMouseOut: this.mouseUpHandler }),
-	        React.createElement('canvas', {
-	          id: 'color-picker',
-	          width: '80',
-	          height: '500',
-	          onMouseDown: this.downColorPicker,
-	          onMouseUp: this.upColorPicker,
-	          onMouseMove: this.moveColorPicker,
-	          onMouseOut: this.outColorPicker }),
-	        React.createElement('canvas', {
-	          id: 'size-picker',
-	          width: '500',
-	          height: '80',
-	          onClick: this.pickSize,
-	          onMouseDown: this.onSizePicking,
-	          onMouseUp: this.offSizePicking,
-	          onMouseMove: this.pickSize,
-	          onMouseOut: this.offSizePicking }),
-	        React.createElement('canvas', {
-	          id: 'stroke-sample',
-	          width: '80',
-	          height: '80' }),
+	        { id: 'drawing-page' },
+	        'ATTN: Don\'t scroll down! Just zoom out your page instead.',
+	        React.createElement(
+	          'div',
+	          { id: 'drawing' },
+	          React.createElement('canvas', {
+	            id: 'drawing-canvas',
+	            onMouseDown: this.mouseDownHandler,
+	            onMouseUp: this.mouseUpHandler,
+	            onMouseMove: this.mouseMoveHandler,
+	            onMouseOut: this.mouseUpHandler }),
+	          React.createElement('canvas', {
+	            id: 'color-picker',
+	            width: '80',
+	            height: '500',
+	            onMouseDown: this.downColorPicker,
+	            onMouseUp: this.upColorPicker,
+	            onMouseMove: this.moveColorPicker,
+	            onMouseOut: this.outColorPicker }),
+	          React.createElement('canvas', {
+	            id: 'size-picker',
+	            width: '500',
+	            height: '80',
+	            onClick: this.pickSize,
+	            onMouseDown: this.onSizePicking,
+	            onMouseUp: this.offSizePicking,
+	            onMouseMove: this.pickSize,
+	            onMouseOut: this.offSizePicking }),
+	          React.createElement('canvas', {
+	            id: 'stroke-sample',
+	            width: '80',
+	            height: '80' }),
+	          React.createElement(
+	            'div',
+	            {
+	              id: 'color-bar' },
+	            this.colorBar()
+	          )
+	        ),
 	        React.createElement(
 	          'div',
 	          {
-	            id: 'color-bar' },
-	          this.colorBar()
+	            className: 'stamp-sidebar' },
+	          React.createElement(StampIndex, null)
+	        ),
+	        React.createElement(
+	          'div',
+	          {
+	            className: 'stamp-canvas' },
+	          React.createElement('canvas', {
+	            id: 'stamp-canvas',
+	            width: '150',
+	            height: '150',
+	            onMouseDown: this.mouseDownHandler,
+	            onMouseUp: this.mouseUpHandler,
+	            onMouseMove: this.mouseMoveHandler })
 	        )
 	      ),
 	      React.createElement(
 	        'div',
-	        {
-	          className: 'stamp-sidebar' },
-	        React.createElement(StampIndex, null)
-	      ),
-	      React.createElement(
-	        'div',
 	        { className: 'drawing-toolbar' },
-	        React.createElement('canvas', {
-	          id: 'stamp-canvas',
-	          width: '150',
-	          height: '150',
-	          onMouseDown: this.mouseDownHandler,
-	          onMouseUp: this.mouseUpHandler,
-	          onMouseMove: this.mouseMoveHandler }),
 	        React.createElement(
 	          'div',
 	          {
@@ -32106,8 +32115,8 @@
 	  this.prevX = this.currX;
 	  this.prevY = this.currY;
 
-	  this.currX = e.clientX - this.drawingCanvas.offsetLeft;
-	  this.currY = e.clientY - this.drawingCanvas.offsetTop;
+	  this.currX = e.clientX - this.drawingCanvas.offsetLeft - this.drawingCanvas.offsetParent.offsetParent.offsetLeft;
+	  this.currY = e.clientY - this.drawingCanvas.offsetTop - this.drawingCanvas.offsetParent.offsetParent.offsetTop;
 
 	  if (this.drawing) {
 	    this.draw();
@@ -32129,6 +32138,7 @@
 	};
 
 	DrawingCanvas.prototype.drawStroke = function () {
+	  console.log([this.prevX, this.prevY]);
 	  this.ctx.beginPath();
 	  this.ctx.moveTo(this.prevX, this.prevY);
 	  this.ctx.lineTo(this.currX, this.currY);
