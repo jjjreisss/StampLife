@@ -5,6 +5,7 @@ var ColorPicker = require('../util/colorPicker');
 var SizePicker = require('../util/sizePicker');
 var StrokeSample = require('../util/strokeSample');
 var LinkedStateMixin = require('react-addons-linked-state-mixin');
+var StampIndex = require('./stampIndex');
 
 var CanvasTest = React.createClass({
   mixins: [LinkedStateMixin],
@@ -172,87 +173,99 @@ var CanvasTest = React.createClass({
 
   render: function() {
     return(
-      <div id="drawing">
-        <canvas
-          id="drawing-canvas"
-          onMouseDown={this.mouseDownHandler}
-          onMouseUp={this.mouseUpHandler}
-          onMouseMove={this.mouseMoveHandler}
-          onMouseOut={this.mouseUpHandler}>
+      <div id="drawing-page">
 
-        </canvas>
-        <canvas
-          id="color-picker"
-          width="80"
-          height="500"
-          onMouseDown={this.downColorPicker}
-          onMouseUp={this.upColorPicker}
-          onMouseMove={this.moveColorPicker}
-          onMouseOut={this.outColorPicker}>
+        <div id="drawing">
+          <canvas
+            id="drawing-canvas"
+            onMouseDown={this.mouseDownHandler}
+            onMouseUp={this.mouseUpHandler}
+            onMouseMove={this.mouseMoveHandler}
+            onMouseOut={this.mouseUpHandler}>
 
-        </canvas>
-        <canvas
-          id="size-picker"
-          width="500"
-          height="80"
-          onClick={this.pickSize}
-          onMouseDown={this.onSizePicking}
-          onMouseUp={this.offSizePicking}
-          onMouseMove={this.pickSize}
-          onMouseOut={this.offSizePicking}>
+          </canvas>
+          <canvas
+            id="color-picker"
+            width="80"
+            height="500"
+            onMouseDown={this.downColorPicker}
+            onMouseUp={this.upColorPicker}
+            onMouseMove={this.moveColorPicker}
+            onMouseOut={this.outColorPicker}>
 
-        </canvas>
-        <canvas
-          id="stroke-sample"
-          width="80"
-          height="80">
+          </canvas>
+          <canvas
+            id="size-picker"
+            width="500"
+            height="80"
+            onClick={this.pickSize}
+            onMouseDown={this.onSizePicking}
+            onMouseUp={this.offSizePicking}
+            onMouseMove={this.pickSize}
+            onMouseOut={this.offSizePicking}>
 
-        </canvas>
+          </canvas>
+          <canvas
+            id="stroke-sample"
+            width="80"
+            height="80">
+
+          </canvas>
+          <div
+            id="color-bar">
+            {this.colorBar()}
+          </div>
+        </div>
+
         <div
-          id="color-bar">
-          {this.colorBar()}
+          className="stamp-sidebar">
+          <StampIndex/>
         </div>
-        <canvas
-          id="stamp-canvas"
-          width="150"
-          height="150"
-          onMouseDown={this.mouseDownHandler}
-          onMouseUp={this.mouseUpHandler}
-          onMouseMove={this.mouseMoveHandler}>
-        </canvas>
-        <div
-          id="toggle-stamping"
-          onMouseDown={this.toggleStamping}>
-          {this.stampingText()}
+
+        <div className="drawing-toolbar">
+          <canvas
+            id="stamp-canvas"
+            width="150"
+            height="150"
+            onMouseDown={this.mouseDownHandler}
+            onMouseUp={this.mouseUpHandler}
+            onMouseMove={this.mouseMoveHandler}>
+          </canvas>
+          <div
+            id="toggle-stamping"
+            onMouseDown={this.toggleStamping}>
+            {this.stampingText()}
+          </div>
+          <div
+            id="undo"
+            onClick={this.undo}>
+            Undo
+          </div>
+          <div id="drawing-form">
+            <input type="text" valueLink={this.linkState('caption')}/>
+          </div>
+          <button
+            className="clear-drawing-canvas"
+            onClick={this.clearDrawingCanvas}>
+            Clear Canvas
+          </button>
+          <button
+            className="clear-button"
+            onClick={this.clearStamp}>
+            Clear Stamp
+          </button>
+          <button
+            className="save-drawing"
+            onClick={this.saveDrawing}>
+            Save Drawing
+          </button>
+          <button
+            className="save-stamp"
+            onClick={this.saveStamp}>
+            Save Stamp
+          </button>
         </div>
-        <div
-          id="undo"
-          onClick={this.undo}>
-          Undo
-        </div>
-        <div id="drawing-form">
-          <input type="text" valueLink={this.linkState('caption')}/>
-        </div>
-        <button
-          className="clear-drawing-canvas"
-          onClick={this.clearDrawingCanvas}>
-          Clear Canvas
-        </button>
-        <button
-          className="clear-button"
-          onClick={this.clearStamp}>
-          Clear Stamp
-        </button>
-        <button
-          className="save-drawing"
-          onClick={this.saveDrawing}>
-          Save Drawing
-        </button>
-        <button
-          className="save-stamp"
-          onClick={this.saveStamp}>
-          Save Stamp
-        </button>
+
       </div>
     );
   }

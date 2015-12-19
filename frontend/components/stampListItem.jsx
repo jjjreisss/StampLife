@@ -9,15 +9,15 @@ var StampListItem = React.createClass({
 
     });
   },
-  goToShow: function() {
-    this.history.push('stamps/' + this.props.stampId);
+  setStamp() {
+    ApiUtil.fetchSingleStamp(this.props.id);
   },
   render: function() {
     var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_150,h_150/" + this.props.imageUrl + ".png";
     return (
       <div className="index-element">
         <img src={url}
-          onClick={this.goToShow}/>
+          onClick={this.setStamp}/>
       </div>
     );
   }

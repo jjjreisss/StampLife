@@ -16,7 +16,7 @@
 
 body {
   background: orange;
-  width: 600px;
+  width: 850px;
   margin: auto;
 }
 
@@ -25,6 +25,7 @@ body {
 
 .index-element{
   float: left;
+  margin: 5px;
 }
 
 .square {
@@ -42,8 +43,7 @@ body {
 
 #drawing{
   width: 580px;
-  height: 800px;
-  margin: auto;
+  height: 650px;
 }
 
 #drawing-canvas{
@@ -87,4 +87,20 @@ body {
   top: -7px;
   width: 580px;
   height: 58px;
+}
+
+#drawing-page {
+  width: 1000px;
+}
+
+.stamp-sidebar {
+  width: 200px;
+  position: absolute;
+  right: 100px;
+  top: 100px;
+}
+
+.drawing-toolbar {
+  width: 580px;
+  height: 240px;
 }
