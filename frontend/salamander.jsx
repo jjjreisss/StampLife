@@ -14,10 +14,10 @@ var StampDetail = require('./components/stampDetail');
 var routes = (
   <Route path="/" component={App}>
     <Route path="/new" component={CanvasTest}/>
+    <Route path="/stamps" component={StampIndex}/>
     <Route path="/drawings" component={DrawingIndex}/>
     <Route path="/drawings/:drawingId" component={DrawingDetail}/>
     <Route path="/users/:username" component={ProfilePage}/>
-    <Route path="/stamps" component={StampIndex}/>
     <Route path="stamps/:stampId" component={StampDetail}/>
   </Route>
 );

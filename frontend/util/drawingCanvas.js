@@ -1,4 +1,5 @@
 var ApiUtil = require('./apiUtil');
+var StampStore = require('../stores/stampStore');
 
 var DrawingCanvas = function(id, length, width) {
   this.length = length;
@@ -79,6 +80,14 @@ DrawingCanvas.prototype.setStamp = function (stampImg) {
 
 DrawingCanvas.prototype.clear = function () {
   this.ctx.clearRect(0, 0, this.width, this.length);
+};
+
+DrawingCanvas.prototype.loadImage = function (url) {
+  img = new Image();
+  drawing.src = url;
+  drawing.onload = function() {
+    this.ctx.drawImage(drawing, 0, 0)
+  }.bind(this);
 };
 
 

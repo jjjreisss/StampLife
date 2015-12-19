@@ -51,19 +51,19 @@
 	var App = __webpack_require__(210);
 	var DrawingIndex = __webpack_require__(211);
 	var CanvasTest = __webpack_require__(236);
-	var DrawingDetail = __webpack_require__(245);
-	var ProfilePage = __webpack_require__(246);
-	var StampIndex = __webpack_require__(247);
-	var StampDetail = __webpack_require__(250);
+	var DrawingDetail = __webpack_require__(237);
+	var ProfilePage = __webpack_require__(238);
+	var StampIndex = __webpack_require__(239);
+	var StampDetail = __webpack_require__(242);
 
 	var routes = React.createElement(
 	  Route,
 	  { path: '/', component: App },
 	  React.createElement(Route, { path: '/new', component: CanvasTest }),
+	  React.createElement(Route, { path: '/stamps', component: StampIndex }),
 	  React.createElement(Route, { path: '/drawings', component: DrawingIndex }),
 	  React.createElement(Route, { path: '/drawings/:drawingId', component: DrawingDetail }),
 	  React.createElement(Route, { path: '/users/:username', component: ProfilePage }),
-	  React.createElement(Route, { path: '/stamps', component: StampIndex }),
 	  React.createElement(Route, { path: 'stamps/:stampId', component: StampDetail })
 	);
 
@@ -31465,11 +31465,13 @@
 
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(233);
-	var DrawingCanvas = __webpack_require__(237);
-	var ColorPicker = __webpack_require__(238);
-	var SizePicker = __webpack_require__(239);
-	var StrokeSample = __webpack_require__(240);
-	var LinkedStateMixin = __webpack_require__(241);
+	var DrawingCanvas = __webpack_require__(243);
+	var ColorPicker = __webpack_require__(244);
+	var SizePicker = __webpack_require__(245);
+	var StrokeSample = __webpack_require__(246);
+	var LinkedStateMixin = __webpack_require__(247);
+	var StampIndex = __webpack_require__(239);
+	var StampStore = __webpack_require__(241);
 
 	var CanvasTest = React.createClass({
 	  displayName: 'CanvasTest',
@@ -31481,7 +31483,8 @@
 	    return {
 	      caption: "caption",
 	      stamping: false,
-	      recentColors: ["#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff"]
+	      recentColors: ["#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff"],
+	      stamp: null
 	    };
 	  },
 	  componentDidMount: function () {
@@ -31493,6 +31496,13 @@
 
 	    this.colorPicking = false;
 	    this.sizePicking = false;
+	  },
+	  selectStamp: function () {
+	    this.setState({
+	      stamp: StampStore.single()
+	    });
+	    url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + this.state.stamp.image_url + ".png";
+	    this.stampCanvas.loadImage(url);
 	  },
 	  colorBar: function () {
 	    return this.state.recentColors.map((function (color, idx) {
@@ -31634,93 +31644,108 @@
 	  render: function () {
 	    return React.createElement(
 	      'div',
-	      { id: 'drawing' },
-	      React.createElement('canvas', {
-	        id: 'drawing-canvas',
-	        onMouseDown: this.mouseDownHandler,
-	        onMouseUp: this.mouseUpHandler,
-	        onMouseMove: this.mouseMoveHandler,
-	        onMouseOut: this.mouseUpHandler }),
-	      React.createElement('canvas', {
-	        id: 'color-picker',
-	        width: '80',
-	        height: '500',
-	        onMouseDown: this.downColorPicker,
-	        onMouseUp: this.upColorPicker,
-	        onMouseMove: this.moveColorPicker,
-	        onMouseOut: this.outColorPicker }),
-	      React.createElement('canvas', {
-	        id: 'size-picker',
-	        width: '500',
-	        height: '80',
-	        onClick: this.pickSize,
-	        onMouseDown: this.onSizePicking,
-	        onMouseUp: this.offSizePicking,
-	        onMouseMove: this.pickSize,
-	        onMouseOut: this.offSizePicking }),
-	      React.createElement('canvas', {
-	        id: 'stroke-sample',
-	        width: '80',
-	        height: '80' }),
+	      { id: 'drawing-page' },
 	      React.createElement(
 	        'div',
-	        {
-	          id: 'color-bar' },
-	        this.colorBar()
-	      ),
-	      React.createElement('canvas', {
-	        id: 'stamp-canvas',
-	        width: '150',
-	        height: '150',
-	        onMouseDown: this.mouseDownHandler,
-	        onMouseUp: this.mouseUpHandler,
-	        onMouseMove: this.mouseMoveHandler }),
-	      React.createElement(
-	        'div',
-	        {
-	          id: 'toggle-stamping',
-	          onMouseDown: this.toggleStamping },
-	        this.stampingText()
+	        { id: 'drawing' },
+	        React.createElement('canvas', {
+	          id: 'drawing-canvas',
+	          onMouseDown: this.mouseDownHandler,
+	          onMouseUp: this.mouseUpHandler,
+	          onMouseMove: this.mouseMoveHandler,
+	          onMouseOut: this.mouseUpHandler }),
+	        React.createElement('canvas', {
+	          id: 'color-picker',
+	          width: '80',
+	          height: '500',
+	          onMouseDown: this.downColorPicker,
+	          onMouseUp: this.upColorPicker,
+	          onMouseMove: this.moveColorPicker,
+	          onMouseOut: this.outColorPicker }),
+	        React.createElement('canvas', {
+	          id: 'size-picker',
+	          width: '500',
+	          height: '80',
+	          onClick: this.pickSize,
+	          onMouseDown: this.onSizePicking,
+	          onMouseUp: this.offSizePicking,
+	          onMouseMove: this.pickSize,
+	          onMouseOut: this.offSizePicking }),
+	        React.createElement('canvas', {
+	          id: 'stroke-sample',
+	          width: '80',
+	          height: '80' }),
+	        React.createElement(
+	          'div',
+	          {
+	            id: 'color-bar' },
+	          this.colorBar()
+	        )
 	      ),
 	      React.createElement(
 	        'div',
 	        {
-	          id: 'undo',
-	          onClick: this.undo },
-	        'Undo'
+	          className: 'stamp-sidebar',
+	          onClick: this.selectStamp },
+	        React.createElement(StampIndex, null)
 	      ),
 	      React.createElement(
 	        'div',
-	        { id: 'drawing-form' },
-	        React.createElement('input', { type: 'text', valueLink: this.linkState('caption') })
-	      ),
-	      React.createElement(
-	        'button',
-	        {
-	          className: 'clear-drawing-canvas',
-	          onClick: this.clearDrawingCanvas },
-	        'Clear Canvas'
-	      ),
-	      React.createElement(
-	        'button',
-	        {
-	          className: 'clear-button',
-	          onClick: this.clearStamp },
-	        'Clear Stamp'
-	      ),
-	      React.createElement(
-	        'button',
-	        {
-	          className: 'save-drawing',
-	          onClick: this.saveDrawing },
-	        'Save Drawing'
-	      ),
-	      React.createElement(
-	        'button',
-	        {
-	          className: 'save-stamp',
-	          onClick: this.saveStamp },
-	        'Save Stamp'
+	        { className: 'drawing-toolbar' },
+	        React.createElement('canvas', {
+	          id: 'stamp-canvas',
+	          width: '150',
+	          height: '150',
+	          onMouseDown: this.mouseDownHandler,
+	          onMouseUp: this.mouseUpHandler,
+	          onMouseMove: this.mouseMoveHandler }),
+	        React.createElement(
+	          'div',
+	          {
+	            id: 'toggle-stamping',
+	            onMouseDown: this.toggleStamping },
+	          this.stampingText()
+	        ),
+	        React.createElement(
+	          'div',
+	          {
+	            id: 'undo',
+	            onClick: this.undo },
+	          'Undo'
+	        ),
+	        React.createElement(
+	          'div',
+	          { id: 'drawing-form' },
+	          React.createElement('input', { type: 'text', valueLink: this.linkState('caption') })
+	        ),
+	        React.createElement(
+	          'button',
+	          {
+	            className: 'clear-drawing-canvas',
+	            onClick: this.clearDrawingCanvas },
+	          'Clear Canvas'
+	        ),
+	        React.createElement(
+	          'button',
+	          {
+	            className: 'clear-button',
+	            onClick: this.clearStamp },
+	          'Clear Stamp'
+	        ),
+	        React.createElement(
+	          'button',
+	          {
+	            className: 'save-drawing',
+	            onClick: this.saveDrawing },
+	          'Save Drawing'
+	        ),
+	        React.createElement(
+	          'button',
+	          {
+	            className: 'save-stamp',
+	            onClick: this.saveStamp },
+	          'Save Stamp'
+	        )
 	      )
 	    );
 	  }
@@ -31738,7 +31763,310 @@
 /* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var React = __webpack_require__(1);
+	var DrawingStore = __webpack_require__(212);
 	var ApiUtil = __webpack_require__(233);
+	var History = __webpack_require__(159).History;
+
+	var DrawingDetail = React.createClass({
+	  displayName: 'DrawingDetail',
+
+	  mixins: [History],
+
+	  getInitialState: function () {
+	    return {
+	      drawing: null
+	    };
+	  },
+	  componentWillMount: function () {
+	    this.token = DrawingStore.addListener(this._onChange);
+	    ApiUtil.fetchDrawing(parseInt(this.props.params.drawingId));
+	  },
+	  componentWillUnmount: function () {
+	    this.token.remove();
+	  },
+	  _onChange: function () {
+	    this.setState({ drawing: DrawingStore.single(this.props.params.drawingId) });
+	  },
+	  goToProfile: function () {
+	    this.history.push('/users/' + this.state.drawing.username);
+	  },
+	  render: function () {
+	    var contents = "";
+	    if (this.state.drawing) {
+	      var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + this.state.drawing.image_url + ".png";
+	      contents = React.createElement(
+	        'div',
+	        null,
+	        React.createElement('img', { src: url }),
+	        React.createElement(
+	          'div',
+	          {
+	            className: 'username',
+	            onClick: this.goToProfile },
+	          this.state.drawing.username
+	        )
+	      );
+	    }
+	    return React.createElement(
+	      'div',
+	      null,
+	      contents
+	    );
+	  }
+
+	});
+
+	module.exports = DrawingDetail;
+
+/***/ },
+/* 238 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var DrawingStore = __webpack_require__(212);
+	var ApiUtil = __webpack_require__(233);
+	var DrawingListItem = __webpack_require__(235);
+
+	var ProfilePage = React.createClass({
+	  displayName: 'ProfilePage',
+
+	  getInitialState: function () {
+	    return {
+	      drawings: null
+	    };
+	  },
+	  componentDidMount: function () {
+	    this.token = DrawingStore.addListener(this._onChange);
+	    ApiUtil.fetchUserDrawings(this.props.params.username);
+	  },
+	  componentWillUnmount: function () {
+	    this.token.remove();
+	  },
+	  _onChange: function () {
+	    this.setState({
+	      drawings: DrawingStore.all()
+	    });
+	  },
+
+	  render: function () {
+	    var drawingsList = "";
+	    if (this.state.drawings) {
+	      drawingsList = this.state.drawings.map(function (drawing, idx) {
+	        return React.createElement(DrawingListItem, {
+	          key: idx,
+	          drawingId: drawing.id,
+	          imageUrl: drawing.image_url });
+	      });
+	    }
+	    return React.createElement(
+	      'div',
+	      { className: 'drawings-index' },
+	      React.createElement(
+	        'h2',
+	        null,
+	        this.props.params.username + "'s Drawings"
+	      ),
+	      drawingsList
+	    );
+	  }
+	});
+
+	module.exports = ProfilePage;
+
+/***/ },
+/* 239 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var ApiUtil = __webpack_require__(233);
+	var StampListItem = __webpack_require__(240);
+	var StampStore = __webpack_require__(241);
+
+	var StampIndex = React.createClass({
+	  displayName: 'StampIndex',
+
+	  getInitialState: function () {
+	    return {
+	      stamps: StampStore.all()
+	    };
+	  },
+	  componentDidMount: function () {
+	    this.listener = StampStore.addListener(this._onChange);
+	    ApiUtil.fetchAllStamps();
+	  },
+	  componentWillUnmount: function () {
+	    this.listener.remove();
+	  },
+	  _onChange: function () {
+	    this.setState({ stamps: StampStore.all() });
+	  },
+
+	  render: function () {
+	    var stampsList = "";
+	    if (this.state.stamps) {
+	      stampsList = this.state.stamps.map(function (stamp, idx) {
+	        return React.createElement(StampListItem, {
+	          key: idx,
+	          stampId: stamp.id,
+	          imageUrl: stamp.image_url });
+	      });
+	    }
+	    return React.createElement(
+	      'div',
+	      { className: 'index' },
+	      stampsList
+	    );
+	  }
+
+	});
+
+	module.exports = StampIndex;
+
+/***/ },
+/* 240 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var History = __webpack_require__(159).History;
+	var ApiUtil = __webpack_require__(233);
+
+	var StampListItem = React.createClass({
+	  displayName: 'StampListItem',
+
+	  mixins: [History],
+
+	  getInitialState: function () {
+	    return {};
+	  },
+	  setStamp() {
+	    ApiUtil.fetchStamp(this.props.stampId);
+	  },
+	  render: function () {
+	    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_150,h_150/" + this.props.imageUrl + ".png";
+	    return React.createElement(
+	      'div',
+	      { className: 'index-element' },
+	      React.createElement('img', { src: url,
+	        onClick: this.setStamp })
+	    );
+	  }
+	});
+
+	module.exports = StampListItem;
+
+/***/ },
+/* 241 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(213).Store;
+	var AppDispatcher = __webpack_require__(230);
+
+	var StampStore = new Store(AppDispatcher);
+	var _stamps = [];
+	var _stamp;
+
+	var resetStamps = function (stamps) {
+	  _stamps = stamps;
+	};
+
+	var resetStamp = function (stamp) {
+	  _stamp = stamp;
+	};
+
+	var receiveStamp = function (stamp) {
+	  _stamps.push(stamp);
+	};
+
+	StampStore.single = function () {
+	  return _stamp;
+	};
+
+	StampStore.all = function () {
+	  return _stamps.slice();
+	};
+
+	StampStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case "STAMP_RECEIVED":
+	      resetStamp(payload.stamp);
+	      StampStore.__emitChange();
+	      break;
+	    case "STAMPS_RECEIVED":
+	      resetStamps(payload.stamps);
+	      StampStore.__emitChange();
+	      break;
+	  }
+	};
+
+	module.exports = StampStore;
+
+/***/ },
+/* 242 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var StampStore = __webpack_require__(241);
+	var ApiUtil = __webpack_require__(233);
+	var History = __webpack_require__(159).History;
+
+	var StampDetail = React.createClass({
+	  displayName: 'StampDetail',
+
+	  mixins: [History],
+
+	  getInitialState: function () {
+	    return {
+	      stamp: null
+	    };
+	  },
+	  componentWillMount: function () {
+	    this.token = StampStore.addListener(this._onChange);
+	    ApiUtil.fetchStamp(parseInt(this.props.params.stampId));
+	  },
+	  componentWillUnmount: function () {
+	    this.token.remove();
+	  },
+	  _onChange: function () {
+	    this.setState({ stamp: StampStore.single(this.props.params.stampId) });
+	  },
+	  goToProfile: function () {
+	    this.history.push('/users/' + this.state.stamp.username);
+	  },
+	  render: function () {
+	    var contents = "";
+	    if (this.state.stamp) {
+	      var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + this.state.stamp.image_url + ".png";
+	      contents = React.createElement(
+	        'div',
+	        null,
+	        React.createElement('img', { src: url }),
+	        React.createElement(
+	          'div',
+	          {
+	            className: 'username',
+	            onClick: this.goToProfile },
+	          this.state.stamp.username
+	        )
+	      );
+	    }
+	    return React.createElement(
+	      'div',
+	      null,
+	      contents
+	    );
+	  }
+
+	});
+
+	module.exports = StampDetail;
+
+/***/ },
+/* 243 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ApiUtil = __webpack_require__(233);
+	var StampStore = __webpack_require__(241);
 
 	var DrawingCanvas = function (id, length, width) {
 	  this.length = length;
@@ -31821,10 +32149,18 @@
 	  this.ctx.clearRect(0, 0, this.width, this.length);
 	};
 
+	DrawingCanvas.prototype.loadImage = function (url) {
+	  img = new Image();
+	  drawing.src = url;
+	  drawing.onload = (function () {
+	    this.ctx.drawImage(drawing, 0, 0);
+	  }).bind(this);
+	};
+
 	module.exports = DrawingCanvas;
 
 /***/ },
-/* 238 */
+/* 244 */
 /***/ function(module, exports) {
 
 	var ColorPicker = function (id) {
@@ -31853,7 +32189,7 @@
 	module.exports = ColorPicker;
 
 /***/ },
-/* 239 */
+/* 245 */
 /***/ function(module, exports) {
 
 	var SizePicker = function (id) {
@@ -31874,7 +32210,7 @@
 	module.exports = SizePicker;
 
 /***/ },
-/* 240 */
+/* 246 */
 /***/ function(module, exports) {
 
 	var StrokeSample = function () {
@@ -31903,13 +32239,13 @@
 	module.exports = StrokeSample;
 
 /***/ },
-/* 241 */
+/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(242);
+	module.exports = __webpack_require__(248);
 
 /***/ },
-/* 242 */
+/* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -31926,8 +32262,8 @@
 
 	'use strict';
 
-	var ReactLink = __webpack_require__(243);
-	var ReactStateSetters = __webpack_require__(244);
+	var ReactLink = __webpack_require__(249);
+	var ReactStateSetters = __webpack_require__(250);
 
 	/**
 	 * A simple mixin around ReactLink.forState().
@@ -31950,7 +32286,7 @@
 	module.exports = LinkedStateMixin;
 
 /***/ },
-/* 243 */
+/* 249 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -32024,7 +32360,7 @@
 	module.exports = ReactLink;
 
 /***/ },
-/* 244 */
+/* 250 */
 /***/ function(module, exports) {
 
 	/**
@@ -32131,307 +32467,6 @@
 	};
 
 	module.exports = ReactStateSetters;
-
-/***/ },
-/* 245 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var DrawingStore = __webpack_require__(212);
-	var ApiUtil = __webpack_require__(233);
-	var History = __webpack_require__(159).History;
-
-	var DrawingDetail = React.createClass({
-	  displayName: 'DrawingDetail',
-
-	  mixins: [History],
-
-	  getInitialState: function () {
-	    return {
-	      drawing: null
-	    };
-	  },
-	  componentWillMount: function () {
-	    this.token = DrawingStore.addListener(this._onChange);
-	    ApiUtil.fetchDrawing(parseInt(this.props.params.drawingId));
-	  },
-	  componentWillUnmount: function () {
-	    this.token.remove();
-	  },
-	  _onChange: function () {
-	    this.setState({ drawing: DrawingStore.single(this.props.params.drawingId) });
-	  },
-	  goToProfile: function () {
-	    this.history.push('/users/' + this.state.drawing.username);
-	  },
-	  render: function () {
-	    var contents = "";
-	    if (this.state.drawing) {
-	      var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + this.state.drawing.image_url + ".png";
-	      contents = React.createElement(
-	        'div',
-	        null,
-	        React.createElement('img', { src: url }),
-	        React.createElement(
-	          'div',
-	          {
-	            className: 'username',
-	            onClick: this.goToProfile },
-	          this.state.drawing.username
-	        )
-	      );
-	    }
-	    return React.createElement(
-	      'div',
-	      null,
-	      contents
-	    );
-	  }
-
-	});
-
-	module.exports = DrawingDetail;
-
-/***/ },
-/* 246 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var DrawingStore = __webpack_require__(212);
-	var ApiUtil = __webpack_require__(233);
-	var DrawingListItem = __webpack_require__(235);
-
-	var ProfilePage = React.createClass({
-	  displayName: 'ProfilePage',
-
-	  getInitialState: function () {
-	    return {
-	      drawings: null
-	    };
-	  },
-	  componentDidMount: function () {
-	    this.token = DrawingStore.addListener(this._onChange);
-	    ApiUtil.fetchUserDrawings(this.props.params.username);
-	  },
-	  componentWillUnmount: function () {
-	    this.token.remove();
-	  },
-	  _onChange: function () {
-	    this.setState({
-	      drawings: DrawingStore.all()
-	    });
-	  },
-
-	  render: function () {
-	    var drawingsList = "";
-	    if (this.state.drawings) {
-	      drawingsList = this.state.drawings.map(function (drawing, idx) {
-	        return React.createElement(DrawingListItem, {
-	          key: idx,
-	          drawingId: drawing.id,
-	          imageUrl: drawing.image_url });
-	      });
-	    }
-	    return React.createElement(
-	      'div',
-	      { className: 'drawings-index' },
-	      React.createElement(
-	        'h2',
-	        null,
-	        this.props.params.username + "'s Drawings"
-	      ),
-	      drawingsList
-	    );
-	  }
-	});
-
-	module.exports = ProfilePage;
-
-/***/ },
-/* 247 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var ApiUtil = __webpack_require__(233);
-	var StampListItem = __webpack_require__(248);
-	var StampStore = __webpack_require__(249);
-
-	var StampIndex = React.createClass({
-	  displayName: 'StampIndex',
-
-	  getInitialState: function () {
-	    return {
-	      stamps: StampStore.all()
-	    };
-	  },
-	  componentDidMount: function () {
-	    this.listener = StampStore.addListener(this._onChange);
-	    ApiUtil.fetchAllStamps();
-	  },
-	  componentWillUnmount: function () {
-	    this.listener.remove();
-	  },
-	  _onChange: function () {
-	    this.setState({ stamps: StampStore.all() });
-	  },
-
-	  render: function () {
-	    var stampsList = "";
-	    if (this.state.stamps) {
-	      stampsList = this.state.stamps.map(function (stamp, idx) {
-	        return React.createElement(StampListItem, {
-	          key: idx,
-	          stampId: stamp.id,
-	          imageUrl: stamp.image_url });
-	      });
-	    }
-	    return React.createElement(
-	      'div',
-	      { className: 'index' },
-	      stampsList
-	    );
-	  }
-
-	});
-
-	module.exports = StampIndex;
-
-/***/ },
-/* 248 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var History = __webpack_require__(159).History;
-
-	var StampListItem = React.createClass({
-	  displayName: 'StampListItem',
-
-	  mixins: [History],
-
-	  getInitialState: function () {
-	    return {};
-	  },
-	  goToShow: function () {
-	    this.history.push('stamps/' + this.props.stampId);
-	  },
-	  render: function () {
-	    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_150,h_150/" + this.props.imageUrl + ".png";
-	    return React.createElement(
-	      'div',
-	      { className: 'index-element' },
-	      React.createElement('img', { src: url,
-	        onClick: this.goToShow })
-	    );
-	  }
-	});
-
-	module.exports = StampListItem;
-
-/***/ },
-/* 249 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(213).Store;
-	var AppDispatcher = __webpack_require__(230);
-
-	var StampStore = new Store(AppDispatcher);
-	var _stamps = [];
-	var stamp;
-
-	var resetStamps = function (stamps) {
-	  _stamps = stamps;
-	};
-
-	var resetStamp = function (stamp) {
-	  _stamp = stamp;
-	};
-
-	var receiveStamp = function (stamp) {
-	  _stamps.push(stamp);
-	};
-
-	StampStore.single = function () {
-	  return _stamp;
-	};
-
-	StampStore.all = function () {
-	  return _stamps.slice();
-	};
-
-	StampStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case "STAMP_RECEIVED":
-	      resetStamp(payload.stamp);
-	      StampStore.__emitChange();
-	      break;
-	    case "STAMPS_RECEIVED":
-	      resetStamps(payload.stamps);
-	      StampStore.__emitChange();
-	      break;
-	  }
-	};
-
-	module.exports = StampStore;
-
-/***/ },
-/* 250 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var StampStore = __webpack_require__(249);
-	var ApiUtil = __webpack_require__(233);
-	var History = __webpack_require__(159).History;
-
-	var StampDetail = React.createClass({
-	  displayName: 'StampDetail',
-
-	  mixins: [History],
-
-	  getInitialState: function () {
-	    return {
-	      stamp: null
-	    };
-	  },
-	  componentWillMount: function () {
-	    this.token = StampStore.addListener(this._onChange);
-	    ApiUtil.fetchStamp(parseInt(this.props.params.stampId));
-	  },
-	  componentWillUnmount: function () {
-	    this.token.remove();
-	  },
-	  _onChange: function () {
-	    this.setState({ stamp: StampStore.single(this.props.params.stampId) });
-	  },
-	  goToProfile: function () {
-	    this.history.push('/users/' + this.state.stamp.username);
-	  },
-	  render: function () {
-	    var contents = "";
-	    if (this.state.stamp) {
-	      var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + this.state.stamp.image_url + ".png";
-	      contents = React.createElement(
-	        'div',
-	        null,
-	        React.createElement('img', { src: url }),
-	        React.createElement(
-	          'div',
-	          {
-	            className: 'username',
-	            onClick: this.goToProfile },
-	          this.state.stamp.username
-	        )
-	      );
-	    }
-	    return React.createElement(
-	      'div',
-	      null,
-	      contents
-	    );
-	  }
-
-	});
-
-	module.exports = StampDetail;
 
 /***/ }
 /******/ ]);

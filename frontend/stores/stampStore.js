@@ -3,7 +3,7 @@ var AppDispatcher = require('../dispatcher/dispatcher');
 
 var StampStore = new Store(AppDispatcher);
 var _stamps = [];
-var stamp;
+var _stamp;
 
 var resetStamps = function(stamps) {
   _stamps = stamps;
