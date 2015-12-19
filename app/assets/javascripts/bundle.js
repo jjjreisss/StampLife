@@ -32223,6 +32223,7 @@
 
 	SizePicker.prototype.pickSize = function (e) {
 	  var x = e.clientX - this.sizePickerCanvas.offsetLeft - this.sizePickerCanvas.offsetParent.offsetParent.offsetLeft;
+	  console.log(x);
 	  return (x - 35) * 52 / 423;
 	};
 
