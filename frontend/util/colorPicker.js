@@ -9,8 +9,10 @@ var ColorPicker = function(id) {
 };
 
 ColorPicker.prototype.pickColor = function (e) {
-  var x = e.clientX - this.colorPickerCanvas.offsetLeft - this.colorPickerCanvas.offsetParent.offsetParent.offsetLeft;
-  var y = e.clientY - this.colorPickerCanvas.offsetTop - this.colorPickerCanvas.offsetParent.offsetParent.offsetTop;
+  var x = e.clientX - this.colorPickerCanvas.offsetLeft - this.colorPickerCanvas.offsetParent.offsetLeft -
+    this.colorPickerCanvas.offsetParent.offsetParent.offsetLeft - this.colorPickerCanvas.offsetParent.offsetParent.offsetParent.offsetLeft;
+  var y = e.clientY - this.colorPickerCanvas.offsetTop - this.colorPickerCanvas.offsetParent.offsetTop -
+    this.colorPickerCanvas.offsetParent.offsetParent.offsetTop - this.colorPickerCanvas.offsetParent.offsetParent.offsetParent.offsetTop;
   console.log([x,y]);
   var imgData = this.colorPickerContext.getImageData(x, y, 1, 1).data;
   var rgbArray = imgData.slice(0,3);

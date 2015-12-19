@@ -32192,8 +32192,8 @@
 	};
 
 	ColorPicker.prototype.pickColor = function (e) {
-	  var x = e.clientX - this.colorPickerCanvas.offsetLeft - this.colorPickerCanvas.offsetParent.offsetParent.offsetLeft;
-	  var y = e.clientY - this.colorPickerCanvas.offsetTop - this.colorPickerCanvas.offsetParent.offsetParent.offsetTop;
+	  var x = e.clientX - this.colorPickerCanvas.offsetLeft - this.colorPickerCanvas.offsetParent.offsetLeft - this.colorPickerCanvas.offsetParent.offsetParent.offsetLeft - this.colorPickerCanvas.offsetParent.offsetParent.offsetParent.offsetLeft;
+	  var y = e.clientY - this.colorPickerCanvas.offsetTop - this.colorPickerCanvas.offsetParent.offsetTop - this.colorPickerCanvas.offsetParent.offsetParent.offsetTop - this.colorPickerCanvas.offsetParent.offsetParent.offsetParent.offsetTop;
 	  console.log([x, y]);
 	  var imgData = this.colorPickerContext.getImageData(x, y, 1, 1).data;
 	  var rgbArray = imgData.slice(0, 3);
@@ -32222,7 +32222,7 @@
 	};
 
 	SizePicker.prototype.pickSize = function (e) {
-	  var x = e.clientX - this.sizePickerCanvas.offsetLeft - this.sizePickerCanvas.offsetParent.offsetParent.offsetLeft;
+	  var x = e.clientX - this.sizePickerCanvas.offsetLeft - this.sizePickerCanvas.offsetParent.offsetParent.offsetLeft - this.sizePickerCanvas.offsetParent.offsetLeft - this.sizePickerCanvas.offsetParent.offsetParent.offsetParent.offsetLeft;
 	  console.log(x);
 	  return (x - 35) * 52 / 423;
 	};
