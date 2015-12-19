@@ -54,7 +54,7 @@
 	var DrawingDetail = __webpack_require__(245);
 	var ProfilePage = __webpack_require__(246);
 	var StampIndex = __webpack_require__(247);
-	var StampDetail = __webpack_require__(249);
+	var StampDetail = __webpack_require__(250);
 
 	var routes = React.createElement(
 	  Route,
@@ -32253,8 +32253,8 @@
 
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(233);
-	var StampListItem = __webpack_require__(251);
-	var StampStore = __webpack_require__(248);
+	var StampListItem = __webpack_require__(248);
+	var StampStore = __webpack_require__(249);
 
 	var StampIndex = React.createClass({
 	  displayName: 'StampIndex',
@@ -32300,6 +32300,37 @@
 /* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var React = __webpack_require__(1);
+	var History = __webpack_require__(159).History;
+
+	var StampListItem = React.createClass({
+	  displayName: 'StampListItem',
+
+	  mixins: [History],
+
+	  getInitialState: function () {
+	    return {};
+	  },
+	  goToShow: function () {
+	    this.history.push('stamps/' + this.props.stampId);
+	  },
+	  render: function () {
+	    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_150,h_150/" + this.props.imageUrl + ".png";
+	    return React.createElement(
+	      'div',
+	      { className: 'index-element' },
+	      React.createElement('img', { src: url,
+	        onClick: this.goToShow })
+	    );
+	  }
+	});
+
+	module.exports = StampListItem;
+
+/***/ },
+/* 249 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var Store = __webpack_require__(213).Store;
 	var AppDispatcher = __webpack_require__(230);
 
@@ -32343,11 +32374,11 @@
 	module.exports = StampStore;
 
 /***/ },
-/* 249 */
+/* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var StampStore = __webpack_require__(248);
+	var StampStore = __webpack_require__(249);
 	var ApiUtil = __webpack_require__(233);
 	var History = __webpack_require__(159).History;
 
@@ -32401,38 +32432,6 @@
 	});
 
 	module.exports = StampDetail;
-
-/***/ },
-/* 250 */,
-/* 251 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var History = __webpack_require__(159).History;
-
-	var StampListItem = React.createClass({
-	  displayName: 'StampListItem',
-
-	  mixins: [History],
-
-	  getInitialState: function () {
-	    return {};
-	  },
-	  goToShow: function () {
-	    this.history.push('stamps/' + this.props.stampId);
-	  },
-	  render: function () {
-	    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_150,h_150/" + this.props.imageUrl + ".png";
-	    return React.createElement(
-	      'div',
-	      { className: 'index-element' },
-	      React.createElement('img', { src: url,
-	        onClick: this.goToShow })
-	    );
-	  }
-	});
-
-	module.exports = StampListItem;
 
 /***/ }
 /******/ ]);
