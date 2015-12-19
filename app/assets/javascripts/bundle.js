@@ -32192,8 +32192,9 @@
 	};
 
 	ColorPicker.prototype.pickColor = function (e) {
-	  var x = e.pageX - this.colorPickerCanvas.offsetLeft;
-	  var y = e.pageY - this.colorPickerCanvas.offsetTop;
+	  var x = e.clientX - this.colorPickerCanvas.offsetLeft - this.colorPickerCanvas.offsetParent.offsetParent.offsetLeft;
+	  var y = e.clientY - this.colorPickerCanvas.offsetTop - this.colorPickerCanvas.offsetParent.offsetParent.offsetTop;
+	  console.log([x, y]);
 	  var imgData = this.colorPickerContext.getImageData(x, y, 1, 1).data;
 	  var rgbArray = imgData.slice(0, 3);
 	  this.rgbString = "rgb(" + rgbArray.join(",") + ")";
@@ -32221,7 +32222,7 @@
 	};
 
 	SizePicker.prototype.pickSize = function (e) {
-	  var x = e.pageX - this.sizePickerCanvas.offsetLeft;
+	  var x = e.clientX - this.sizePickerCanvas.offsetLeft - this.sizePickerCanvas.offsetParent.offsetParent.offsetLeft;
 	  return (x - 35) * 52 / 423;
 	};
 

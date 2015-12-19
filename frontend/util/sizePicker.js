@@ -9,7 +9,7 @@ var SizePicker = function (id) {
 };
 
 SizePicker.prototype.pickSize = function (e) {
-  var x = e.pageX - this.sizePickerCanvas.offsetLeft;
+  var x = e.clientX - this.sizePickerCanvas.offsetLeft - this.sizePickerCanvas.offsetParent.offsetParent.offsetLeft;
   return (x-35) * 52 / 423;
 };
 
