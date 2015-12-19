@@ -31496,6 +31496,11 @@
 
 	    this.colorPicking = false;
 	    this.sizePicking = false;
+
+	    this.token = StampStore.addListener(this.selectStamp);
+	  },
+	  componentWillUnmount: function () {
+	    this.token.remove();
 	  },
 	  selectStamp: function () {
 	    this.setState({
@@ -31645,6 +31650,7 @@
 	    return React.createElement(
 	      'div',
 	      { id: 'drawing-page' },
+	      'ATTN: Don\'t scroll down! Just zoom out your page instead.',
 	      React.createElement(
 	        'div',
 	        { id: 'drawing' },
@@ -31685,8 +31691,7 @@
 	      React.createElement(
 	        'div',
 	        {
-	          className: 'stamp-sidebar',
-	          onClick: this.selectStamp },
+	          className: 'stamp-sidebar' },
 	        React.createElement(StampIndex, null)
 	      ),
 	      React.createElement(
@@ -32151,9 +32156,10 @@
 
 	DrawingCanvas.prototype.loadImage = function (url) {
 	  img = new Image();
-	  drawing.src = url;
-	  drawing.onload = (function () {
-	    this.ctx.drawImage(drawing, 0, 0);
+	  img.src = url;
+	  img.onload = (function () {
+	    console.log('hi');
+	    this.ctx.drawImage(img, 0, 0);
 	  }).bind(this);
 	};
 

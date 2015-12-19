@@ -30,6 +30,11 @@ var CanvasTest = React.createClass({
 
     this.colorPicking = false;
     this.sizePicking = false;
+
+    this.token = StampStore.addListener(this.selectStamp);
+  },
+  componentWillUnmount: function() {
+    this.token.remove();
   },
   selectStamp: function() {
     this.setState({
@@ -183,7 +188,7 @@ var CanvasTest = React.createClass({
   render: function() {
     return(
       <div id="drawing-page">
-
+        ATTN: Don't scroll down! Just zoom out your page instead.
         <div id="drawing">
           <canvas
             id="drawing-canvas"
@@ -227,8 +232,7 @@ var CanvasTest = React.createClass({
         </div>
 
         <div
-          className="stamp-sidebar"
-          onClick={this.selectStamp}>
+          className="stamp-sidebar">
           <StampIndex/>
         </div>
 

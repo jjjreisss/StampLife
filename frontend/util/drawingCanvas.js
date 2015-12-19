@@ -84,9 +84,10 @@ DrawingCanvas.prototype.clear = function () {
 
 DrawingCanvas.prototype.loadImage = function (url) {
   img = new Image();
-  drawing.src = url;
-  drawing.onload = function() {
-    this.ctx.drawImage(drawing, 0, 0)
+  img.src = url;
+  img.onload = function() {
+    console.log('hi');
+    this.ctx.drawImage(img, 0, 0)
   }.bind(this);
 };
 
