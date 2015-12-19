@@ -31506,8 +31506,10 @@
 	    this.setState({
 	      stamp: StampStore.single()
 	    });
-	    url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + this.state.stamp.image_url + ".png";
-	    this.stampCanvas.loadImage(url);
+	    if (this.state.stamp) {
+	      url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + this.state.stamp.image_url + ".png";
+	      this.stampCanvas.loadImage(url);
+	    }
 	  },
 	  colorBar: function () {
 	    return this.state.recentColors.map((function (color, idx) {
