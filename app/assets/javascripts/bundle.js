@@ -31734,16 +31734,14 @@
 	    var oldWidth = stampCanvas.width;
 	    var oldHeight = stampCanvas.height;
 	    if (e.deltaY < 0) {
-	      var newWidth = oldWidth + 20;
-	      var newHeight = oldHeight + 20;
-	      stampCanvas.width += 20;
-	      stampCanvas.height += 20;
+	      var newWidth = oldWidth * 1.2;
+	      var newHeight = oldHeight * 1.2;
 	    } else {
-	      var newWidth = oldWidth - 20;
-	      var newHeight = oldHeight - 20;
-	      stampCanvas.width -= 20;
-	      stampCanvas.height -= 20;
+	      var newWidth = oldWidth / 1.2;
+	      var newHeight = oldHeight / 1.2;
 	    }
+	    stampCanvas.width = newWidth;
+	    stampCanvas.height = newHeight;
 	    var img = new Image();
 	    img.src = this.stampImg;
 	    this.stampCanvas.ctx.drawImage(img, 0, 0, oldWidth, oldHeight, 0, 0, newWidth, newHeight);
