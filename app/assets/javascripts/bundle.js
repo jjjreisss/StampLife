@@ -51,10 +51,10 @@
 	var App = __webpack_require__(210);
 	var DrawingIndex = __webpack_require__(239);
 	var CanvasTest = __webpack_require__(242);
-	var DrawingDetail = __webpack_require__(251);
-	var ProfilePage = __webpack_require__(252);
+	var DrawingDetail = __webpack_require__(252);
+	var ProfilePage = __webpack_require__(253);
 	var StampIndex = __webpack_require__(211);
-	var StampDetail = __webpack_require__(253);
+	var StampDetail = __webpack_require__(254);
 
 	var routes = React.createElement(
 	  Route,
@@ -31818,11 +31818,11 @@
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(212);
 	var DrawingCanvas = __webpack_require__(243);
-	var StampCanvas = __webpack_require__(254);
-	var ColorPicker = __webpack_require__(244);
-	var SizePicker = __webpack_require__(245);
-	var StrokeSample = __webpack_require__(246);
-	var LinkedStateMixin = __webpack_require__(247);
+	var StampCanvas = __webpack_require__(244);
+	var ColorPicker = __webpack_require__(245);
+	var SizePicker = __webpack_require__(246);
+	var StrokeSample = __webpack_require__(247);
+	var LinkedStateMixin = __webpack_require__(248);
 	var StampIndex = __webpack_require__(211);
 	var StampStore = __webpack_require__(219);
 
@@ -31835,7 +31835,7 @@
 	  getInitialState: function () {
 	    return {
 	      caption: "caption",
-	      stamping: false,
+	      stamping: true,
 	      recentColors: ["#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff"],
 	      stamp: null,
 	      stampSize: 150
@@ -32160,7 +32160,7 @@
 	  this.history = [null, null, null, null, null];
 
 	  this.drawing = false;
-	  this.stamping = false;
+	  this.stamping = true;
 	};
 
 	DrawingCanvas.prototype.mouseDown = function (e, color, size) {
@@ -32292,6 +32292,75 @@
 /* 244 */
 /***/ function(module, exports) {
 
+	var StampCanvas = function (id, width, height) {
+	  this.canvas = document.getElementById(id);
+	  this.canvas.width = width;
+	  this.canvas.height = height;
+	  this.ctx = this.canvas.getContext('2d');
+	  this.img = new Image();
+	  this.scale = 1;
+	};
+
+	StampCanvas.prototype.width = function () {
+	  return this.canvas.width;
+	};
+
+	StampCanvas.prototype.height = function () {
+	  return this.canvas.height;
+	};
+
+	StampCanvas.prototype.loadImage = function (url) {
+	  this.img = new Image();
+	  this.img.crossOrigin = "anonymous";
+	  this.img.src = url;
+	  this.img.onload = (function () {
+	    this.ctx.drawImage(this.img, 0, 0);
+	  }).bind(this);
+	};
+
+	StampCanvas.prototype.getImageData = function () {
+	  return this.ctx.getImageData(0, 0, this.width(), this.height());
+	};
+
+	StampCanvas.prototype.putImageData = function (imageData) {
+	  this.clear();
+	  this.ctx.putImageData(imageData, 0, 0);
+	};
+
+	StampCanvas.prototype.toData = function () {
+	  return this.canvas.toDataURL("image/png");
+	};
+
+	StampCanvas.prototype.clear = function () {
+	  this.ctx.clearRect(0, 0, this.width(), this.height());
+	};
+
+	StampCanvas.prototype.scaleUp = function () {
+	  this.scale = this.scale * 1.2;
+	  var newWidth = 150 * this.scale;
+	  var newHeight = 150 * this.scale;
+	  this.canvas.width = newWidth;
+	  this.canvas.height = newHeight;
+
+	  this.ctx.drawImage(this.img, 0, 0, 150, 150, 0, 0, newWidth, newHeight);
+	};
+
+	StampCanvas.prototype.scaleDown = function () {
+	  this.scale = this.scale / 1.2;
+	  var newWidth = 150 * this.scale;
+	  var newHeight = 150 * this.scale;
+	  this.canvas.width = newWidth;
+	  this.canvas.height = newHeight;
+
+	  this.ctx.drawImage(this.img, 0, 0, 150, 150, 0, 0, newWidth, newHeight);
+	};
+
+	module.exports = StampCanvas;
+
+/***/ },
+/* 245 */
+/***/ function(module, exports) {
+
 	var ColorPicker = function (id) {
 	  this.colorPickerCanvas = document.getElementById(id);
 	  this.colorPickerContext = this.colorPickerCanvas.getContext('2d');
@@ -32318,7 +32387,7 @@
 	module.exports = ColorPicker;
 
 /***/ },
-/* 245 */
+/* 246 */
 /***/ function(module, exports) {
 
 	var SizePicker = function (id) {
@@ -32339,7 +32408,7 @@
 	module.exports = SizePicker;
 
 /***/ },
-/* 246 */
+/* 247 */
 /***/ function(module, exports) {
 
 	var StrokeSample = function () {
@@ -32368,13 +32437,13 @@
 	module.exports = StrokeSample;
 
 /***/ },
-/* 247 */
+/* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(248);
+	module.exports = __webpack_require__(249);
 
 /***/ },
-/* 248 */
+/* 249 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -32391,8 +32460,8 @@
 
 	'use strict';
 
-	var ReactLink = __webpack_require__(249);
-	var ReactStateSetters = __webpack_require__(250);
+	var ReactLink = __webpack_require__(250);
+	var ReactStateSetters = __webpack_require__(251);
 
 	/**
 	 * A simple mixin around ReactLink.forState().
@@ -32415,7 +32484,7 @@
 	module.exports = LinkedStateMixin;
 
 /***/ },
-/* 249 */
+/* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -32489,7 +32558,7 @@
 	module.exports = ReactLink;
 
 /***/ },
-/* 250 */
+/* 251 */
 /***/ function(module, exports) {
 
 	/**
@@ -32598,7 +32667,7 @@
 	module.exports = ReactStateSetters;
 
 /***/ },
-/* 251 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -32658,7 +32727,7 @@
 	module.exports = DrawingDetail;
 
 /***/ },
-/* 252 */
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -32713,7 +32782,7 @@
 	module.exports = ProfilePage;
 
 /***/ },
-/* 253 */
+/* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -32771,75 +32840,6 @@
 	});
 
 	module.exports = StampDetail;
-
-/***/ },
-/* 254 */
-/***/ function(module, exports) {
-
-	var StampCanvas = function (id, width, height) {
-	  this.canvas = document.getElementById(id);
-	  this.canvas.width = width;
-	  this.canvas.height = height;
-	  this.ctx = this.canvas.getContext('2d');
-	  this.img = new Image();
-	  this.scale = 1;
-	};
-
-	StampCanvas.prototype.width = function () {
-	  return this.canvas.width;
-	};
-
-	StampCanvas.prototype.height = function () {
-	  return this.canvas.height;
-	};
-
-	StampCanvas.prototype.loadImage = function (url) {
-	  this.img = new Image();
-	  this.img.crossOrigin = "anonymous";
-	  this.img.src = url;
-	  this.img.onload = (function () {
-	    this.ctx.drawImage(this.img, 0, 0);
-	  }).bind(this);
-	};
-
-	StampCanvas.prototype.getImageData = function () {
-	  return this.ctx.getImageData(0, 0, this.width(), this.height());
-	};
-
-	StampCanvas.prototype.putImageData = function (imageData) {
-	  this.clear();
-	  this.ctx.putImageData(imageData, 0, 0);
-	};
-
-	StampCanvas.prototype.toData = function () {
-	  return this.canvas.toDataURL("image/png");
-	};
-
-	StampCanvas.prototype.clear = function () {
-	  this.ctx.clearRect(0, 0, this.width(), this.height());
-	};
-
-	StampCanvas.prototype.scaleUp = function () {
-	  this.scale = this.scale * 1.2;
-	  var newWidth = 150 * this.scale;
-	  var newHeight = 150 * this.scale;
-	  this.canvas.width = newWidth;
-	  this.canvas.height = newHeight;
-
-	  this.ctx.drawImage(this.img, 0, 0, 150, 150, 0, 0, newWidth, newHeight);
-	};
-
-	StampCanvas.prototype.scaleDown = function () {
-	  this.scale = this.scale / 1.2;
-	  var newWidth = 150 * this.scale;
-	  var newHeight = 150 * this.scale;
-	  this.canvas.width = newWidth;
-	  this.canvas.height = newHeight;
-
-	  this.ctx.drawImage(this.img, 0, 0, 150, 150, 0, 0, newWidth, newHeight);
-	};
-
-	module.exports = StampCanvas;
 
 /***/ }
 /******/ ]);
