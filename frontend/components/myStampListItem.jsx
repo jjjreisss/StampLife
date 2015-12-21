@@ -21,6 +21,7 @@ var MyStampListItem = React.createClass({
     var size = this.props.size;
     var sizeString = "w_"+size+",h_"+size+"/";
     var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + sizeString + this.props.imageUrl + ".png";
+
     return (
       <div className="index-element">
         <img src={url}

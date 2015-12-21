@@ -4,10 +4,10 @@ var StampStore = require('../stores/stampStore');
 var DrawingCanvas = function(id, length, width) {
   this.length = length;
   this.width = width;
-  this.drawingCanvas = document.getElementById(id);
-  this.drawingCanvas.width = length;
-  this.drawingCanvas.height = width;
-  this.ctx = this.drawingCanvas.getContext('2d');
+  this.canvas = document.getElementById(id);
+  this.canvas.width = length;
+  this.canvas.height = width;
+  this.ctx = this.canvas.getContext('2d');
   this.prevX = 0;
   this.prevY = 0;
   this.currX = 0;
@@ -30,12 +30,15 @@ DrawingCanvas.prototype.mouseDown = function (e, color, size) {
 DrawingCanvas.prototype.mouseUp = function (e) {
   this.history.shift();
   this.history.push(this.getImageData());
-  console.log(this.history);
 
   this.drawing = false;
 };
 
 DrawingCanvas.prototype.mouseOut = function (e) {
+  this.clear();
+  if (this.history[this.history.length - 1]){
+    this.putImageData(this.history[this.history.length - 1]);
+  }
   this.drawing = false;
 };
 
@@ -43,12 +46,12 @@ DrawingCanvas.prototype.mouseMove = function (e) {
   this.prevX = this.currX;
   this.prevY = this.currY;
 
-  this.currX = (e.clientX - this.drawingCanvas.offsetLeft
-    - this.drawingCanvas.offsetParent.offsetLeft
-    - this.drawingCanvas.offsetParent.offsetParent.offsetLeft);
-  this.currY = (e.clientY - this.drawingCanvas.offsetTop
-    - this.drawingCanvas.offsetParent.offsetTop
-    - this.drawingCanvas.offsetParent.offsetParent.offsetTop);
+  this.currX = (e.clientX - this.canvas.offsetLeft
+    - this.canvas.offsetParent.offsetLeft
+    - this.canvas.offsetParent.offsetParent.offsetLeft);
+  this.currY = (e.clientY - this.canvas.offsetTop
+    - this.canvas.offsetParent.offsetTop
+    - this.canvas.offsetParent.offsetParent.offsetTop);
 
   if (this.drawing) {
     this.draw();
@@ -61,6 +64,7 @@ DrawingCanvas.prototype.undo = function () {
   if(this.history[this.history.length - 2]) {
     this.history.unshift(null);
     this.history.pop();
+    this.clear();
     this.putImageData(this.history[this.history.length - 1]);
   }
 };
@@ -75,17 +79,16 @@ DrawingCanvas.prototype.draw = function () {
 
 DrawingCanvas.prototype.preview = function () {
   if (this.stamping) {
-    console.log('hi')
     this.clear();
     if (this.history[this.history.length - 1]){
       this.putImageData(this.history[this.history.length - 1]);
     }
-    this.drawStamp("transparent")
+    this.drawStamp("transparent");
   }
 };
 
 DrawingCanvas.prototype.drawStamp = function (transparent) {
-  if (transparent) {this.ctx.globalAlpha = 0.4}
+  if (transparent) {this.ctx.globalAlpha = 0.4;}
   var img = new Image();
   img.src = this.stampImg;
   this.ctx.drawImage(img, this.currX-75, this.currY-75);
@@ -107,11 +110,12 @@ DrawingCanvas.prototype.toggleStamping = function () {
 };
 
 DrawingCanvas.prototype.toData = function () {
-  return this.drawingCanvas.toDataURL("image/png");
+  return this.canvas.toDataURL("image/png");
 };
 
-DrawingCanvas.prototype.setStamp = function (stampImg) {
+DrawingCanvas.prototype.setStamp = function (stampImg, stampSize) {
   this.stampImg = stampImg;
+  this.stampSize = stampSize;
 };
 
 DrawingCanvas.prototype.clear = function () {
@@ -123,8 +127,7 @@ DrawingCanvas.prototype.loadImage = function (url) {
   img.crossOrigin="anonymous";
   img.src = url;
   img.onload = function() {
-    this.ctx.drawImage(img, 0, 0)
-    console.log('loaded');
+    this.ctx.drawImage(img, 0, 0);
   }.bind(this);
 };
 
