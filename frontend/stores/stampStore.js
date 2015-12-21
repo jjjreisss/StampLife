@@ -38,6 +38,7 @@ StampStore.__onDispatch = function(payload) {
     case "STAMP_RECEIVED":
       receiveStamp(payload.stamp)
       StampStore.__emitChange();
+      break;
   }
 }
 

@@ -34,6 +34,20 @@ var ApiActions = {
       actionType: "SET_STAMP",
       stamp: stamp
     })
+  },
+
+  addToMyStamp: function(stamp) {
+    Dispatcher.dispatch({
+      actionType: "ADD_STAMP",
+      stamp: stamp
+    })
+  },
+
+  deleteMyStamp: function(id) {
+    Dispatcher.dispatch({
+      actionType: "DELETE_MY_STAMP",
+      id: id
+    })
   }
 };
 

@@ -95,6 +95,16 @@ var ApiUtil = {
     });
   },
 
+  addToMyStamp: function(id) {
+    $.ajax({
+      url: "api/stamps/" + id,
+      method: "GET",
+      success: function(stamp) {
+        ApiActions.addToMyStamp(stamp);
+      }
+    });
+  },
+
 };
 
 module.exports = ApiUtil;

@@ -24437,6 +24437,8 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
+	var StampIndex = __webpack_require__(246);
+	var MyStampIndex = __webpack_require__(252);
 
 	var App = React.createClass({
 	  displayName: 'App',
@@ -24470,7 +24472,14 @@
 	        { onClick: this.goToStampsIndex },
 	        'All Stamps'
 	      ),
-	      this.props.children
+	      this.props.children,
+	      React.createElement(
+	        'div',
+	        {
+	          className: 'stamp-sidebar' },
+	        React.createElement(MyStampIndex, {
+	          filterIndicies: [] })
+	      )
 	    );
 	  }
 	});
@@ -31394,6 +31403,16 @@
 	        ApiActions.receiveAllDrawings(drawings);
 	      }
 	    });
+	  },
+
+	  addToMyStamp: function (id) {
+	    $.ajax({
+	      url: "api/stamps/" + id,
+	      method: "GET",
+	      success: function (stamp) {
+	        ApiActions.addToMyStamp(stamp);
+	      }
+	    });
 	  }
 
 	};
@@ -31439,6 +31458,20 @@
 	    Dispatcher.dispatch({
 	      actionType: "SET_STAMP",
 	      stamp: stamp
+	    });
+	  },
+
+	  addToMyStamp: function (stamp) {
+	    Dispatcher.dispatch({
+	      actionType: "ADD_STAMP",
+	      stamp: stamp
+	    });
+	  },
+
+	  deleteMyStamp: function (id) {
+	    Dispatcher.dispatch({
+	      actionType: "DELETE_MY_STAMP",
+	      id: id
 	    });
 	  }
 	};
@@ -31721,12 +31754,6 @@
 	        React.createElement(
 	          'div',
 	          {
-	            className: 'stamp-sidebar' },
-	          React.createElement(StampIndex, null)
-	        ),
-	        React.createElement(
-	          'div',
-	          {
 	            className: 'stamp-canvas' },
 	          React.createElement('canvas', {
 	            id: 'stamp-canvas',
@@ -31944,6 +31971,7 @@
 	    case "STAMP_RECEIVED":
 	      receiveStamp(payload.stamp);
 	      StampStore.__emitChange();
+	      break;
 	  }
 	};
 
@@ -32272,7 +32300,7 @@
 
 	  getInitialState: function () {
 	    return {
-	      stamps: StampStore.all()
+	      stamps: null
 	    };
 	  },
 	  componentDidMount: function () {
@@ -32283,7 +32311,15 @@
 	    this.listener.remove();
 	  },
 	  _onChange: function () {
-	    this.setState({ stamps: StampStore.all().reverse() });
+	    var allStamps = StampStore.all().reverse();
+	    // if (this.props.filterIndicies) {
+	    //   var myStamp = allStamps.filter(function(stamp) {
+	    //     return this.props.filterIndicies.indexOf(stamp.id) !== -1
+	    //   }.bind(this))
+	    //   this.setState({stamps: myStamp})
+	    // } else {
+	    this.setState({ stamps: allStamps });
+	    // }
 	  },
 
 	  render: function () {
@@ -32293,7 +32329,8 @@
 	        return React.createElement(StampListItem, {
 	          key: idx,
 	          stampId: stamp.id,
-	          imageUrl: stamp.image_url });
+	          imageUrl: stamp.image_url,
+	          size: 150 });
 	      });
 	    }
 	    return React.createElement(
@@ -32314,6 +32351,7 @@
 	var React = __webpack_require__(1);
 	var History = __webpack_require__(159).History;
 	var ApiUtil = __webpack_require__(233);
+	var ApiActions = __webpack_require__(234);
 
 	var StampListItem = React.createClass({
 	  displayName: 'StampListItem',
@@ -32324,10 +32362,12 @@
 	    return {};
 	  },
 	  setStamp: function () {
-	    ApiUtil.setStamp(this.props.stampId);
+	    ApiUtil.addToMyStamp(this.props.stampId);
 	  },
 	  render: function () {
-	    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_150,h_150/" + this.props.imageUrl + ".png";
+	    var size = this.props.size;
+	    var sizeString = "w_" + size + ",h_" + size + "/";
+	    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + sizeString + this.props.imageUrl + ".png";
 	    return React.createElement(
 	      'div',
 	      { className: 'index-element' },
@@ -32513,6 +32553,151 @@
 	});
 
 	module.exports = StampDetail;
+
+/***/ },
+/* 251 */,
+/* 252 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var ApiUtil = __webpack_require__(233);
+	var MyStampListItem = __webpack_require__(255);
+	var MyStampStore = __webpack_require__(253);
+
+	var MyStampIndex = React.createClass({
+	  displayName: 'MyStampIndex',
+
+	  getInitialState: function () {
+	    return {
+	      stamps: null
+	    };
+	  },
+	  componentDidMount: function () {
+	    this.listener = MyStampStore.addListener(this._onChange);
+	    // ApiUtil.fetchMyStamp();
+	  },
+	  componentWillUnmount: function () {
+	    this.listener.remove();
+	  },
+	  _onChange: function () {
+	    this.setState({
+	      stamps: MyStampStore.all()
+	    });
+	  },
+
+	  render: function () {
+	    var stampsList = "";
+	    if (this.state.stamps) {
+	      stampsList = this.state.stamps.map(function (stamp, idx) {
+	        return React.createElement(MyStampListItem, {
+	          key: idx,
+	          stampId: stamp.id,
+	          imageUrl: stamp.image_url,
+	          size: 100 });
+	      });
+	    }
+	    return React.createElement(
+	      'div',
+	      { className: 'index' },
+	      stampsList
+	    );
+	  }
+
+	});
+
+	module.exports = MyStampIndex;
+
+/***/ },
+/* 253 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(213).Store;
+	var AppDispatcher = __webpack_require__(230);
+
+	var MyStampStore = new Store(AppDispatcher);
+	var _stamps = [];
+	var _stamp;
+
+	var receiveStamp = function (stamp) {
+	  if (_stamps.length < 5) {
+	    _stamps.push(stamp);
+	  }
+	};
+
+	var removeStamp = function (id) {
+	  var stampToRemove = _stamps.find(function (stamp) {
+	    return stamp.id === id;
+	  });
+
+	  var idxToRemove = _stamps.indexOf(stampToRemove);
+
+	  _stamps.splice(idxToRemove, 1);
+	};
+
+	MyStampStore.all = function () {
+	  return _stamps.slice();
+	};
+
+	MyStampStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case "ADD_STAMP":
+	      receiveStamp(payload.stamp);
+	      MyStampStore.__emitChange();
+	      break;
+	    case "DELETE_MY_STAMP":
+	      removeStamp(payload.id);
+	      MyStampStore.__emitChange();
+	      break;
+	  }
+	};
+
+	module.exports = MyStampStore;
+
+/***/ },
+/* 254 */,
+/* 255 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var History = __webpack_require__(159).History;
+	var ApiUtil = __webpack_require__(233);
+	var ApiActions = __webpack_require__(234);
+
+	var MyStampListItem = React.createClass({
+	  displayName: 'MyStampListItem',
+
+	  mixins: [History],
+
+	  getInitialState: function () {
+	    return {};
+	  },
+	  setStamp: function () {
+	    ApiUtil.setStamp(this.props.stampId);
+	  },
+	  deleteMyStamp: function () {
+	    ApiActions.deleteMyStamp(this.props.stampId);
+	  },
+	  render: function () {
+	    var size = this.props.size;
+	    var sizeString = "w_" + size + ",h_" + size + "/";
+	    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + sizeString + this.props.imageUrl + ".png";
+	    return React.createElement(
+	      'div',
+	      { className: 'index-element' },
+	      React.createElement('img', { src: url,
+	        onClick: this.setStamp }),
+	      React.createElement(
+	        'div',
+	        {
+	          className: 'delete-my-stamp',
+	          onClick: this.deleteMyStamp },
+	        'Delete'
+	      )
+	    );
+	  }
+	});
+
+	module.exports = MyStampListItem;
 
 /***/ }
 /******/ ]);

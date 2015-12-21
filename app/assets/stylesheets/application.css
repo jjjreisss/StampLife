@@ -28,6 +28,7 @@ body {
   float: left;
   margin: 5px;
   background: white;
+  position: relative;
 }
 
 .square {
@@ -110,16 +111,22 @@ body {
 }
 
 .stamp-sidebar {
-  width: 200px;
-  height: 500px;
-  overflow: scroll;
+  width: 110px;
+  height: 575px;
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 50px;
+  right: 50px;
+  outline: solid black 1px;
 }
 
 .drawing-toolbar {
   width: 580px;
   height: 150px;
 
+}
+
+.delete-my-stamp {
+  position: absolute;
+  bottom: 0;
+  right: 0;
 }

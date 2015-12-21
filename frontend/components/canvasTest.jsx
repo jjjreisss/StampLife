@@ -242,10 +242,7 @@ var CanvasTest = React.createClass({
           </div>
         </div>
 
-        <div
-          className="stamp-sidebar">
-          <StampIndex/>
-        </div>
+
 
         <div
           className="stamp-canvas">

@@ -3,7 +3,7 @@ var History = require('react-router').History;
 var ApiUtil = require('../util/apiUtil');
 var ApiActions = require('../actions/apiActions');
 
-var StampListItem = React.createClass({
+var MyStampListItem = React.createClass({
   mixins: [History],
 
   getInitialState: function() {
@@ -12,7 +12,10 @@ var StampListItem = React.createClass({
     });
   },
   setStamp: function() {
-    ApiUtil.addToMyStamp(this.props.stampId);
+    ApiUtil.setStamp(this.props.stampId);
+  },
+  deleteMyStamp: function() {
+    ApiActions.deleteMyStamp(this.props.stampId);
   },
   render: function() {
     var size = this.props.size;
@@ -22,9 +25,14 @@ var StampListItem = React.createClass({
       <div className="index-element">
         <img src={url}
           onClick={this.setStamp}/>
+        <div
+          className="delete-my-stamp"
+          onClick={this.deleteMyStamp}>
+          Delete
+        </div>
       </div>
     );
   }
 });
 
-module.exports = StampListItem;
+module.exports = MyStampListItem;

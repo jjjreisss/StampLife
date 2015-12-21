@@ -1,4 +1,6 @@
 var React = require('react');
+var StampIndex = require('./stampIndex');
+var MyStampIndex = require('./myStampIndex');
 
 var App = React.createClass({
   goToDrawingsIndex: function() {
@@ -24,6 +26,11 @@ var App = React.createClass({
           All Stamps
         </div>
           {this.props.children}
+        <div
+          className="stamp-sidebar">
+          <MyStampIndex
+            filterIndicies={[]}/>
+        </div>
       </div>
     )
   }

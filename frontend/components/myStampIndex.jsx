@@ -1,31 +1,25 @@
 var React = require('react');
 var ApiUtil = require('../util/apiUtil');
-var StampListItem = require('./stampListItem');
-var StampStore = require('../stores/stampStore');
+var MyStampListItem = require('./myStampListItem');
+var MyStampStore = require('../stores/myStampStore');
 
-var StampIndex = React.createClass({
+var MyStampIndex = React.createClass({
   getInitialState: function() {
     return({
       stamps: null
     });
   },
   componentDidMount: function() {
-    this.listener = StampStore.addListener(this._onChange);
-    ApiUtil.fetchAllStamps();
+    this.listener = MyStampStore.addListener(this._onChange);
+    // ApiUtil.fetchMyStamp();
   },
   componentWillUnmount: function() {
     this.listener.remove();
   },
   _onChange: function() {
-    var allStamps = StampStore.all().reverse();
-    // if (this.props.filterIndicies) {
-    //   var myStamp = allStamps.filter(function(stamp) {
-    //     return this.props.filterIndicies.indexOf(stamp.id) !== -1
-    //   }.bind(this))
-    //   this.setState({stamps: myStamp})
-    // } else {
-      this.setState({stamps: allStamps})
-    // }
+    this.setState({
+      stamps: MyStampStore.all()
+    })
   },
 
   render: function() {
@@ -33,11 +27,11 @@ var StampIndex = React.createClass({
     if (this.state.stamps) {
       stampsList = this.state.stamps.map(function(stamp, idx){
         return (
-          <StampListItem
+          <MyStampListItem
             key={idx}
             stampId={stamp.id}
             imageUrl={stamp.image_url}
-            size={150}/>
+            size={100}/>
         );
       });
     }
@@ -50,4 +44,4 @@ var StampIndex = React.createClass({
 
 });
 
-module.exports = StampIndex;
+module.exports = MyStampIndex;
