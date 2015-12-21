@@ -16,7 +16,7 @@ var CanvasTest = React.createClass({
   getInitialState: function() {
     return({
       caption: "caption",
-      stamping: true,
+      stamping: false,
       recentColors: ["#fff","#fff","#fff","#fff","#fff",
                       "#fff","#fff","#fff","#fff","#fff",],
       stamp: null,

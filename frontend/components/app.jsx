@@ -10,7 +10,7 @@ var App = React.createClass({
     this.props.history.push('new');
   },
   goToStampsIndex: function() {
-    this.props.history.push('stamps')
+    this.props.history.push('stamps');
   },
 
   render: function() {
@@ -25,11 +25,13 @@ var App = React.createClass({
         <div onClick={this.goToStampsIndex}>
           All Stamps
         </div>
+        <div>
           {this.props.children}
-        <div
-          className="stamp-sidebar">
-          <MyStampIndex
-            filterIndicies={[]}/>
+          <div
+            className="stamp-sidebar">
+            <MyStampIndex
+              filterIndicies={[]}/>
+          </div>
         </div>
       </div>
     )

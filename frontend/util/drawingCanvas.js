@@ -17,7 +17,7 @@ var DrawingCanvas = function(id, length, width) {
   this.history = [null, null, null, null, null];
 
   this.drawing = false;
-  this.stamping = true;
+  this.stamping = false;
 };
 
 DrawingCanvas.prototype.mouseDown = function (e, color, size) {
