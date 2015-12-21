@@ -49,12 +49,12 @@
 	var Router = __webpack_require__(159).Router;
 	var Route = __webpack_require__(159).Route;
 	var App = __webpack_require__(210);
-	var DrawingIndex = __webpack_require__(211);
-	var CanvasTest = __webpack_require__(236);
-	var DrawingDetail = __webpack_require__(248);
-	var ProfilePage = __webpack_require__(249);
-	var StampIndex = __webpack_require__(246);
-	var StampDetail = __webpack_require__(250);
+	var DrawingIndex = __webpack_require__(239);
+	var CanvasTest = __webpack_require__(242);
+	var DrawingDetail = __webpack_require__(251);
+	var ProfilePage = __webpack_require__(252);
+	var StampIndex = __webpack_require__(211);
+	var StampDetail = __webpack_require__(253);
 
 	var routes = React.createElement(
 	  Route,
@@ -24437,8 +24437,8 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var StampIndex = __webpack_require__(246);
-	var MyStampIndex = __webpack_require__(252);
+	var StampIndex = __webpack_require__(211);
+	var MyStampIndex = __webpack_require__(236);
 
 	var App = React.createClass({
 	  displayName: 'App',
@@ -24491,119 +24491,240 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var DrawingStore = __webpack_require__(212);
-	var ApiUtil = __webpack_require__(233);
-	var DrawingListItem = __webpack_require__(235);
+	var ApiUtil = __webpack_require__(212);
+	var StampListItem = __webpack_require__(218);
+	var StampStore = __webpack_require__(219);
 
-	var DrawingIndex = React.createClass({
-	  displayName: 'DrawingIndex',
+	var StampIndex = React.createClass({
+	  displayName: 'StampIndex',
 
 	  getInitialState: function () {
 	    return {
-	      drawings: DrawingStore.all()
+	      stamps: null
 	    };
 	  },
 	  componentDidMount: function () {
-	    this.listener = DrawingStore.addListener(this._onChange);
-	    ApiUtil.fetchAllDrawings();
+	    this.listener = StampStore.addListener(this._onChange);
+	    ApiUtil.fetchAllStamps();
 	  },
 	  componentWillUnmount: function () {
 	    this.listener.remove();
 	  },
 	  _onChange: function () {
-	    this.setState({ drawings: DrawingStore.all() });
+	    var allStamps = StampStore.all().reverse();
+	    // if (this.props.filterIndicies) {
+	    //   var myStamp = allStamps.filter(function(stamp) {
+	    //     return this.props.filterIndicies.indexOf(stamp.id) !== -1
+	    //   }.bind(this))
+	    //   this.setState({stamps: myStamp})
+	    // } else {
+	    this.setState({ stamps: allStamps });
+	    // }
 	  },
 
 	  render: function () {
-	    var drawingsList = "";
-	    if (this.state.drawings) {
-	      drawingsList = this.state.drawings.map(function (drawing, idx) {
-	        return React.createElement(DrawingListItem, {
+	    var stampsList = "";
+	    if (this.state.stamps) {
+	      stampsList = this.state.stamps.map(function (stamp, idx) {
+	        return React.createElement(StampListItem, {
 	          key: idx,
-	          drawingId: drawing.id,
-	          imageUrl: drawing.image_url });
+	          stampId: stamp.id,
+	          imageUrl: stamp.image_url,
+	          size: 150 });
 	      });
 	    }
 	    return React.createElement(
 	      'div',
 	      { className: 'index' },
-	      drawingsList
+	      stampsList
 	    );
 	  }
 
 	});
 
-	module.exports = DrawingIndex;
-
-	// function draw() {
-	//     	// Erasing line
-	//     	var canvas = document.getElementById("eraseLine");
-	//     	if (canvas.getContext) {
-	//         	var ctx = canvas.getContext("2d");
-	//
-	//         	// Black background square
-	//         	ctx.fillRect(0, 0, 200, 200);
-	//
-	//         	// Erasing curved line
-	//         	ctx.globalCompositeOperation = "destination-out";
-	//
-	//         	ctx.beginPath();
-	//         	ctx.moveTo(160, 40);
-	//         	ctx.bezierCurveTo(90, 10, 60, 20, 10, 90);
-	//
-	//         	ctx.lineWidth = 7;
-	//         	ctx.stroke();
-	//     	}
-	// }
+	module.exports = StampIndex;
 
 /***/ },
 /* 212 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Store = __webpack_require__(213).Store;
-	var AppDispatcher = __webpack_require__(230);
+	var ApiActions = __webpack_require__(213);
 
-	var DrawingStore = new Store(AppDispatcher);
-	var _drawings = [];
-	var _drawing;
+	var ApiUtil = {
+	  createDrawing: function (drawing) {
+	    $.ajax({
+	      url: "api/drawings",
+	      method: "POST",
+	      data: { drawing: drawing },
+	      success: function (drawing) {
+	        ApiActions.receiveSingleDrawing(drawing);
+	      }
+	    });
+	  },
 
-	var resetDrawings = function (drawings) {
-	  _drawings = drawings;
-	};
+	  createStamp: function (stamp) {
+	    $.ajax({
+	      url: "api/stamps",
+	      method: "POST",
+	      data: { stamp: stamp },
+	      success: function (stamp) {
+	        ApiActions.receiveSingleStamp(stamp);
+	      }
+	    });
+	  },
 
-	var resetDrawing = function (drawing) {
-	  _drawing = drawing;
-	};
+	  fetchDrawing: function (id) {
+	    $.ajax({
+	      url: "api/drawings/" + id,
+	      method: "GET",
+	      success: function (drawing) {
+	        ApiActions.receiveSingleDrawing(drawing);
+	      }
+	    });
+	  },
 
-	var receiveDrawing = function (drawing) {
-	  _drawings.push(drawing);
-	};
+	  fetchStamp: function (id) {
+	    $.ajax({
+	      url: "api/stamps/" + id,
+	      method: "GET",
+	      success: function (stamp) {
+	        ApiActions.receiveSingleStamp(stamp);
+	      }
+	    });
+	  },
 
-	DrawingStore.single = function () {
-	  return _drawing;
-	};
+	  setStamp: function (id) {
+	    $.ajax({
+	      url: "api/stamps/" + id,
+	      method: "GET",
+	      success: function (stamp) {
+	        ApiActions.setStamp(stamp);
+	      }
+	    });
+	  },
 
-	DrawingStore.all = function () {
-	  return _drawings.slice();
-	};
+	  fetchAllDrawings: function () {
+	    $.ajax({
+	      url: "api/drawings",
+	      method: "GET",
+	      success: function (drawings) {
+	        ApiActions.receiveAllDrawings(drawings);
+	      }
+	    });
+	  },
 
-	DrawingStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case "DRAWING_RECEIVED":
-	      resetDrawing(payload.drawing);
-	      DrawingStore.__emitChange();
-	      break;
-	    case "DRAWINGS_RECEIVED":
-	      resetDrawings(payload.drawings);
-	      DrawingStore.__emitChange();
-	      break;
+	  fetchAllStamps: function () {
+	    $.ajax({
+	      url: "api/stamps",
+	      method: "GET",
+	      success: function (stamps) {
+	        ApiActions.receiveAllStamps(stamps);
+	      }
+	    });
+	  },
+
+	  storeImage: function (img) {
+	    $.ajax({
+	      url: "api/images",
+	      method: "POST",
+	      data: { img: img },
+	      success: function (image_url) {}
+	    });
+	  },
+
+	  fetchUserDrawings: function (username) {
+	    $.ajax({
+	      url: "api/drawings",
+	      method: "GET",
+	      data: { username: username },
+	      success: function (drawings) {
+	        ApiActions.receiveAllDrawings(drawings);
+	      }
+	    });
+	  },
+
+	  addToMyStamp: function (id) {
+	    $.ajax({
+	      url: "api/stamps/" + id,
+	      method: "GET",
+	      success: function (stamp) {
+	        ApiActions.addToMyStamp(stamp);
+	      }
+	    });
 	  }
+
 	};
 
-	module.exports = DrawingStore;
+	module.exports = ApiUtil;
 
 /***/ },
 /* 213 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Dispatcher = __webpack_require__(214);
+
+	var ApiActions = {
+	  receiveSingleDrawing: function (drawing) {
+	    Dispatcher.dispatch({
+	      actionType: "DRAWING_RECEIVED",
+	      drawing: drawing
+	    });
+	  },
+
+	  receiveAllDrawings: function (drawings) {
+	    Dispatcher.dispatch({
+	      actionType: "DRAWINGS_RECEIVED",
+	      drawings: drawings
+	    });
+	  },
+
+	  receiveSingleStamp: function (stamp) {
+	    Dispatcher.dispatch({
+	      actionType: "STAMP_RECEIVED",
+	      stamp: stamp
+	    });
+	  },
+
+	  receiveAllStamps: function (stamps) {
+	    Dispatcher.dispatch({
+	      actionType: "STAMPS_RECEIVED",
+	      stamps: stamps
+	    });
+	  },
+
+	  setStamp: function (stamp) {
+	    Dispatcher.dispatch({
+	      actionType: "SET_STAMP",
+	      stamp: stamp
+	    });
+	  },
+
+	  addToMyStamp: function (stamp) {
+	    Dispatcher.dispatch({
+	      actionType: "ADD_STAMP",
+	      stamp: stamp
+	    });
+	  },
+
+	  deleteMyStamp: function (id) {
+	    Dispatcher.dispatch({
+	      actionType: "DELETE_MY_STAMP",
+	      id: id
+	    });
+	  }
+	};
+
+	module.exports = ApiActions;
+
+/***/ },
+/* 214 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Dispatcher = __webpack_require__(215).Dispatcher;
+	module.exports = new Dispatcher();
+
+/***/ },
+/* 215 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -24615,15 +24736,408 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 
-	module.exports.Container = __webpack_require__(214);
-	module.exports.MapStore = __webpack_require__(218);
-	module.exports.Mixin = __webpack_require__(229);
-	module.exports.ReduceStore = __webpack_require__(219);
-	module.exports.Store = __webpack_require__(220);
+	module.exports.Dispatcher = __webpack_require__(216);
 
 
 /***/ },
-/* 214 */
+/* 216 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright (c) 2014-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule Dispatcher
+	 * 
+	 * @preventMunge
+	 */
+
+	'use strict';
+
+	exports.__esModule = true;
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	var invariant = __webpack_require__(217);
+
+	var _prefix = 'ID_';
+
+	/**
+	 * Dispatcher is used to broadcast payloads to registered callbacks. This is
+	 * different from generic pub-sub systems in two ways:
+	 *
+	 *   1) Callbacks are not subscribed to particular events. Every payload is
+	 *      dispatched to every registered callback.
+	 *   2) Callbacks can be deferred in whole or part until other callbacks have
+	 *      been executed.
+	 *
+	 * For example, consider this hypothetical flight destination form, which
+	 * selects a default city when a country is selected:
+	 *
+	 *   var flightDispatcher = new Dispatcher();
+	 *
+	 *   // Keeps track of which country is selected
+	 *   var CountryStore = {country: null};
+	 *
+	 *   // Keeps track of which city is selected
+	 *   var CityStore = {city: null};
+	 *
+	 *   // Keeps track of the base flight price of the selected city
+	 *   var FlightPriceStore = {price: null}
+	 *
+	 * When a user changes the selected city, we dispatch the payload:
+	 *
+	 *   flightDispatcher.dispatch({
+	 *     actionType: 'city-update',
+	 *     selectedCity: 'paris'
+	 *   });
+	 *
+	 * This payload is digested by `CityStore`:
+	 *
+	 *   flightDispatcher.register(function(payload) {
+	 *     if (payload.actionType === 'city-update') {
+	 *       CityStore.city = payload.selectedCity;
+	 *     }
+	 *   });
+	 *
+	 * When the user selects a country, we dispatch the payload:
+	 *
+	 *   flightDispatcher.dispatch({
+	 *     actionType: 'country-update',
+	 *     selectedCountry: 'australia'
+	 *   });
+	 *
+	 * This payload is digested by both stores:
+	 *
+	 *   CountryStore.dispatchToken = flightDispatcher.register(function(payload) {
+	 *     if (payload.actionType === 'country-update') {
+	 *       CountryStore.country = payload.selectedCountry;
+	 *     }
+	 *   });
+	 *
+	 * When the callback to update `CountryStore` is registered, we save a reference
+	 * to the returned token. Using this token with `waitFor()`, we can guarantee
+	 * that `CountryStore` is updated before the callback that updates `CityStore`
+	 * needs to query its data.
+	 *
+	 *   CityStore.dispatchToken = flightDispatcher.register(function(payload) {
+	 *     if (payload.actionType === 'country-update') {
+	 *       // `CountryStore.country` may not be updated.
+	 *       flightDispatcher.waitFor([CountryStore.dispatchToken]);
+	 *       // `CountryStore.country` is now guaranteed to be updated.
+	 *
+	 *       // Select the default city for the new country
+	 *       CityStore.city = getDefaultCityForCountry(CountryStore.country);
+	 *     }
+	 *   });
+	 *
+	 * The usage of `waitFor()` can be chained, for example:
+	 *
+	 *   FlightPriceStore.dispatchToken =
+	 *     flightDispatcher.register(function(payload) {
+	 *       switch (payload.actionType) {
+	 *         case 'country-update':
+	 *         case 'city-update':
+	 *           flightDispatcher.waitFor([CityStore.dispatchToken]);
+	 *           FlightPriceStore.price =
+	 *             getFlightPriceStore(CountryStore.country, CityStore.city);
+	 *           break;
+	 *     }
+	 *   });
+	 *
+	 * The `country-update` payload will be guaranteed to invoke the stores'
+	 * registered callbacks in order: `CountryStore`, `CityStore`, then
+	 * `FlightPriceStore`.
+	 */
+
+	var Dispatcher = (function () {
+	  function Dispatcher() {
+	    _classCallCheck(this, Dispatcher);
+
+	    this._callbacks = {};
+	    this._isDispatching = false;
+	    this._isHandled = {};
+	    this._isPending = {};
+	    this._lastID = 1;
+	  }
+
+	  /**
+	   * Registers a callback to be invoked with every dispatched payload. Returns
+	   * a token that can be used with `waitFor()`.
+	   */
+
+	  Dispatcher.prototype.register = function register(callback) {
+	    var id = _prefix + this._lastID++;
+	    this._callbacks[id] = callback;
+	    return id;
+	  };
+
+	  /**
+	   * Removes a callback based on its token.
+	   */
+
+	  Dispatcher.prototype.unregister = function unregister(id) {
+	    !this._callbacks[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.unregister(...): `%s` does not map to a registered callback.', id) : invariant(false) : undefined;
+	    delete this._callbacks[id];
+	  };
+
+	  /**
+	   * Waits for the callbacks specified to be invoked before continuing execution
+	   * of the current callback. This method should only be used by a callback in
+	   * response to a dispatched payload.
+	   */
+
+	  Dispatcher.prototype.waitFor = function waitFor(ids) {
+	    !this._isDispatching ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): Must be invoked while dispatching.') : invariant(false) : undefined;
+	    for (var ii = 0; ii < ids.length; ii++) {
+	      var id = ids[ii];
+	      if (this._isPending[id]) {
+	        !this._isHandled[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): Circular dependency detected while ' + 'waiting for `%s`.', id) : invariant(false) : undefined;
+	        continue;
+	      }
+	      !this._callbacks[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): `%s` does not map to a registered callback.', id) : invariant(false) : undefined;
+	      this._invokeCallback(id);
+	    }
+	  };
+
+	  /**
+	   * Dispatches a payload to all registered callbacks.
+	   */
+
+	  Dispatcher.prototype.dispatch = function dispatch(payload) {
+	    !!this._isDispatching ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatch.dispatch(...): Cannot dispatch in the middle of a dispatch.') : invariant(false) : undefined;
+	    this._startDispatching(payload);
+	    try {
+	      for (var id in this._callbacks) {
+	        if (this._isPending[id]) {
+	          continue;
+	        }
+	        this._invokeCallback(id);
+	      }
+	    } finally {
+	      this._stopDispatching();
+	    }
+	  };
+
+	  /**
+	   * Is this Dispatcher currently dispatching.
+	   */
+
+	  Dispatcher.prototype.isDispatching = function isDispatching() {
+	    return this._isDispatching;
+	  };
+
+	  /**
+	   * Call the callback stored with the given id. Also do some internal
+	   * bookkeeping.
+	   *
+	   * @internal
+	   */
+
+	  Dispatcher.prototype._invokeCallback = function _invokeCallback(id) {
+	    this._isPending[id] = true;
+	    this._callbacks[id](this._pendingPayload);
+	    this._isHandled[id] = true;
+	  };
+
+	  /**
+	   * Set up bookkeeping needed when dispatching.
+	   *
+	   * @internal
+	   */
+
+	  Dispatcher.prototype._startDispatching = function _startDispatching(payload) {
+	    for (var id in this._callbacks) {
+	      this._isPending[id] = false;
+	      this._isHandled[id] = false;
+	    }
+	    this._pendingPayload = payload;
+	    this._isDispatching = true;
+	  };
+
+	  /**
+	   * Clear bookkeeping used for dispatching.
+	   *
+	   * @internal
+	   */
+
+	  Dispatcher.prototype._stopDispatching = function _stopDispatching() {
+	    delete this._pendingPayload;
+	    this._isDispatching = false;
+	  };
+
+	  return Dispatcher;
+	})();
+
+	module.exports = Dispatcher;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+
+/***/ },
+/* 217 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule invariant
+	 */
+
+	"use strict";
+
+	/**
+	 * Use invariant() to assert state which your program assumes to be true.
+	 *
+	 * Provide sprintf-style format (only %s is supported) and arguments
+	 * to provide information about what broke and what you were
+	 * expecting.
+	 *
+	 * The invariant message will be stripped in production, but the invariant
+	 * will remain to ensure logic does not differ in production.
+	 */
+
+	var invariant = function (condition, format, a, b, c, d, e, f) {
+	  if (process.env.NODE_ENV !== 'production') {
+	    if (format === undefined) {
+	      throw new Error('invariant requires an error message argument');
+	    }
+	  }
+
+	  if (!condition) {
+	    var error;
+	    if (format === undefined) {
+	      error = new Error('Minified exception occurred; use the non-minified dev environment ' + 'for the full error message and additional helpful warnings.');
+	    } else {
+	      var args = [a, b, c, d, e, f];
+	      var argIndex = 0;
+	      error = new Error('Invariant Violation: ' + format.replace(/%s/g, function () {
+	        return args[argIndex++];
+	      }));
+	    }
+
+	    error.framesToPop = 1; // we don't care about invariant's own frame
+	    throw error;
+	  }
+	};
+
+	module.exports = invariant;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+
+/***/ },
+/* 218 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var History = __webpack_require__(159).History;
+	var ApiUtil = __webpack_require__(212);
+	var ApiActions = __webpack_require__(213);
+
+	var StampListItem = React.createClass({
+	  displayName: 'StampListItem',
+
+	  mixins: [History],
+
+	  getInitialState: function () {
+	    return {};
+	  },
+	  setStamp: function () {
+	    ApiUtil.addToMyStamp(this.props.stampId);
+	  },
+	  render: function () {
+	    var size = this.props.size;
+	    var sizeString = "w_" + size + ",h_" + size + "/";
+	    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + sizeString + this.props.imageUrl + ".png";
+	    return React.createElement(
+	      'div',
+	      { className: 'index-element' },
+	      React.createElement('img', { src: url,
+	        onClick: this.setStamp })
+	    );
+	  }
+	});
+
+	module.exports = StampListItem;
+
+/***/ },
+/* 219 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(220).Store;
+	var AppDispatcher = __webpack_require__(214);
+
+	var StampStore = new Store(AppDispatcher);
+	var _stamps = [];
+	var _stamp;
+
+	var resetStamps = function (stamps) {
+	  _stamps = stamps;
+	};
+
+	var resetStamp = function (stamp) {
+	  _stamp = stamp;
+	};
+
+	var receiveStamp = function (stamp) {
+	  _stamps.push(stamp);
+	};
+
+	StampStore.single = function () {
+	  return _stamp;
+	};
+
+	StampStore.all = function () {
+	  return _stamps.slice();
+	};
+
+	StampStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case "SET_STAMP":
+	      resetStamp(payload.stamp);
+	      StampStore.__emitChange();
+	      break;
+	    case "STAMPS_RECEIVED":
+	      resetStamps(payload.stamps);
+	      StampStore.__emitChange();
+	      break;
+	    case "STAMP_RECEIVED":
+	      receiveStamp(payload.stamp);
+	      StampStore.__emitChange();
+	      break;
+	  }
+	};
+
+	module.exports = StampStore;
+
+/***/ },
+/* 220 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright (c) 2014-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 */
+
+	module.exports.Container = __webpack_require__(221);
+	module.exports.MapStore = __webpack_require__(224);
+	module.exports.Mixin = __webpack_require__(235);
+	module.exports.ReduceStore = __webpack_require__(225);
+	module.exports.Store = __webpack_require__(226);
+
+
+/***/ },
+/* 221 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -24645,10 +25159,10 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var FluxStoreGroup = __webpack_require__(215);
+	var FluxStoreGroup = __webpack_require__(222);
 
-	var invariant = __webpack_require__(216);
-	var shallowEqual = __webpack_require__(217);
+	var invariant = __webpack_require__(217);
+	var shallowEqual = __webpack_require__(223);
 
 	var DEFAULT_OPTIONS = {
 	  pure: true,
@@ -24806,7 +25320,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 215 */
+/* 222 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -24825,7 +25339,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var invariant = __webpack_require__(216);
+	var invariant = __webpack_require__(217);
 
 	/**
 	 * FluxStoreGroup allows you to execute a callback on every dispatch after
@@ -24887,62 +25401,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 216 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {/**
-	 * Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule invariant
-	 */
-
-	"use strict";
-
-	/**
-	 * Use invariant() to assert state which your program assumes to be true.
-	 *
-	 * Provide sprintf-style format (only %s is supported) and arguments
-	 * to provide information about what broke and what you were
-	 * expecting.
-	 *
-	 * The invariant message will be stripped in production, but the invariant
-	 * will remain to ensure logic does not differ in production.
-	 */
-
-	var invariant = function (condition, format, a, b, c, d, e, f) {
-	  if (process.env.NODE_ENV !== 'production') {
-	    if (format === undefined) {
-	      throw new Error('invariant requires an error message argument');
-	    }
-	  }
-
-	  if (!condition) {
-	    var error;
-	    if (format === undefined) {
-	      error = new Error('Minified exception occurred; use the non-minified dev environment ' + 'for the full error message and additional helpful warnings.');
-	    } else {
-	      var args = [a, b, c, d, e, f];
-	      var argIndex = 0;
-	      error = new Error('Invariant Violation: ' + format.replace(/%s/g, function () {
-	        return args[argIndex++];
-	      }));
-	    }
-
-	    error.framesToPop = 1; // we don't care about invariant's own frame
-	    throw error;
-	  }
-	};
-
-	module.exports = invariant;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
-
-/***/ },
-/* 217 */
+/* 223 */
 /***/ function(module, exports) {
 
 	/**
@@ -24997,7 +25456,7 @@
 	module.exports = shallowEqual;
 
 /***/ },
-/* 218 */
+/* 224 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25018,10 +25477,10 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var FluxReduceStore = __webpack_require__(219);
-	var Immutable = __webpack_require__(228);
+	var FluxReduceStore = __webpack_require__(225);
+	var Immutable = __webpack_require__(234);
 
-	var invariant = __webpack_require__(216);
+	var invariant = __webpack_require__(217);
 
 	/**
 	 * This is a simple store. It allows caching key value pairs. An implementation
@@ -25147,7 +25606,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 219 */
+/* 225 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25168,10 +25627,10 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var FluxStore = __webpack_require__(220);
+	var FluxStore = __webpack_require__(226);
 
-	var abstractMethod = __webpack_require__(227);
-	var invariant = __webpack_require__(216);
+	var abstractMethod = __webpack_require__(233);
+	var invariant = __webpack_require__(217);
 
 	var FluxReduceStore = (function (_FluxStore) {
 	  _inherits(FluxReduceStore, _FluxStore);
@@ -25254,7 +25713,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 220 */
+/* 226 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25273,11 +25732,11 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var _require = __webpack_require__(221);
+	var _require = __webpack_require__(227);
 
 	var EventEmitter = _require.EventEmitter;
 
-	var invariant = __webpack_require__(216);
+	var invariant = __webpack_require__(217);
 
 	/**
 	 * This class should be extended by the stores in your application, like so:
@@ -25437,7 +25896,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 221 */
+/* 227 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -25450,14 +25909,14 @@
 	 */
 
 	var fbemitter = {
-	  EventEmitter: __webpack_require__(222)
+	  EventEmitter: __webpack_require__(228)
 	};
 
 	module.exports = fbemitter;
 
 
 /***/ },
-/* 222 */
+/* 228 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25476,11 +25935,11 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var EmitterSubscription = __webpack_require__(223);
-	var EventSubscriptionVendor = __webpack_require__(225);
+	var EmitterSubscription = __webpack_require__(229);
+	var EventSubscriptionVendor = __webpack_require__(231);
 
-	var emptyFunction = __webpack_require__(226);
-	var invariant = __webpack_require__(216);
+	var emptyFunction = __webpack_require__(232);
+	var invariant = __webpack_require__(217);
 
 	/**
 	 * @class BaseEventEmitter
@@ -25654,7 +26113,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 223 */
+/* 229 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -25675,7 +26134,7 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var EventSubscription = __webpack_require__(224);
+	var EventSubscription = __webpack_require__(230);
 
 	/**
 	 * EmitterSubscription represents a subscription with listener and context data.
@@ -25707,7 +26166,7 @@
 	module.exports = EmitterSubscription;
 
 /***/ },
-/* 224 */
+/* 230 */
 /***/ function(module, exports) {
 
 	/**
@@ -25758,7 +26217,7 @@
 	module.exports = EventSubscription;
 
 /***/ },
-/* 225 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25777,7 +26236,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var invariant = __webpack_require__(216);
+	var invariant = __webpack_require__(217);
 
 	/**
 	 * EventSubscriptionVendor stores a set of EventSubscriptions that are
@@ -25867,7 +26326,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 226 */
+/* 232 */
 /***/ function(module, exports) {
 
 	/**
@@ -25910,7 +26369,7 @@
 	module.exports = emptyFunction;
 
 /***/ },
-/* 227 */
+/* 233 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25927,7 +26386,7 @@
 
 	'use strict';
 
-	var invariant = __webpack_require__(216);
+	var invariant = __webpack_require__(217);
 
 	function abstractMethod(className, methodName) {
 	   true ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Subclasses of %s must override %s() with their own implementation.', className, methodName) : invariant(false) : undefined;
@@ -25937,7 +26396,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 228 */
+/* 234 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -30924,7 +31383,7 @@
 	}));
 
 /***/ },
-/* 229 */
+/* 235 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -30941,9 +31400,9 @@
 
 	'use strict';
 
-	var FluxStoreGroup = __webpack_require__(215);
+	var FluxStoreGroup = __webpack_require__(222);
 
-	var invariant = __webpack_require__(216);
+	var invariant = __webpack_require__(217);
 
 	/**
 	 * `FluxContainer` should be preferred over this mixin, but it requires using
@@ -31047,439 +31506,266 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 230 */
+/* 236 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Dispatcher = __webpack_require__(231).Dispatcher;
-	module.exports = new Dispatcher();
+	var React = __webpack_require__(1);
+	var ApiUtil = __webpack_require__(212);
+	var MyStampListItem = __webpack_require__(237);
+	var MyStampStore = __webpack_require__(238);
 
-/***/ },
-/* 231 */
-/***/ function(module, exports, __webpack_require__) {
+	var MyStampIndex = React.createClass({
+	  displayName: 'MyStampIndex',
 
-	/**
-	 * Copyright (c) 2014-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 */
+	  getInitialState: function () {
+	    return {
+	      stamps: null
+	    };
+	  },
+	  componentDidMount: function () {
+	    this.listener = MyStampStore.addListener(this._onChange);
+	    // ApiUtil.fetchMyStamp();
+	  },
+	  componentWillUnmount: function () {
+	    this.listener.remove();
+	  },
+	  _onChange: function () {
+	    this.setState({
+	      stamps: MyStampStore.all()
+	    });
+	  },
 
-	module.exports.Dispatcher = __webpack_require__(232);
-
-
-/***/ },
-/* 232 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {/**
-	 * Copyright (c) 2014-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule Dispatcher
-	 * 
-	 * @preventMunge
-	 */
-
-	'use strict';
-
-	exports.__esModule = true;
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	var invariant = __webpack_require__(216);
-
-	var _prefix = 'ID_';
-
-	/**
-	 * Dispatcher is used to broadcast payloads to registered callbacks. This is
-	 * different from generic pub-sub systems in two ways:
-	 *
-	 *   1) Callbacks are not subscribed to particular events. Every payload is
-	 *      dispatched to every registered callback.
-	 *   2) Callbacks can be deferred in whole or part until other callbacks have
-	 *      been executed.
-	 *
-	 * For example, consider this hypothetical flight destination form, which
-	 * selects a default city when a country is selected:
-	 *
-	 *   var flightDispatcher = new Dispatcher();
-	 *
-	 *   // Keeps track of which country is selected
-	 *   var CountryStore = {country: null};
-	 *
-	 *   // Keeps track of which city is selected
-	 *   var CityStore = {city: null};
-	 *
-	 *   // Keeps track of the base flight price of the selected city
-	 *   var FlightPriceStore = {price: null}
-	 *
-	 * When a user changes the selected city, we dispatch the payload:
-	 *
-	 *   flightDispatcher.dispatch({
-	 *     actionType: 'city-update',
-	 *     selectedCity: 'paris'
-	 *   });
-	 *
-	 * This payload is digested by `CityStore`:
-	 *
-	 *   flightDispatcher.register(function(payload) {
-	 *     if (payload.actionType === 'city-update') {
-	 *       CityStore.city = payload.selectedCity;
-	 *     }
-	 *   });
-	 *
-	 * When the user selects a country, we dispatch the payload:
-	 *
-	 *   flightDispatcher.dispatch({
-	 *     actionType: 'country-update',
-	 *     selectedCountry: 'australia'
-	 *   });
-	 *
-	 * This payload is digested by both stores:
-	 *
-	 *   CountryStore.dispatchToken = flightDispatcher.register(function(payload) {
-	 *     if (payload.actionType === 'country-update') {
-	 *       CountryStore.country = payload.selectedCountry;
-	 *     }
-	 *   });
-	 *
-	 * When the callback to update `CountryStore` is registered, we save a reference
-	 * to the returned token. Using this token with `waitFor()`, we can guarantee
-	 * that `CountryStore` is updated before the callback that updates `CityStore`
-	 * needs to query its data.
-	 *
-	 *   CityStore.dispatchToken = flightDispatcher.register(function(payload) {
-	 *     if (payload.actionType === 'country-update') {
-	 *       // `CountryStore.country` may not be updated.
-	 *       flightDispatcher.waitFor([CountryStore.dispatchToken]);
-	 *       // `CountryStore.country` is now guaranteed to be updated.
-	 *
-	 *       // Select the default city for the new country
-	 *       CityStore.city = getDefaultCityForCountry(CountryStore.country);
-	 *     }
-	 *   });
-	 *
-	 * The usage of `waitFor()` can be chained, for example:
-	 *
-	 *   FlightPriceStore.dispatchToken =
-	 *     flightDispatcher.register(function(payload) {
-	 *       switch (payload.actionType) {
-	 *         case 'country-update':
-	 *         case 'city-update':
-	 *           flightDispatcher.waitFor([CityStore.dispatchToken]);
-	 *           FlightPriceStore.price =
-	 *             getFlightPriceStore(CountryStore.country, CityStore.city);
-	 *           break;
-	 *     }
-	 *   });
-	 *
-	 * The `country-update` payload will be guaranteed to invoke the stores'
-	 * registered callbacks in order: `CountryStore`, `CityStore`, then
-	 * `FlightPriceStore`.
-	 */
-
-	var Dispatcher = (function () {
-	  function Dispatcher() {
-	    _classCallCheck(this, Dispatcher);
-
-	    this._callbacks = {};
-	    this._isDispatching = false;
-	    this._isHandled = {};
-	    this._isPending = {};
-	    this._lastID = 1;
+	  render: function () {
+	    var stampsList = "";
+	    if (this.state.stamps) {
+	      stampsList = this.state.stamps.map(function (stamp, idx) {
+	        return React.createElement(MyStampListItem, {
+	          key: idx,
+	          stampId: stamp.id,
+	          imageUrl: stamp.image_url,
+	          size: 100 });
+	      });
+	    }
+	    return React.createElement(
+	      'div',
+	      { className: 'index' },
+	      stampsList
+	    );
 	  }
 
-	  /**
-	   * Registers a callback to be invoked with every dispatched payload. Returns
-	   * a token that can be used with `waitFor()`.
-	   */
+	});
 
-	  Dispatcher.prototype.register = function register(callback) {
-	    var id = _prefix + this._lastID++;
-	    this._callbacks[id] = callback;
-	    return id;
-	  };
-
-	  /**
-	   * Removes a callback based on its token.
-	   */
-
-	  Dispatcher.prototype.unregister = function unregister(id) {
-	    !this._callbacks[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.unregister(...): `%s` does not map to a registered callback.', id) : invariant(false) : undefined;
-	    delete this._callbacks[id];
-	  };
-
-	  /**
-	   * Waits for the callbacks specified to be invoked before continuing execution
-	   * of the current callback. This method should only be used by a callback in
-	   * response to a dispatched payload.
-	   */
-
-	  Dispatcher.prototype.waitFor = function waitFor(ids) {
-	    !this._isDispatching ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): Must be invoked while dispatching.') : invariant(false) : undefined;
-	    for (var ii = 0; ii < ids.length; ii++) {
-	      var id = ids[ii];
-	      if (this._isPending[id]) {
-	        !this._isHandled[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): Circular dependency detected while ' + 'waiting for `%s`.', id) : invariant(false) : undefined;
-	        continue;
-	      }
-	      !this._callbacks[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): `%s` does not map to a registered callback.', id) : invariant(false) : undefined;
-	      this._invokeCallback(id);
-	    }
-	  };
-
-	  /**
-	   * Dispatches a payload to all registered callbacks.
-	   */
-
-	  Dispatcher.prototype.dispatch = function dispatch(payload) {
-	    !!this._isDispatching ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatch.dispatch(...): Cannot dispatch in the middle of a dispatch.') : invariant(false) : undefined;
-	    this._startDispatching(payload);
-	    try {
-	      for (var id in this._callbacks) {
-	        if (this._isPending[id]) {
-	          continue;
-	        }
-	        this._invokeCallback(id);
-	      }
-	    } finally {
-	      this._stopDispatching();
-	    }
-	  };
-
-	  /**
-	   * Is this Dispatcher currently dispatching.
-	   */
-
-	  Dispatcher.prototype.isDispatching = function isDispatching() {
-	    return this._isDispatching;
-	  };
-
-	  /**
-	   * Call the callback stored with the given id. Also do some internal
-	   * bookkeeping.
-	   *
-	   * @internal
-	   */
-
-	  Dispatcher.prototype._invokeCallback = function _invokeCallback(id) {
-	    this._isPending[id] = true;
-	    this._callbacks[id](this._pendingPayload);
-	    this._isHandled[id] = true;
-	  };
-
-	  /**
-	   * Set up bookkeeping needed when dispatching.
-	   *
-	   * @internal
-	   */
-
-	  Dispatcher.prototype._startDispatching = function _startDispatching(payload) {
-	    for (var id in this._callbacks) {
-	      this._isPending[id] = false;
-	      this._isHandled[id] = false;
-	    }
-	    this._pendingPayload = payload;
-	    this._isDispatching = true;
-	  };
-
-	  /**
-	   * Clear bookkeeping used for dispatching.
-	   *
-	   * @internal
-	   */
-
-	  Dispatcher.prototype._stopDispatching = function _stopDispatching() {
-	    delete this._pendingPayload;
-	    this._isDispatching = false;
-	  };
-
-	  return Dispatcher;
-	})();
-
-	module.exports = Dispatcher;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+	module.exports = MyStampIndex;
 
 /***/ },
-/* 233 */
+/* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var ApiActions = __webpack_require__(234);
+	var React = __webpack_require__(1);
+	var History = __webpack_require__(159).History;
+	var ApiUtil = __webpack_require__(212);
+	var ApiActions = __webpack_require__(213);
 
-	var ApiUtil = {
-	  createDrawing: function (drawing) {
-	    $.ajax({
-	      url: "api/drawings",
-	      method: "POST",
-	      data: { drawing: drawing },
-	      success: function (drawing) {
-	        ApiActions.receiveSingleDrawing(drawing);
-	      }
-	    });
+	var MyStampListItem = React.createClass({
+	  displayName: 'MyStampListItem',
+
+	  mixins: [History],
+
+	  getInitialState: function () {
+	    return {};
 	  },
-
-	  createStamp: function (stamp) {
-	    $.ajax({
-	      url: "api/stamps",
-	      method: "POST",
-	      data: { stamp: stamp },
-	      success: function (stamp) {
-	        ApiActions.receiveSingleStamp(stamp);
-	      }
-	    });
+	  setStamp: function () {
+	    ApiUtil.setStamp(this.props.stampId);
 	  },
-
-	  fetchDrawing: function (id) {
-	    $.ajax({
-	      url: "api/drawings/" + id,
-	      method: "GET",
-	      success: function (drawing) {
-	        ApiActions.receiveSingleDrawing(drawing);
-	      }
-	    });
+	  deleteMyStamp: function () {
+	    ApiActions.deleteMyStamp(this.props.stampId);
 	  },
-
-	  fetchStamp: function (id) {
-	    $.ajax({
-	      url: "api/stamps/" + id,
-	      method: "GET",
-	      success: function (stamp) {
-	        ApiActions.receiveSingleStamp(stamp);
-	      }
-	    });
-	  },
-
-	  setStamp: function (id) {
-	    $.ajax({
-	      url: "api/stamps/" + id,
-	      method: "GET",
-	      success: function (stamp) {
-	        ApiActions.setStamp(stamp);
-	      }
-	    });
-	  },
-
-	  fetchAllDrawings: function () {
-	    $.ajax({
-	      url: "api/drawings",
-	      method: "GET",
-	      success: function (drawings) {
-	        ApiActions.receiveAllDrawings(drawings);
-	      }
-	    });
-	  },
-
-	  fetchAllStamps: function () {
-	    $.ajax({
-	      url: "api/stamps",
-	      method: "GET",
-	      success: function (stamps) {
-	        ApiActions.receiveAllStamps(stamps);
-	      }
-	    });
-	  },
-
-	  storeImage: function (img) {
-	    $.ajax({
-	      url: "api/images",
-	      method: "POST",
-	      data: { img: img },
-	      success: function (image_url) {}
-	    });
-	  },
-
-	  fetchUserDrawings: function (username) {
-	    $.ajax({
-	      url: "api/drawings",
-	      method: "GET",
-	      data: { username: username },
-	      success: function (drawings) {
-	        ApiActions.receiveAllDrawings(drawings);
-	      }
-	    });
-	  },
-
-	  addToMyStamp: function (id) {
-	    $.ajax({
-	      url: "api/stamps/" + id,
-	      method: "GET",
-	      success: function (stamp) {
-	        ApiActions.addToMyStamp(stamp);
-	      }
-	    });
+	  render: function () {
+	    var size = this.props.size;
+	    var sizeString = "w_" + size + ",h_" + size + "/";
+	    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + sizeString + this.props.imageUrl + ".png";
+	    return React.createElement(
+	      'div',
+	      { className: 'index-element' },
+	      React.createElement('img', { src: url,
+	        onClick: this.setStamp }),
+	      React.createElement(
+	        'div',
+	        {
+	          className: 'delete-my-stamp',
+	          onClick: this.deleteMyStamp },
+	        'Delete'
+	      )
+	    );
 	  }
+	});
 
-	};
-
-	module.exports = ApiUtil;
+	module.exports = MyStampListItem;
 
 /***/ },
-/* 234 */
+/* 238 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Dispatcher = __webpack_require__(230);
+	var Store = __webpack_require__(220).Store;
+	var AppDispatcher = __webpack_require__(214);
 
-	var ApiActions = {
-	  receiveSingleDrawing: function (drawing) {
-	    Dispatcher.dispatch({
-	      actionType: "DRAWING_RECEIVED",
-	      drawing: drawing
-	    });
-	  },
+	var MyStampStore = new Store(AppDispatcher);
+	var _stamps = [];
+	var _stamp;
 
-	  receiveAllDrawings: function (drawings) {
-	    Dispatcher.dispatch({
-	      actionType: "DRAWINGS_RECEIVED",
-	      drawings: drawings
-	    });
-	  },
-
-	  receiveSingleStamp: function (stamp) {
-	    Dispatcher.dispatch({
-	      actionType: "STAMP_RECEIVED",
-	      stamp: stamp
-	    });
-	  },
-
-	  receiveAllStamps: function (stamps) {
-	    Dispatcher.dispatch({
-	      actionType: "STAMPS_RECEIVED",
-	      stamps: stamps
-	    });
-	  },
-
-	  setStamp: function (stamp) {
-	    Dispatcher.dispatch({
-	      actionType: "SET_STAMP",
-	      stamp: stamp
-	    });
-	  },
-
-	  addToMyStamp: function (stamp) {
-	    Dispatcher.dispatch({
-	      actionType: "ADD_STAMP",
-	      stamp: stamp
-	    });
-	  },
-
-	  deleteMyStamp: function (id) {
-	    Dispatcher.dispatch({
-	      actionType: "DELETE_MY_STAMP",
-	      id: id
-	    });
+	var receiveStamp = function (stamp) {
+	  if (_stamps.length < 5) {
+	    _stamps.push(stamp);
 	  }
 	};
 
-	module.exports = ApiActions;
+	var removeStamp = function (id) {
+	  var stampToRemove = _stamps.find(function (stamp) {
+	    return stamp.id === id;
+	  });
+
+	  var idxToRemove = _stamps.indexOf(stampToRemove);
+
+	  _stamps.splice(idxToRemove, 1);
+	};
+
+	MyStampStore.all = function () {
+	  return _stamps.slice();
+	};
+
+	MyStampStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case "ADD_STAMP":
+	      receiveStamp(payload.stamp);
+	      MyStampStore.__emitChange();
+	      break;
+	    case "DELETE_MY_STAMP":
+	      removeStamp(payload.id);
+	      MyStampStore.__emitChange();
+	      break;
+	  }
+	};
+
+	module.exports = MyStampStore;
 
 /***/ },
-/* 235 */
+/* 239 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var DrawingStore = __webpack_require__(240);
+	var ApiUtil = __webpack_require__(212);
+	var DrawingListItem = __webpack_require__(241);
+
+	var DrawingIndex = React.createClass({
+	  displayName: 'DrawingIndex',
+
+	  getInitialState: function () {
+	    return {
+	      drawings: DrawingStore.all()
+	    };
+	  },
+	  componentDidMount: function () {
+	    this.listener = DrawingStore.addListener(this._onChange);
+	    ApiUtil.fetchAllDrawings();
+	  },
+	  componentWillUnmount: function () {
+	    this.listener.remove();
+	  },
+	  _onChange: function () {
+	    this.setState({ drawings: DrawingStore.all() });
+	  },
+
+	  render: function () {
+	    var drawingsList = "";
+	    if (this.state.drawings) {
+	      drawingsList = this.state.drawings.map(function (drawing, idx) {
+	        return React.createElement(DrawingListItem, {
+	          key: idx,
+	          drawingId: drawing.id,
+	          imageUrl: drawing.image_url });
+	      });
+	    }
+	    return React.createElement(
+	      'div',
+	      { className: 'index' },
+	      drawingsList
+	    );
+	  }
+
+	});
+
+	module.exports = DrawingIndex;
+
+	// function draw() {
+	//     	// Erasing line
+	//     	var canvas = document.getElementById("eraseLine");
+	//     	if (canvas.getContext) {
+	//         	var ctx = canvas.getContext("2d");
+	//
+	//         	// Black background square
+	//         	ctx.fillRect(0, 0, 200, 200);
+	//
+	//         	// Erasing curved line
+	//         	ctx.globalCompositeOperation = "destination-out";
+	//
+	//         	ctx.beginPath();
+	//         	ctx.moveTo(160, 40);
+	//         	ctx.bezierCurveTo(90, 10, 60, 20, 10, 90);
+	//
+	//         	ctx.lineWidth = 7;
+	//         	ctx.stroke();
+	//     	}
+	// }
+
+/***/ },
+/* 240 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(220).Store;
+	var AppDispatcher = __webpack_require__(214);
+
+	var DrawingStore = new Store(AppDispatcher);
+	var _drawings = [];
+	var _drawing;
+
+	var resetDrawings = function (drawings) {
+	  _drawings = drawings;
+	};
+
+	var resetDrawing = function (drawing) {
+	  _drawing = drawing;
+	};
+
+	var receiveDrawing = function (drawing) {
+	  _drawings.push(drawing);
+	};
+
+	DrawingStore.single = function () {
+	  return _drawing;
+	};
+
+	DrawingStore.all = function () {
+	  return _drawings.slice();
+	};
+
+	DrawingStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case "DRAWING_RECEIVED":
+	      resetDrawing(payload.drawing);
+	      DrawingStore.__emitChange();
+	      break;
+	    case "DRAWINGS_RECEIVED":
+	      resetDrawings(payload.drawings);
+	      DrawingStore.__emitChange();
+	      break;
+	  }
+	};
+
+	module.exports = DrawingStore;
+
+/***/ },
+/* 241 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -31510,18 +31796,18 @@
 	module.exports = DrawingListItem;
 
 /***/ },
-/* 236 */
+/* 242 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var ApiUtil = __webpack_require__(233);
-	var DrawingCanvas = __webpack_require__(237);
-	var ColorPicker = __webpack_require__(239);
-	var SizePicker = __webpack_require__(240);
-	var StrokeSample = __webpack_require__(241);
-	var LinkedStateMixin = __webpack_require__(242);
-	var StampIndex = __webpack_require__(246);
-	var StampStore = __webpack_require__(238);
+	var ApiUtil = __webpack_require__(212);
+	var DrawingCanvas = __webpack_require__(243);
+	var ColorPicker = __webpack_require__(244);
+	var SizePicker = __webpack_require__(245);
+	var StrokeSample = __webpack_require__(246);
+	var LinkedStateMixin = __webpack_require__(247);
+	var StampIndex = __webpack_require__(211);
+	var StampStore = __webpack_require__(219);
 
 	var CanvasTest = React.createClass({
 	  displayName: 'CanvasTest',
@@ -31875,11 +32161,11 @@
 	// })
 
 /***/ },
-/* 237 */
+/* 243 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var ApiUtil = __webpack_require__(233);
-	var StampStore = __webpack_require__(238);
+	var ApiUtil = __webpack_require__(212);
+	var StampStore = __webpack_require__(219);
 
 	var DrawingCanvas = function (id, length, width) {
 	  this.length = length;
@@ -32018,57 +32304,7 @@
 	module.exports = DrawingCanvas;
 
 /***/ },
-/* 238 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(213).Store;
-	var AppDispatcher = __webpack_require__(230);
-
-	var StampStore = new Store(AppDispatcher);
-	var _stamps = [];
-	var _stamp;
-
-	var resetStamps = function (stamps) {
-	  _stamps = stamps;
-	};
-
-	var resetStamp = function (stamp) {
-	  _stamp = stamp;
-	};
-
-	var receiveStamp = function (stamp) {
-	  _stamps.push(stamp);
-	};
-
-	StampStore.single = function () {
-	  return _stamp;
-	};
-
-	StampStore.all = function () {
-	  return _stamps.slice();
-	};
-
-	StampStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case "SET_STAMP":
-	      resetStamp(payload.stamp);
-	      StampStore.__emitChange();
-	      break;
-	    case "STAMPS_RECEIVED":
-	      resetStamps(payload.stamps);
-	      StampStore.__emitChange();
-	      break;
-	    case "STAMP_RECEIVED":
-	      receiveStamp(payload.stamp);
-	      StampStore.__emitChange();
-	      break;
-	  }
-	};
-
-	module.exports = StampStore;
-
-/***/ },
-/* 239 */
+/* 244 */
 /***/ function(module, exports) {
 
 	var ColorPicker = function (id) {
@@ -32097,7 +32333,7 @@
 	module.exports = ColorPicker;
 
 /***/ },
-/* 240 */
+/* 245 */
 /***/ function(module, exports) {
 
 	var SizePicker = function (id) {
@@ -32118,7 +32354,7 @@
 	module.exports = SizePicker;
 
 /***/ },
-/* 241 */
+/* 246 */
 /***/ function(module, exports) {
 
 	var StrokeSample = function () {
@@ -32147,13 +32383,13 @@
 	module.exports = StrokeSample;
 
 /***/ },
-/* 242 */
+/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(243);
+	module.exports = __webpack_require__(248);
 
 /***/ },
-/* 243 */
+/* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -32170,8 +32406,8 @@
 
 	'use strict';
 
-	var ReactLink = __webpack_require__(244);
-	var ReactStateSetters = __webpack_require__(245);
+	var ReactLink = __webpack_require__(249);
+	var ReactStateSetters = __webpack_require__(250);
 
 	/**
 	 * A simple mixin around ReactLink.forState().
@@ -32194,7 +32430,7 @@
 	module.exports = LinkedStateMixin;
 
 /***/ },
-/* 244 */
+/* 249 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -32268,7 +32504,7 @@
 	module.exports = ReactLink;
 
 /***/ },
-/* 245 */
+/* 250 */
 /***/ function(module, exports) {
 
 	/**
@@ -32377,105 +32613,12 @@
 	module.exports = ReactStateSetters;
 
 /***/ },
-/* 246 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var ApiUtil = __webpack_require__(233);
-	var StampListItem = __webpack_require__(247);
-	var StampStore = __webpack_require__(238);
-
-	var StampIndex = React.createClass({
-	  displayName: 'StampIndex',
-
-	  getInitialState: function () {
-	    return {
-	      stamps: null
-	    };
-	  },
-	  componentDidMount: function () {
-	    this.listener = StampStore.addListener(this._onChange);
-	    ApiUtil.fetchAllStamps();
-	  },
-	  componentWillUnmount: function () {
-	    this.listener.remove();
-	  },
-	  _onChange: function () {
-	    var allStamps = StampStore.all().reverse();
-	    // if (this.props.filterIndicies) {
-	    //   var myStamp = allStamps.filter(function(stamp) {
-	    //     return this.props.filterIndicies.indexOf(stamp.id) !== -1
-	    //   }.bind(this))
-	    //   this.setState({stamps: myStamp})
-	    // } else {
-	    this.setState({ stamps: allStamps });
-	    // }
-	  },
-
-	  render: function () {
-	    var stampsList = "";
-	    if (this.state.stamps) {
-	      stampsList = this.state.stamps.map(function (stamp, idx) {
-	        return React.createElement(StampListItem, {
-	          key: idx,
-	          stampId: stamp.id,
-	          imageUrl: stamp.image_url,
-	          size: 150 });
-	      });
-	    }
-	    return React.createElement(
-	      'div',
-	      { className: 'index' },
-	      stampsList
-	    );
-	  }
-
-	});
-
-	module.exports = StampIndex;
-
-/***/ },
-/* 247 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var History = __webpack_require__(159).History;
-	var ApiUtil = __webpack_require__(233);
-	var ApiActions = __webpack_require__(234);
-
-	var StampListItem = React.createClass({
-	  displayName: 'StampListItem',
-
-	  mixins: [History],
-
-	  getInitialState: function () {
-	    return {};
-	  },
-	  setStamp: function () {
-	    ApiUtil.addToMyStamp(this.props.stampId);
-	  },
-	  render: function () {
-	    var size = this.props.size;
-	    var sizeString = "w_" + size + ",h_" + size + "/";
-	    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + sizeString + this.props.imageUrl + ".png";
-	    return React.createElement(
-	      'div',
-	      { className: 'index-element' },
-	      React.createElement('img', { src: url,
-	        onClick: this.setStamp })
-	    );
-	  }
-	});
-
-	module.exports = StampListItem;
-
-/***/ },
-/* 248 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var DrawingStore = __webpack_require__(212);
-	var ApiUtil = __webpack_require__(233);
+	var DrawingStore = __webpack_require__(240);
+	var ApiUtil = __webpack_require__(212);
 	var History = __webpack_require__(159).History;
 
 	var DrawingDetail = React.createClass({
@@ -32530,13 +32673,13 @@
 	module.exports = DrawingDetail;
 
 /***/ },
-/* 249 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var DrawingStore = __webpack_require__(212);
-	var ApiUtil = __webpack_require__(233);
-	var DrawingListItem = __webpack_require__(235);
+	var DrawingStore = __webpack_require__(240);
+	var ApiUtil = __webpack_require__(212);
+	var DrawingListItem = __webpack_require__(241);
 
 	var ProfilePage = React.createClass({
 	  displayName: 'ProfilePage',
@@ -32585,12 +32728,12 @@
 	module.exports = ProfilePage;
 
 /***/ },
-/* 250 */
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var StampStore = __webpack_require__(238);
-	var ApiUtil = __webpack_require__(233);
+	var StampStore = __webpack_require__(219);
+	var ApiUtil = __webpack_require__(212);
 	var History = __webpack_require__(159).History;
 
 	var StampDetail = React.createClass({
@@ -32643,151 +32786,6 @@
 	});
 
 	module.exports = StampDetail;
-
-/***/ },
-/* 251 */,
-/* 252 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var ApiUtil = __webpack_require__(233);
-	var MyStampListItem = __webpack_require__(255);
-	var MyStampStore = __webpack_require__(253);
-
-	var MyStampIndex = React.createClass({
-	  displayName: 'MyStampIndex',
-
-	  getInitialState: function () {
-	    return {
-	      stamps: null
-	    };
-	  },
-	  componentDidMount: function () {
-	    this.listener = MyStampStore.addListener(this._onChange);
-	    // ApiUtil.fetchMyStamp();
-	  },
-	  componentWillUnmount: function () {
-	    this.listener.remove();
-	  },
-	  _onChange: function () {
-	    this.setState({
-	      stamps: MyStampStore.all()
-	    });
-	  },
-
-	  render: function () {
-	    var stampsList = "";
-	    if (this.state.stamps) {
-	      stampsList = this.state.stamps.map(function (stamp, idx) {
-	        return React.createElement(MyStampListItem, {
-	          key: idx,
-	          stampId: stamp.id,
-	          imageUrl: stamp.image_url,
-	          size: 100 });
-	      });
-	    }
-	    return React.createElement(
-	      'div',
-	      { className: 'index' },
-	      stampsList
-	    );
-	  }
-
-	});
-
-	module.exports = MyStampIndex;
-
-/***/ },
-/* 253 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(213).Store;
-	var AppDispatcher = __webpack_require__(230);
-
-	var MyStampStore = new Store(AppDispatcher);
-	var _stamps = [];
-	var _stamp;
-
-	var receiveStamp = function (stamp) {
-	  if (_stamps.length < 5) {
-	    _stamps.push(stamp);
-	  }
-	};
-
-	var removeStamp = function (id) {
-	  var stampToRemove = _stamps.find(function (stamp) {
-	    return stamp.id === id;
-	  });
-
-	  var idxToRemove = _stamps.indexOf(stampToRemove);
-
-	  _stamps.splice(idxToRemove, 1);
-	};
-
-	MyStampStore.all = function () {
-	  return _stamps.slice();
-	};
-
-	MyStampStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case "ADD_STAMP":
-	      receiveStamp(payload.stamp);
-	      MyStampStore.__emitChange();
-	      break;
-	    case "DELETE_MY_STAMP":
-	      removeStamp(payload.id);
-	      MyStampStore.__emitChange();
-	      break;
-	  }
-	};
-
-	module.exports = MyStampStore;
-
-/***/ },
-/* 254 */,
-/* 255 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var History = __webpack_require__(159).History;
-	var ApiUtil = __webpack_require__(233);
-	var ApiActions = __webpack_require__(234);
-
-	var MyStampListItem = React.createClass({
-	  displayName: 'MyStampListItem',
-
-	  mixins: [History],
-
-	  getInitialState: function () {
-	    return {};
-	  },
-	  setStamp: function () {
-	    ApiUtil.setStamp(this.props.stampId);
-	  },
-	  deleteMyStamp: function () {
-	    ApiActions.deleteMyStamp(this.props.stampId);
-	  },
-	  render: function () {
-	    var size = this.props.size;
-	    var sizeString = "w_" + size + ",h_" + size + "/";
-	    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + sizeString + this.props.imageUrl + ".png";
-	    return React.createElement(
-	      'div',
-	      { className: 'index-element' },
-	      React.createElement('img', { src: url,
-	        onClick: this.setStamp }),
-	      React.createElement(
-	        'div',
-	        {
-	          className: 'delete-my-stamp',
-	          onClick: this.deleteMyStamp },
-	        'Delete'
-	      )
-	    );
-	  }
-	});
-
-	module.exports = MyStampListItem;
 
 /***/ }
 /******/ ]);
