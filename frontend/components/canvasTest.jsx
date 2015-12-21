@@ -19,7 +19,8 @@ var CanvasTest = React.createClass({
       stamping: false,
       recentColors: ["#fff","#fff","#fff","#fff","#fff",
                       "#fff","#fff","#fff","#fff","#fff",],
-      stamp: null
+      stamp: null,
+      stampSize: 150
     });
   },
   componentDidMount: function() {
@@ -99,6 +100,7 @@ var CanvasTest = React.createClass({
   },
   setStamp: function() {
     this.stampImg = this.stampCanvas.toData();
+    this.stampSize = this.stampCanvas.width();
     this.drawingCanvas.setStamp(this.stampImg, this.stampSize);
   },
   stampingText: function() {
@@ -169,77 +171,32 @@ var CanvasTest = React.createClass({
 
 // Methods for drawing
   clearDrawingCanvas: function() {
-    this.drawingCanvas.clear();
+    this.drawingCanvas.clearCanvas();
   },
   clearStamp: function() {
     this.stampCanvas.clear();
     this.setStamp();
   },
   mouseDownHandler: function(e) {
-    // if (e.target.id === "drawing-canvas"){
-      this.drawingCanvas.mouseDown(e, this.color, this.size);
-    // } else if (e.target.id === "stamp-canvas"){
-    //   this.stampCanvas.mouseDown(e, this.color, this.size);
-    // }
+    this.drawingCanvas.mouseDown(e, this.color, this.size);
   },
   mouseUpHandler: function(e) {
-    // if (e.target.id === "drawing-canvas"){
-      this.drawingCanvas.mouseUp(e, this.color, this.size);
-    // } else if (e.target.id === "stamp-canvas"){
-    //   this.stampCanvas.mouseUp(e, this.color, this.size);
-    //   this.setStamp();
-    // }
+    this.drawingCanvas.mouseUp(e, this.color, this.size);
   },
   mouseOutHandler: function(e) {
-    // if (e.target.id === "drawing-canvas"){
-      this.drawingCanvas.mouseOut(e, this.color, this.size);
-    // } else if (e.target.id === "stamp-canvas"){
-    //   this.stampCanvas.mouseOut(e, this.color, this.size);
-    //   this.setStamp();
-    // }
+    this.drawingCanvas.mouseOut(e, this.color, this.size);
   },
   mouseMoveHandler: function(e) {
-    // if (e.target.id === "drawing-canvas"){
-        this.drawingCanvas.mouseMove(e, this.color, this.size);
-    // } else if (e.target.id === "stamp-canvas"){
-    //   this.stampCanvas.mouseMove(e, this.color, this.size);
-    // }
+    this.drawingCanvas.mouseMove(e, this.color, this.size);
   },
   onWheelHandler: function(e) {
-    // var stampCanvas = document.getElementById('stamp-canvas');
-    // var newWidth = oldWidth + 20;
-    // var newHeight = oldHeight + 20;
-    // var tempCanvas = (
-    //   <canvas
-    //     width={newWidth}
-    //     height={newHeight}>
-    //
-    //   </canvas>
-    // )
-    // var tempContext = tempCanvas.getContext('2d');
-    // tempContext.drawImg(this.stampImg, 0, 0, oldWidth, oldHeight,
-    //                                   0, 0, newWidth, newHeight);
-    //
-
-    // this.stampCanvas = document.getElementById('stamp-canvas');
-    // var oldWidth = this.stampCanvas.width;
-    // var oldHeight = this.stampCanvas.height;
-    // if (e.deltaY < 0) {
-    //   var newWidth = oldWidth * 1.2;
-    //   var newHeight = oldHeight * 1.2;
-    // } else {
-    //   var newWidth = oldWidth / 1.2;
-    //   var newHeight = oldHeight / 1.2;
-    // }
-    // this.stampCanvas.width = newWidth;
-    // this.stampCanvas.height = newHeight;
-    // var img = new Image();
-    // img.src = this.stampImg;
-    // this.stampCanvas.ctx.drawImage(img, 0, 0, oldWidth, oldHeight,
-    //                                       0, 0, newWidth, newHeight);
-    // console.log(this.stampCanvas.width);
-    // this.setStamp();
-    // this.drawingCanvas.mouseMove(e);
+    if (e.deltaY < 0) {
+      this.stampCanvas.scaleUp();
+    } else {
+      this.stampCanvas.scaleDown();
+    }
+    this.setStamp();
+    this.drawingCanvas.mouseMove(e);
   },
   undo: function(e) {
     this.drawingCanvas.undo();
