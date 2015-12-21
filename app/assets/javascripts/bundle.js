@@ -31519,7 +31519,8 @@
 
 	  getInitialState: function () {
 	    return {
-	      stamps: null
+	      stamps: null,
+	      selected: null
 	    };
 	  },
 	  componentDidMount: function () {
@@ -31534,17 +31535,31 @@
 	      stamps: MyStampStore.all()
 	    });
 	  },
+	  selectStamp: function (e) {
+	    this.setState({
+	      selected: parseInt(e.currentTarget.attributes["data-idx"].value)
+	    });
+	  },
 
 	  render: function () {
 	    var stampsList = "";
 	    if (this.state.stamps) {
-	      stampsList = this.state.stamps.map(function (stamp, idx) {
-	        return React.createElement(MyStampListItem, {
-	          key: idx,
-	          stampId: stamp.id,
-	          imageUrl: stamp.image_url,
-	          size: 100 });
-	      });
+	      stampsList = this.state.stamps.map((function (stamp, idx) {
+	        var selected = this.state.selected === idx ? "selected-stamp" : "";
+	        return React.createElement(
+	          'div',
+	          {
+	            key: idx,
+	            'data-idx': idx,
+	            onClick: this.selectStamp,
+	            id: selected,
+	            className: 'stamp-index-element' },
+	          React.createElement(MyStampListItem, {
+	            stampId: stamp.id,
+	            imageUrl: stamp.image_url,
+	            size: 100 })
+	        );
+	      }).bind(this));
 	    }
 	    return React.createElement(
 	      'div',
@@ -31584,6 +31599,7 @@
 	    var size = this.props.size;
 	    var sizeString = "w_" + size + ",h_" + size + "/";
 	    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + sizeString + this.props.imageUrl + ".png";
+
 	    return React.createElement(
 	      'div',
 	      { className: 'index-element' },
@@ -31802,6 +31818,7 @@
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(212);
 	var DrawingCanvas = __webpack_require__(243);
+	var StampCanvas = __webpack_require__(254);
 	var ColorPicker = __webpack_require__(244);
 	var SizePicker = __webpack_require__(245);
 	var StrokeSample = __webpack_require__(246);
@@ -31828,7 +31845,7 @@
 	    this.sizePicker = new SizePicker('size-picker');
 	    this.colorPicker = new ColorPicker('color-picker');
 	    this.strokeSample = new StrokeSample('stroke-sample');
-	    this.stampCanvas = new DrawingCanvas('stamp-canvas', 150, 150);
+	    this.stampCanvas = new StampCanvas('stamp-canvas', 150, 150);
 	    this.history = [null, null, null];
 	    this.viewHistory = [null, null];
 
@@ -31896,7 +31913,7 @@
 	  },
 	  setStamp: function () {
 	    this.stampImg = this.stampCanvas.toData();
-	    this.drawingCanvas.setStamp(this.stampImg);
+	    this.drawingCanvas.setStamp(this.stampImg, this.stampSize);
 	  },
 	  stampingText: function () {
 	    var text = this.state.stamping ? "Turn Stamping Off" : "Turn Stamping On";
@@ -31972,34 +31989,34 @@
 	    this.setStamp();
 	  },
 	  mouseDownHandler: function (e) {
-	    if (e.target.id === "drawing-canvas") {
-	      this.drawingCanvas.mouseDown(e, this.color, this.size);
-	    } else if (e.target.id === "stamp-canvas") {
-	      this.stampCanvas.mouseDown(e, this.color, this.size);
-	    }
+	    // if (e.target.id === "drawing-canvas"){
+	    this.drawingCanvas.mouseDown(e, this.color, this.size);
+	    // } else if (e.target.id === "stamp-canvas"){
+	    //   this.stampCanvas.mouseDown(e, this.color, this.size);
+	    // }
 	  },
 	  mouseUpHandler: function (e) {
-	    if (e.target.id === "drawing-canvas") {
-	      this.drawingCanvas.mouseUp(e, this.color, this.size);
-	    } else if (e.target.id === "stamp-canvas") {
-	      this.stampCanvas.mouseUp(e, this.color, this.size);
-	      this.setStamp();
-	    }
+	    // if (e.target.id === "drawing-canvas"){
+	    this.drawingCanvas.mouseUp(e, this.color, this.size);
+	    // } else if (e.target.id === "stamp-canvas"){
+	    //   this.stampCanvas.mouseUp(e, this.color, this.size);
+	    //   this.setStamp();
+	    // }
 	  },
 	  mouseOutHandler: function (e) {
-	    if (e.target.id === "drawing-canvas") {
-	      this.drawingCanvas.mouseOut(e, this.color, this.size);
-	    } else if (e.target.id === "stamp-canvas") {
-	      this.stampCanvas.mouseOut(e, this.color, this.size);
-	      this.setStamp();
-	    }
+	    // if (e.target.id === "drawing-canvas"){
+	    this.drawingCanvas.mouseOut(e, this.color, this.size);
+	    // } else if (e.target.id === "stamp-canvas"){
+	    //   this.stampCanvas.mouseOut(e, this.color, this.size);
+	    //   this.setStamp();
+	    // }
 	  },
 	  mouseMoveHandler: function (e) {
-	    if (e.target.id === "drawing-canvas") {
-	      this.drawingCanvas.mouseMove(e, this.color, this.size);
-	    } else if (e.target.id === "stamp-canvas") {
-	      this.stampCanvas.mouseMove(e, this.color, this.size);
-	    }
+	    // if (e.target.id === "drawing-canvas"){
+	    this.drawingCanvas.mouseMove(e, this.color, this.size);
+	    // } else if (e.target.id === "stamp-canvas"){
+	    //   this.stampCanvas.mouseMove(e, this.color, this.size);
+	    // }
 	  },
 	  onWheelHandler: function (e) {
 	    // var stampCanvas = document.getElementById('stamp-canvas');
@@ -32016,23 +32033,26 @@
 	    // tempContext.drawImg(this.stampImg, 0, 0, oldWidth, oldHeight,
 	    //                                   0, 0, newWidth, newHeight);
 	    //
-	    var stampCanvas = document.getElementById('stamp-canvas');
-	    var oldWidth = stampCanvas.width;
-	    var oldHeight = stampCanvas.height;
-	    if (e.deltaY < 0) {
-	      var newWidth = oldWidth * 1.2;
-	      var newHeight = oldHeight * 1.2;
-	    } else {
-	      var newWidth = oldWidth / 1.2;
-	      var newHeight = oldHeight / 1.2;
-	    }
-	    stampCanvas.width = newWidth;
-	    stampCanvas.height = newHeight;
-	    var img = new Image();
-	    img.src = this.stampImg;
-	    this.stampCanvas.ctx.drawImage(img, 0, 0, oldWidth, oldHeight, 0, 0, newWidth, newHeight);
-	    this.setStamp();
-	    this.drawingCanvas.mouseMove(e);
+
+	    // this.stampCanvas = document.getElementById('stamp-canvas');
+	    // var oldWidth = this.stampCanvas.width;
+	    // var oldHeight = this.stampCanvas.height;
+	    // if (e.deltaY < 0) {
+	    //   var newWidth = oldWidth * 1.2;
+	    //   var newHeight = oldHeight * 1.2;
+	    // } else {
+	    //   var newWidth = oldWidth / 1.2;
+	    //   var newHeight = oldHeight / 1.2;
+	    // }
+	    // this.stampCanvas.width = newWidth;
+	    // this.stampCanvas.height = newHeight;
+	    // var img = new Image();
+	    // img.src = this.stampImg;
+	    // this.stampCanvas.ctx.drawImage(img, 0, 0, oldWidth, oldHeight,
+	    //                                       0, 0, newWidth, newHeight);
+	    // console.log(this.stampCanvas.width);
+	    // this.setStamp();
+	    // this.drawingCanvas.mouseMove(e);
 	  },
 	  undo: function (e) {
 	    this.drawingCanvas.undo();
@@ -32170,10 +32190,10 @@
 	var DrawingCanvas = function (id, length, width) {
 	  this.length = length;
 	  this.width = width;
-	  this.drawingCanvas = document.getElementById(id);
-	  this.drawingCanvas.width = length;
-	  this.drawingCanvas.height = width;
-	  this.ctx = this.drawingCanvas.getContext('2d');
+	  this.canvas = document.getElementById(id);
+	  this.canvas.width = length;
+	  this.canvas.height = width;
+	  this.ctx = this.canvas.getContext('2d');
 	  this.prevX = 0;
 	  this.prevY = 0;
 	  this.currX = 0;
@@ -32196,12 +32216,15 @@
 	DrawingCanvas.prototype.mouseUp = function (e) {
 	  this.history.shift();
 	  this.history.push(this.getImageData());
-	  console.log(this.history);
 
 	  this.drawing = false;
 	};
 
 	DrawingCanvas.prototype.mouseOut = function (e) {
+	  this.clear();
+	  if (this.history[this.history.length - 1]) {
+	    this.putImageData(this.history[this.history.length - 1]);
+	  }
 	  this.drawing = false;
 	};
 
@@ -32209,8 +32232,8 @@
 	  this.prevX = this.currX;
 	  this.prevY = this.currY;
 
-	  this.currX = e.clientX - this.drawingCanvas.offsetLeft - this.drawingCanvas.offsetParent.offsetLeft - this.drawingCanvas.offsetParent.offsetParent.offsetLeft;
-	  this.currY = e.clientY - this.drawingCanvas.offsetTop - this.drawingCanvas.offsetParent.offsetTop - this.drawingCanvas.offsetParent.offsetParent.offsetTop;
+	  this.currX = e.clientX - this.canvas.offsetLeft - this.canvas.offsetParent.offsetLeft - this.canvas.offsetParent.offsetParent.offsetLeft;
+	  this.currY = e.clientY - this.canvas.offsetTop - this.canvas.offsetParent.offsetTop - this.canvas.offsetParent.offsetParent.offsetTop;
 
 	  if (this.drawing) {
 	    this.draw();
@@ -32223,6 +32246,7 @@
 	  if (this.history[this.history.length - 2]) {
 	    this.history.unshift(null);
 	    this.history.pop();
+	    this.clear();
 	    this.putImageData(this.history[this.history.length - 1]);
 	  }
 	};
@@ -32237,7 +32261,6 @@
 
 	DrawingCanvas.prototype.preview = function () {
 	  if (this.stamping) {
-	    console.log('hi');
 	    this.clear();
 	    if (this.history[this.history.length - 1]) {
 	      this.putImageData(this.history[this.history.length - 1]);
@@ -32271,11 +32294,12 @@
 	};
 
 	DrawingCanvas.prototype.toData = function () {
-	  return this.drawingCanvas.toDataURL("image/png");
+	  return this.canvas.toDataURL("image/png");
 	};
 
-	DrawingCanvas.prototype.setStamp = function (stampImg) {
+	DrawingCanvas.prototype.setStamp = function (stampImg, stampSize) {
 	  this.stampImg = stampImg;
+	  this.stampSize = stampSize;
 	};
 
 	DrawingCanvas.prototype.clear = function () {
@@ -32288,7 +32312,6 @@
 	  img.src = url;
 	  img.onload = (function () {
 	    this.ctx.drawImage(img, 0, 0);
-	    console.log('loaded');
 	  }).bind(this);
 	};
 
@@ -32786,6 +32809,47 @@
 	});
 
 	module.exports = StampDetail;
+
+/***/ },
+/* 254 */
+/***/ function(module, exports) {
+
+	var StampCanvas = function (id, length, width) {
+	  this.length = length;
+	  this.width = width;
+	  this.canvas = document.getElementById(id);
+	  this.canvas.width = length;
+	  this.canvas.height = width;
+	  this.ctx = this.canvas.getContext('2d');
+	};
+
+	StampCanvas.prototype.loadImage = function (url) {
+	  var img = new Image();
+	  img.crossOrigin = "anonymous";
+	  img.src = url;
+	  img.onload = (function () {
+	    this.ctx.drawImage(img, 0, 0);
+	  }).bind(this);
+	};
+
+	StampCanvas.prototype.getImageData = function () {
+	  return this.ctx.getImageData(0, 0, this.width, this.length);
+	};
+
+	StampCanvas.prototype.putImageData = function (imageData) {
+	  this.clear();
+	  this.ctx.putImageData(imageData, 0, 0);
+	};
+
+	StampCanvas.prototype.toData = function () {
+	  return this.canvas.toDataURL("image/png");
+	};
+
+	StampCanvas.prototype.clear = function () {
+	  this.ctx.clearRect(0, 0, this.width, this.length);
+	};
+
+	module.exports = StampCanvas;
 
 /***/ }
 /******/ ]);

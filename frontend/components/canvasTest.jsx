@@ -1,6 +1,7 @@
 var React = require('react');
 var ApiUtil = require('../util/apiUtil');
 var DrawingCanvas = require('../util/drawingCanvas');
+var StampCanvas = require('../util/stampCanvas');
 var ColorPicker = require('../util/colorPicker');
 var SizePicker = require('../util/sizePicker');
 var StrokeSample = require('../util/strokeSample');
@@ -26,7 +27,7 @@ var CanvasTest = React.createClass({
     this.sizePicker = new SizePicker('size-picker');
     this.colorPicker = new ColorPicker('color-picker');
     this.strokeSample = new StrokeSample('stroke-sample');
-    this.stampCanvas = new DrawingCanvas('stamp-canvas', 150, 150);
+    this.stampCanvas = new StampCanvas('stamp-canvas', 150, 150);
     this.history = [null, null, null];
     this.viewHistory = [null, null];
 
@@ -46,7 +47,7 @@ var CanvasTest = React.createClass({
   selectStamp: function() {
     this.setState({
       stamp: StampStore.single()
-    })
+    });
     if(this.state.stamp) {
       this.stampCanvas.clear();
       var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + this.state.stamp.image_url + ".png";
@@ -64,8 +65,8 @@ var CanvasTest = React.createClass({
           onClick={this.pickRecentColor}>
 
         </div>
-      )
-    }.bind(this))
+      );
+    }.bind(this));
   },
   saveDrawing: function() {
     var img = this.drawingCanvas.toData();
@@ -92,13 +93,13 @@ var CanvasTest = React.createClass({
         ApiUtil.createStamp({
           name: "default name",
           image_url: imageReceived.public_id
-        })
+        });
       }
-    })
+    });
   },
   setStamp: function() {
     this.stampImg = this.stampCanvas.toData();
-    this.drawingCanvas.setStamp(this.stampImg);
+    this.drawingCanvas.setStamp(this.stampImg, this.stampSize);
   },
   stampingText: function() {
     var text = this.state.stamping ? "Turn Stamping Off" : "Turn Stamping On";
@@ -106,7 +107,7 @@ var CanvasTest = React.createClass({
   },
   toggleStamping: function() {
     this.drawingCanvas.toggleStamping();
-    this.setState({stamping: !this.state.stamping})
+    this.setState({stamping: !this.state.stamping});
     this.setStamp();
   },
 
@@ -148,7 +149,7 @@ var CanvasTest = React.createClass({
   addRecentColor: function() {
     var recentColors = this.state.recentColors.slice(1,10);
     recentColors.push(this.color);
-    this.setState({recentColors: recentColors})
+    this.setState({recentColors: recentColors});
   },
 
   // Methods for picking size
@@ -175,34 +176,34 @@ var CanvasTest = React.createClass({
     this.setStamp();
   },
   mouseDownHandler: function(e) {
-    if (e.target.id === "drawing-canvas"){
+    // if (e.target.id === "drawing-canvas"){
       this.drawingCanvas.mouseDown(e, this.color, this.size);
-    } else if (e.target.id === "stamp-canvas"){
-      this.stampCanvas.mouseDown(e, this.color, this.size);
-    }
+    // } else if (e.target.id === "stamp-canvas"){
+    //   this.stampCanvas.mouseDown(e, this.color, this.size);
+    // }
   },
   mouseUpHandler: function(e) {
-    if (e.target.id === "drawing-canvas"){
+    // if (e.target.id === "drawing-canvas"){
       this.drawingCanvas.mouseUp(e, this.color, this.size);
-    } else if (e.target.id === "stamp-canvas"){
-      this.stampCanvas.mouseUp(e, this.color, this.size);
-      this.setStamp();
-    }
+    // } else if (e.target.id === "stamp-canvas"){
+    //   this.stampCanvas.mouseUp(e, this.color, this.size);
+    //   this.setStamp();
+    // }
   },
   mouseOutHandler: function(e) {
-    if (e.target.id === "drawing-canvas"){
+    // if (e.target.id === "drawing-canvas"){
       this.drawingCanvas.mouseOut(e, this.color, this.size);
-    } else if (e.target.id === "stamp-canvas"){
-      this.stampCanvas.mouseOut(e, this.color, this.size);
-      this.setStamp();
-    }
+    // } else if (e.target.id === "stamp-canvas"){
+    //   this.stampCanvas.mouseOut(e, this.color, this.size);
+    //   this.setStamp();
+    // }
   },
   mouseMoveHandler: function(e) {
-    if (e.target.id === "drawing-canvas"){
+    // if (e.target.id === "drawing-canvas"){
         this.drawingCanvas.mouseMove(e, this.color, this.size);
-    } else if (e.target.id === "stamp-canvas"){
-      this.stampCanvas.mouseMove(e, this.color, this.size);
-    }
+    // } else if (e.target.id === "stamp-canvas"){
+    //   this.stampCanvas.mouseMove(e, this.color, this.size);
+    // }
   },
   onWheelHandler: function(e) {
     // var stampCanvas = document.getElementById('stamp-canvas');
@@ -219,24 +220,26 @@ var CanvasTest = React.createClass({
     // tempContext.drawImg(this.stampImg, 0, 0, oldWidth, oldHeight,
     //                                   0, 0, newWidth, newHeight);
     //
-    var stampCanvas = document.getElementById('stamp-canvas');
-    var oldWidth = stampCanvas.width;
-    var oldHeight = stampCanvas.height;
-    if (e.deltaY < 0) {
-      var newWidth = oldWidth * 1.2;
-      var newHeight = oldHeight * 1.2;
-    } else {
-      var newWidth = oldWidth / 1.2;
-      var newHeight = oldHeight / 1.2;
-    }
-    stampCanvas.width = newWidth;
-    stampCanvas.height = newHeight;
-    var img = new Image();
-    img.src = this.stampImg;
-    this.stampCanvas.ctx.drawImage(img, 0, 0, oldWidth, oldHeight,
-                                          0, 0, newWidth, newHeight);
-    this.setStamp();
-    this.drawingCanvas.mouseMove(e);
+
+    // this.stampCanvas = document.getElementById('stamp-canvas');
+    // var oldWidth = this.stampCanvas.width;
+    // var oldHeight = this.stampCanvas.height;
+    // if (e.deltaY < 0) {
+    //   var newWidth = oldWidth * 1.2;
+    //   var newHeight = oldHeight * 1.2;
+    // } else {
+    //   var newWidth = oldWidth / 1.2;
+    //   var newHeight = oldHeight / 1.2;
+    // }
+    // this.stampCanvas.width = newWidth;
+    // this.stampCanvas.height = newHeight;
+    // var img = new Image();
+    // img.src = this.stampImg;
+    // this.stampCanvas.ctx.drawImage(img, 0, 0, oldWidth, oldHeight,
+    //                                       0, 0, newWidth, newHeight);
+    // console.log(this.stampCanvas.width);
+    // this.setStamp();
+    // this.drawingCanvas.mouseMove(e);
   },
   undo: function(e) {
     this.drawingCanvas.undo();
