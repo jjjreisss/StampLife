@@ -205,7 +205,40 @@ var CanvasTest = React.createClass({
     }
   },
   onWheelHandler: function(e) {
-    console.log(e);
+    // var stampCanvas = document.getElementById('stamp-canvas');
+    // var newWidth = oldWidth + 20;
+    // var newHeight = oldHeight + 20;
+    // var tempCanvas = (
+    //   <canvas
+    //     width={newWidth}
+    //     height={newHeight}>
+    //
+    //   </canvas>
+    // )
+    // var tempContext = tempCanvas.getContext('2d');
+    // tempContext.drawImg(this.stampImg, 0, 0, oldWidth, oldHeight,
+    //                                   0, 0, newWidth, newHeight);
+    //
+    var stampCanvas = document.getElementById('stamp-canvas');
+    var oldWidth = stampCanvas.width;
+    var oldHeight = stampCanvas.height;
+    if (e.deltaY < 0) {
+      var newWidth = oldWidth + 20;
+      var newHeight = oldHeight + 20;
+      stampCanvas.width += 20;
+      stampCanvas.height += 20;
+    } else {
+      var newWidth = oldWidth - 20;
+      var newHeight = oldHeight - 20;
+      stampCanvas.width -= 20;
+      stampCanvas.height -= 20;
+    }
+    var img = new Image();
+    img.src = this.stampImg;
+    this.stampCanvas.ctx.drawImage(img, 0, 0, oldWidth, oldHeight,
+                                          0, 0, newWidth, newHeight);
+    this.setStamp();
+    this.drawingCanvas.mouseMove(e);
   },
   undo: function(e) {
     this.drawingCanvas.undo();
@@ -215,6 +248,7 @@ var CanvasTest = React.createClass({
     return(
     <div>
       <div id="drawing-page">
+
 
         <div id="drawing">
           <canvas

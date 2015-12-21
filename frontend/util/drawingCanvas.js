@@ -75,6 +75,7 @@ DrawingCanvas.prototype.draw = function () {
 
 DrawingCanvas.prototype.preview = function () {
   if (this.stamping) {
+    console.log('hi')
     this.clear();
     if (this.history[this.history.length - 1]){
       this.putImageData(this.history[this.history.length - 1]);
