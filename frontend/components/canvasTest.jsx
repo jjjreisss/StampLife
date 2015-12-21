@@ -27,6 +27,8 @@ var CanvasTest = React.createClass({
     this.colorPicker = new ColorPicker('color-picker');
     this.strokeSample = new StrokeSample('stroke-sample');
     this.stampCanvas = new DrawingCanvas('stamp-canvas', 150, 150);
+    this.history = [null, null, null];
+    this.viewHistory = [null, null];
 
     this.size = 10;
     this.color = "#000";
@@ -187,6 +189,14 @@ var CanvasTest = React.createClass({
       this.setStamp();
     }
   },
+  mouseOutHandler: function(e) {
+    if (e.target.id === "drawing-canvas"){
+      this.drawingCanvas.mouseOut(e, this.color, this.size);
+    } else if (e.target.id === "stamp-canvas"){
+      this.stampCanvas.mouseOut(e, this.color, this.size);
+      this.setStamp();
+    }
+  },
   mouseMoveHandler: function(e) {
     if (e.target.id === "drawing-canvas"){
         this.drawingCanvas.mouseMove(e, this.color, this.size);
@@ -194,19 +204,27 @@ var CanvasTest = React.createClass({
       this.stampCanvas.mouseMove(e, this.color, this.size);
     }
   },
+  onWheelHandler: function(e) {
+    console.log(e);
+  },
+  undo: function(e) {
+    this.drawingCanvas.undo();
+  },
 
   render: function() {
     return(
     <div>
       <div id="drawing-page">
-        ATTN: Don't scroll down! Just zoom out your page instead.
+
         <div id="drawing">
           <canvas
             id="drawing-canvas"
             onMouseDown={this.mouseDownHandler}
             onMouseUp={this.mouseUpHandler}
             onMouseMove={this.mouseMoveHandler}
-            onMouseOut={this.mouseUpHandler}>
+            onMouseOut={this.mouseOutHandler}
+            onMouseOver={this.mouseOverHandler}
+            onWheel={this.onWheelHandler}>
 
           </canvas>
           <canvas
@@ -262,11 +280,6 @@ var CanvasTest = React.createClass({
           onMouseDown={this.toggleStamping}>
           {this.stampingText()}
         </div>
-        <div
-          id="undo"
-          onClick={this.undo}>
-          Undo
-        </div>
         <div id="drawing-form">
           <input type="text" valueLink={this.linkState('caption')}/>
         </div>
@@ -289,6 +302,11 @@ var CanvasTest = React.createClass({
           className="save-stamp"
           onClick={this.saveStamp}>
           Save Stamp
+        </button>
+        <button
+          className="undo"
+          onClick={this.undo}>
+          Undo
         </button>
       </div>
     </div>

@@ -31543,6 +31543,8 @@
 	    this.colorPicker = new ColorPicker('color-picker');
 	    this.strokeSample = new StrokeSample('stroke-sample');
 	    this.stampCanvas = new DrawingCanvas('stamp-canvas', 150, 150);
+	    this.history = [null, null, null];
+	    this.viewHistory = [null, null];
 
 	    this.size = 10;
 	    this.color = "#000";
@@ -31698,12 +31700,26 @@
 	      this.setStamp();
 	    }
 	  },
+	  mouseOutHandler: function (e) {
+	    if (e.target.id === "drawing-canvas") {
+	      this.drawingCanvas.mouseOut(e, this.color, this.size);
+	    } else if (e.target.id === "stamp-canvas") {
+	      this.stampCanvas.mouseOut(e, this.color, this.size);
+	      this.setStamp();
+	    }
+	  },
 	  mouseMoveHandler: function (e) {
 	    if (e.target.id === "drawing-canvas") {
 	      this.drawingCanvas.mouseMove(e, this.color, this.size);
 	    } else if (e.target.id === "stamp-canvas") {
 	      this.stampCanvas.mouseMove(e, this.color, this.size);
 	    }
+	  },
+	  onWheelHandler: function (e) {
+	    console.log(e);
+	  },
+	  undo: function (e) {
+	    this.drawingCanvas.undo();
 	  },
 
 	  render: function () {
@@ -31713,7 +31729,6 @@
 	      React.createElement(
 	        'div',
 	        { id: 'drawing-page' },
-	        'ATTN: Don\'t scroll down! Just zoom out your page instead.',
 	        React.createElement(
 	          'div',
 	          { id: 'drawing' },
@@ -31722,7 +31737,9 @@
 	            onMouseDown: this.mouseDownHandler,
 	            onMouseUp: this.mouseUpHandler,
 	            onMouseMove: this.mouseMoveHandler,
-	            onMouseOut: this.mouseUpHandler }),
+	            onMouseOut: this.mouseOutHandler,
+	            onMouseOver: this.mouseOverHandler,
+	            onWheel: this.onWheelHandler }),
 	          React.createElement('canvas', {
 	            id: 'color-picker',
 	            width: '80',
@@ -31776,13 +31793,6 @@
 	        ),
 	        React.createElement(
 	          'div',
-	          {
-	            id: 'undo',
-	            onClick: this.undo },
-	          'Undo'
-	        ),
-	        React.createElement(
-	          'div',
 	          { id: 'drawing-form' },
 	          React.createElement('input', { type: 'text', valueLink: this.linkState('caption') })
 	        ),
@@ -31813,6 +31823,13 @@
 	            className: 'save-stamp',
 	            onClick: this.saveStamp },
 	          'Save Stamp'
+	        ),
+	        React.createElement(
+	          'button',
+	          {
+	            className: 'undo',
+	            onClick: this.undo },
+	          'Undo'
 	        )
 	      )
 	    );
@@ -31847,6 +31864,7 @@
 	  this.currY = 0;
 	  this.rgbString = "black";
 	  this.ctx.lineJoin = this.ctx.lineCap = 'round';
+	  this.history = [null, null, null, null, null];
 
 	  this.drawing = false;
 	  this.stamping = false;
@@ -31860,6 +31878,14 @@
 	};
 
 	DrawingCanvas.prototype.mouseUp = function (e) {
+	  this.history.shift();
+	  this.history.push(this.getImageData());
+	  console.log(this.history);
+
+	  this.drawing = false;
+	};
+
+	DrawingCanvas.prototype.mouseOut = function (e) {
 	  this.drawing = false;
 	};
 
@@ -31872,6 +31898,16 @@
 
 	  if (this.drawing) {
 	    this.draw();
+	  } else {
+	    this.preview();
+	  }
+	};
+
+	DrawingCanvas.prototype.undo = function () {
+	  if (this.history[this.history.length - 2]) {
+	    this.history.unshift(null);
+	    this.history.pop();
+	    this.putImageData(this.history[this.history.length - 1]);
 	  }
 	};
 
@@ -31883,10 +31919,24 @@
 	  }
 	};
 
-	DrawingCanvas.prototype.drawStamp = function () {
+	DrawingCanvas.prototype.preview = function () {
+	  if (this.stamping) {
+	    this.clear();
+	    if (this.history[this.history.length - 1]) {
+	      this.putImageData(this.history[this.history.length - 1]);
+	    }
+	    this.drawStamp("transparent");
+	  }
+	};
+
+	DrawingCanvas.prototype.drawStamp = function (transparent) {
+	  if (transparent) {
+	    this.ctx.globalAlpha = 0.4;
+	  }
 	  var img = new Image();
 	  img.src = this.stampImg;
 	  this.ctx.drawImage(img, this.currX - 75, this.currY - 75);
+	  this.ctx.globalAlpha = 1.0;
 	};
 
 	DrawingCanvas.prototype.drawStroke = function () {
@@ -31923,6 +31973,15 @@
 	    this.ctx.drawImage(img, 0, 0);
 	    console.log('loaded');
 	  }).bind(this);
+	};
+
+	DrawingCanvas.prototype.getImageData = function () {
+	  return this.ctx.getImageData(0, 0, this.width, this.length);
+	};
+
+	DrawingCanvas.prototype.putImageData = function (imageData) {
+	  this.clear();
+	  this.ctx.putImageData(imageData, 0, 0);
 	};
 
 	module.exports = DrawingCanvas;
