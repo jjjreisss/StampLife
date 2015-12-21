@@ -43,6 +43,16 @@ var ApiUtil = {
     });
   },
 
+  setStamp: function(id) {
+    $.ajax({
+      url: "api/stamps/" + id,
+      method: "GET",
+      success: function(stamp) {
+        ApiActions.setStamp(stamp);
+      }
+    })
+  },
+
   fetchAllDrawings: function() {
     $.ajax({
       url: "api/drawings",

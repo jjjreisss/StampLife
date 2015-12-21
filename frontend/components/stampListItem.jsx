@@ -10,8 +10,8 @@ var StampListItem = React.createClass({
 
     });
   },
-  setStamp() {
-    ApiUtil.fetchStamp(this.props.stampId);
+  setStamp: function() {
+    ApiUtil.setStamp(this.props.stampId);
   },
   render: function() {
     var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_150,h_150/" + this.props.imageUrl + ".png";

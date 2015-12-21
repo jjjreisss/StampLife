@@ -27,6 +27,7 @@ body {
 .index-element{
   float: left;
   margin: 5px;
+  background: white;
 }
 
 .square {

@@ -28,6 +28,11 @@ var CanvasTest = React.createClass({
     this.strokeSample = new StrokeSample('stroke-sample');
     this.stampCanvas = new DrawingCanvas('stamp-canvas', 150, 150);
 
+    this.size = 10;
+    this.color = "#000";
+
+    this.strokeSample.pickSample(this.color, this.size);
+
     this.colorPicking = false;
     this.sizePicking = false;
 
@@ -41,8 +46,10 @@ var CanvasTest = React.createClass({
       stamp: StampStore.single()
     })
     if(this.state.stamp) {
-      url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + this.state.stamp.image_url + ".png";
+      this.stampCanvas.clear();
+      var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + this.state.stamp.image_url + ".png";
       this.stampCanvas.loadImage(url);
+      window.setTimeout(this.setStamp, 300);
     }
   },
   colorBar: function() {
@@ -74,7 +81,7 @@ var CanvasTest = React.createClass({
     });
   },
   saveStamp: function() {
-    img = this.stampCanvas.toData();
+    var img = this.stampCanvas.toData();
     $.ajax({
       url: "api/images",
       method: "POST",
@@ -92,7 +99,7 @@ var CanvasTest = React.createClass({
     this.drawingCanvas.setStamp(this.stampImg);
   },
   stampingText: function() {
-    text = this.state.stamping ? "Turn Stamping Off" : "Turn Stamping On";
+    var text = this.state.stamping ? "Turn Stamping Off" : "Turn Stamping On";
     return text;
   },
   toggleStamping: function() {
@@ -105,7 +112,7 @@ var CanvasTest = React.createClass({
 // Methods for changing Color
   downColorPicker: function(e) {
     this.colorPicking = true;
-    color = this.colorPicker.pickColor(e);
+    var color = this.colorPicker.pickColor(e);
     this.strokeSample.pickSample(color, this.size);
   },
   upColorPicker: function(e) {
@@ -116,7 +123,7 @@ var CanvasTest = React.createClass({
   },
   moveColorPicker: function(e) {
     if(this.colorPicking) {
-      color = this.colorPicker.pickColor(e);
+      var color = this.colorPicker.pickColor(e);
       this.strokeSample.pickSample(color, this.size);
     }
   },
@@ -134,9 +141,10 @@ var CanvasTest = React.createClass({
   },
   pickRecentColor: function(e) {
     this.color = e.target.style.background;
+    this.strokeSample.pickSample(this.color, this.size);
   },
   addRecentColor: function() {
-    recentColors = this.state.recentColors.slice(1,10);
+    var recentColors = this.state.recentColors.slice(1,10);
     recentColors.push(this.color);
     this.setState({recentColors: recentColors})
   },
@@ -166,7 +174,7 @@ var CanvasTest = React.createClass({
   },
   mouseDownHandler: function(e) {
     if (e.target.id === "drawing-canvas"){
-        this.drawingCanvas.mouseDown(e, this.color, this.size);
+      this.drawingCanvas.mouseDown(e, this.color, this.size);
     } else if (e.target.id === "stamp-canvas"){
       this.stampCanvas.mouseDown(e, this.color, this.size);
     }

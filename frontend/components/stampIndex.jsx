@@ -17,7 +17,7 @@ var StampIndex = React.createClass({
     this.listener.remove();
   },
   _onChange: function() {
-    this.setState({stamps: StampStore.all()});
+    this.setState({stamps: StampStore.all().reverse()});
   },
 
   render: function() {

@@ -1,7 +1,7 @@
 var Store = require('flux/utils').Store;
 var AppDispatcher = require('../dispatcher/dispatcher');
 
-var StampStore = new Store(AppDispatcher);
+var UserStampStore = new Store(AppDispatcher);
 var _stamps = [];
 var _stamp;
 
@@ -17,27 +17,27 @@ var receiveStamp = function(stamp) {
   _stamps.push(stamp);
 };
 
-StampStore.single = function() {
+UserStampStore.single = function() {
   return _stamp;
 };
 
-StampStore.all = function() {
+UserStampStore.all = function() {
   return _stamps.slice();
 };
 
-StampStore.__onDispatch = function(payload) {
+UserStampStore.__onDispatch = function(payload) {
   switch(payload.actionType) {
     case "SET_STAMP":
       resetStamp(payload.stamp);
-      StampStore.__emitChange();
+      UserStampStore.__emitChange();
       break;
     case "STAMPS_RECEIVED":
       resetStamps(payload.stamps);
-      StampStore.__emitChange();
+      UserStampStore.__emitChange();
       break;
     case "STAMP_RECEIVED":
       receiveStamp(payload.stamp)
-      StampStore.__emitChange();
+      UserStampStore.__emitChange();
   }
 }
 

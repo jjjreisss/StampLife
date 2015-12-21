@@ -27,6 +27,13 @@ var ApiActions = {
       actionType: "STAMPS_RECEIVED",
       stamps: stamps
     })
+  },
+
+  setStamp: function(stamp) {
+    Dispatcher.dispatch({
+      actionType: "SET_STAMP",
+      stamp: stamp
+    })
   }
 };
 

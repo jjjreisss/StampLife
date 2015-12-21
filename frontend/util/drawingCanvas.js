@@ -34,8 +34,12 @@ DrawingCanvas.prototype.mouseMove = function (e) {
   this.prevX = this.currX;
   this.prevY = this.currY;
 
-  this.currX = (e.clientX - this.drawingCanvas.offsetLeft - this.drawingCanvas.offsetParent.offsetParent.offsetLeft);
-  this.currY = (e.clientY - this.drawingCanvas.offsetTop - this.drawingCanvas.offsetParent.offsetParent.offsetTop);
+  this.currX = (e.clientX - this.drawingCanvas.offsetLeft
+    - this.drawingCanvas.offsetParent.offsetLeft
+    - this.drawingCanvas.offsetParent.offsetParent.offsetLeft);
+  this.currY = (e.clientY - this.drawingCanvas.offsetTop
+    - this.drawingCanvas.offsetParent.offsetTop
+    - this.drawingCanvas.offsetParent.offsetParent.offsetTop);
 
   if (this.drawing) {
     this.draw();
@@ -57,7 +61,6 @@ DrawingCanvas.prototype.drawStamp = function () {
 };
 
 DrawingCanvas.prototype.drawStroke = function () {
-  console.log([this.prevX, this.prevY]);
   this.ctx.beginPath();
   this.ctx.moveTo(this.prevX, this.prevY);
   this.ctx.lineTo(this.currX, this.currY);
@@ -84,13 +87,15 @@ DrawingCanvas.prototype.clear = function () {
 };
 
 DrawingCanvas.prototype.loadImage = function (url) {
-  img = new Image();
+  var img = new Image();
+  img.crossOrigin="anonymous";
   img.src = url;
   img.onload = function() {
-    console.log('hi');
     this.ctx.drawImage(img, 0, 0)
+    console.log('loaded');
   }.bind(this);
 };
+
 
 
 module.exports = DrawingCanvas;
