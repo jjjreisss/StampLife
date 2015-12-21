@@ -91,7 +91,7 @@ DrawingCanvas.prototype.drawStamp = function (transparent) {
   if (transparent) {this.ctx.globalAlpha = 0.4;}
   var img = new Image();
   img.src = this.stampImg;
-  this.ctx.drawImage(img, this.currX-75, this.currY-75);
+  this.ctx.drawImage(img, this.currX-this.stampSize/2, this.currY-this.stampSize/2);
   this.ctx.globalAlpha = 1.0;
 };
 
@@ -138,6 +138,11 @@ DrawingCanvas.prototype.getImageData = function () {
 DrawingCanvas.prototype.putImageData = function (imageData) {
   this.clear();
   this.ctx.putImageData(imageData, 0, 0);
+};
+
+DrawingCanvas.prototype.clearCanvas = function () {
+  this.clear();
+  this.history = [null, null, null, null, null];
 };
 
 

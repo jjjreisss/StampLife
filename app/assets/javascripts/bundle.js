@@ -31837,7 +31837,8 @@
 	      caption: "caption",
 	      stamping: false,
 	      recentColors: ["#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff"],
-	      stamp: null
+	      stamp: null,
+	      stampSize: 150
 	    };
 	  },
 	  componentDidMount: function () {
@@ -31913,6 +31914,7 @@
 	  },
 	  setStamp: function () {
 	    this.stampImg = this.stampCanvas.toData();
+	    this.stampSize = this.stampCanvas.width();
 	    this.drawingCanvas.setStamp(this.stampImg, this.stampSize);
 	  },
 	  stampingText: function () {
@@ -31982,77 +31984,32 @@
 
 	  // Methods for drawing
 	  clearDrawingCanvas: function () {
-	    this.drawingCanvas.clear();
+	    this.drawingCanvas.clearCanvas();
 	  },
 	  clearStamp: function () {
 	    this.stampCanvas.clear();
 	    this.setStamp();
 	  },
 	  mouseDownHandler: function (e) {
-	    // if (e.target.id === "drawing-canvas"){
 	    this.drawingCanvas.mouseDown(e, this.color, this.size);
-	    // } else if (e.target.id === "stamp-canvas"){
-	    //   this.stampCanvas.mouseDown(e, this.color, this.size);
-	    // }
 	  },
 	  mouseUpHandler: function (e) {
-	    // if (e.target.id === "drawing-canvas"){
 	    this.drawingCanvas.mouseUp(e, this.color, this.size);
-	    // } else if (e.target.id === "stamp-canvas"){
-	    //   this.stampCanvas.mouseUp(e, this.color, this.size);
-	    //   this.setStamp();
-	    // }
 	  },
 	  mouseOutHandler: function (e) {
-	    // if (e.target.id === "drawing-canvas"){
 	    this.drawingCanvas.mouseOut(e, this.color, this.size);
-	    // } else if (e.target.id === "stamp-canvas"){
-	    //   this.stampCanvas.mouseOut(e, this.color, this.size);
-	    //   this.setStamp();
-	    // }
 	  },
 	  mouseMoveHandler: function (e) {
-	    // if (e.target.id === "drawing-canvas"){
 	    this.drawingCanvas.mouseMove(e, this.color, this.size);
-	    // } else if (e.target.id === "stamp-canvas"){
-	    //   this.stampCanvas.mouseMove(e, this.color, this.size);
-	    // }
 	  },
 	  onWheelHandler: function (e) {
-	    // var stampCanvas = document.getElementById('stamp-canvas');
-	    // var newWidth = oldWidth + 20;
-	    // var newHeight = oldHeight + 20;
-	    // var tempCanvas = (
-	    //   <canvas
-	    //     width={newWidth}
-	    //     height={newHeight}>
-	    //
-	    //   </canvas>
-	    // )
-	    // var tempContext = tempCanvas.getContext('2d');
-	    // tempContext.drawImg(this.stampImg, 0, 0, oldWidth, oldHeight,
-	    //                                   0, 0, newWidth, newHeight);
-	    //
-
-	    // this.stampCanvas = document.getElementById('stamp-canvas');
-	    // var oldWidth = this.stampCanvas.width;
-	    // var oldHeight = this.stampCanvas.height;
-	    // if (e.deltaY < 0) {
-	    //   var newWidth = oldWidth * 1.2;
-	    //   var newHeight = oldHeight * 1.2;
-	    // } else {
-	    //   var newWidth = oldWidth / 1.2;
-	    //   var newHeight = oldHeight / 1.2;
-	    // }
-	    // this.stampCanvas.width = newWidth;
-	    // this.stampCanvas.height = newHeight;
-	    // var img = new Image();
-	    // img.src = this.stampImg;
-	    // this.stampCanvas.ctx.drawImage(img, 0, 0, oldWidth, oldHeight,
-	    //                                       0, 0, newWidth, newHeight);
-	    // console.log(this.stampCanvas.width);
-	    // this.setStamp();
-	    // this.drawingCanvas.mouseMove(e);
+	    if (e.deltaY < 0) {
+	      this.stampCanvas.scaleUp();
+	    } else {
+	      this.stampCanvas.scaleDown();
+	    }
+	    this.setStamp();
+	    this.drawingCanvas.mouseMove(e);
 	  },
 	  undo: function (e) {
 	    this.drawingCanvas.undo();
@@ -32275,7 +32232,7 @@
 	  }
 	  var img = new Image();
 	  img.src = this.stampImg;
-	  this.ctx.drawImage(img, this.currX - 75, this.currY - 75);
+	  this.ctx.drawImage(img, this.currX - this.stampSize / 2, this.currY - this.stampSize / 2);
 	  this.ctx.globalAlpha = 1.0;
 	};
 
@@ -32322,6 +32279,11 @@
 	DrawingCanvas.prototype.putImageData = function (imageData) {
 	  this.clear();
 	  this.ctx.putImageData(imageData, 0, 0);
+	};
+
+	DrawingCanvas.prototype.clearCanvas = function () {
+	  this.clear();
+	  this.history = [null, null, null, null, null];
 	};
 
 	module.exports = DrawingCanvas;
@@ -32814,26 +32776,34 @@
 /* 254 */
 /***/ function(module, exports) {
 
-	var StampCanvas = function (id, length, width) {
-	  this.length = length;
-	  this.width = width;
+	var StampCanvas = function (id, width, height) {
 	  this.canvas = document.getElementById(id);
-	  this.canvas.width = length;
-	  this.canvas.height = width;
+	  this.canvas.width = width;
+	  this.canvas.height = height;
 	  this.ctx = this.canvas.getContext('2d');
+	  this.img = new Image();
+	  this.scale = 1;
+	};
+
+	StampCanvas.prototype.width = function () {
+	  return this.canvas.width;
+	};
+
+	StampCanvas.prototype.height = function () {
+	  return this.canvas.height;
 	};
 
 	StampCanvas.prototype.loadImage = function (url) {
-	  var img = new Image();
-	  img.crossOrigin = "anonymous";
-	  img.src = url;
-	  img.onload = (function () {
-	    this.ctx.drawImage(img, 0, 0);
+	  this.img = new Image();
+	  this.img.crossOrigin = "anonymous";
+	  this.img.src = url;
+	  this.img.onload = (function () {
+	    this.ctx.drawImage(this.img, 0, 0);
 	  }).bind(this);
 	};
 
 	StampCanvas.prototype.getImageData = function () {
-	  return this.ctx.getImageData(0, 0, this.width, this.length);
+	  return this.ctx.getImageData(0, 0, this.width(), this.height());
 	};
 
 	StampCanvas.prototype.putImageData = function (imageData) {
@@ -32846,7 +32816,27 @@
 	};
 
 	StampCanvas.prototype.clear = function () {
-	  this.ctx.clearRect(0, 0, this.width, this.length);
+	  this.ctx.clearRect(0, 0, this.width(), this.height());
+	};
+
+	StampCanvas.prototype.scaleUp = function () {
+	  this.scale = this.scale * 1.2;
+	  var newWidth = 150 * this.scale;
+	  var newHeight = 150 * this.scale;
+	  this.canvas.width = newWidth;
+	  this.canvas.height = newHeight;
+
+	  this.ctx.drawImage(this.img, 0, 0, 150, 150, 0, 0, newWidth, newHeight);
+	};
+
+	StampCanvas.prototype.scaleDown = function () {
+	  this.scale = this.scale / 1.2;
+	  var newWidth = 150 * this.scale;
+	  var newHeight = 150 * this.scale;
+	  this.canvas.width = newWidth;
+	  this.canvas.height = newHeight;
+
+	  this.ctx.drawImage(this.img, 0, 0, 150, 150, 0, 0, newWidth, newHeight);
 	};
 
 	module.exports = StampCanvas;
