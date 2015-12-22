@@ -281,11 +281,6 @@ var CanvasTest = React.createClass({
           Clear Canvas
         </button>
         <button
-          className="clear-button"
-          onClick={this.clearStamp}>
-          Clear Stamp
-        </button>
-        <button
           className="save-drawing"
           onClick={this.saveDrawing}>
           Save Drawing

@@ -32235,13 +32235,6 @@
 	        React.createElement(
 	          'button',
 	          {
-	            className: 'clear-button',
-	            onClick: this.clearStamp },
-	          'Clear Stamp'
-	        ),
-	        React.createElement(
-	          'button',
-	          {
 	            className: 'save-drawing',
 	            onClick: this.saveDrawing },
 	          'Save Drawing'
