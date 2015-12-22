@@ -106,6 +106,17 @@ var ApiUtil = {
     });
   },
 
+  fetchUserStamps: function(username) {
+    $.ajax({
+      url: "api/stamps",
+      method: "GET",
+      data: {username: username},
+      success: function(stamps){
+        ApiActions.receiveAllStamps(stamps);
+      }
+    });
+  },
+
   addToMyStamp: function(id) {
     $.ajax({
       url: "api/stamps/" + id,

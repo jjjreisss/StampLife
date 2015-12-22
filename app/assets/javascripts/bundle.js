@@ -24457,6 +24457,7 @@
 	  goToNewStamp: function () {
 	    this.props.history.push('stamp/new');
 	  },
+	  goToMyProfile: function () {},
 
 	  render: function () {
 	    return React.createElement(
@@ -24505,6 +24506,12 @@
 	                'New Stamp'
 	              )
 	            )
+	          ),
+	          React.createElement(
+	            'li',
+	            {
+	              onClick: this.goToMyProfile },
+	            'My Profile'
 	          )
 	        )
 	      ),
@@ -24690,6 +24697,17 @@
 	      data: { username: username },
 	      success: function (drawings) {
 	        ApiActions.receiveAllDrawings(drawings);
+	      }
+	    });
+	  },
+
+	  fetchUserStamps: function (username) {
+	    $.ajax({
+	      url: "api/stamps",
+	      method: "GET",
+	      data: { username: username },
+	      success: function (stamps) {
+	        ApiActions.receiveAllStamps(stamps);
 	      }
 	    });
 	  },
@@ -31729,7 +31747,7 @@
 
 	  getInitialState: function () {
 	    return {
-	      drawings: DrawingStore.all()
+	      drawings: DrawingStore.all().reverse()
 	    };
 	  },
 	  componentDidMount: function () {
@@ -31740,7 +31758,7 @@
 	    this.listener.remove();
 	  },
 	  _onChange: function () {
-	    this.setState({ drawings: DrawingStore.all() });
+	    this.setState({ drawings: DrawingStore.all().reverse() });
 	  },
 
 	  render: function () {
@@ -32711,25 +32729,36 @@
 	var DrawingStore = __webpack_require__(240);
 	var ApiUtil = __webpack_require__(212);
 	var DrawingListItem = __webpack_require__(241);
+	var StampStore = __webpack_require__(219);
+	var StampListItem = __webpack_require__(218);
 
 	var ProfilePage = React.createClass({
 	  displayName: 'ProfilePage',
 
 	  getInitialState: function () {
 	    return {
-	      drawings: null
+	      drawings: null,
+	      stamps: null
 	    };
 	  },
 	  componentDidMount: function () {
-	    this.token = DrawingStore.addListener(this._onChange);
+	    this.drawingToken = DrawingStore.addListener(this._drawingsChanged);
+	    this.stampToken = StampStore.addListener(this._stampsChanged);
 	    ApiUtil.fetchUserDrawings(this.props.params.username);
+	    ApiUtil.fetchUserStamps(this.props.params.username);
 	  },
 	  componentWillUnmount: function () {
-	    this.token.remove();
+	    this.drawingToken.remove();
+	    this.stampToken.remove();
 	  },
-	  _onChange: function () {
+	  _drawingsChanged: function () {
 	    this.setState({
 	      drawings: DrawingStore.all()
+	    });
+	  },
+	  _stampsChanged: function () {
+	    this.setState({
+	      stamps: StampStore.all()
 	    });
 	  },
 
@@ -32743,15 +32772,39 @@
 	          imageUrl: drawing.image_url });
 	      });
 	    }
+	    var stampsList = "";
+	    if (this.state.stamps) {
+	      stampsList = this.state.stamps.map(function (stamp, idx) {
+	        return React.createElement(StampListItem, {
+	          key: idx,
+	          stampId: stamp.id,
+	          imageUrl: stamp.image_url,
+	          size: 100 });
+	      });
+	    }
 	    return React.createElement(
 	      'div',
-	      { className: 'drawings-index' },
+	      null,
 	      React.createElement(
-	        'h2',
-	        null,
-	        this.props.params.username + "'s Drawings"
+	        'div',
+	        { className: 'drawings-index' },
+	        React.createElement(
+	          'h2',
+	          null,
+	          this.props.params.username + "'s Drawings"
+	        ),
+	        drawingsList
 	      ),
-	      drawingsList
+	      React.createElement(
+	        'div',
+	        null,
+	        React.createElement(
+	          'h2',
+	          null,
+	          this.props.params.username + "'s Stamps"
+	        ),
+	        stampsList
+	      )
 	    );
 	  }
 	});

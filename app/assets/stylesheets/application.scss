@@ -10,13 +10,15 @@
  * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
  * file per style scope.
  *
- *= require_tree .
- *= require_self
  */
+
+ @import "bootstrap-sprockets";
+ @import "bootstrap";
+
 
 body {
   background: orange;
-  width: 790px;
+  width: 700px;
   height: 655px;
   margin: auto;
 }
@@ -119,8 +121,8 @@ body {
 .stamp-sidebar {
   width: 110px;
   height: 640px;
-  position: absolute;
-  top: 110px;
+  position: fixed;
+  top: 150px;
   right: 50px;
   outline: solid black 1px;
 }

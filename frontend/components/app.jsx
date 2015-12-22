@@ -15,6 +15,9 @@ var App = React.createClass({
   goToNewStamp: function() {
     this.props.history.push('stamp/new');
   },
+  goToMyProfile: function() {
+    
+  },
 
   render: function() {
     return(
@@ -43,6 +46,10 @@ var App = React.createClass({
                 New Stamp
               </li>
             </ul>
+          </li>
+          <li
+            onClick={this.goToMyProfile}>
+            My Profile
           </li>
         </ul>
       </div>

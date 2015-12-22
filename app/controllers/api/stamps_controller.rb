@@ -1,7 +1,11 @@
 class Api::StampsController < ApplicationController
 
   def index
-    @stamps = Stamp.all
+    if params[:username]
+      @stamps = User.where(username: params[:username]).first.stamps
+    else
+      @stamps = Stamp.all
+    end
 
     render json: @stamps
   end
