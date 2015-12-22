@@ -12,29 +12,53 @@ var App = React.createClass({
   goToStampsIndex: function() {
     this.props.history.push('stamps');
   },
+  goToNewStamp: function() {
+    this.props.history.push('stamp/new');
+  },
 
   render: function() {
     return(
+    <div>
+      <div className="navbar navbar-inverse">
+        <ul className="nav navbar-nav">
+          <li role="presentation" className="dropdown">
+            <a className="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+              Dropdown <span className="caret"></span>
+            </a>
+            <ul className="dropdown-menu">
+              <li
+                onClick={this.goToDrawingsIndex}>
+                All Drawings
+              </li>
+              <li
+                onClick={this.goToNew}>
+                New Drawing
+              </li>
+              <li
+                onClick={this.goToStampsIndex}>
+                All Stamps
+              </li>
+              <li
+                onClick={this.goToNewStamp}>
+                New Stamp
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+
+
       <div>
-        <div onClick={this.goToDrawingsIndex}>
-          All Drawings
-        </div>
-        <div onClick={this.goToNew}>
-          New Drawing
-        </div>
-        <div onClick={this.goToStampsIndex}>
-          All Stamps
-        </div>
-        <div>
-          {this.props.children}
-          <div
-            className="stamp-sidebar">
-            <MyStampIndex
-              filterIndicies={[]}/>
-          </div>
+        {this.props.children}
+        <div
+          className="stamp-sidebar">
+          <MyStampIndex
+            filterIndicies={[]}/>
         </div>
       </div>
-    )
+    </div>
+  );
   }
 });
 

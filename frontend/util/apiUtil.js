@@ -23,6 +23,17 @@ var ApiUtil = {
     })
   },
 
+  createMyStamp: function(stamp) {
+    $.ajax({
+      url: "api/stamps",
+      method: "POST",
+      data: {stamp: stamp},
+      success: function(stamp) {
+        ApiActions.addToMyStamp(stamp);
+      }
+    })
+  },
+
   fetchDrawing: function(id) {
     $.ajax({
       url: "api/drawings/" + id,

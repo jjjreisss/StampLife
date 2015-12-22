@@ -18,9 +18,7 @@ var CanvasTest = React.createClass({
       caption: "caption",
       stamping: false,
       recentColors: ["#fff","#fff","#fff","#fff","#fff",
-                      "#fff","#fff","#fff","#fff","#fff",],
-      stamp: null,
-      stampSize: 150
+                      "#fff","#fff","#fff","#fff","#fff",]
     });
   },
   componentDidMount: function() {
@@ -28,7 +26,6 @@ var CanvasTest = React.createClass({
     this.sizePicker = new SizePicker('size-picker');
     this.colorPicker = new ColorPicker('color-picker');
     this.strokeSample = new StrokeSample('stroke-sample');
-    this.stampCanvas = new StampCanvas('stamp-canvas', 150, 150);
     this.history = [null, null, null];
     this.viewHistory = [null, null];
 
@@ -40,22 +37,8 @@ var CanvasTest = React.createClass({
     this.colorPicking = false;
     this.sizePicking = false;
 
-    this.token = StampStore.addListener(this.selectStamp);
   },
-  componentWillUnmount: function() {
-    this.token.remove();
-  },
-  selectStamp: function() {
-    this.setState({
-      stamp: StampStore.single()
-    });
-    if(this.state.stamp) {
-      this.stampCanvas.clear();
-      var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_500,h_500/" + this.state.stamp.image_url + ".png";
-      this.stampCanvas.loadImage(url);
-      window.setTimeout(this.setStamp, 500);
-    }
-  },
+
   colorBar: function() {
     return this.state.recentColors.map(function(color, idx){
       return (
@@ -69,23 +52,8 @@ var CanvasTest = React.createClass({
       );
     }.bind(this));
   },
-  saveDrawing: function() {
-    var img = this.drawingCanvas.toData();
-    $.ajax({
-      url: "api/images",
-      method: "POST",
-      data: {img: img},
-      success: function(imageReceived) {
-        ApiUtil.createDrawing({
-          caption: this.state.caption,
-          image_url: imageReceived.public_id
-        });
-        this.props.history.push('drawings');
-      }.bind(this)
-    });
-  },
   saveStamp: function() {
-    var img = this.stampCanvas.toData();
+    var img = this.drawingCanvas.toData();
     $.ajax({
       url: "api/images",
       method: "POST",
@@ -98,21 +66,20 @@ var CanvasTest = React.createClass({
       }
     });
   },
-  setStamp: function() {
-    this.stampImg = this.stampCanvas.toData();
-    this.stampSize = this.stampCanvas.width();
-    this.drawingCanvas.setStamp(this.stampImg, this.stampSize);
+  saveToMyStamps: function() {
+    var img = this.drawingCanvas.toData();
+    $.ajax({
+      url: "api/images",
+      method: "POST",
+      data: {img: img},
+      success: function(imageReceived) {
+        ApiUtil.createMyStamp({
+          name: "default name",
+          image_url: imageReceived.public_id
+        });
+      }
+    });
   },
-  stampingText: function() {
-    var text = this.state.stamping ? "Turn Stamping Off" : "Turn Stamping On";
-    return text;
-  },
-  toggleStamping: function() {
-    this.drawingCanvas.toggleStamping();
-    this.setState({stamping: !this.state.stamping});
-    this.setStamp();
-  },
-
 
 // Methods for changing Color
   downColorPicker: function(e) {
@@ -173,10 +140,6 @@ var CanvasTest = React.createClass({
   clearDrawingCanvas: function() {
     this.drawingCanvas.clearCanvas();
   },
-  clearStamp: function() {
-    this.stampCanvas.clear();
-    this.setStamp();
-  },
   mouseDownHandler: function(e) {
     this.drawingCanvas.mouseDown(e, this.color, this.size);
   },
@@ -188,15 +151,6 @@ var CanvasTest = React.createClass({
   },
   mouseMoveHandler: function(e) {
     this.drawingCanvas.mouseMove(e, this.color, this.size);
-  },
-  onWheelHandler: function(e) {
-    if (e.deltaY < 0) {
-      this.stampCanvas.scaleUp();
-    } else {
-      this.stampCanvas.scaleDown();
-    }
-    this.setStamp();
-    this.drawingCanvas.mouseMove(e);
   },
   undo: function(e) {
     this.drawingCanvas.undo();
@@ -214,8 +168,7 @@ var CanvasTest = React.createClass({
             onMouseUp={this.mouseUpHandler}
             onMouseMove={this.mouseMoveHandler}
             onMouseOut={this.mouseOutHandler}
-            onMouseOver={this.mouseOverHandler}
-            onWheel={this.onWheelHandler}>
+            onMouseOver={this.mouseOverHandler}>
 
           </canvas>
           <canvas
@@ -250,27 +203,9 @@ var CanvasTest = React.createClass({
             {this.colorBar()}
           </div>
         </div>
-
-
-
-        <div
-          className="stamp-canvas">
-          <canvas
-            id="stamp-canvas"
-            width="150"
-            height="150"
-            onMouseDown={this.mouseDownHandler}
-            onMouseUp={this.mouseUpHandler}
-            onMouseMove={this.mouseMoveHandler}>
-          </canvas>
-        </div>
       </div>
+
       <div className="drawing-toolbar">
-        <div
-          id="toggle-stamping"
-          onMouseDown={this.toggleStamping}>
-          {this.stampingText()}
-        </div>
         <div id="drawing-form">
           <input type="text" valueLink={this.linkState('caption')}/>
         </div>
@@ -280,19 +215,14 @@ var CanvasTest = React.createClass({
           Clear Canvas
         </button>
         <button
-          className="clear-button"
-          onClick={this.clearStamp}>
-          Clear Stamp
-        </button>
-        <button
-          className="save-drawing"
-          onClick={this.saveDrawing}>
-          Save Drawing
-        </button>
-        <button
           className="save-stamp"
           onClick={this.saveStamp}>
           Save Stamp
+        </button>
+        <button
+          className="save-to-my-stamps"
+          onClick={this.saveToMyStamps}>
+          Save To My Stamps
         </button>
         <button
           className="undo"

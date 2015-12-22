@@ -9,6 +9,7 @@ var DrawingDetail = require('./components/drawingDetail');
 var ProfilePage = require('./components/profilePage');
 var StampIndex = require('./components/stampIndex');
 var StampDetail = require('./components/stampDetail');
+var NewStamp = require('./components/newStamp');
 
 
 var routes = (
@@ -19,6 +20,7 @@ var routes = (
     <Route path="/drawings/:drawingId" component={DrawingDetail}/>
     <Route path="/users/:username" component={ProfilePage}/>
     <Route path="stamps/:stampId" component={StampDetail}/>
+    <Route path="stamp/new" component={NewStamp}/>
   </Route>
 );
 

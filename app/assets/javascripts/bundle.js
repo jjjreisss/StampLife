@@ -55,6 +55,7 @@
 	var ProfilePage = __webpack_require__(252);
 	var StampIndex = __webpack_require__(211);
 	var StampDetail = __webpack_require__(253);
+	var NewStamp = __webpack_require__(499);
 
 	var routes = React.createElement(
 	  Route,
@@ -64,7 +65,8 @@
 	  React.createElement(Route, { path: '/drawings', component: DrawingIndex }),
 	  React.createElement(Route, { path: '/drawings/:drawingId', component: DrawingDetail }),
 	  React.createElement(Route, { path: '/users/:username', component: ProfilePage }),
-	  React.createElement(Route, { path: 'stamps/:stampId', component: StampDetail })
+	  React.createElement(Route, { path: 'stamps/:stampId', component: StampDetail }),
+	  React.createElement(Route, { path: 'stamp/new', component: NewStamp })
 	);
 
 	document.addEventListener("DOMContentLoaded", function () {
@@ -24452,6 +24454,9 @@
 	  goToStampsIndex: function () {
 	    this.props.history.push('stamps');
 	  },
+	  goToNewStamp: function () {
+	    this.props.history.push('stamp/new');
+	  },
 
 	  render: function () {
 	    return React.createElement(
@@ -24459,18 +24464,49 @@
 	      null,
 	      React.createElement(
 	        'div',
-	        { onClick: this.goToDrawingsIndex },
-	        'All Drawings'
-	      ),
-	      React.createElement(
-	        'div',
-	        { onClick: this.goToNew },
-	        'New Drawing'
-	      ),
-	      React.createElement(
-	        'div',
-	        { onClick: this.goToStampsIndex },
-	        'All Stamps'
+	        { className: 'navbar navbar-inverse' },
+	        React.createElement(
+	          'ul',
+	          { className: 'nav navbar-nav' },
+	          React.createElement(
+	            'li',
+	            { role: 'presentation', className: 'dropdown' },
+	            React.createElement(
+	              'a',
+	              { className: 'dropdown-toggle', 'data-toggle': 'dropdown', href: '#', role: 'button', 'aria-haspopup': 'true', 'aria-expanded': 'false' },
+	              'Dropdown ',
+	              React.createElement('span', { className: 'caret' })
+	            ),
+	            React.createElement(
+	              'ul',
+	              { className: 'dropdown-menu' },
+	              React.createElement(
+	                'li',
+	                {
+	                  onClick: this.goToDrawingsIndex },
+	                'All Drawings'
+	              ),
+	              React.createElement(
+	                'li',
+	                {
+	                  onClick: this.goToNew },
+	                'New Drawing'
+	              ),
+	              React.createElement(
+	                'li',
+	                {
+	                  onClick: this.goToStampsIndex },
+	                'All Stamps'
+	              ),
+	              React.createElement(
+	                'li',
+	                {
+	                  onClick: this.goToNewStamp },
+	                'New Stamp'
+	              )
+	            )
+	          )
+	        )
 	      ),
 	      React.createElement(
 	        'div',
@@ -24573,6 +24609,17 @@
 	      data: { stamp: stamp },
 	      success: function (stamp) {
 	        ApiActions.receiveSingleStamp(stamp);
+	      }
+	    });
+	  },
+
+	  createMyStamp: function (stamp) {
+	    $.ajax({
+	      url: "api/stamps",
+	      method: "POST",
+	      data: { stamp: stamp },
+	      success: function (stamp) {
+	        ApiActions.addToMyStamp(stamp);
 	      }
 	    });
 	  },
@@ -31873,9 +31920,9 @@
 	    });
 	    if (this.state.stamp) {
 	      this.stampCanvas.clear();
-	      var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + this.state.stamp.image_url + ".png";
+	      var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_500,h_500/" + this.state.stamp.image_url + ".png";
 	      this.stampCanvas.loadImage(url);
-	      window.setTimeout(this.setStamp, 300);
+	      window.setTimeout(this.setStamp, 500);
 	    }
 	  },
 	  colorBar: function () {
@@ -32134,12 +32181,6 @@
 	});
 
 	module.exports = CanvasTest;
-
-	// cloudinary.config({
-	//   cloud_name: "ddhru3qpb",
-	//   api_key: 146894146738463,
-	//   api_secret: "5y7HbBXImnBzHQsL8SrkL72qW2Q"
-	// })
 
 /***/ },
 /* 243 */
@@ -32802,7 +32843,8 @@
 	  this.img.crossOrigin = "anonymous";
 	  this.img.src = url;
 	  this.img.onload = (function () {
-	    this.ctx.drawImage(this.img, 0, 0);
+	    this.ctx.drawImage(this.img, 0, 0, 500, 500, 0, 0, 150, 150);
+	    console.log(this.img.src);
 	  }).bind(this);
 	};
 
@@ -32830,7 +32872,7 @@
 	  this.canvas.width = newWidth;
 	  this.canvas.height = newHeight;
 
-	  this.ctx.drawImage(this.img, 0, 0, 150, 150, 0, 0, newWidth, newHeight);
+	  this.ctx.drawImage(this.img, 0, 0, 500, 500, 0, 0, newWidth, newHeight);
 	};
 
 	StampCanvas.prototype.scaleDown = function () {
@@ -32840,10 +32882,501 @@
 	  this.canvas.width = newWidth;
 	  this.canvas.height = newHeight;
 
-	  this.ctx.drawImage(this.img, 0, 0, 150, 150, 0, 0, newWidth, newHeight);
+	  this.ctx.drawImage(this.img, 0, 0, 500, 500, 0, 0, newWidth, newHeight);
 	};
 
 	module.exports = StampCanvas;
+
+/***/ },
+/* 255 */,
+/* 256 */,
+/* 257 */,
+/* 258 */,
+/* 259 */,
+/* 260 */,
+/* 261 */,
+/* 262 */,
+/* 263 */,
+/* 264 */,
+/* 265 */,
+/* 266 */,
+/* 267 */,
+/* 268 */,
+/* 269 */,
+/* 270 */,
+/* 271 */,
+/* 272 */,
+/* 273 */,
+/* 274 */,
+/* 275 */,
+/* 276 */,
+/* 277 */,
+/* 278 */,
+/* 279 */,
+/* 280 */,
+/* 281 */,
+/* 282 */,
+/* 283 */,
+/* 284 */,
+/* 285 */,
+/* 286 */,
+/* 287 */,
+/* 288 */,
+/* 289 */,
+/* 290 */,
+/* 291 */,
+/* 292 */,
+/* 293 */,
+/* 294 */,
+/* 295 */,
+/* 296 */,
+/* 297 */,
+/* 298 */,
+/* 299 */,
+/* 300 */,
+/* 301 */,
+/* 302 */,
+/* 303 */,
+/* 304 */,
+/* 305 */,
+/* 306 */,
+/* 307 */,
+/* 308 */,
+/* 309 */,
+/* 310 */,
+/* 311 */,
+/* 312 */,
+/* 313 */,
+/* 314 */,
+/* 315 */,
+/* 316 */,
+/* 317 */,
+/* 318 */,
+/* 319 */,
+/* 320 */,
+/* 321 */,
+/* 322 */,
+/* 323 */,
+/* 324 */,
+/* 325 */,
+/* 326 */,
+/* 327 */,
+/* 328 */,
+/* 329 */,
+/* 330 */,
+/* 331 */,
+/* 332 */,
+/* 333 */,
+/* 334 */,
+/* 335 */,
+/* 336 */,
+/* 337 */,
+/* 338 */,
+/* 339 */,
+/* 340 */,
+/* 341 */,
+/* 342 */,
+/* 343 */,
+/* 344 */,
+/* 345 */,
+/* 346 */,
+/* 347 */,
+/* 348 */,
+/* 349 */,
+/* 350 */,
+/* 351 */,
+/* 352 */,
+/* 353 */,
+/* 354 */,
+/* 355 */,
+/* 356 */,
+/* 357 */,
+/* 358 */,
+/* 359 */,
+/* 360 */,
+/* 361 */,
+/* 362 */,
+/* 363 */,
+/* 364 */,
+/* 365 */,
+/* 366 */,
+/* 367 */,
+/* 368 */,
+/* 369 */,
+/* 370 */,
+/* 371 */,
+/* 372 */,
+/* 373 */,
+/* 374 */,
+/* 375 */,
+/* 376 */,
+/* 377 */,
+/* 378 */,
+/* 379 */,
+/* 380 */,
+/* 381 */,
+/* 382 */,
+/* 383 */,
+/* 384 */,
+/* 385 */,
+/* 386 */,
+/* 387 */,
+/* 388 */,
+/* 389 */,
+/* 390 */,
+/* 391 */,
+/* 392 */,
+/* 393 */,
+/* 394 */,
+/* 395 */,
+/* 396 */,
+/* 397 */,
+/* 398 */,
+/* 399 */,
+/* 400 */,
+/* 401 */,
+/* 402 */,
+/* 403 */,
+/* 404 */,
+/* 405 */,
+/* 406 */,
+/* 407 */,
+/* 408 */,
+/* 409 */,
+/* 410 */,
+/* 411 */,
+/* 412 */,
+/* 413 */,
+/* 414 */,
+/* 415 */,
+/* 416 */,
+/* 417 */,
+/* 418 */,
+/* 419 */,
+/* 420 */,
+/* 421 */,
+/* 422 */,
+/* 423 */,
+/* 424 */,
+/* 425 */,
+/* 426 */,
+/* 427 */,
+/* 428 */,
+/* 429 */,
+/* 430 */,
+/* 431 */,
+/* 432 */,
+/* 433 */,
+/* 434 */,
+/* 435 */,
+/* 436 */,
+/* 437 */,
+/* 438 */,
+/* 439 */,
+/* 440 */,
+/* 441 */,
+/* 442 */,
+/* 443 */,
+/* 444 */,
+/* 445 */,
+/* 446 */,
+/* 447 */,
+/* 448 */,
+/* 449 */,
+/* 450 */,
+/* 451 */,
+/* 452 */,
+/* 453 */,
+/* 454 */,
+/* 455 */,
+/* 456 */,
+/* 457 */,
+/* 458 */,
+/* 459 */,
+/* 460 */,
+/* 461 */,
+/* 462 */,
+/* 463 */,
+/* 464 */,
+/* 465 */,
+/* 466 */,
+/* 467 */,
+/* 468 */,
+/* 469 */,
+/* 470 */,
+/* 471 */,
+/* 472 */,
+/* 473 */,
+/* 474 */,
+/* 475 */,
+/* 476 */,
+/* 477 */,
+/* 478 */,
+/* 479 */,
+/* 480 */,
+/* 481 */,
+/* 482 */,
+/* 483 */,
+/* 484 */,
+/* 485 */,
+/* 486 */,
+/* 487 */,
+/* 488 */,
+/* 489 */,
+/* 490 */,
+/* 491 */,
+/* 492 */,
+/* 493 */,
+/* 494 */,
+/* 495 */,
+/* 496 */,
+/* 497 */,
+/* 498 */,
+/* 499 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var ApiUtil = __webpack_require__(212);
+	var DrawingCanvas = __webpack_require__(243);
+	var StampCanvas = __webpack_require__(254);
+	var ColorPicker = __webpack_require__(244);
+	var SizePicker = __webpack_require__(245);
+	var StrokeSample = __webpack_require__(246);
+	var LinkedStateMixin = __webpack_require__(247);
+	var StampIndex = __webpack_require__(211);
+	var StampStore = __webpack_require__(219);
+
+	var CanvasTest = React.createClass({
+	  displayName: 'CanvasTest',
+
+	  mixins: [LinkedStateMixin],
+
+	  // Methods that set state
+	  getInitialState: function () {
+	    return {
+	      caption: "caption",
+	      stamping: false,
+	      recentColors: ["#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff"]
+	    };
+	  },
+	  componentDidMount: function () {
+	    this.drawingCanvas = new DrawingCanvas('drawing-canvas', 500, 500);
+	    this.sizePicker = new SizePicker('size-picker');
+	    this.colorPicker = new ColorPicker('color-picker');
+	    this.strokeSample = new StrokeSample('stroke-sample');
+	    this.history = [null, null, null];
+	    this.viewHistory = [null, null];
+
+	    this.size = 10;
+	    this.color = "#000";
+
+	    this.strokeSample.pickSample(this.color, this.size);
+
+	    this.colorPicking = false;
+	    this.sizePicking = false;
+	  },
+
+	  colorBar: function () {
+	    return this.state.recentColors.map((function (color, idx) {
+	      return React.createElement('div', {
+	        key: idx,
+	        className: 'color-square',
+	        style: { background: color },
+	        onClick: this.pickRecentColor });
+	    }).bind(this));
+	  },
+	  saveStamp: function () {
+	    var img = this.drawingCanvas.toData();
+	    $.ajax({
+	      url: "api/images",
+	      method: "POST",
+	      data: { img: img },
+	      success: function (imageReceived) {
+	        ApiUtil.createStamp({
+	          name: "default name",
+	          image_url: imageReceived.public_id
+	        });
+	      }
+	    });
+	  },
+	  saveToMyStamps: function () {
+	    var img = this.drawingCanvas.toData();
+	    $.ajax({
+	      url: "api/images",
+	      method: "POST",
+	      data: { img: img },
+	      success: function (imageReceived) {
+	        ApiUtil.createMyStamp({
+	          name: "default name",
+	          image_url: imageReceived.public_id
+	        });
+	      }
+	    });
+	  },
+
+	  // Methods for changing Color
+	  downColorPicker: function (e) {
+	    this.colorPicking = true;
+	    var color = this.colorPicker.pickColor(e);
+	    this.strokeSample.pickSample(color, this.size);
+	  },
+	  upColorPicker: function (e) {
+	    if (this.colorPicking) {
+	      this.pickColor();
+	    }
+	    this.colorPicking = false;
+	  },
+	  moveColorPicker: function (e) {
+	    if (this.colorPicking) {
+	      var color = this.colorPicker.pickColor(e);
+	      this.strokeSample.pickSample(color, this.size);
+	    }
+	  },
+	  outColorPicker: function (e) {
+	    if (this.colorPicking) {
+	      this.pickColor();
+	    }
+	    this.colorPicking = false;
+	  },
+	  pickColor: function (e) {
+	    if (this.colorPicking) {
+	      this.color = this.colorPicker.color();
+	      this.addRecentColor();
+	    }
+	  },
+	  pickRecentColor: function (e) {
+	    this.color = e.target.style.background;
+	    this.strokeSample.pickSample(this.color, this.size);
+	  },
+	  addRecentColor: function () {
+	    var recentColors = this.state.recentColors.slice(1, 10);
+	    recentColors.push(this.color);
+	    this.setState({ recentColors: recentColors });
+	  },
+
+	  // Methods for picking size
+	  onSizePicking: function (e) {
+	    this.sizePicking = true;
+	    this.pickSize(e);
+	  },
+	  offSizePicking: function () {
+	    this.sizePicking = false;
+	  },
+	  pickSize: function (e) {
+	    if (this.sizePicking) {
+	      this.size = this.sizePicker.pickSize(e);
+	      this.strokeSample.pickSample(this.color, this.size);
+	    }
+	  },
+
+	  // Methods for drawing
+	  clearDrawingCanvas: function () {
+	    this.drawingCanvas.clearCanvas();
+	  },
+	  mouseDownHandler: function (e) {
+	    this.drawingCanvas.mouseDown(e, this.color, this.size);
+	  },
+	  mouseUpHandler: function (e) {
+	    this.drawingCanvas.mouseUp(e, this.color, this.size);
+	  },
+	  mouseOutHandler: function (e) {
+	    this.drawingCanvas.mouseOut(e, this.color, this.size);
+	  },
+	  mouseMoveHandler: function (e) {
+	    this.drawingCanvas.mouseMove(e, this.color, this.size);
+	  },
+	  undo: function (e) {
+	    this.drawingCanvas.undo();
+	  },
+
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'div',
+	        { id: 'drawing-page' },
+	        React.createElement(
+	          'div',
+	          { id: 'drawing' },
+	          React.createElement('canvas', {
+	            id: 'drawing-canvas',
+	            onMouseDown: this.mouseDownHandler,
+	            onMouseUp: this.mouseUpHandler,
+	            onMouseMove: this.mouseMoveHandler,
+	            onMouseOut: this.mouseOutHandler,
+	            onMouseOver: this.mouseOverHandler }),
+	          React.createElement('canvas', {
+	            id: 'color-picker',
+	            width: '80',
+	            height: '500',
+	            onMouseDown: this.downColorPicker,
+	            onMouseUp: this.upColorPicker,
+	            onMouseMove: this.moveColorPicker,
+	            onMouseOut: this.outColorPicker }),
+	          React.createElement('canvas', {
+	            id: 'size-picker',
+	            width: '500',
+	            height: '80',
+	            onClick: this.pickSize,
+	            onMouseDown: this.onSizePicking,
+	            onMouseUp: this.offSizePicking,
+	            onMouseMove: this.pickSize,
+	            onMouseOut: this.offSizePicking }),
+	          React.createElement('canvas', {
+	            id: 'stroke-sample',
+	            width: '80',
+	            height: '80' }),
+	          React.createElement(
+	            'div',
+	            {
+	              id: 'color-bar' },
+	            this.colorBar()
+	          )
+	        )
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'drawing-toolbar' },
+	        React.createElement(
+	          'div',
+	          { id: 'drawing-form' },
+	          React.createElement('input', { type: 'text', valueLink: this.linkState('caption') })
+	        ),
+	        React.createElement(
+	          'button',
+	          {
+	            className: 'clear-drawing-canvas',
+	            onClick: this.clearDrawingCanvas },
+	          'Clear Canvas'
+	        ),
+	        React.createElement(
+	          'button',
+	          {
+	            className: 'save-stamp',
+	            onClick: this.saveStamp },
+	          'Save Stamp'
+	        ),
+	        React.createElement(
+	          'button',
+	          {
+	            className: 'save-to-my-stamps',
+	            onClick: this.saveToMyStamps },
+	          'Save To My Stamps'
+	        ),
+	        React.createElement(
+	          'button',
+	          {
+	            className: 'undo',
+	            onClick: this.undo },
+	          'Undo'
+	        )
+	      )
+	    );
+	  }
+	});
+
+	module.exports = CanvasTest;
 
 /***/ }
 /******/ ]);
