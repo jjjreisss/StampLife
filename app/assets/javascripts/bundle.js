@@ -51,11 +51,11 @@
 	var App = __webpack_require__(210);
 	var DrawingIndex = __webpack_require__(239);
 	var CanvasTest = __webpack_require__(242);
-	var DrawingDetail = __webpack_require__(251);
-	var ProfilePage = __webpack_require__(252);
+	var DrawingDetail = __webpack_require__(252);
+	var ProfilePage = __webpack_require__(253);
 	var StampIndex = __webpack_require__(211);
-	var StampDetail = __webpack_require__(253);
-	var NewStamp = __webpack_require__(499);
+	var StampDetail = __webpack_require__(254);
+	var NewStamp = __webpack_require__(255);
 
 	var routes = React.createElement(
 	  Route,
@@ -24559,14 +24559,7 @@
 	  },
 	  _onChange: function () {
 	    var allStamps = StampStore.all().reverse();
-	    // if (this.props.filterIndicies) {
-	    //   var myStamp = allStamps.filter(function(stamp) {
-	    //     return this.props.filterIndicies.indexOf(stamp.id) !== -1
-	    //   }.bind(this))
-	    //   this.setState({stamps: myStamp})
-	    // } else {
 	    this.setState({ stamps: allStamps });
-	    // }
 	  },
 
 	  render: function () {
@@ -25115,20 +25108,35 @@
 	  mixins: [History],
 
 	  getInitialState: function () {
-	    return {};
+	    return {
+	      text: false
+	    };
 	  },
 	  setStamp: function () {
 	    ApiUtil.addToMyStamp(this.props.stampId);
+	  },
+	  displayText: function () {
+	    this.setState({ text: true });
+	  },
+	  hideText: function () {
+	    this.setState({ text: false });
 	  },
 	  render: function () {
 	    var size = this.props.size;
 	    var sizeString = "w_" + size + ",h_" + size + "/";
 	    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + sizeString + this.props.imageUrl + ".png";
+	    var selectStampText = this.state.text ? "select-stamp-icon" : "hidden";
 	    return React.createElement(
 	      'div',
-	      { className: 'index-element' },
-	      React.createElement('img', { src: url,
-	        onClick: this.setStamp })
+	      {
+	        className: 'index-element',
+	        onClick: this.setStamp,
+	        onMouseEnter: this.displayText,
+	        onMouseLeave: this.hideText },
+	      React.createElement('img', { src: url }),
+	      React.createElement('img', {
+	        src: './plussign5.png',
+	        className: selectStampText })
 	    );
 	  }
 	});
@@ -31633,6 +31641,7 @@
 	    return React.createElement(
 	      'div',
 	      { className: 'index' },
+	      'My Stamps',
 	      stampsList
 	    );
 	  }
@@ -31674,13 +31683,10 @@
 	      { className: 'index-element' },
 	      React.createElement('img', { src: url,
 	        onClick: this.setStamp }),
-	      React.createElement(
-	        'div',
-	        {
-	          className: 'delete-my-stamp',
-	          onClick: this.deleteMyStamp },
-	        'Delete'
-	      )
+	      React.createElement('img', {
+	        src: './close12.png',
+	        className: 'delete-my-stamp',
+	        onClick: this.deleteMyStamp })
 	    );
 	  }
 	});
@@ -31887,11 +31893,11 @@
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(212);
 	var DrawingCanvas = __webpack_require__(243);
-	var StampCanvas = __webpack_require__(254);
-	var ColorPicker = __webpack_require__(244);
-	var SizePicker = __webpack_require__(245);
-	var StrokeSample = __webpack_require__(246);
-	var LinkedStateMixin = __webpack_require__(247);
+	var StampCanvas = __webpack_require__(244);
+	var ColorPicker = __webpack_require__(245);
+	var SizePicker = __webpack_require__(246);
+	var StrokeSample = __webpack_require__(247);
+	var LinkedStateMixin = __webpack_require__(248);
 	var StampIndex = __webpack_require__(211);
 	var StampStore = __webpack_require__(219);
 
@@ -32073,13 +32079,16 @@
 	    this.drawingCanvas.mouseMove(e, this.color, this.size);
 	  },
 	  onWheelHandler: function (e) {
-	    if (e.deltaY < 0) {
-	      this.stampCanvas.scaleUp();
-	    } else {
-	      this.stampCanvas.scaleDown();
+	    e.preventDefault();
+	    if (this.state.stamping) {
+	      if (e.deltaY < 0) {
+	        this.stampCanvas.scaleUp();
+	      } else {
+	        this.stampCanvas.scaleDown();
+	      }
+	      this.setStamp();
+	      this.drawingCanvas.mouseMove(e);
 	    }
-	    this.setStamp();
-	    this.drawingCanvas.mouseMove(e);
 	  },
 	  undo: function (e) {
 	    this.drawingCanvas.undo();
@@ -32253,8 +32262,8 @@
 	  this.prevX = this.currX;
 	  this.prevY = this.currY;
 
-	  this.currX = e.clientX - this.canvas.offsetLeft - this.canvas.offsetParent.offsetLeft - this.canvas.offsetParent.offsetParent.offsetLeft;
-	  this.currY = e.clientY - this.canvas.offsetTop - this.canvas.offsetParent.offsetTop - this.canvas.offsetParent.offsetParent.offsetTop;
+	  this.currX = e.pageX - this.canvas.offsetLeft - this.canvas.offsetParent.offsetLeft - this.canvas.offsetParent.offsetParent.offsetLeft;
+	  this.currY = e.pageY - this.canvas.offsetTop - this.canvas.offsetParent.offsetTop - this.canvas.offsetParent.offsetParent.offsetTop;
 
 	  if (this.drawing) {
 	    this.draw();
@@ -32356,6 +32365,76 @@
 /* 244 */
 /***/ function(module, exports) {
 
+	var StampCanvas = function (id, width, height) {
+	  this.canvas = document.getElementById(id);
+	  this.canvas.width = width;
+	  this.canvas.height = height;
+	  this.ctx = this.canvas.getContext('2d');
+	  this.img = new Image();
+	  this.scale = 1;
+	};
+
+	StampCanvas.prototype.width = function () {
+	  return this.canvas.width;
+	};
+
+	StampCanvas.prototype.height = function () {
+	  return this.canvas.height;
+	};
+
+	StampCanvas.prototype.loadImage = function (url) {
+	  this.img = new Image();
+	  this.img.crossOrigin = "anonymous";
+	  this.img.src = url;
+	  this.img.onload = (function () {
+	    this.ctx.drawImage(this.img, 0, 0, 500, 500, 0, 0, this.width(), this.height());
+	    console.log(this.img.src);
+	  }).bind(this);
+	};
+
+	StampCanvas.prototype.getImageData = function () {
+	  return this.ctx.getImageData(0, 0, this.width(), this.height());
+	};
+
+	StampCanvas.prototype.putImageData = function (imageData) {
+	  this.clear();
+	  this.ctx.putImageData(imageData, 0, 0);
+	};
+
+	StampCanvas.prototype.toData = function () {
+	  return this.canvas.toDataURL("image/png");
+	};
+
+	StampCanvas.prototype.clear = function () {
+	  this.ctx.clearRect(0, 0, this.width(), this.height());
+	};
+
+	StampCanvas.prototype.scaleUp = function () {
+	  this.scale = this.scale * 1.2;
+	  var newWidth = 150 * this.scale;
+	  var newHeight = 150 * this.scale;
+	  this.canvas.width = newWidth;
+	  this.canvas.height = newHeight;
+
+	  this.ctx.drawImage(this.img, 0, 0, 500, 500, 0, 0, newWidth, newHeight);
+	};
+
+	StampCanvas.prototype.scaleDown = function () {
+	  this.scale = this.scale / 1.2;
+	  var newWidth = 150 * this.scale;
+	  var newHeight = 150 * this.scale;
+	  this.canvas.width = newWidth;
+	  this.canvas.height = newHeight;
+
+	  this.ctx.drawImage(this.img, 0, 0, 500, 500, 0, 0, newWidth, newHeight);
+	};
+
+	module.exports = StampCanvas;
+
+/***/ },
+/* 245 */
+/***/ function(module, exports) {
+
 	var ColorPicker = function (id) {
 	  this.colorPickerCanvas = document.getElementById(id);
 	  this.colorPickerContext = this.colorPickerCanvas.getContext('2d');
@@ -32382,7 +32461,7 @@
 	module.exports = ColorPicker;
 
 /***/ },
-/* 245 */
+/* 246 */
 /***/ function(module, exports) {
 
 	var SizePicker = function (id) {
@@ -32403,7 +32482,7 @@
 	module.exports = SizePicker;
 
 /***/ },
-/* 246 */
+/* 247 */
 /***/ function(module, exports) {
 
 	var StrokeSample = function () {
@@ -32432,13 +32511,13 @@
 	module.exports = StrokeSample;
 
 /***/ },
-/* 247 */
+/* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(248);
+	module.exports = __webpack_require__(249);
 
 /***/ },
-/* 248 */
+/* 249 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -32455,8 +32534,8 @@
 
 	'use strict';
 
-	var ReactLink = __webpack_require__(249);
-	var ReactStateSetters = __webpack_require__(250);
+	var ReactLink = __webpack_require__(250);
+	var ReactStateSetters = __webpack_require__(251);
 
 	/**
 	 * A simple mixin around ReactLink.forState().
@@ -32479,7 +32558,7 @@
 	module.exports = LinkedStateMixin;
 
 /***/ },
-/* 249 */
+/* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -32553,7 +32632,7 @@
 	module.exports = ReactLink;
 
 /***/ },
-/* 250 */
+/* 251 */
 /***/ function(module, exports) {
 
 	/**
@@ -32662,7 +32741,7 @@
 	module.exports = ReactStateSetters;
 
 /***/ },
-/* 251 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -32700,13 +32779,18 @@
 	      contents = React.createElement(
 	        'div',
 	        null,
-	        React.createElement('img', { src: url }),
+	        React.createElement(
+	          'div',
+	          {
+	            className: 'drawing-detail-picture' },
+	          React.createElement('img', { src: url })
+	        ),
 	        React.createElement(
 	          'div',
 	          {
 	            className: 'username',
 	            onClick: this.goToProfile },
-	          this.state.drawing.username
+	          "Drawn by " + this.state.drawing.username
 	        )
 	      );
 	    }
@@ -32722,7 +32806,7 @@
 	module.exports = DrawingDetail;
 
 /***/ },
-/* 252 */
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -32812,7 +32896,7 @@
 	module.exports = ProfilePage;
 
 /***/ },
-/* 253 */
+/* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -32872,331 +32956,17 @@
 	module.exports = StampDetail;
 
 /***/ },
-/* 254 */
-/***/ function(module, exports) {
-
-	var StampCanvas = function (id, width, height) {
-	  this.canvas = document.getElementById(id);
-	  this.canvas.width = width;
-	  this.canvas.height = height;
-	  this.ctx = this.canvas.getContext('2d');
-	  this.img = new Image();
-	  this.scale = 1;
-	};
-
-	StampCanvas.prototype.width = function () {
-	  return this.canvas.width;
-	};
-
-	StampCanvas.prototype.height = function () {
-	  return this.canvas.height;
-	};
-
-	StampCanvas.prototype.loadImage = function (url) {
-	  this.img = new Image();
-	  this.img.crossOrigin = "anonymous";
-	  this.img.src = url;
-	  this.img.onload = (function () {
-	    this.ctx.drawImage(this.img, 0, 0, 500, 500, 0, 0, 150, 150);
-	    console.log(this.img.src);
-	  }).bind(this);
-	};
-
-	StampCanvas.prototype.getImageData = function () {
-	  return this.ctx.getImageData(0, 0, this.width(), this.height());
-	};
-
-	StampCanvas.prototype.putImageData = function (imageData) {
-	  this.clear();
-	  this.ctx.putImageData(imageData, 0, 0);
-	};
-
-	StampCanvas.prototype.toData = function () {
-	  return this.canvas.toDataURL("image/png");
-	};
-
-	StampCanvas.prototype.clear = function () {
-	  this.ctx.clearRect(0, 0, this.width(), this.height());
-	};
-
-	StampCanvas.prototype.scaleUp = function () {
-	  this.scale = this.scale * 1.2;
-	  var newWidth = 150 * this.scale;
-	  var newHeight = 150 * this.scale;
-	  this.canvas.width = newWidth;
-	  this.canvas.height = newHeight;
-
-	  this.ctx.drawImage(this.img, 0, 0, 500, 500, 0, 0, newWidth, newHeight);
-	};
-
-	StampCanvas.prototype.scaleDown = function () {
-	  this.scale = this.scale / 1.2;
-	  var newWidth = 150 * this.scale;
-	  var newHeight = 150 * this.scale;
-	  this.canvas.width = newWidth;
-	  this.canvas.height = newHeight;
-
-	  this.ctx.drawImage(this.img, 0, 0, 500, 500, 0, 0, newWidth, newHeight);
-	};
-
-	module.exports = StampCanvas;
-
-/***/ },
-/* 255 */,
-/* 256 */,
-/* 257 */,
-/* 258 */,
-/* 259 */,
-/* 260 */,
-/* 261 */,
-/* 262 */,
-/* 263 */,
-/* 264 */,
-/* 265 */,
-/* 266 */,
-/* 267 */,
-/* 268 */,
-/* 269 */,
-/* 270 */,
-/* 271 */,
-/* 272 */,
-/* 273 */,
-/* 274 */,
-/* 275 */,
-/* 276 */,
-/* 277 */,
-/* 278 */,
-/* 279 */,
-/* 280 */,
-/* 281 */,
-/* 282 */,
-/* 283 */,
-/* 284 */,
-/* 285 */,
-/* 286 */,
-/* 287 */,
-/* 288 */,
-/* 289 */,
-/* 290 */,
-/* 291 */,
-/* 292 */,
-/* 293 */,
-/* 294 */,
-/* 295 */,
-/* 296 */,
-/* 297 */,
-/* 298 */,
-/* 299 */,
-/* 300 */,
-/* 301 */,
-/* 302 */,
-/* 303 */,
-/* 304 */,
-/* 305 */,
-/* 306 */,
-/* 307 */,
-/* 308 */,
-/* 309 */,
-/* 310 */,
-/* 311 */,
-/* 312 */,
-/* 313 */,
-/* 314 */,
-/* 315 */,
-/* 316 */,
-/* 317 */,
-/* 318 */,
-/* 319 */,
-/* 320 */,
-/* 321 */,
-/* 322 */,
-/* 323 */,
-/* 324 */,
-/* 325 */,
-/* 326 */,
-/* 327 */,
-/* 328 */,
-/* 329 */,
-/* 330 */,
-/* 331 */,
-/* 332 */,
-/* 333 */,
-/* 334 */,
-/* 335 */,
-/* 336 */,
-/* 337 */,
-/* 338 */,
-/* 339 */,
-/* 340 */,
-/* 341 */,
-/* 342 */,
-/* 343 */,
-/* 344 */,
-/* 345 */,
-/* 346 */,
-/* 347 */,
-/* 348 */,
-/* 349 */,
-/* 350 */,
-/* 351 */,
-/* 352 */,
-/* 353 */,
-/* 354 */,
-/* 355 */,
-/* 356 */,
-/* 357 */,
-/* 358 */,
-/* 359 */,
-/* 360 */,
-/* 361 */,
-/* 362 */,
-/* 363 */,
-/* 364 */,
-/* 365 */,
-/* 366 */,
-/* 367 */,
-/* 368 */,
-/* 369 */,
-/* 370 */,
-/* 371 */,
-/* 372 */,
-/* 373 */,
-/* 374 */,
-/* 375 */,
-/* 376 */,
-/* 377 */,
-/* 378 */,
-/* 379 */,
-/* 380 */,
-/* 381 */,
-/* 382 */,
-/* 383 */,
-/* 384 */,
-/* 385 */,
-/* 386 */,
-/* 387 */,
-/* 388 */,
-/* 389 */,
-/* 390 */,
-/* 391 */,
-/* 392 */,
-/* 393 */,
-/* 394 */,
-/* 395 */,
-/* 396 */,
-/* 397 */,
-/* 398 */,
-/* 399 */,
-/* 400 */,
-/* 401 */,
-/* 402 */,
-/* 403 */,
-/* 404 */,
-/* 405 */,
-/* 406 */,
-/* 407 */,
-/* 408 */,
-/* 409 */,
-/* 410 */,
-/* 411 */,
-/* 412 */,
-/* 413 */,
-/* 414 */,
-/* 415 */,
-/* 416 */,
-/* 417 */,
-/* 418 */,
-/* 419 */,
-/* 420 */,
-/* 421 */,
-/* 422 */,
-/* 423 */,
-/* 424 */,
-/* 425 */,
-/* 426 */,
-/* 427 */,
-/* 428 */,
-/* 429 */,
-/* 430 */,
-/* 431 */,
-/* 432 */,
-/* 433 */,
-/* 434 */,
-/* 435 */,
-/* 436 */,
-/* 437 */,
-/* 438 */,
-/* 439 */,
-/* 440 */,
-/* 441 */,
-/* 442 */,
-/* 443 */,
-/* 444 */,
-/* 445 */,
-/* 446 */,
-/* 447 */,
-/* 448 */,
-/* 449 */,
-/* 450 */,
-/* 451 */,
-/* 452 */,
-/* 453 */,
-/* 454 */,
-/* 455 */,
-/* 456 */,
-/* 457 */,
-/* 458 */,
-/* 459 */,
-/* 460 */,
-/* 461 */,
-/* 462 */,
-/* 463 */,
-/* 464 */,
-/* 465 */,
-/* 466 */,
-/* 467 */,
-/* 468 */,
-/* 469 */,
-/* 470 */,
-/* 471 */,
-/* 472 */,
-/* 473 */,
-/* 474 */,
-/* 475 */,
-/* 476 */,
-/* 477 */,
-/* 478 */,
-/* 479 */,
-/* 480 */,
-/* 481 */,
-/* 482 */,
-/* 483 */,
-/* 484 */,
-/* 485 */,
-/* 486 */,
-/* 487 */,
-/* 488 */,
-/* 489 */,
-/* 490 */,
-/* 491 */,
-/* 492 */,
-/* 493 */,
-/* 494 */,
-/* 495 */,
-/* 496 */,
-/* 497 */,
-/* 498 */,
-/* 499 */
+/* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(212);
 	var DrawingCanvas = __webpack_require__(243);
-	var StampCanvas = __webpack_require__(254);
-	var ColorPicker = __webpack_require__(244);
-	var SizePicker = __webpack_require__(245);
-	var StrokeSample = __webpack_require__(246);
-	var LinkedStateMixin = __webpack_require__(247);
+	var StampCanvas = __webpack_require__(244);
+	var ColorPicker = __webpack_require__(245);
+	var SizePicker = __webpack_require__(246);
+	var StrokeSample = __webpack_require__(247);
+	var LinkedStateMixin = __webpack_require__(248);
 	var StampIndex = __webpack_require__(211);
 	var StampStore = __webpack_require__(219);
 

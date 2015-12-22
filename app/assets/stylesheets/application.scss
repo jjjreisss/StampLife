@@ -135,10 +135,26 @@ body {
 
 .delete-my-stamp {
   position: absolute;
-  bottom: 0;
-  right: 0;
+  bottom: 2px;
+  right: 2px;
+  font-size: 10px;
 }
 
 #selected-stamp {
   background: cornflowerblue;
+}
+
+.drawing-detail-picture {
+  background: white;
+  width: 500px;
+}
+
+.select-stamp-icon {
+  position: absolute;
+  bottom: 3px;
+  right: 3px;
+}
+
+.hidden {
+  display: none;
 }

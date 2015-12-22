@@ -26,11 +26,10 @@ var MyStampListItem = React.createClass({
       <div className="index-element">
         <img src={url}
           onClick={this.setStamp}/>
-        <div
+        <img
+          src="./close12.png"
           className="delete-my-stamp"
-          onClick={this.deleteMyStamp}>
-          Delete
-        </div>
+          onClick={this.deleteMyStamp}/>
       </div>
     );
   }

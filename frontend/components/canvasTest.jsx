@@ -191,13 +191,16 @@ var CanvasTest = React.createClass({
     this.drawingCanvas.mouseMove(e, this.color, this.size);
   },
   onWheelHandler: function(e) {
-    if (e.deltaY < 0) {
-      this.stampCanvas.scaleUp();
-    } else {
-      this.stampCanvas.scaleDown();
+    e.preventDefault();
+    if (this.state.stamping) {
+      if (e.deltaY < 0) {
+        this.stampCanvas.scaleUp();
+      } else {
+        this.stampCanvas.scaleDown();
+      }
+      this.setStamp();
+      this.drawingCanvas.mouseMove(e);
     }
-    this.setStamp();
-    this.drawingCanvas.mouseMove(e);
   },
   undo: function(e) {
     this.drawingCanvas.undo();

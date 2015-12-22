@@ -30,11 +30,14 @@ var DrawingDetail = React.createClass({
       var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + this.state.drawing.image_url + ".png";
       contents = (
         <div>
-          <img src={url}/>
+          <div
+            className="drawing-detail-picture">
+            <img src={url}/>
+          </div>
           <div
             className="username"
             onClick={this.goToProfile}>
-            {this.state.drawing.username}
+            {"Drawn by " + this.state.drawing.username}
           </div>
         </div>
       );

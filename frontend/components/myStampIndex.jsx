@@ -52,6 +52,7 @@ var MyStampIndex = React.createClass({
     }
     return(
       <div className="index">
+        My Stamps
         {stampsList}
       </div>
     );

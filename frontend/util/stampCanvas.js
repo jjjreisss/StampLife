@@ -20,7 +20,7 @@ StampCanvas.prototype.loadImage = function (url) {
   this.img.crossOrigin="anonymous";
   this.img.src = url;
   this.img.onload = function() {
-    this.ctx.drawImage(this.img, 0, 0, 500, 500, 0, 0, 150, 150);
+    this.ctx.drawImage(this.img, 0, 0, 500, 500, 0, 0, this.width(), this.height());
     console.log(this.img.src);
   }.bind(this);
 };

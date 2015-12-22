@@ -18,14 +18,7 @@ var StampIndex = React.createClass({
   },
   _onChange: function() {
     var allStamps = StampStore.all().reverse();
-    // if (this.props.filterIndicies) {
-    //   var myStamp = allStamps.filter(function(stamp) {
-    //     return this.props.filterIndicies.indexOf(stamp.id) !== -1
-    //   }.bind(this))
-    //   this.setState({stamps: myStamp})
-    // } else {
-      this.setState({stamps: allStamps})
-    // }
+    this.setState({stamps: allStamps});
   },
 
   render: function() {
