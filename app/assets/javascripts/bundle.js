@@ -56,10 +56,13 @@
 	var StampIndex = __webpack_require__(211);
 	var StampDetail = __webpack_require__(254);
 	var NewStamp = __webpack_require__(255);
+	var Home = __webpack_require__(256);
+	var IndexRoute = __webpack_require__(159).IndexRoute;
 
 	var routes = React.createElement(
 	  Route,
 	  { path: '/', component: App },
+	  React.createElement(IndexRoute, { component: Home }),
 	  React.createElement(Route, { path: '/new', component: CanvasTest }),
 	  React.createElement(Route, { path: '/stamps', component: StampIndex }),
 	  React.createElement(Route, { path: '/drawings', component: DrawingIndex }),
@@ -24509,9 +24512,26 @@
 	          ),
 	          React.createElement(
 	            'li',
-	            {
-	              onClick: this.goToMyProfile },
-	            'My Profile'
+	            null,
+	            React.createElement(
+	              'ul',
+	              null,
+	              React.createElement(
+	                'li',
+	                { className: 'instructions' },
+	                'Step 1. Make a stamp.'
+	              ),
+	              React.createElement(
+	                'li',
+	                { className: 'instructions' },
+	                'Step 2. Go \'shopping\' for stamps.'
+	              ),
+	              React.createElement(
+	                'li',
+	                { className: 'instructions' },
+	                'Step 3. Make a drawing with your stamps'
+	              )
+	            )
 	          )
 	        )
 	      ),
@@ -33229,6 +33249,22 @@
 	});
 
 	module.exports = CanvasTest;
+
+/***/ },
+/* 256 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+
+	var Home = React.createClass({
+	  displayName: 'Home',
+
+	  render: function () {
+	    return React.createElement('div', null);
+	  }
+	});
+
+	module.exports = Home;
 
 /***/ }
 /******/ ]);

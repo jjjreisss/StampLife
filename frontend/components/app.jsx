@@ -16,7 +16,7 @@ var App = React.createClass({
     this.props.history.push('stamp/new');
   },
   goToMyProfile: function() {
-    
+
   },
 
   render: function() {
@@ -47,9 +47,19 @@ var App = React.createClass({
               </li>
             </ul>
           </li>
-          <li
-            onClick={this.goToMyProfile}>
-            My Profile
+
+          <li>
+            <ul>
+              <li className="instructions">
+                Step 1. Make a stamp.
+              </li >
+              <li className="instructions">
+                Step 2. Go 'shopping' for stamps.
+              </li >
+              <li className="instructions">
+                Step 3. Make a drawing with your stamps
+              </li >
+            </ul>
           </li>
         </ul>
       </div>

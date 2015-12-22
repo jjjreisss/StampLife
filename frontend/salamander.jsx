@@ -10,10 +10,13 @@ var ProfilePage = require('./components/profilePage');
 var StampIndex = require('./components/stampIndex');
 var StampDetail = require('./components/stampDetail');
 var NewStamp = require('./components/newStamp');
+var Home = require('./components/home');
+var IndexRoute = require('react-router').IndexRoute;
 
 
 var routes = (
   <Route path="/" component={App}>
+    <IndexRoute component={Home}/>
     <Route path="/new" component={CanvasTest}/>
     <Route path="/stamps" component={StampIndex}/>
     <Route path="/drawings" component={DrawingIndex}/>
