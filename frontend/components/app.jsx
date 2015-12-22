@@ -61,6 +61,19 @@ var App = React.createClass({
               </li >
             </ul>
           </li>
+
+          <li>
+            <ul className="instructions">
+              <li className="instructions">
+                Tip: The mousewheel resizes stamps
+              </li >
+              <li className="instructions">
+                Tip: Click + Drag on Size + Color
+              </li >
+
+            </ul>
+          </li>
+
         </ul>
       </div>
 

@@ -24532,6 +24532,24 @@
 	                'Step 3. Make a drawing with your stamps'
 	              )
 	            )
+	          ),
+	          React.createElement(
+	            'li',
+	            null,
+	            React.createElement(
+	              'ul',
+	              { className: 'instructions' },
+	              React.createElement(
+	                'li',
+	                { className: 'instructions' },
+	                'Tip: The mousewheel resizes stamps'
+	              ),
+	              React.createElement(
+	                'li',
+	                { className: 'instructions' },
+	                'Tip: Click + Drag on Size + Color'
+	              )
+	            )
 	          )
 	        )
 	      ),
