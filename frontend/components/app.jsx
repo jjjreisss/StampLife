@@ -26,24 +26,24 @@ var App = React.createClass({
         <ul className="nav navbar-nav">
           <li role="presentation" className="dropdown">
             <a className="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-              Dropdown <span className="caret"></span>
+              <div className="ghost">👻</div> <span className="caret"></span>
             </a>
             <ul className="dropdown-menu">
               <li
-                onClick={this.goToDrawingsIndex}>
-                All Drawings
+                onClick={this.goToNewStamp}>
+                Make Stamp
+              </li>
+              <li
+                onClick={this.goToStampsIndex}>
+                Get Stamps
               </li>
               <li
                 onClick={this.goToNew}>
                 New Drawing
               </li>
               <li
-                onClick={this.goToStampsIndex}>
-                All Stamps
-              </li>
-              <li
-                onClick={this.goToNewStamp}>
-                New Stamp
+                onClick={this.goToDrawingsIndex}>
+                All Drawings
               </li>
             </ul>
           </li>

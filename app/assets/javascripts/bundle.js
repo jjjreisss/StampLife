@@ -24478,7 +24478,12 @@
 	            React.createElement(
 	              'a',
 	              { className: 'dropdown-toggle', 'data-toggle': 'dropdown', href: '#', role: 'button', 'aria-haspopup': 'true', 'aria-expanded': 'false' },
-	              'Dropdown ',
+	              React.createElement(
+	                'div',
+	                { className: 'ghost' },
+	                '👻'
+	              ),
+	              ' ',
 	              React.createElement('span', { className: 'caret' })
 	            ),
 	            React.createElement(
@@ -24487,8 +24492,14 @@
 	              React.createElement(
 	                'li',
 	                {
-	                  onClick: this.goToDrawingsIndex },
-	                'All Drawings'
+	                  onClick: this.goToNewStamp },
+	                'Make Stamp'
+	              ),
+	              React.createElement(
+	                'li',
+	                {
+	                  onClick: this.goToStampsIndex },
+	                'Get Stamps'
 	              ),
 	              React.createElement(
 	                'li',
@@ -24499,14 +24510,8 @@
 	              React.createElement(
 	                'li',
 	                {
-	                  onClick: this.goToStampsIndex },
-	                'All Stamps'
-	              ),
-	              React.createElement(
-	                'li',
-	                {
-	                  onClick: this.goToNewStamp },
-	                'New Stamp'
+	                  onClick: this.goToDrawingsIndex },
+	                'All Drawings'
 	              )
 	            )
 	          ),
