@@ -32274,7 +32274,7 @@
 	  this.currY = 0;
 	  this.rgbString = "black";
 	  this.ctx.lineJoin = this.ctx.lineCap = 'round';
-	  this.history = [null, null, null, null, null];
+	  this.history = [this.getImageData(), this.getImageData(), this.getImageData(), this.getImageData(), this.getImageData()];
 
 	  this.drawing = false;
 	  this.stamping = false;
