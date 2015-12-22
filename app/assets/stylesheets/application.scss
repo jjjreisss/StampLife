@@ -181,7 +181,10 @@ body {
 .drawing-toolbar {
   width: 580px;
   height: 150px;
+}
 
+.drawing-toolbar * {
+  margin: 2px;
 }
 
 .delete-my-stamp-icon {

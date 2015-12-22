@@ -270,14 +270,11 @@ var CanvasTest = React.createClass({
         </div>
       </div>
       <div className="drawing-toolbar">
-        <div
+        <button
           id="toggle-stamping"
           onMouseDown={this.toggleStamping}>
           {this.stampingText()}
-        </div>
-        <div id="drawing-form">
-          <input type="text" valueLink={this.linkState('caption')}/>
-        </div>
+        </button>
         <button
           className="clear-drawing-canvas"
           onClick={this.clearDrawingCanvas}>

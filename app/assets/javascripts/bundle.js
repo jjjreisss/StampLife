@@ -32219,16 +32219,11 @@
 	        'div',
 	        { className: 'drawing-toolbar' },
 	        React.createElement(
-	          'div',
+	          'button',
 	          {
 	            id: 'toggle-stamping',
 	            onMouseDown: this.toggleStamping },
 	          this.stampingText()
-	        ),
-	        React.createElement(
-	          'div',
-	          { id: 'drawing-form' },
-	          React.createElement('input', { type: 'text', valueLink: this.linkState('caption') })
 	        ),
 	        React.createElement(
 	          'button',

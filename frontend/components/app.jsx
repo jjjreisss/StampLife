@@ -70,7 +70,6 @@ var App = React.createClass({
               <li className="instructions">
                 Tip: Click + Drag on Size + Color
               </li >
-
             </ul>
           </li>
 
