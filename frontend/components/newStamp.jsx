@@ -211,11 +211,7 @@ var CanvasTest = React.createClass({
           onClick={this.clearDrawingCanvas}>
           Clear Canvas
         </button>
-        <button
-          className="save-stamp"
-          onClick={this.saveStamp}>
-          Save Stamp
-        </button>
+
         <button
           className="save-to-my-stamps"
           onClick={this.saveToMyStamps}>

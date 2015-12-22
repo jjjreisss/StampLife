@@ -33233,13 +33233,6 @@
 	        React.createElement(
 	          'button',
 	          {
-	            className: 'save-stamp',
-	            onClick: this.saveStamp },
-	          'Save Stamp'
-	        ),
-	        React.createElement(
-	          'button',
-	          {
 	            className: 'save-to-my-stamps',
 	            onClick: this.saveToMyStamps },
 	          'Save To My Stamps'
