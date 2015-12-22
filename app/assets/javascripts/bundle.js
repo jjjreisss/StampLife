@@ -24519,17 +24519,17 @@
 	              React.createElement(
 	                'li',
 	                { className: 'instructions' },
-	                'Step 1. Make a stamp.'
+	                'Step 1. Make a Stamp (or two)'
 	              ),
 	              React.createElement(
 	                'li',
 	                { className: 'instructions' },
-	                'Step 2. Go \'shopping\' for stamps.'
+	                'Step 2. Go \'Shopping\' for Stamps'
 	              ),
 	              React.createElement(
 	                'li',
 	                { className: 'instructions' },
-	                'Step 3. Make a drawing with your stamps'
+	                'Step 3. Make a Drawing with Your Stamps'
 	              )
 	            )
 	          ),
@@ -24542,7 +24542,7 @@
 	              React.createElement(
 	                'li',
 	                { className: 'instructions' },
-	                'Tip: The mousewheel resizes stamps'
+	                'Tip: The Mousewheel Resizes Stamps'
 	              ),
 	              React.createElement(
 	                'li',
