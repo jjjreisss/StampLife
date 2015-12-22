@@ -25134,8 +25134,7 @@
 	        onMouseEnter: this.displayText,
 	        onMouseLeave: this.hideText },
 	      React.createElement('img', { src: url }),
-	      React.createElement('img', {
-	        src: './plussign5.png',
+	      React.createElement('div', {
 	        className: selectStampText })
 	    );
 	  }
@@ -31590,9 +31589,12 @@
 	var ApiUtil = __webpack_require__(212);
 	var MyStampListItem = __webpack_require__(237);
 	var MyStampStore = __webpack_require__(238);
+	var History = __webpack_require__(159).History;
 
 	var MyStampIndex = React.createClass({
 	  displayName: 'MyStampIndex',
+
+	  mixins: [History],
 
 	  getInitialState: function () {
 	    return {
@@ -31617,6 +31619,12 @@
 	      selected: parseInt(e.currentTarget.attributes["data-idx"].value)
 	    });
 	  },
+	  goToStampsIndex: function () {
+	    this.history.push('stamps');
+	  },
+	  goToNewStamp: function () {
+	    this.history.push('stamp/new');
+	  },
 
 	  render: function () {
 	    var stampsList = "";
@@ -31629,8 +31637,7 @@
 	            key: idx,
 	            'data-idx': idx,
 	            onClick: this.selectStamp,
-	            id: selected,
-	            className: 'stamp-index-element' },
+	            id: selected },
 	          React.createElement(MyStampListItem, {
 	            stampId: stamp.id,
 	            imageUrl: stamp.image_url,
@@ -31641,8 +31648,26 @@
 	    return React.createElement(
 	      'div',
 	      { className: 'index' },
-	      'My Stamps',
-	      stampsList
+	      React.createElement(
+	        'div',
+	        { className: 'my-stamp-index-text' },
+	        'My Stamps'
+	      ),
+	      stampsList,
+	      React.createElement(
+	        'div',
+	        { className: 'my-stamp-index-footer' },
+	        React.createElement(
+	          'button',
+	          { onClick: this.goToStampsIndex },
+	          'Get Stamps'
+	        ),
+	        React.createElement(
+	          'button',
+	          { onClick: this.goToNewStamp },
+	          'Make Stamps'
+	        )
+	      )
 	    );
 	  }
 
@@ -31680,12 +31705,11 @@
 
 	    return React.createElement(
 	      'div',
-	      { className: 'index-element' },
+	      { className: 'my-stamp-index-element' },
 	      React.createElement('img', { src: url,
 	        onClick: this.setStamp }),
-	      React.createElement('img', {
-	        src: './close12.png',
-	        className: 'delete-my-stamp',
+	      React.createElement('div', {
+	        className: 'delete-my-stamp-icon',
 	        onClick: this.deleteMyStamp })
 	    );
 	  }
@@ -32251,6 +32275,10 @@
 	};
 
 	DrawingCanvas.prototype.mouseOut = function (e) {
+	  if (this.drawing) {
+	    this.history.shift();
+	    this.history.push(this.getImageData());
+	  }
 	  this.clear();
 	  if (this.history[this.history.length - 1]) {
 	    this.putImageData(this.history[this.history.length - 1]);

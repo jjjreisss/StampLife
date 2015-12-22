@@ -2,8 +2,12 @@ var React = require('react');
 var ApiUtil = require('../util/apiUtil');
 var MyStampListItem = require('./myStampListItem');
 var MyStampStore = require('../stores/myStampStore');
+var History = require('react-router').History;
+
 
 var MyStampIndex = React.createClass({
+  mixins: [History],
+
   getInitialState: function() {
     return({
       stamps: null,
@@ -27,6 +31,12 @@ var MyStampIndex = React.createClass({
       selected: parseInt(e.currentTarget.attributes["data-idx"].value)
     });
   },
+  goToStampsIndex: function() {
+    this.history.push('stamps');
+  },
+  goToNewStamp: function() {
+    this.history.push('stamp/new');
+  },
 
   render: function() {
     var stampsList = "";
@@ -38,8 +48,7 @@ var MyStampIndex = React.createClass({
             key={idx}
             data-idx={idx}
             onClick={this.selectStamp}
-            id={selected}
-            className="stamp-index-element">
+            id={selected}>
 
           <MyStampListItem
             stampId={stamp.id}
@@ -52,8 +61,18 @@ var MyStampIndex = React.createClass({
     }
     return(
       <div className="index">
-        My Stamps
+        <div className="my-stamp-index-text">
+          My Stamps
+        </div>
         {stampsList}
+        <div className="my-stamp-index-footer">
+          <button onClick={this.goToStampsIndex}>
+            Get Stamps
+          </button>
+          <button onClick={this.goToNewStamp}>
+            Make Stamps
+          </button>
+        </div>
       </div>
     );
   }

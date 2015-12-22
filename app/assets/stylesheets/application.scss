@@ -16,21 +16,48 @@
  @import "bootstrap";
 
 
+ .intro {
+   background: #f3ede2;
+   margin: 200px;
+   border-radius: 5px;
+ }
+
+ .sign-in{
+   padding: 50px;
+   padding-top: 10px;
+   padding-bottom: 40px;
+ }
+
+.sign-in-label{
+  padding-left: 10px;
+}
+
+.sign-in-submit{
+  margin-left: 10px;
+}
+
+.sign-in-header{
+  padding-top: 30px;
+  padding-left: 60px;
+  padding-bottom: -30px;
+}
+
 body {
-  background: orange;
+  background: #f7b67d;
   width: 700px;
   height: 655px;
   margin: auto;
 }
 
-.index {
+.my-stamp-index-text {
+
 }
 
 .index-element{
   float: left;
-  margin: 5px;
   background: white;
   position: relative;
+  margin: 5px;
 }
 
 .stamp-index-element{
@@ -127,17 +154,49 @@ body {
   outline: solid black 1px;
 }
 
+.my-stamp-index-element {
+  float: left;
+  background: white;
+  position: relative;
+  margin: 5px;
+  margin-bottom: 3px;
+}
+
+.my-stamp-index-footer {
+  position: absolute;
+  font-size: 12px;
+  width: 92px;
+  bottom: 0px;
+  margin: 15px;
+  margin-left: 9px;
+}
+
+.my-stamp-index-footer button {
+  width: 92px;
+  margin-top: 5px;
+  margin: auto;
+  margin-top: 5px;
+}
+
 .drawing-toolbar {
   width: 580px;
   height: 150px;
 
 }
 
-.delete-my-stamp {
+.delete-my-stamp-icon {
   position: absolute;
   bottom: 2px;
   right: 2px;
   font-size: 10px;
+  width: 16px;
+  height: 16px;
+  background: white;
+  background-image: url('../close12.png');
+}
+
+.delete-my-stamp-icon:hover {
+  background-image: url('../cancel24.png');
 }
 
 #selected-stamp {
@@ -153,6 +212,14 @@ body {
   position: absolute;
   bottom: 3px;
   right: 3px;
+  width: 24px;
+  height: 24px;
+  background: white;
+  background-image: url('../plussign5.png');
+}
+
+.select-stamp-icon:hover {
+  background-image: url('../add198.png');
 }
 
 .hidden {

@@ -35,6 +35,10 @@ DrawingCanvas.prototype.mouseUp = function (e) {
 };
 
 DrawingCanvas.prototype.mouseOut = function (e) {
+  if(this.drawing) {
+    this.history.shift();
+    this.history.push(this.getImageData());
+  }
   this.clear();
   if (this.history[this.history.length - 1]){
     this.putImageData(this.history[this.history.length - 1]);

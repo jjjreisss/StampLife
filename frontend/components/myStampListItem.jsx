@@ -23,13 +23,14 @@ var MyStampListItem = React.createClass({
     var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + sizeString + this.props.imageUrl + ".png";
 
     return (
-      <div className="index-element">
+      <div className="my-stamp-index-element">
         <img src={url}
           onClick={this.setStamp}/>
-        <img
-          src="./close12.png"
-          className="delete-my-stamp"
-          onClick={this.deleteMyStamp}/>
+        <div
+          className="delete-my-stamp-icon"
+          onClick={this.deleteMyStamp}>
+        </div>
+
       </div>
     );
   }

@@ -32,9 +32,9 @@ var StampListItem = React.createClass({
         onMouseEnter={this.displayText}
         onMouseLeave={this.hideText}>
         <img src={url}/>
-        <img
-          src="./plussign5.png"
-          className={selectStampText}/>
+        <div
+          className={selectStampText}>
+        </div>
       </div>
     );
   }
