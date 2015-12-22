@@ -206,9 +206,6 @@ var CanvasTest = React.createClass({
       </div>
 
       <div className="drawing-toolbar">
-        <div id="drawing-form">
-          <input type="text" valueLink={this.linkState('caption')}/>
-        </div>
         <button
           className="clear-drawing-canvas"
           onClick={this.clearDrawingCanvas}>

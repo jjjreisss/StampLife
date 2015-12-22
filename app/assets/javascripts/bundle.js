@@ -33224,11 +33224,6 @@
 	        'div',
 	        { className: 'drawing-toolbar' },
 	        React.createElement(
-	          'div',
-	          { id: 'drawing-form' },
-	          React.createElement('input', { type: 'text', valueLink: this.linkState('caption') })
-	        ),
-	        React.createElement(
 	          'button',
 	          {
 	            className: 'clear-drawing-canvas',
