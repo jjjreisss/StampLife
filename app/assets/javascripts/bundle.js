@@ -31888,7 +31888,7 @@
 	      caption: "caption",
 	      stamping: false,
 	      recentColors: ["#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff"],
-	      stamp: null,
+	      stamp: StampStore.single(),
 	      stampSize: 150
 	    };
 	  },
@@ -31976,6 +31976,7 @@
 	    this.drawingCanvas.toggleStamping();
 	    this.setState({ stamping: !this.state.stamping });
 	    this.setStamp();
+	    this.selectStamp();
 	  },
 
 	  // Methods for changing Color

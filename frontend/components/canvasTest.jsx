@@ -19,7 +19,7 @@ var CanvasTest = React.createClass({
       stamping: false,
       recentColors: ["#fff","#fff","#fff","#fff","#fff",
                       "#fff","#fff","#fff","#fff","#fff",],
-      stamp: null,
+      stamp: StampStore.single(),
       stampSize: 150
     });
   },
@@ -111,6 +111,7 @@ var CanvasTest = React.createClass({
     this.drawingCanvas.toggleStamping();
     this.setState({stamping: !this.state.stamping});
     this.setStamp();
+    this.selectStamp();
   },
 
 
