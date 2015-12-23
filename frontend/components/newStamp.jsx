@@ -26,8 +26,6 @@ var CanvasTest = React.createClass({
     this.sizePicker = new SizePicker('size-picker');
     this.colorPicker = new ColorPicker('color-picker');
     this.strokeSample = new StrokeSample('stroke-sample');
-    this.history = [null, null, null];
-    this.viewHistory = [null, null];
 
     this.size = 10;
     this.color = "#000";
@@ -36,7 +34,6 @@ var CanvasTest = React.createClass({
 
     this.colorPicking = false;
     this.sizePicking = false;
-
   },
 
   colorBar: function() {
@@ -109,6 +106,7 @@ var CanvasTest = React.createClass({
     if (this.colorPicking) {
       this.color = this.colorPicker.color();
       this.addRecentColor();
+      this.drawingCanvas.setColor(this.color);
     }
   },
   pickRecentColor: function(e) {
@@ -133,6 +131,7 @@ var CanvasTest = React.createClass({
     if (this.sizePicking) {
       this.size = this.sizePicker.pickSize(e);
       this.strokeSample.pickSample(this.color, this.size);
+      this.drawingCanvas.setSize(this.size);
     }
   },
 
@@ -152,6 +151,19 @@ var CanvasTest = React.createClass({
   mouseMoveHandler: function(e) {
     this.drawingCanvas.mouseMove(e, this.color, this.size);
   },
+  onWheelHandler: function(e) {
+    e.preventDefault();
+    if (e.deltaY < 0) {
+      this.size = this.size * 1.2;
+      this.strokeSample.pickSample(this.color, this.size);
+      this.drawingCanvas.setSize(this.size);
+    } else {
+      this.size = this.size / 1.2;
+      this.strokeSample.pickSample(this.color, this.size);
+      this.drawingCanvas.setSize(this.size);
+    }
+    this.drawingCanvas.mouseMove(e);
+  },
   undo: function(e) {
     this.drawingCanvas.undo();
   },
@@ -168,7 +180,8 @@ var CanvasTest = React.createClass({
             onMouseUp={this.mouseUpHandler}
             onMouseMove={this.mouseMoveHandler}
             onMouseOut={this.mouseOutHandler}
-            onMouseOver={this.mouseOverHandler}>
+            onMouseOver={this.mouseOverHandler}
+            onWheel={this.onWheelHandler}>
 
           </canvas>
           <canvas

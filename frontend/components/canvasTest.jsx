@@ -28,9 +28,7 @@ var CanvasTest = React.createClass({
     this.sizePicker = new SizePicker('size-picker');
     this.colorPicker = new ColorPicker('color-picker');
     this.strokeSample = new StrokeSample('stroke-sample');
-    // this.stampCanvas = new StampCanvas('stamp-canvas', 150, 150);
-    // this.history = [null, null, null];
-    // this.viewHistory = [null, null];
+    this.stampCanvas = new StampCanvas('stamp-canvas', 150, 150);
     this.size = 10;
     this.color = "#000";
 
@@ -79,22 +77,7 @@ var CanvasTest = React.createClass({
           caption: this.state.caption,
           image_url: imageReceived.public_id
         });
-        this.props.history.push('drawings');
       }.bind(this)
-    });
-  },
-  saveStamp: function() {
-    var img = this.stampCanvas.toData();
-    $.ajax({
-      url: "api/images",
-      method: "POST",
-      data: {img: img},
-      success: function(imageReceived) {
-        ApiUtil.createStamp({
-          name: "default name",
-          image_url: imageReceived.public_id
-        });
-      }
     });
   },
   setStamp: function() {
@@ -113,7 +96,7 @@ var CanvasTest = React.createClass({
     this.selectStamp();
   },
   handleSave: function() {
-    this.saveStamp();
+    this.saveDrawing();
     this.clearDrawingCanvas();
   },
 
@@ -177,7 +160,7 @@ var CanvasTest = React.createClass({
 
 // Methods for drawing
   clearDrawingCanvas: function() {
-    this.drawingCanvas.clearCanvas();
+    this.drawingCanvas.hardReset();
   },
   clearStamp: function() {
     this.stampCanvas.clear();
@@ -192,9 +175,7 @@ var CanvasTest = React.createClass({
   mouseOutHandler: function(e) {
     this.drawingCanvas.mouseOut(e, this.color, this.size);
   },
-  mouseEnterHandler: function(e) {
-    this.drawingCanvas.mouseEnter(e);
-  },
+
   mouseMoveHandler: function(e) {
     this.drawingCanvas.mouseMove(e, this.color, this.size);
   },
@@ -240,7 +221,6 @@ var CanvasTest = React.createClass({
             onMouseMove={this.mouseMoveHandler}
             onMouseOut={this.mouseOutHandler}
             onMouseOver={this.mouseOverHandler}
-            onMouseEnter={this.mouseEnterHandler}
             onWheel={this.onWheelHandler}>
 
           </canvas>

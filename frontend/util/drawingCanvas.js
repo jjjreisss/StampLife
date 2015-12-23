@@ -14,38 +14,16 @@ var DrawingCanvas = function(id, length, width) {
   this.currY = 0;
   this.rgbString = "black";
   this.ctx.lineJoin = this.ctx.lineCap = 'round';
-  this.history = [this.getImageData(), this.getImageData(), this.getImageData(), this.getImageData(), this.getImageData()];
-  this.outside = [];
+  this.blankImageData = this.getImageData();
+  this.history = [this.blankImageData, this.blankImageData, this.blankImageData, this.blankImageData, this.blankImageData];
 
   this.drawing = false;
   this.stamping = false;
 };
 
 DrawingCanvas.prototype.mouseDown = function (e, color, size) {
-  this.drawInitialStroke();
+  this.drawInitialMark();
   this.drawing = true;
-  this.draw();
-};
-
-
-DrawingCanvas.prototype.mouseUp = function (e) {
-  this.history.shift();
-  this.history.push(this.getImageData());
-
-  this.drawing = false;
-};
-
-DrawingCanvas.prototype.mouseOut = function (e) {
-  if(this.drawing) {
-    this.history.shift();
-    this.history.push(this.getImageData());
-  }
-  this.clear();
-  if (this.history[this.history.length - 1]){
-    this.putImageData(this.history[this.history.length - 1]);
-  }
-
-  this.drawing = false;
 };
 
 DrawingCanvas.prototype.mouseMove = function (e) {
@@ -66,9 +44,31 @@ DrawingCanvas.prototype.mouseMove = function (e) {
   }
 };
 
-DrawingCanvas.prototype.mouseEnter = function (e) {
 
+DrawingCanvas.prototype.mouseUp = function (e) {
+  this.saveFrame();
+  this.drawing = false;
 };
+
+DrawingCanvas.prototype.mouseOut = function (e) {
+  if(this.drawing) {
+    this.saveFrame();
+  }
+  this.setToLastFrame();
+
+  this.drawing = false;
+};
+
+DrawingCanvas.prototype.setToLastFrame = function() {
+  this.clear();
+  this.putImageData(this.history[this.history.length - 1]);
+};
+
+DrawingCanvas.prototype.saveFrame = function () {
+  this.history.shift();
+  this.history.push(this.getImageData());
+};
+
 
 DrawingCanvas.prototype.setColor = function (color) {
   this.color = color;
@@ -79,11 +79,18 @@ DrawingCanvas.prototype.setSize = function (size) {
 };
 
 DrawingCanvas.prototype.undo = function () {
-  if(this.history[this.history.length - 2]) {
-    this.history.unshift(null);
-    this.history.pop();
-    this.clear();
-    this.putImageData(this.history[this.history.length - 1]);
+  this.history.unshift(this.blankImageData);
+  this.history.pop();
+  this.setToLastFrame();
+};
+
+DrawingCanvas.prototype.preview = function () {
+  if (this.stamping) {
+    this.setToLastFrame();
+    this.previewStamp();
+  } else {
+    this.setToLastFrame();
+    this.previewStroke();
   }
 };
 
@@ -95,28 +102,16 @@ DrawingCanvas.prototype.draw = function () {
   }
 };
 
-DrawingCanvas.prototype.preview = function () {
-  if (this.stamping) {
-    this.clear();
-    if (this.history[this.history.length - 1]){
-      this.putImageData(this.history[this.history.length - 1]);
-    }
-    this.drawStamp("transparent");
-  } else {
-    this.clear();
-    if (this.history[this.history.length - 1]){
-      this.putImageData(this.history[this.history.length - 1]);
-    }
-    this.previewStroke();
-  }
+DrawingCanvas.prototype.previewStamp = function () {
+  this.ctx.globalAlpha = 0.4;
+  this.drawStamp();
+  this.ctx.globalAlpha = 1.0;
 };
 
-DrawingCanvas.prototype.drawStamp = function (transparent) {
-  if (transparent) {this.ctx.globalAlpha = 0.4;}
+DrawingCanvas.prototype.drawStamp = function () {
   var img = new Image();
   img.src = this.stampImg;
   this.ctx.drawImage(img, this.currX-this.stampSize/2, this.currY-this.stampSize/2);
-  this.ctx.globalAlpha = 1.0;
 };
 
 DrawingCanvas.prototype.previewStroke = function () {
@@ -131,8 +126,7 @@ DrawingCanvas.prototype.previewStroke = function () {
   this.ctx.globalAlpha = 1.0;
 };
 
-DrawingCanvas.prototype.drawStroke = function (transparent) {
-  if (transparent) {this.ctx.globalAlpha = 0.4;}
+DrawingCanvas.prototype.drawStroke = function () {
   this.ctx.beginPath();
   this.ctx.moveTo(this.prevX, this.prevY);
   this.ctx.lineTo(this.currX, this.currY);
@@ -140,10 +134,17 @@ DrawingCanvas.prototype.drawStroke = function (transparent) {
   this.ctx.lineWidth = this.size;
   this.ctx.stroke();
   this.ctx.closePath();
-  this.ctx.globalAlpha = 1.0;
 };
 
-DrawingCanvas.prototype.drawInitialStroke = function (transparent) {
+DrawingCanvas.prototype.drawInitialMark = function () {
+  if (this.stamping) {
+    this.drawStamp();
+  } else {
+    this.drawInitialStroke();
+  }
+};
+
+DrawingCanvas.prototype.drawInitialStroke = function () {
   this.ctx.beginPath();
   this.ctx.moveTo(this.currX+1, this.currY+1);
   this.ctx.lineTo(this.currX, this.currY);
@@ -188,11 +189,9 @@ DrawingCanvas.prototype.putImageData = function (imageData) {
   this.ctx.putImageData(imageData, 0, 0);
 };
 
-DrawingCanvas.prototype.clearCanvas = function () {
+DrawingCanvas.prototype.hardReset = function () {
   this.clear();
-  this.history = [null, null, null, null, null];
+  this.history = [this.getImageData(), this.getImageData(), this.getImageData(), this.getImageData(), this.getImageData()];
 };
-
-
 
 module.exports = DrawingCanvas;
