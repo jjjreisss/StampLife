@@ -8,7 +8,7 @@ var MyStampListItem = React.createClass({
 
   getInitialState: function() {
     return({
-
+      stamp: null
     });
   },
   setStamp: function() {

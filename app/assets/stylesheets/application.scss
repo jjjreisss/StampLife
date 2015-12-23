@@ -15,232 +15,223 @@
  @import "bootstrap-sprockets";
  @import "bootstrap";
 
-
  .intro {
-   background: #f3ede2;
-   margin: 200px;
-   border-radius: 5px;
+    background: #f3ede2;
+    margin: 200px;
+    border-radius: 5px;
+  }
+
+  .sign-in{
+    padding: 50px;
+    padding-top: 10px;
+    padding-bottom: 40px;
+  }
+
+ .sign-in-label{
+   padding-left: 10px;
  }
 
- .sign-in{
-   padding: 50px;
-   padding-top: 10px;
-   padding-bottom: 40px;
+ .sign-in-submit{
+   margin-left: 10px;
  }
 
-.sign-in-label{
-  padding-left: 10px;
-}
+ .sign-in-header{
+   padding-top: 30px;
+   padding-left: 60px;
+   padding-bottom: -30px;
+ }
 
-.sign-in-submit{
-  margin-left: 10px;
-}
+ body {
+   background: #f7b67d;
+   width: 85%;
+   height: 655px;
+   margin: auto;
+ }
 
-.sign-in-header{
-  padding-top: 30px;
-  padding-left: 60px;
-  padding-bottom: -30px;
-}
+ .my-stamp-index-text {
 
-body {
-  background: #f7b67d;
-  width: 900px;
-  height: 655px;
-  margin: auto;
-}
+ }
 
-.my-stamp-index-text {
+ .index-element{
+   float: left;
+   background: white;
+   position: relative;
+   margin: 5px;
+ }
 
-}
+ .stamp-index-element{
+   width: 110px;
+   height: 115px;
+ }
 
-.index {
-  margin: auto;
-  overflow: auto;
+ .square {
+   width: 3px;
+   height: 3px;
+   float: left;
+ }
 
-}
-
-.index-element{
-  float: left;
-  background: white;
-  position: relative;
-  margin: 5px;
-}
-
-.stamp-index-element{
-  width: 110px;
-  height: 115px;
-}
-
-.square {
-  width: 3px;
-  height: 3px;
-  float: left;
-}
-
-.drawn {
-  background: black;
-  width: 3px;
-  height: 3px;
-  float: left;
-}
+ .drawn {
+   background: black;
+   width: 3px;
+   height: 3px;
+   float: left;
+ }
 
 
-#drawing-canvas{
-  background: white;
-  outline: 1px solid black;
-}
+ #drawing-canvas{
+   background: white;
+   outline: 1px solid black;
+ }
 
-#color-picker {
-  background: white;
-  outline: 1px solid black;
-}
+ #color-picker {
+   background: white;
+   outline: 1px solid black;
+ }
 
-#size-picker {
-  background: white;
-  position: relative;
-  top: -4px;
-  outline: 1px solid black;
-  display: none;
-}
+ #size-picker {
+   background: white;
+   position: relative;
+   top: -4px;
+   outline: 1px solid black;
+ }
 
-#stroke-sample {
-  background: white;
-  position: relative;
-  top: -4px;
-  outline: 1px solid black;
-  display: none;
-}
+ #stroke-sample {
+   background: white;
+   position: relative;
+   top: -4px;
+   outline: 1px solid black;
+ }
 
-#stamp-canvas {
-  background: white;
-}
+ #stamp-canvas {
+   background: white;
+ }
 
 
-.color-square {
-  background: white;
-  width: 58px;
-  height: 58px;
-  outline: 1px solid black;
-  float: left
-}
+ .color-square {
+   background: white;
+   width: 58px;
+   height: 58px;
+   outline: 1px solid black;
+   float: left
+ }
 
-#color-bar {
-  top: -7px;
-  width: 580px;
-  height: 58px;
-}
+ #color-bar {
+   top: -7px;
+   width: 580px;
+   height: 58px;
+ }
 
-#drawing-page {
-  width: 800px;
-  height: 650px;
-  position: relative;
-}
+ #drawing-page {
+   width: 800px;
+   height: 650px;
+   position: relative;
+ }
 
-#drawing{
-  width: 580px;
-  height: 650px;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
+ #drawing{
+   width: 580px;
+   height: 650px;
+   position: absolute;
+   top: 0;
+   left: 0;
+ }
 
-.stamp-canvas {
-  display: none;
-  width: 150px;
-  height: 150px;
-  position: absolute;
-  bottom: 0;
-  right: 0;
-}
+ .stamp-canvas {
+   display: none;
+   width: 150px;
+   height: 150px;
+   position: absolute;
+   bottom: 0;
+   right: 0;
+ }
 
-.stamp-sidebar {
-  width: 110px;
-  height: 640px;
-  position: fixed;
-  top: 150px;
-  right: 50px;
-  outline: solid black 1px;
-}
+ .stamp-sidebar {
+   width: 110px;
+   height: 640px;
+   position: fixed;
+   top: 150px;
+   right: 50px;
+   outline: solid black 1px;
+ }
 
-.my-stamp-index-element {
-  float: left;
-  background: white;
-  position: relative;
-  margin: 5px;
-  margin-bottom: 3px;
-}
+ .my-stamp-index-element {
+   float: left;
+   background: white;
+   position: relative;
+   margin: 5px;
+   margin-bottom: 3px;
+ }
 
-.my-stamp-index-footer {
-  position: absolute;
-  font-size: 12px;
-  width: 92px;
-  bottom: 0px;
-  margin: 15px;
-  margin-left: 9px;
-}
+ .my-stamp-index-footer {
+   position: absolute;
+   font-size: 12px;
+   width: 92px;
+   bottom: 0px;
+   margin: 15px;
+   margin-left: 9px;
+ }
 
-.my-stamp-index-footer button {
-  width: 92px;
-  margin-top: 5px;
-  margin: auto;
-  margin-top: 5px;
-}
+ .my-stamp-index-footer button {
+   width: 92px;
+   margin-top: 5px;
+   margin: auto;
+   margin-top: 5px;
+ }
 
-.drawing-toolbar {
-  width: 580px;
-  height: 150px;
-}
+ .drawing-toolbar {
+   width: 580px;
+   height: 150px;
+ }
 
-.drawing-toolbar * {
-  margin: 2px;
-}
+ .drawing-toolbar * {
+   margin: 2px;
+ }
 
-.delete-my-stamp-icon {
-  position: absolute;
-  bottom: 2px;
-  right: 2px;
-  font-size: 10px;
-  width: 16px;
-  height: 16px;
-  background: white;
-  background-image: url('../close12.png');
-}
+ .delete-my-stamp-icon {
+   position: absolute;
+   bottom: 2px;
+   right: 2px;
+   font-size: 10px;
+   width: 16px;
+   height: 16px;
+   background: white;
+   background-image: url('../close12.png');
+ }
 
-.delete-my-stamp-icon:hover {
-  background-image: url('../cancel24.png');
-}
+ .delete-my-stamp-icon:hover {
+   background-image: url('../cancel24.png');
+ }
 
-#selected-stamp {
-  background: cornflowerblue;
-}
+ #selected-stamp {
+   background: cornflowerblue;
+ }
 
-.drawing-detail-picture {
-  background: white;
-  width: 500px;
-}
+ .drawing-detail-picture {
+   background: white;
+   width: 500px;
+ }
 
-.select-stamp-icon {
-  position: absolute;
-  bottom: 3px;
-  right: 3px;
-  width: 24px;
-  height: 24px;
-  background: white;
-  background-image: url('../plussign5.png');
-}
+ .select-stamp-icon {
+   position: absolute;
+   bottom: 3px;
+   right: 3px;
+   width: 24px;
+   height: 24px;
+   background: white;
+   background-image: url('../plussign5.png');
+ }
 
-.select-stamp-icon:hover {
-  background-image: url('../add198.png');
-}
+ .select-stamp-icon:hover {
+   background-image: url('../add198.png');
+ }
 
-.hidden {
-  display: none;
-}
+ .hidden {
+   display: none;
+ }
 
-.instructions {
-  color: white;
-}
+ .instructions {
+   color: white;
+ }
 
-.ghost {
-  font-size: 36px;
-}
+ .ghost {
+   font-size: 36px;
+ }

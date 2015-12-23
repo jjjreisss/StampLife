@@ -24514,47 +24514,6 @@
 	                'All Drawings'
 	              )
 	            )
-	          ),
-	          React.createElement(
-	            'li',
-	            null,
-	            React.createElement(
-	              'ul',
-	              null,
-	              React.createElement(
-	                'li',
-	                { className: 'instructions' },
-	                'Step 1. Make a Stamp (or two)'
-	              ),
-	              React.createElement(
-	                'li',
-	                { className: 'instructions' },
-	                'Step 2. Go \'Shopping\' for Stamps'
-	              ),
-	              React.createElement(
-	                'li',
-	                { className: 'instructions' },
-	                'Step 3. Make a Drawing with Your Stamps'
-	              )
-	            )
-	          ),
-	          React.createElement(
-	            'li',
-	            null,
-	            React.createElement(
-	              'ul',
-	              { className: 'instructions' },
-	              React.createElement(
-	                'li',
-	                { className: 'instructions' },
-	                'Tip: Use Mousewheel to Resize'
-	              ),
-	              React.createElement(
-	                'li',
-	                { className: 'instructions' },
-	                'Tip: Click + Drag on Size + Color'
-	              )
-	            )
 	          )
 	        )
 	      ),
@@ -31733,7 +31692,9 @@
 	  mixins: [History],
 
 	  getInitialState: function () {
-	    return {};
+	    return {
+	      stamp: null
+	    };
 	  },
 	  setStamp: function () {
 	    ApiUtil.setStamp(this.props.stampId);
@@ -31941,7 +31902,7 @@
 	    this.history.push('drawings/' + this.props.drawingId);
 	  },
 	  render: function () {
-	    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_200,h_200/" + this.props.imageUrl + ".png";
+	    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_500,h_500/" + this.props.imageUrl + ".png";
 	    return React.createElement(
 	      'div',
 	      { className: 'index-element' },

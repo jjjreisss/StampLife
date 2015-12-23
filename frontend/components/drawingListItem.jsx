@@ -13,7 +13,7 @@ var DrawingListItem = React.createClass({
     this.history.push('drawings/' + this.props.drawingId);
   },
   render: function() {
-    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_200,h_200/" + this.props.imageUrl + ".png";
+    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_500,h_500/" + this.props.imageUrl + ".png";
     return (
       <div className="index-element">
         <img src={url}
