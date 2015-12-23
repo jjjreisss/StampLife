@@ -21,7 +21,7 @@ var StampListItem = React.createClass({
     this.setState({text: false});
   },
   render: function() {
-    var size = this.props.size;
+    var size = 250;
     var sizeString = "w_"+size+",h_"+size+"/";
     var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + sizeString + this.props.imageUrl + ".png";
     var selectStampText = (this.state.text ? "select-stamp-icon" : "hidden");
