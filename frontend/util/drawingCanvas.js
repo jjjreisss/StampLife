@@ -15,17 +15,18 @@ var DrawingCanvas = function(id, length, width) {
   this.rgbString = "black";
   this.ctx.lineJoin = this.ctx.lineCap = 'round';
   this.history = [this.getImageData(), this.getImageData(), this.getImageData(), this.getImageData(), this.getImageData()];
+  this.outside = [];
 
   this.drawing = false;
   this.stamping = false;
 };
 
 DrawingCanvas.prototype.mouseDown = function (e, color, size) {
-  this.color = color;
-  this.size = size;
+  this.drawInitialStroke();
   this.drawing = true;
   this.draw();
 };
+
 
 DrawingCanvas.prototype.mouseUp = function (e) {
   this.history.shift();
@@ -43,6 +44,7 @@ DrawingCanvas.prototype.mouseOut = function (e) {
   if (this.history[this.history.length - 1]){
     this.putImageData(this.history[this.history.length - 1]);
   }
+
   this.drawing = false;
 };
 
@@ -62,6 +64,18 @@ DrawingCanvas.prototype.mouseMove = function (e) {
   } else {
     this.preview();
   }
+};
+
+DrawingCanvas.prototype.mouseEnter = function (e) {
+
+};
+
+DrawingCanvas.prototype.setColor = function (color) {
+  this.color = color;
+};
+
+DrawingCanvas.prototype.setSize = function (size) {
+  this.size = size;
 };
 
 DrawingCanvas.prototype.undo = function () {
@@ -88,6 +102,12 @@ DrawingCanvas.prototype.preview = function () {
       this.putImageData(this.history[this.history.length - 1]);
     }
     this.drawStamp("transparent");
+  } else {
+    this.clear();
+    if (this.history[this.history.length - 1]){
+      this.putImageData(this.history[this.history.length - 1]);
+    }
+    this.previewStroke();
   }
 };
 
@@ -99,9 +119,33 @@ DrawingCanvas.prototype.drawStamp = function (transparent) {
   this.ctx.globalAlpha = 1.0;
 };
 
-DrawingCanvas.prototype.drawStroke = function () {
+DrawingCanvas.prototype.previewStroke = function () {
+  this.ctx.globalAlpha = 0.4;
+  this.ctx.beginPath();
+  this.ctx.moveTo(this.currX+1, this.currY+1);
+  this.ctx.lineTo(this.currX, this.currY);
+  this.ctx.strokeStyle = this.color;
+  this.ctx.lineWidth = this.size;
+  this.ctx.stroke();
+  this.ctx.closePath();
+  this.ctx.globalAlpha = 1.0;
+};
+
+DrawingCanvas.prototype.drawStroke = function (transparent) {
+  if (transparent) {this.ctx.globalAlpha = 0.4;}
   this.ctx.beginPath();
   this.ctx.moveTo(this.prevX, this.prevY);
+  this.ctx.lineTo(this.currX, this.currY);
+  this.ctx.strokeStyle = this.color;
+  this.ctx.lineWidth = this.size;
+  this.ctx.stroke();
+  this.ctx.closePath();
+  this.ctx.globalAlpha = 1.0;
+};
+
+DrawingCanvas.prototype.drawInitialStroke = function (transparent) {
+  this.ctx.beginPath();
+  this.ctx.moveTo(this.currX+1, this.currY+1);
   this.ctx.lineTo(this.currX, this.currY);
   this.ctx.strokeStyle = this.color;
   this.ctx.lineWidth = this.size;

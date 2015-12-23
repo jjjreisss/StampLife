@@ -28,9 +28,9 @@ var CanvasTest = React.createClass({
     this.sizePicker = new SizePicker('size-picker');
     this.colorPicker = new ColorPicker('color-picker');
     this.strokeSample = new StrokeSample('stroke-sample');
-    this.stampCanvas = new StampCanvas('stamp-canvas', 150, 150);
-    this.history = [null, null, null];
-    this.viewHistory = [null, null];
+    // this.stampCanvas = new StampCanvas('stamp-canvas', 150, 150);
+    // this.history = [null, null, null];
+    // this.viewHistory = [null, null];
 
     this.size = 10;
     this.color = "#000";
@@ -143,6 +143,7 @@ var CanvasTest = React.createClass({
     if (this.colorPicking) {
       this.color = this.colorPicker.color();
       this.addRecentColor();
+      this.drawingCanvas.setColor(this.color);
     }
   },
   pickRecentColor: function(e) {
@@ -167,6 +168,7 @@ var CanvasTest = React.createClass({
     if (this.sizePicking) {
       this.size = this.sizePicker.pickSize(e);
       this.strokeSample.pickSample(this.color, this.size);
+      this.drawingCanvas.setSize(this.size);
     }
   },
 
@@ -187,6 +189,9 @@ var CanvasTest = React.createClass({
   mouseOutHandler: function(e) {
     this.drawingCanvas.mouseOut(e, this.color, this.size);
   },
+  mouseEnterHandler: function(e) {
+    this.drawingCanvas.mouseEnter(e);
+  },
   mouseMoveHandler: function(e) {
     this.drawingCanvas.mouseMove(e, this.color, this.size);
   },
@@ -200,7 +205,19 @@ var CanvasTest = React.createClass({
       }
       this.setStamp();
       this.drawingCanvas.mouseMove(e);
+    } else {
+      if (e.deltaY < 0) {
+        this.size = this.size * 1.2;
+        this.strokeSample.pickSample(this.color, this.size);
+        this.drawingCanvas.setSize(this.size);
+      } else {
+        this.size = this.size / 1.2;
+        this.strokeSample.pickSample(this.color, this.size);
+        this.drawingCanvas.setSize(this.size);
+      }
+      this.drawingCanvas.mouseMove(e);
     }
+
   },
   undo: function(e) {
     this.drawingCanvas.undo();
@@ -219,6 +236,7 @@ var CanvasTest = React.createClass({
             onMouseMove={this.mouseMoveHandler}
             onMouseOut={this.mouseOutHandler}
             onMouseOver={this.mouseOverHandler}
+            onMouseEnter={this.mouseEnterHandler}
             onWheel={this.onWheelHandler}>
 
           </canvas>
@@ -284,11 +302,6 @@ var CanvasTest = React.createClass({
           className="save-drawing"
           onClick={this.saveDrawing}>
           Save Drawing
-        </button>
-        <button
-          className="save-stamp"
-          onClick={this.saveStamp}>
-          Save Stamp
         </button>
         <button
           className="undo"

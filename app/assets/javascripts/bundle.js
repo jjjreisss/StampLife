@@ -24547,7 +24547,7 @@
 	              React.createElement(
 	                'li',
 	                { className: 'instructions' },
-	                'Tip: The Mousewheel Resizes Stamps'
+	                'Tip: Use Mousewheel to Resize'
 	              ),
 	              React.createElement(
 	                'li',
@@ -31988,9 +31988,9 @@
 	    this.sizePicker = new SizePicker('size-picker');
 	    this.colorPicker = new ColorPicker('color-picker');
 	    this.strokeSample = new StrokeSample('stroke-sample');
-	    this.stampCanvas = new StampCanvas('stamp-canvas', 150, 150);
-	    this.history = [null, null, null];
-	    this.viewHistory = [null, null];
+	    // this.stampCanvas = new StampCanvas('stamp-canvas', 150, 150);
+	    // this.history = [null, null, null];
+	    // this.viewHistory = [null, null];
 
 	    this.size = 10;
 	    this.color = "#000";
@@ -32098,6 +32098,7 @@
 	    if (this.colorPicking) {
 	      this.color = this.colorPicker.color();
 	      this.addRecentColor();
+	      this.drawingCanvas.setColor(this.color);
 	    }
 	  },
 	  pickRecentColor: function (e) {
@@ -32122,6 +32123,7 @@
 	    if (this.sizePicking) {
 	      this.size = this.sizePicker.pickSize(e);
 	      this.strokeSample.pickSample(this.color, this.size);
+	      this.drawingCanvas.setSize(this.size);
 	    }
 	  },
 
@@ -32142,6 +32144,9 @@
 	  mouseOutHandler: function (e) {
 	    this.drawingCanvas.mouseOut(e, this.color, this.size);
 	  },
+	  mouseEnterHandler: function (e) {
+	    this.drawingCanvas.mouseEnter(e);
+	  },
 	  mouseMoveHandler: function (e) {
 	    this.drawingCanvas.mouseMove(e, this.color, this.size);
 	  },
@@ -32154,6 +32159,17 @@
 	        this.stampCanvas.scaleDown();
 	      }
 	      this.setStamp();
+	      this.drawingCanvas.mouseMove(e);
+	    } else {
+	      if (e.deltaY < 0) {
+	        this.size = this.size * 1.2;
+	        this.strokeSample.pickSample(this.color, this.size);
+	        this.drawingCanvas.setSize(this.size);
+	      } else {
+	        this.size = this.size / 1.2;
+	        this.strokeSample.pickSample(this.color, this.size);
+	        this.drawingCanvas.setSize(this.size);
+	      }
 	      this.drawingCanvas.mouseMove(e);
 	    }
 	  },
@@ -32178,6 +32194,7 @@
 	            onMouseMove: this.mouseMoveHandler,
 	            onMouseOut: this.mouseOutHandler,
 	            onMouseOver: this.mouseOverHandler,
+	            onMouseEnter: this.mouseEnterHandler,
 	            onWheel: this.onWheelHandler }),
 	          React.createElement('canvas', {
 	            id: 'color-picker',
@@ -32247,13 +32264,6 @@
 	        React.createElement(
 	          'button',
 	          {
-	            className: 'save-stamp',
-	            onClick: this.saveStamp },
-	          'Save Stamp'
-	        ),
-	        React.createElement(
-	          'button',
-	          {
 	            className: 'undo',
 	            onClick: this.undo },
 	          'Undo'
@@ -32286,14 +32296,14 @@
 	  this.rgbString = "black";
 	  this.ctx.lineJoin = this.ctx.lineCap = 'round';
 	  this.history = [this.getImageData(), this.getImageData(), this.getImageData(), this.getImageData(), this.getImageData()];
+	  this.outside = [];
 
 	  this.drawing = false;
 	  this.stamping = false;
 	};
 
 	DrawingCanvas.prototype.mouseDown = function (e, color, size) {
-	  this.color = color;
-	  this.size = size;
+	  this.drawInitialStroke();
 	  this.drawing = true;
 	  this.draw();
 	};
@@ -32314,6 +32324,7 @@
 	  if (this.history[this.history.length - 1]) {
 	    this.putImageData(this.history[this.history.length - 1]);
 	  }
+
 	  this.drawing = false;
 	};
 
@@ -32329,6 +32340,16 @@
 	  } else {
 	    this.preview();
 	  }
+	};
+
+	DrawingCanvas.prototype.mouseEnter = function (e) {};
+
+	DrawingCanvas.prototype.setColor = function (color) {
+	  this.color = color;
+	};
+
+	DrawingCanvas.prototype.setSize = function (size) {
+	  this.size = size;
 	};
 
 	DrawingCanvas.prototype.undo = function () {
@@ -32355,6 +32376,12 @@
 	      this.putImageData(this.history[this.history.length - 1]);
 	    }
 	    this.drawStamp("transparent");
+	  } else {
+	    this.clear();
+	    if (this.history[this.history.length - 1]) {
+	      this.putImageData(this.history[this.history.length - 1]);
+	    }
+	    this.previewStroke();
 	  }
 	};
 
@@ -32368,9 +32395,35 @@
 	  this.ctx.globalAlpha = 1.0;
 	};
 
-	DrawingCanvas.prototype.drawStroke = function () {
+	DrawingCanvas.prototype.previewStroke = function () {
+	  this.ctx.globalAlpha = 0.4;
+	  this.ctx.beginPath();
+	  this.ctx.moveTo(this.currX + 1, this.currY + 1);
+	  this.ctx.lineTo(this.currX, this.currY);
+	  this.ctx.strokeStyle = this.color;
+	  this.ctx.lineWidth = this.size;
+	  this.ctx.stroke();
+	  this.ctx.closePath();
+	  this.ctx.globalAlpha = 1.0;
+	};
+
+	DrawingCanvas.prototype.drawStroke = function (transparent) {
+	  if (transparent) {
+	    this.ctx.globalAlpha = 0.4;
+	  }
 	  this.ctx.beginPath();
 	  this.ctx.moveTo(this.prevX, this.prevY);
+	  this.ctx.lineTo(this.currX, this.currY);
+	  this.ctx.strokeStyle = this.color;
+	  this.ctx.lineWidth = this.size;
+	  this.ctx.stroke();
+	  this.ctx.closePath();
+	  this.ctx.globalAlpha = 1.0;
+	};
+
+	DrawingCanvas.prototype.drawInitialStroke = function (transparent) {
+	  this.ctx.beginPath();
+	  this.ctx.moveTo(this.currX + 1, this.currY + 1);
 	  this.ctx.lineTo(this.currX, this.currY);
 	  this.ctx.strokeStyle = this.color;
 	  this.ctx.lineWidth = this.size;
