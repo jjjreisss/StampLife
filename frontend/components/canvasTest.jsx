@@ -31,7 +31,6 @@ var CanvasTest = React.createClass({
     // this.stampCanvas = new StampCanvas('stamp-canvas', 150, 150);
     // this.history = [null, null, null];
     // this.viewHistory = [null, null];
-
     this.size = 10;
     this.color = "#000";
 
@@ -112,6 +111,10 @@ var CanvasTest = React.createClass({
     this.setState({stamping: !this.state.stamping});
     this.setStamp();
     this.selectStamp();
+  },
+  handleSave: function() {
+    this.saveStamp();
+    this.clearDrawingCanvas();
   },
 
 
@@ -224,6 +227,7 @@ var CanvasTest = React.createClass({
   },
 
   render: function() {
+
     return(
     <div>
       <div id="drawing-page">
@@ -300,7 +304,7 @@ var CanvasTest = React.createClass({
         </button>
         <button
           className="save-drawing"
-          onClick={this.saveDrawing}>
+          onClick={this.handleSave}>
           Save Drawing
         </button>
         <button

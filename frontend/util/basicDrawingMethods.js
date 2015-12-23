@@ -62,19 +62,19 @@ var BasicDrawingMethods = {
     this.setToLastFrame();
   },
 
+  preview: function () {
+    this.setToLastFrame();
+    this.ctx.globalAlpha = 0.4;
+    this.draw();
+    this.ctx.globalAlpha = 1.0;
+  },
+
   draw: function () {
     if (this.stamping) {
       this.drawStamp();
     } else {
       this.drawStroke();
     }
-  },
-
-  preview: function () {
-    this.setToLastFrame();
-    this.ctx.globalAlpha = 0.4;
-    this.draw();
-    this.ctx.globalAlpha = 1.0;
   },
 
   drawStroke: function () {
@@ -103,6 +103,15 @@ var BasicDrawingMethods = {
     this.ctx.closePath();
   },
 
+  toggleStamping: function() {
+    this.stamping = !this.stamping;
+  },
+
+  setStamp: function(stampImg, stampSize) {
+    this.stampImg = stampImg;
+    this.stampSize = stampSize;
+  },
+
   toData: function () {
     return this.canvas.toDataURL("image/png");
   },
@@ -129,8 +138,8 @@ var BasicDrawingMethods = {
     this.ctx.putImageData(imageData, 0, 0);
   },
 
-  clearCanvas: function () {
+  hardReset: function () {
     this.clear();
-    this.history = [null, null, null, null, null];
+    this.history = [this.getImageData(), this.getImageData(), this.getImageData(), this.getImageData(), this.getImageData()];
   }
 };
