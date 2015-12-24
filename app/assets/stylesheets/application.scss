@@ -122,17 +122,16 @@
  }
 
  #drawing-page {
-   width: 800px;
    height: 650px;
    position: relative;
+   margin-top: 5%;
  }
 
  #drawing{
    width: 580px;
    height: 650px;
-   position: absolute;
-   top: 0;
-   left: 0;
+   position: relative;
+   margin: auto;
  }
 
  .stamp-canvas {
@@ -233,5 +232,17 @@
  }
 
  .ghost {
-   font-size: 36px;
+   font-size: 28px;
+   position: relative;
+   top: 3px;
+   left: -5px;
+ }
+
+
+.navbar {
+  min-height: 0px;
+}
+
+ .navbar-nav > li > a {
+   line-height: 0;
  }
