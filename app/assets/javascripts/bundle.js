@@ -24461,11 +24461,22 @@
 	    this.props.history.push('stamp/new');
 	  },
 	  goToMyProfile: function () {},
+	  signOut: function () {
+	    $.ajax({
+	      url: '/session',
+	      method: 'DELETE',
+	      success: function (message) {
+	        console.log(message);
+	        window.location.href = '/';
+	      },
+	      error: function (message) {}
+	    });
+	  },
 
 	  render: function () {
 	    return React.createElement(
 	      'div',
-	      null,
+	      { id: 'page-content' },
 	      React.createElement(
 	        'div',
 	        { className: 'navbar navbar-inverse' },
@@ -24513,6 +24524,16 @@
 	                  onClick: this.goToDrawingsIndex },
 	                'All Drawings'
 	              )
+	            )
+	          ),
+	          React.createElement(
+	            'li',
+	            null,
+	            React.createElement(
+	              'button',
+	              {
+	                onClick: this.signOut },
+	              'Sign Out'
 	            )
 	          )
 	        )

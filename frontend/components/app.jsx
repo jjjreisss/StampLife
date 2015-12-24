@@ -18,10 +18,22 @@ var App = React.createClass({
   goToMyProfile: function() {
 
   },
+  signOut: function() {
+    $.ajax({
+      url: '/session',
+      method: 'DELETE',
+      success: function(message) {
+        console.log(message);
+        window.location.href = '/';
+      },
+      error: function(message) {
+      }
+    });
+  },
 
   render: function() {
     return(
-    <div>
+    <div id="page-content">
       <div className="navbar navbar-inverse">
         <ul className="nav navbar-nav">
           <li role="presentation" className="dropdown">
@@ -47,7 +59,12 @@ var App = React.createClass({
               </li>
             </ul>
           </li>
-
+          <li>
+            <button
+              onClick={this.signOut}>
+              Sign Out
+            </button>
+          </li>
 
 
         </ul>
