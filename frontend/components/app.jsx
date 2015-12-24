@@ -33,7 +33,7 @@ var App = React.createClass({
 
   render: function() {
     return(
-    <div id="page-content">
+    <div id="entire-page">
       <div className="navbar navbar-inverse">
         <ul className="nav navbar-nav">
           <li role="presentation" className="dropdown">
@@ -72,12 +72,14 @@ var App = React.createClass({
 
 
 
-      <div>
-        {this.props.children}
-        <div
-          className="stamp-sidebar">
-          <MyStampIndex
-            filterIndicies={[]}/>
+      <div id="page-content">
+        <div id="page-content-inner">
+          {this.props.children}
+          <div
+            className="stamp-sidebar">
+            <MyStampIndex
+              filterIndicies={[]}/>
+          </div>
         </div>
       </div>
     </div>

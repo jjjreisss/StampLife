@@ -24476,7 +24476,7 @@
 	  render: function () {
 	    return React.createElement(
 	      'div',
-	      { id: 'page-content' },
+	      { id: 'entire-page' },
 	      React.createElement(
 	        'div',
 	        { className: 'navbar navbar-inverse' },
@@ -24540,14 +24540,18 @@
 	      ),
 	      React.createElement(
 	        'div',
-	        null,
-	        this.props.children,
+	        { id: 'page-content' },
 	        React.createElement(
 	          'div',
-	          {
-	            className: 'stamp-sidebar' },
-	          React.createElement(MyStampIndex, {
-	            filterIndicies: [] })
+	          { id: 'page-content-inner' },
+	          this.props.children,
+	          React.createElement(
+	            'div',
+	            {
+	              className: 'stamp-sidebar' },
+	            React.createElement(MyStampIndex, {
+	              filterIndicies: [] })
+	          )
 	        )
 	      )
 	    );
@@ -31654,28 +31658,19 @@
 	    if (this.state.stamps) {
 	      stampsList = this.state.stamps.map((function (stamp, idx) {
 	        var selected = this.state.selected === idx ? "selected-stamp" : "";
-	        return React.createElement(
-	          'div',
-	          {
-	            key: idx,
-	            'data-idx': idx,
-	            onClick: this.selectStamp,
-	            id: selected },
-	          React.createElement(MyStampListItem, {
-	            stampId: stamp.id,
-	            imageUrl: stamp.image_url,
-	            size: 100 })
-	        );
+	        return React.createElement(MyStampListItem, {
+	          stampId: stamp.id,
+	          imageUrl: stamp.image_url,
+	          size: 100,
+	          key: idx,
+	          'data-idx': idx,
+	          onClick: this.selectStamp,
+	          id: selected });
 	      }).bind(this));
 	    }
 	    return React.createElement(
 	      'div',
-	      { className: 'index' },
-	      React.createElement(
-	        'div',
-	        { className: 'my-stamp-index-text' },
-	        'My Stamps'
-	      ),
+	      { className: 'my-stamp-index' },
 	      stampsList,
 	      React.createElement(
 	        'div',

@@ -70,11 +70,17 @@
 
  }
 
+.index {
+  overflow: auto;
+  margin: 5%;
+}
+
  .index-element{
    float: left;
    background: white;
    position: relative;
-   margin: 5px;
+   margin: 20px 30px;
+   border: 2px solid black;
  }
 
  .stamp-index-element{
@@ -162,12 +168,22 @@
  }
 
  .stamp-sidebar {
-   width: 110px;
-   height: 640px;
+   height: 110px;
+   width: 100%;
    position: fixed;
-   top: 150px;
-   right: 50px;
+   bottom: 0;
+   left: 0;
    outline: solid black 1px;
+  background: url('../../haring-bwr.jpg');
+  background-position: 200px;
+  background-size: 100%;
+ }
+
+ .my-stamp-index {
+   width: 0px;
+   min-width: 580px;
+   margin: auto;
+   overflow: auto;
  }
 
  .my-stamp-index-element {
@@ -176,6 +192,7 @@
    position: relative;
    margin: 5px;
    margin-bottom: 3px;
+   border: 2px solid black;
  }
 
  .my-stamp-index-footer {
@@ -259,14 +276,34 @@
 
 .navbar {
   min-height: 0px;
+  border-radius: 0px;
 }
 
  .navbar-nav > li > a {
    line-height: 0;
  }
 
+ .navbar-inverse {
+   background: url('../../haring-bwr.jpg');
+   background-position: 200px 200px;
+   background-size: 75%;
+   position: fixed;
+   width: 100%;
+   z-index: 2;
+ }
+
+ .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:hover, .navbar-inverse .navbar-nav > .open > a:focus {
+    background-color: rgba(1,1,1,0);
+  }
+
 #page-content {
   overflow: auto;
+  top: 5%;
+}
+
+#page-content-inner {
+  margin: auto;
+  width: 80%;
 }
 
 

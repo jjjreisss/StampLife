@@ -44,26 +44,22 @@ var MyStampIndex = React.createClass({
       stampsList = this.state.stamps.map(function(stamp, idx){
         var selected = (this.state.selected === idx) ? "selected-stamp" : "";
         return (
-          <div
-            key={idx}
-            data-idx={idx}
-            onClick={this.selectStamp}
-            id={selected}>
 
           <MyStampListItem
             stampId={stamp.id}
             imageUrl={stamp.image_url}
-            size={100}/>
+            size={100}
+            key={idx}
+            data-idx={idx}
+            onClick={this.selectStamp}
+            id={selected}/>
 
-          </div>
         );
       }.bind(this));
     }
     return(
-      <div className="index">
-        <div className="my-stamp-index-text">
-          My Stamps
-        </div>
+      <div className="my-stamp-index">
+
         {stampsList}
         <div className="my-stamp-index-footer">
           <button onClick={this.goToStampsIndex}>
