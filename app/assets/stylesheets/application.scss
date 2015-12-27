@@ -72,7 +72,7 @@
 
 .index {
   overflow: auto;
-  margin: 5%;
+  margin: 5% 0% 10% 0%;
   text-align: center;
 }
 
@@ -277,13 +277,16 @@
    background-image: url('../cancel24.png');
  }
 
- #selected-stamp {
-   background: cornflowerblue;
+ .drawing-detail {
+   text-align: center;
+   position: relative;
+   margin-top: 3%
  }
 
  .drawing-detail-picture {
    background: white;
    width: 500px;
+   display: inline-block;
  }
 
  .select-stamp-icon {

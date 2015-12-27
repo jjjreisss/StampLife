@@ -32905,7 +32905,7 @@
 	    }
 	    return React.createElement(
 	      'div',
-	      null,
+	      { className: 'drawing-detail' },
 	      contents
 	    );
 	  }

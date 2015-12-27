@@ -43,7 +43,7 @@ var DrawingDetail = React.createClass({
       );
     }
     return(
-      <div>
+      <div className="drawing-detail">
         {contents}
       </div>
     );
