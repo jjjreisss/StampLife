@@ -31966,8 +31966,12 @@
 	    this.colorPicker = new ColorPicker('color-picker');
 	    this.strokeSample = new StrokeSample('stroke-sample');
 	    this.stampCanvas = new StampCanvas('stamp-canvas', 150, 150);
-	    this.size = 10;
+
+	    this.size = 15;
 	    this.color = "#000";
+	    this.drawingCanvas.setSize(this.size);
+	    this.drawingCanvas.setColor(this.color);
+	    this.addRecentColor(this.color);
 
 	    this.strokeSample.pickSample(this.color, this.size);
 
@@ -31997,7 +32001,7 @@
 	        className: 'color-square',
 	        style: { background: color },
 	        onClick: this.pickRecentColor });
-	    }).bind(this));
+	    }).bind(this)).reverse();
 	  },
 	  saveDrawing: function () {
 	    var img = this.drawingCanvas.toData();
@@ -32067,6 +32071,7 @@
 	  pickRecentColor: function (e) {
 	    this.color = e.target.style.background;
 	    this.strokeSample.pickSample(this.color, this.size);
+	    this.drawingCanvas.setColor(this.color);
 	  },
 	  addRecentColor: function () {
 	    var recentColors = this.state.recentColors.slice(1, 10);
@@ -32145,90 +32150,104 @@
 	      null,
 	      React.createElement(
 	        'div',
-	        { id: 'drawing-page' },
+	        { id: 'entire-drawing-page' },
 	        React.createElement(
-	          'div',
-	          { id: 'drawing' },
-	          React.createElement('canvas', {
-	            id: 'drawing-canvas',
-	            onMouseDown: this.mouseDownHandler,
-	            onMouseUp: this.mouseUpHandler,
-	            onMouseMove: this.mouseMoveHandler,
-	            onMouseOut: this.mouseOutHandler,
-	            onMouseOver: this.mouseOverHandler,
-	            onWheel: this.onWheelHandler }),
-	          React.createElement('canvas', {
-	            id: 'color-picker',
-	            width: '80',
-	            height: '500',
-	            onMouseDown: this.downColorPicker,
-	            onMouseUp: this.upColorPicker,
-	            onMouseMove: this.moveColorPicker,
-	            onMouseOut: this.outColorPicker }),
-	          React.createElement('canvas', {
-	            id: 'size-picker',
-	            width: '500',
-	            height: '80',
-	            onClick: this.pickSize,
-	            onMouseDown: this.onSizePicking,
-	            onMouseUp: this.offSizePicking,
-	            onMouseMove: this.pickSize,
-	            onMouseOut: this.offSizePicking }),
-	          React.createElement('canvas', {
-	            id: 'stroke-sample',
-	            width: '80',
-	            height: '80' }),
+	          'span',
+	          { className: 'drawing-buttons',
+	            id: 'left-buttons' },
 	          React.createElement(
-	            'div',
+	            'button',
 	            {
-	              id: 'color-bar' },
-	            this.colorBar()
+	              className: 'clear-drawing-canvas',
+	              onClick: this.clearDrawingCanvas },
+	            'Clear Canvas'
+	          ),
+	          React.createElement(
+	            'button',
+	            {
+	              className: 'undo',
+	              onClick: this.undo },
+	            'Undo'
 	          )
 	        ),
 	        React.createElement(
-	          'div',
-	          {
-	            className: 'stamp-canvas' },
-	          React.createElement('canvas', {
-	            id: 'stamp-canvas',
-	            width: '150',
-	            height: '150',
-	            onMouseDown: this.mouseDownHandler,
-	            onMouseUp: this.mouseUpHandler,
-	            onMouseMove: this.mouseMoveHandler })
+	          'span',
+	          { id: 'drawing-page' },
+	          React.createElement(
+	            'div',
+	            { id: 'drawing' },
+	            React.createElement(
+	              'div',
+	              { id: 'main-square' },
+	              React.createElement('canvas', {
+	                id: 'drawing-canvas',
+	                onMouseDown: this.mouseDownHandler,
+	                onMouseUp: this.mouseUpHandler,
+	                onMouseMove: this.mouseMoveHandler,
+	                onMouseOut: this.mouseOutHandler,
+	                onMouseOver: this.mouseOverHandler,
+	                onWheel: this.onWheelHandler }),
+	              React.createElement('canvas', {
+	                id: 'color-picker',
+	                width: '80',
+	                height: '500',
+	                onMouseDown: this.downColorPicker,
+	                onMouseUp: this.upColorPicker,
+	                onMouseMove: this.moveColorPicker,
+	                onMouseOut: this.outColorPicker }),
+	              React.createElement('canvas', {
+	                id: 'size-picker',
+	                width: '500',
+	                height: '80',
+	                onClick: this.pickSize,
+	                onMouseDown: this.onSizePicking,
+	                onMouseUp: this.offSizePicking,
+	                onMouseMove: this.pickSize,
+	                onMouseOut: this.offSizePicking }),
+	              React.createElement('canvas', {
+	                id: 'stroke-sample',
+	                width: '80',
+	                height: '80' })
+	            ),
+	            React.createElement(
+	              'div',
+	              {
+	                id: 'color-bar' },
+	              this.colorBar()
+	            )
+	          )
+	        ),
+	        React.createElement(
+	          'span',
+	          { className: 'drawing-buttons',
+	            id: 'right-buttons' },
+	          React.createElement(
+	            'button',
+	            {
+	              id: 'toggle-stamping',
+	              onMouseDown: this.toggleStamping },
+	            this.stampingText()
+	          ),
+	          React.createElement(
+	            'button',
+	            {
+	              className: 'save-drawing',
+	              onClick: this.handleSave },
+	            'Save Drawing'
+	          )
 	        )
 	      ),
 	      React.createElement(
 	        'div',
-	        { className: 'drawing-toolbar' },
-	        React.createElement(
-	          'button',
-	          {
-	            id: 'toggle-stamping',
-	            onMouseDown: this.toggleStamping },
-	          this.stampingText()
-	        ),
-	        React.createElement(
-	          'button',
-	          {
-	            className: 'clear-drawing-canvas',
-	            onClick: this.clearDrawingCanvas },
-	          'Clear Canvas'
-	        ),
-	        React.createElement(
-	          'button',
-	          {
-	            className: 'save-drawing',
-	            onClick: this.handleSave },
-	          'Save Drawing'
-	        ),
-	        React.createElement(
-	          'button',
-	          {
-	            className: 'undo',
-	            onClick: this.undo },
-	          'Undo'
-	        )
+	        {
+	          className: 'stamp-canvas' },
+	        React.createElement('canvas', {
+	          id: 'stamp-canvas',
+	          width: '150',
+	          height: '150',
+	          onMouseDown: this.mouseDownHandler,
+	          onMouseUp: this.mouseUpHandler,
+	          onMouseMove: this.mouseMoveHandler })
 	      )
 	    );
 	  }
@@ -32272,8 +32291,8 @@
 	  this.prevX = this.currX;
 	  this.prevY = this.currY;
 
-	  this.currX = e.pageX - this.canvas.offsetLeft - this.canvas.offsetParent.offsetLeft - this.canvas.offsetParent.offsetParent.offsetLeft;
-	  this.currY = e.pageY - this.canvas.offsetTop - this.canvas.offsetParent.offsetTop - this.canvas.offsetParent.offsetParent.offsetTop;
+	  this.currX = e.pageX - this.canvas.getBoundingClientRect().left;
+	  this.currY = e.pageY - this.canvas.getBoundingClientRect().top;
 
 	  if (this.drawing) {
 	    this.draw();
@@ -32516,8 +32535,8 @@
 	};
 
 	ColorPicker.prototype.pickColor = function (e) {
-	  var x = e.clientX - this.colorPickerCanvas.offsetLeft - this.colorPickerCanvas.offsetParent.offsetLeft - this.colorPickerCanvas.offsetParent.offsetParent.offsetLeft - this.colorPickerCanvas.offsetParent.offsetParent.offsetParent.offsetLeft;
-	  var y = e.clientY - this.colorPickerCanvas.offsetTop - this.colorPickerCanvas.offsetParent.offsetTop - this.colorPickerCanvas.offsetParent.offsetParent.offsetTop - this.colorPickerCanvas.offsetParent.offsetParent.offsetParent.offsetTop;
+	  var x = e.clientX - this.colorPickerCanvas.getBoundingClientRect().left;
+	  var y = e.clientY - this.colorPickerCanvas.getBoundingClientRect().top;
 	  var imgData = this.colorPickerContext.getImageData(x, y, 1, 1).data;
 	  var rgbArray = imgData.slice(0, 3);
 	  this.rgbString = "rgb(" + rgbArray.join(",") + ")";
@@ -32545,7 +32564,7 @@
 	};
 
 	SizePicker.prototype.pickSize = function (e) {
-	  var x = e.clientX - this.sizePickerCanvas.offsetLeft - this.sizePickerCanvas.offsetParent.offsetParent.offsetLeft - this.sizePickerCanvas.offsetParent.offsetLeft - this.sizePickerCanvas.offsetParent.offsetParent.offsetParent.offsetLeft;
+	  var x = e.clientX - this.sizePickerCanvas.getBoundingClientRect().left;
 	  return (x - 35) * 52 / 423;
 	};
 
@@ -33061,8 +33080,11 @@
 
 	    this.size = 10;
 	    this.color = "#000";
+	    this.drawingCanvas.setSize(this.size);
+	    this.drawingCanvas.setColor(this.color);
 
 	    this.strokeSample.pickSample(this.color, this.size);
+	    this.addRecentColor();
 
 	    this.colorPicking = false;
 	    this.sizePicking = false;
@@ -33075,7 +33097,7 @@
 	        className: 'color-square',
 	        style: { background: color },
 	        onClick: this.pickRecentColor });
-	    }).bind(this));
+	    }).bind(this)).reverse();
 	  },
 	  saveStamp: function () {
 	    var img = this.drawingCanvas.toData();
@@ -33140,6 +33162,7 @@
 	  pickRecentColor: function (e) {
 	    this.color = e.target.style.background;
 	    this.strokeSample.pickSample(this.color, this.size);
+	    this.drawingCanvas.setColor(this.color);
 	  },
 	  addRecentColor: function () {
 	    var recentColors = this.state.recentColors.slice(1, 10);
@@ -33165,7 +33188,7 @@
 
 	  // Methods for drawing
 	  clearDrawingCanvas: function () {
-	    this.drawingCanvas.clearCanvas();
+	    this.drawingCanvas.hardReset();
 	  },
 	  mouseDownHandler: function (e) {
 	    this.drawingCanvas.mouseDown(e, this.color, this.size);
@@ -33199,53 +33222,11 @@
 	  render: function () {
 	    return React.createElement(
 	      'div',
-	      null,
+	      { id: 'entire-drawing-page' },
 	      React.createElement(
-	        'div',
-	        { id: 'drawing-page' },
-	        React.createElement(
-	          'div',
-	          { id: 'drawing' },
-	          React.createElement('canvas', {
-	            id: 'drawing-canvas',
-	            onMouseDown: this.mouseDownHandler,
-	            onMouseUp: this.mouseUpHandler,
-	            onMouseMove: this.mouseMoveHandler,
-	            onMouseOut: this.mouseOutHandler,
-	            onMouseOver: this.mouseOverHandler,
-	            onWheel: this.onWheelHandler }),
-	          React.createElement('canvas', {
-	            id: 'color-picker',
-	            width: '80',
-	            height: '500',
-	            onMouseDown: this.downColorPicker,
-	            onMouseUp: this.upColorPicker,
-	            onMouseMove: this.moveColorPicker,
-	            onMouseOut: this.outColorPicker }),
-	          React.createElement('canvas', {
-	            id: 'size-picker',
-	            width: '500',
-	            height: '80',
-	            onClick: this.pickSize,
-	            onMouseDown: this.onSizePicking,
-	            onMouseUp: this.offSizePicking,
-	            onMouseMove: this.pickSize,
-	            onMouseOut: this.offSizePicking }),
-	          React.createElement('canvas', {
-	            id: 'stroke-sample',
-	            width: '80',
-	            height: '80' }),
-	          React.createElement(
-	            'div',
-	            {
-	              id: 'color-bar' },
-	            this.colorBar()
-	          )
-	        )
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'drawing-toolbar' },
+	        'span',
+	        { className: 'drawing-buttons',
+	          id: 'left-buttons' },
 	        React.createElement(
 	          'button',
 	          {
@@ -33256,16 +33237,75 @@
 	        React.createElement(
 	          'button',
 	          {
-	            className: 'save-to-my-stamps',
-	            onClick: this.saveToMyStamps },
-	          'Save To My Stamps'
+	            className: 'undo',
+	            onClick: this.undo },
+	          'Undo'
+	        )
+	      ),
+	      React.createElement(
+	        'span',
+	        { id: 'drawing-page' },
+	        React.createElement(
+	          'div',
+	          { id: 'drawing' },
+	          React.createElement(
+	            'div',
+	            { id: 'main-square' },
+	            React.createElement('canvas', {
+	              id: 'drawing-canvas',
+	              onMouseDown: this.mouseDownHandler,
+	              onMouseUp: this.mouseUpHandler,
+	              onMouseMove: this.mouseMoveHandler,
+	              onMouseOut: this.mouseOutHandler,
+	              onMouseOver: this.mouseOverHandler,
+	              onWheel: this.onWheelHandler }),
+	            React.createElement('canvas', {
+	              id: 'color-picker',
+	              width: '80',
+	              height: '500',
+	              onMouseDown: this.downColorPicker,
+	              onMouseUp: this.upColorPicker,
+	              onMouseMove: this.moveColorPicker,
+	              onMouseOut: this.outColorPicker }),
+	            React.createElement('canvas', {
+	              id: 'size-picker',
+	              width: '500',
+	              height: '80',
+	              onClick: this.pickSize,
+	              onMouseDown: this.onSizePicking,
+	              onMouseUp: this.offSizePicking,
+	              onMouseMove: this.pickSize,
+	              onMouseOut: this.offSizePicking }),
+	            React.createElement('canvas', {
+	              id: 'stroke-sample',
+	              width: '80',
+	              height: '80' })
+	          ),
+	          React.createElement(
+	            'div',
+	            {
+	              id: 'color-bar' },
+	            this.colorBar()
+	          )
+	        )
+	      ),
+	      React.createElement(
+	        'span',
+	        { className: 'drawing-buttons',
+	          id: 'right-buttons' },
+	        React.createElement(
+	          'button',
+	          {
+	            className: 'save-stamp',
+	            onClick: this.saveStamp },
+	          'Save Stamp'
 	        ),
 	        React.createElement(
 	          'button',
 	          {
-	            className: 'undo',
-	            onClick: this.undo },
-	          'Undo'
+	            className: 'save-to-my-stamps',
+	            onClick: this.saveToMyStamps },
+	          'Save To My Stamps'
 	        )
 	      )
 	    );

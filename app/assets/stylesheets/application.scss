@@ -73,14 +73,15 @@
 .index {
   overflow: auto;
   margin: 5%;
+  text-align: center;
 }
 
  .index-element{
-   float: left;
    background: white;
    position: relative;
    margin: 20px 30px;
    border: 2px solid black;
+   display: inline-block;
  }
 
  .stamp-index-element{
@@ -141,21 +142,52 @@
 
  #color-bar {
    top: -7px;
-   width: 580px;
-   height: 58px;
+   width: 58px;
+   height: 580px;
  }
 
  #drawing-page {
    height: 650px;
    position: relative;
-   margin-top: 5%;
+   text-align: center;
+   display: inline-block;
  }
 
  #drawing{
-   width: 580px;
+   width: 638px;
    height: 650px;
    position: relative;
    margin: auto;
+   display: inline-flex;
+ }
+
+ #entire-drawing-page {
+   text-align: center;
+   margin-top: 5%
+ }
+
+ #entire-drawing-page button{
+   height: 100px;
+   width: 100px;
+   margin-bottom: 50px;
+ }
+
+ .drawing-buttons {
+   width: 100px;
+   display: inline-block;
+   position: relative;
+   top: -200px;
+   margin: 20px;
+ }
+
+ #left-buttons {
+ }
+
+ #right-buttons {
+ }
+
+ #main-square {
+   width: 580px;
  }
 
  .stamp-canvas {
@@ -303,7 +335,6 @@
 
 #page-content-inner {
   margin: auto;
-  width: 80%;
 }
 
 

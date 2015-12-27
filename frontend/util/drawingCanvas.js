@@ -30,12 +30,8 @@ DrawingCanvas.prototype.mouseMove = function (e) {
   this.prevX = this.currX;
   this.prevY = this.currY;
 
-  this.currX = (e.pageX - this.canvas.offsetLeft
-    - this.canvas.offsetParent.offsetLeft
-    - this.canvas.offsetParent.offsetParent.offsetLeft);
-  this.currY = (e.pageY - this.canvas.offsetTop
-    - this.canvas.offsetParent.offsetTop
-    - this.canvas.offsetParent.offsetParent.offsetTop);
+  this.currX = e.pageX - this.canvas.getBoundingClientRect().left;
+  this.currY = e.pageY - this.canvas.getBoundingClientRect().top;
 
   if (this.drawing) {
     this.draw();

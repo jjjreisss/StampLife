@@ -29,8 +29,12 @@ var CanvasTest = React.createClass({
     this.colorPicker = new ColorPicker('color-picker');
     this.strokeSample = new StrokeSample('stroke-sample');
     this.stampCanvas = new StampCanvas('stamp-canvas', 150, 150);
-    this.size = 10;
+
+    this.size = 15;
     this.color = "#000";
+    this.drawingCanvas.setSize(this.size);
+    this.drawingCanvas.setColor(this.color);
+    this.addRecentColor(this.color);
 
     this.strokeSample.pickSample(this.color, this.size);
 
@@ -64,7 +68,7 @@ var CanvasTest = React.createClass({
 
         </div>
       );
-    }.bind(this));
+    }.bind(this)).reverse();
   },
   saveDrawing: function() {
     var img = this.drawingCanvas.toData();
@@ -135,6 +139,7 @@ var CanvasTest = React.createClass({
   pickRecentColor: function(e) {
     this.color = e.target.style.background;
     this.strokeSample.pickSample(this.color, this.size);
+    this.drawingCanvas.setColor(this.color);
   },
   addRecentColor: function() {
     var recentColors = this.state.recentColors.slice(1,10);
@@ -211,89 +216,98 @@ var CanvasTest = React.createClass({
 
     return(
     <div>
-      <div id="drawing-page">
-
-        <div id="drawing">
-          <canvas
-            id="drawing-canvas"
-            onMouseDown={this.mouseDownHandler}
-            onMouseUp={this.mouseUpHandler}
-            onMouseMove={this.mouseMoveHandler}
-            onMouseOut={this.mouseOutHandler}
-            onMouseOver={this.mouseOverHandler}
-            onWheel={this.onWheelHandler}>
-
-          </canvas>
-          <canvas
-            id="color-picker"
-            width="80"
-            height="500"
-            onMouseDown={this.downColorPicker}
-            onMouseUp={this.upColorPicker}
-            onMouseMove={this.moveColorPicker}
-            onMouseOut={this.outColorPicker}>
-
-          </canvas>
-          <canvas
-            id="size-picker"
-            width="500"
-            height="80"
-            onClick={this.pickSize}
-            onMouseDown={this.onSizePicking}
-            onMouseUp={this.offSizePicking}
-            onMouseMove={this.pickSize}
-            onMouseOut={this.offSizePicking}>
-
-          </canvas>
-          <canvas
-            id="stroke-sample"
-            width="80"
-            height="80">
-
-          </canvas>
-          <div
-            id="color-bar">
-            {this.colorBar()}
-          </div>
-        </div>
-
-
-
-        <div
-          className="stamp-canvas">
-          <canvas
-            id="stamp-canvas"
-            width="150"
-            height="150"
-            onMouseDown={this.mouseDownHandler}
-            onMouseUp={this.mouseUpHandler}
-            onMouseMove={this.mouseMoveHandler}>
-          </canvas>
-        </div>
-      </div>
-      <div className="drawing-toolbar">
-        <button
-          id="toggle-stamping"
-          onMouseDown={this.toggleStamping}>
-          {this.stampingText()}
-        </button>
+    <div id="entire-drawing-page">
+      <span className="drawing-buttons"
+        id="left-buttons">
         <button
           className="clear-drawing-canvas"
           onClick={this.clearDrawingCanvas}>
           Clear Canvas
         </button>
         <button
-          className="save-drawing"
-          onClick={this.handleSave}>
-          Save Drawing
-        </button>
-        <button
           className="undo"
           onClick={this.undo}>
           Undo
         </button>
-      </div>
+      </span>
+
+
+      <span id="drawing-page">
+
+        <div id="drawing">
+          <div id="main-square">
+            <canvas
+              id="drawing-canvas"
+              onMouseDown={this.mouseDownHandler}
+              onMouseUp={this.mouseUpHandler}
+              onMouseMove={this.mouseMoveHandler}
+              onMouseOut={this.mouseOutHandler}
+              onMouseOver={this.mouseOverHandler}
+              onWheel={this.onWheelHandler}>
+
+            </canvas>
+            <canvas
+              id="color-picker"
+              width="80"
+              height="500"
+              onMouseDown={this.downColorPicker}
+              onMouseUp={this.upColorPicker}
+              onMouseMove={this.moveColorPicker}
+              onMouseOut={this.outColorPicker}>
+
+            </canvas>
+            <canvas
+              id="size-picker"
+              width="500"
+              height="80"
+              onClick={this.pickSize}
+              onMouseDown={this.onSizePicking}
+              onMouseUp={this.offSizePicking}
+              onMouseMove={this.pickSize}
+              onMouseOut={this.offSizePicking}>
+
+            </canvas>
+            <canvas
+              id="stroke-sample"
+              width="80"
+              height="80">
+
+            </canvas>
+          </div>
+          <div
+            id="color-bar">
+            {this.colorBar()}
+          </div>
+        </div>
+      </span>
+
+      <span className="drawing-buttons"
+        id="right-buttons">
+        <button
+          id="toggle-stamping"
+          onMouseDown={this.toggleStamping}>
+          {this.stampingText()}
+        </button>
+        <button
+          className="save-drawing"
+          onClick={this.handleSave}>
+          Save Drawing
+        </button>
+      </span>
+
     </div>
+    <div
+      className="stamp-canvas">
+      <canvas
+        id="stamp-canvas"
+        width="150"
+        height="150"
+        onMouseDown={this.mouseDownHandler}
+        onMouseUp={this.mouseUpHandler}
+        onMouseMove={this.mouseMoveHandler}>
+      </canvas>
+    </div>
+  </div>
     );
   }
 });
