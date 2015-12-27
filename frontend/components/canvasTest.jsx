@@ -8,9 +8,11 @@ var StrokeSample = require('../util/strokeSample');
 var LinkedStateMixin = require('react-addons-linked-state-mixin');
 var StampIndex = require('./stampIndex');
 var StampStore = require('../stores/stampStore');
+var History = require('react-router').History;
+
 
 var CanvasTest = React.createClass({
-  mixins: [LinkedStateMixin],
+  mixins: [LinkedStateMixin, History],
 
 // Methods that set state
   getInitialState: function() {
@@ -20,7 +22,9 @@ var CanvasTest = React.createClass({
       recentColors: ["#fff","#fff","#fff","#fff","#fff",
                       "#fff","#fff","#fff","#fff","#fff",],
       stamp: StampStore.single(),
-      stampSize: 150
+      stampSize: 150,
+      saveStarted: false,
+      saved: false
     });
   },
   componentDidMount: function() {
@@ -72,6 +76,7 @@ var CanvasTest = React.createClass({
   },
   saveDrawing: function() {
     var img = this.drawingCanvas.toData();
+    this.setState({saveStarted: true});
     $.ajax({
       url: "api/images",
       method: "POST",
@@ -81,7 +86,12 @@ var CanvasTest = React.createClass({
           caption: this.state.caption,
           image_url: imageReceived.public_id
         });
-      }.bind(this)
+        this.setState({saved: true});
+        this.history.push("drawings/" + imageReceived.id);
+      }.bind(this),
+      error: function() {
+        this.setState({saveStarted: false});
+      },
     });
   },
   setStamp: function() {
@@ -99,11 +109,16 @@ var CanvasTest = React.createClass({
     this.setStamp();
     this.selectStamp();
   },
-  handleSave: function() {
-    this.saveDrawing();
-    this.clearDrawingCanvas();
+  saveText: function() {
+    var text;
+    this.state.saveStarted ? text = "Saving" : text = "Save Drawing";
+    return text;
   },
-
+  saveDisabled: function () {
+    var text;
+    this.state.saveStarted ? text = true : text = false;
+    return text;
+  },
 
 // Methods for changing Color
   downColorPicker: function(e) {
@@ -290,8 +305,9 @@ var CanvasTest = React.createClass({
         </button>
         <button
           className="save-drawing"
-          onClick={this.handleSave}>
-          Save Drawing
+          onClick={this.saveDrawing}
+          disabled={this.saveDisabled()}>
+          {this.saveText()}
         </button>
       </span>
 

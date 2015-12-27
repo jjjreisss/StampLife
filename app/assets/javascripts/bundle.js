@@ -32003,11 +32003,12 @@
 	var LinkedStateMixin = __webpack_require__(248);
 	var StampIndex = __webpack_require__(211);
 	var StampStore = __webpack_require__(219);
+	var History = __webpack_require__(159).History;
 
 	var CanvasTest = React.createClass({
 	  displayName: 'CanvasTest',
 
-	  mixins: [LinkedStateMixin],
+	  mixins: [LinkedStateMixin, History],
 
 	  // Methods that set state
 	  getInitialState: function () {
@@ -32016,7 +32017,9 @@
 	      stamping: false,
 	      recentColors: ["#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff"],
 	      stamp: StampStore.single(),
-	      stampSize: 150
+	      stampSize: 150,
+	      saveStarted: false,
+	      saved: false
 	    };
 	  },
 	  componentDidMount: function () {
@@ -32064,6 +32067,7 @@
 	  },
 	  saveDrawing: function () {
 	    var img = this.drawingCanvas.toData();
+	    this.setState({ saveStarted: true });
 	    $.ajax({
 	      url: "api/images",
 	      method: "POST",
@@ -32073,7 +32077,12 @@
 	          caption: this.state.caption,
 	          image_url: imageReceived.public_id
 	        });
-	      }).bind(this)
+	        this.setState({ saved: true });
+	        this.history.push("drawings/" + imageReceived.id);
+	      }).bind(this),
+	      error: function () {
+	        this.setState({ saveStarted: false });
+	      }
 	    });
 	  },
 	  setStamp: function () {
@@ -32091,9 +32100,15 @@
 	    this.setStamp();
 	    this.selectStamp();
 	  },
-	  handleSave: function () {
-	    this.saveDrawing();
-	    this.clearDrawingCanvas();
+	  saveText: function () {
+	    var text;
+	    this.state.saveStarted ? text = "Saving" : text = "Save Drawing";
+	    return text;
+	  },
+	  saveDisabled: function () {
+	    var text;
+	    this.state.saveStarted ? text = true : text = false;
+	    return text;
 	  },
 
 	  // Methods for changing Color
@@ -32291,8 +32306,9 @@
 	            'button',
 	            {
 	              className: 'save-drawing',
-	              onClick: this.handleSave },
-	            'Save Drawing'
+	              onClick: this.saveDrawing,
+	              disabled: this.saveDisabled() },
+	            this.saveText()
 	          )
 	        )
 	      ),
