@@ -31701,6 +31701,7 @@
 	var History = __webpack_require__(159).History;
 	var ApiUtil = __webpack_require__(212);
 	var ApiActions = __webpack_require__(213);
+	var StampStore = __webpack_require__(219);
 
 	var MyStampListItem = React.createClass({
 	  displayName: 'MyStampListItem',
@@ -31718,6 +31719,13 @@
 	  deleteMyStamp: function () {
 	    ApiActions.deleteMyStamp(this.props.stampId);
 	  },
+	  selectedText: function () {
+	    var text;
+	    if (StampStore.single()) {
+	      StampStore.single().id === this.props.stampId ? text = "selected" : text = "";
+	    }
+	    return text;
+	  },
 	  render: function () {
 	    var size = this.props.size;
 	    var sizeString = "w_" + size + ",h_" + size + "/";
@@ -31725,7 +31733,8 @@
 
 	    return React.createElement(
 	      'div',
-	      { className: 'my-stamp-index-element' },
+	      { className: 'my-stamp-index-element',
+	        id: this.selectedText() },
 	      React.createElement('img', { src: url,
 	        onClick: this.setStamp }),
 	      React.createElement('div', {
@@ -31754,6 +31763,10 @@
 	  }
 	};
 
+	var setStamp = function (stamp) {
+	  _stamp = stamp;
+	};
+
 	var removeStamp = function (id) {
 	  var stampToRemove = _stamps.find(function (stamp) {
 	    return stamp.id === id;
@@ -31768,6 +31781,10 @@
 	  return _stamps.slice();
 	};
 
+	MyStampStore.current = function () {
+	  return _stamp;
+	};
+
 	MyStampStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
 	    case "ADD_STAMP":
@@ -31776,6 +31793,10 @@
 	      break;
 	    case "DELETE_MY_STAMP":
 	      removeStamp(payload.id);
+	      MyStampStore.__emitChange();
+	      break;
+	    case "SET_STAMP":
+	      setStamp(payload.stamp);
 	      MyStampStore.__emitChange();
 	      break;
 	  }

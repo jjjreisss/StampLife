@@ -2,6 +2,7 @@ var React = require('react');
 var History = require('react-router').History;
 var ApiUtil = require('../util/apiUtil');
 var ApiActions = require('../actions/apiActions');
+var StampStore = require('../stores/stampStore');
 
 var MyStampListItem = React.createClass({
   mixins: [History],
@@ -17,13 +18,21 @@ var MyStampListItem = React.createClass({
   deleteMyStamp: function() {
     ApiActions.deleteMyStamp(this.props.stampId);
   },
+  selectedText: function() {
+    var text;
+    if (StampStore.single()) {
+      StampStore.single().id === this.props.stampId ? text = "selected" : text = "";
+    }
+    return text;
+  },
   render: function() {
     var size = this.props.size;
     var sizeString = "w_"+size+",h_"+size+"/";
     var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + sizeString + this.props.imageUrl + ".png";
 
     return (
-      <div className="my-stamp-index-element">
+      <div className="my-stamp-index-element"
+        id={this.selectedText()}>
         <img src={url}
           onClick={this.setStamp}/>
         <div

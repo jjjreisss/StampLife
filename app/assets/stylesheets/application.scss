@@ -84,6 +84,10 @@
    display: inline-block;
  }
 
+ .index-element:hover {
+   box-shadow: 0 0 10px 0;
+ }
+
  .stamp-index-element{
    width: 110px;
    height: 115px;
@@ -116,14 +120,14 @@
  #size-picker {
    background: white;
    position: relative;
-   top: -4px;
+   top: -5px;
    outline: 1px solid black;
  }
 
  #stroke-sample {
    background: white;
    position: relative;
-   top: -4px;
+   top: -5px;
    outline: 1px solid black;
  }
 
@@ -225,6 +229,11 @@
    margin: 5px;
    margin-bottom: 3px;
    border: 2px solid black;
+   box-shadow: 0 0 4px 1px;
+ }
+
+ #selected {
+   box-shadow: 0 0 8px 4px #FBDF18;
  }
 
  .my-stamp-index-footer {
@@ -234,6 +243,7 @@
    bottom: 0px;
    margin: 15px;
    margin-left: 9px;
+   display: none;
  }
 
  .my-stamp-index-footer button {

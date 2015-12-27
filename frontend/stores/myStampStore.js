@@ -12,10 +12,14 @@ var receiveStamp = function(stamp) {
   }
 };
 
+var setStamp = function(stamp) {
+  _stamp = stamp;
+};
+
 var removeStamp = function(id) {
   var stampToRemove = _stamps.find(function(stamp) {
     return stamp.id === id;
-  })
+  });
 
   var idxToRemove = _stamps.indexOf(stampToRemove);
 
@@ -27,6 +31,10 @@ MyStampStore.all = function() {
   return _stamps.slice();
 };
 
+MyStampStore.current = function() {
+  return _stamp;
+};
+
 MyStampStore.__onDispatch = function(payload) {
   switch(payload.actionType) {
     case "ADD_STAMP":
@@ -35,6 +43,10 @@ MyStampStore.__onDispatch = function(payload) {
       break;
     case "DELETE_MY_STAMP":
       removeStamp(payload.id);
+      MyStampStore.__emitChange();
+      break;
+    case "SET_STAMP":
+      setStamp(payload.stamp);
       MyStampStore.__emitChange();
       break;
   }
