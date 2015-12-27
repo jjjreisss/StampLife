@@ -24492,7 +24492,7 @@
 	              React.createElement(
 	                'div',
 	                { className: 'ghost' },
-	                '👻'
+	                'Click Here'
 	              ),
 	              ' ',
 	              React.createElement('span', { className: 'caret' })
