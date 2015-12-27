@@ -30,7 +30,8 @@ var StampIndex = React.createClass({
             key={idx}
             stampId={stamp.id}
             imageUrl={stamp.image_url}
-            size={150}/>
+            size={150}
+            stamp={stamp}/>
         );
       });
     }

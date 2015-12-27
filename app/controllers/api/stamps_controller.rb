@@ -7,7 +7,6 @@ class Api::StampsController < ApplicationController
       @stamps = Stamp.all
     end
 
-    render json: @stamps
   end
 
   def show

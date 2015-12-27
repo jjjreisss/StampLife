@@ -9,7 +9,8 @@ var MyStampListItem = React.createClass({
 
   getInitialState: function() {
     return({
-      stamp: null
+      stamp: null,
+      imageLoaded: false
     });
   },
   setStamp: function() {
@@ -25,6 +26,23 @@ var MyStampListItem = React.createClass({
     }
     return text;
   },
+  addDeleteIcon: function() {
+    this.setState({imageLoaded: true});
+  },
+  deleteIcon: function () {
+    var text;
+    if (this.state.imageLoaded) {
+      text = (
+        <div
+          className="delete-my-stamp-icon"
+          onClick={this.deleteMyStamp}>
+        </div>
+      );
+    } else {
+      text = "";
+    }
+    return text;
+  },
   render: function() {
     var size = this.props.size;
     var sizeString = "w_"+size+",h_"+size+"/";
@@ -33,12 +51,11 @@ var MyStampListItem = React.createClass({
     return (
       <div className="my-stamp-index-element"
         id={this.selectedText()}>
-        <img src={url}
-          onClick={this.setStamp}/>
-        <div
-          className="delete-my-stamp-icon"
-          onClick={this.deleteMyStamp}>
-        </div>
+        <img
+          src={url}
+          onClick={this.setStamp}
+          onLoad={this.addDeleteIcon}/>
+        {this.deleteIcon()}
 
       </div>
     );

@@ -62,7 +62,7 @@
 	var routes = React.createElement(
 	  Route,
 	  { path: '/', component: App },
-	  React.createElement(IndexRoute, { component: Home }),
+	  React.createElement(IndexRoute, { component: DrawingIndex }),
 	  React.createElement(Route, { path: '/new', component: CanvasTest }),
 	  React.createElement(Route, { path: '/stamps', component: StampIndex }),
 	  React.createElement(Route, { path: '/drawings', component: DrawingIndex }),
@@ -24597,7 +24597,8 @@
 	          key: idx,
 	          stampId: stamp.id,
 	          imageUrl: stamp.image_url,
-	          size: 150 });
+	          size: 150,
+	          stamp: stamp });
 	      });
 	    }
 	    return React.createElement(
@@ -25128,6 +25129,7 @@
 	var History = __webpack_require__(159).History;
 	var ApiUtil = __webpack_require__(212);
 	var ApiActions = __webpack_require__(213);
+	var StampStore = __webpack_require__(219);
 
 	var StampListItem = React.createClass({
 	  displayName: 'StampListItem',
@@ -25181,6 +25183,11 @@
 	        { className: 'delete',
 	          onClick: this.deleteStamp },
 	        'Delete'
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'stamp-author' },
+	        this.props.stamp.author
 	      )
 	    );
 	  }
@@ -31729,7 +31736,8 @@
 
 	  getInitialState: function () {
 	    return {
-	      stamp: null
+	      stamp: null,
+	      imageLoaded: false
 	    };
 	  },
 	  setStamp: function () {
@@ -31745,6 +31753,20 @@
 	    }
 	    return text;
 	  },
+	  addDeleteIcon: function () {
+	    this.setState({ imageLoaded: true });
+	  },
+	  deleteIcon: function () {
+	    var text;
+	    if (this.state.imageLoaded) {
+	      text = React.createElement('div', {
+	        className: 'delete-my-stamp-icon',
+	        onClick: this.deleteMyStamp });
+	    } else {
+	      text = "";
+	    }
+	    return text;
+	  },
 	  render: function () {
 	    var size = this.props.size;
 	    var sizeString = "w_" + size + ",h_" + size + "/";
@@ -31754,11 +31776,11 @@
 	      'div',
 	      { className: 'my-stamp-index-element',
 	        id: this.selectedText() },
-	      React.createElement('img', { src: url,
-	        onClick: this.setStamp }),
-	      React.createElement('div', {
-	        className: 'delete-my-stamp-icon',
-	        onClick: this.deleteMyStamp })
+	      React.createElement('img', {
+	        src: url,
+	        onClick: this.setStamp,
+	        onLoad: this.addDeleteIcon }),
+	      this.deleteIcon()
 	    );
 	  }
 	});

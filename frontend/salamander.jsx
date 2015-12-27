@@ -16,7 +16,7 @@ var IndexRoute = require('react-router').IndexRoute;
 
 var routes = (
   <Route path="/" component={App}>
-    <IndexRoute component={Home}/>
+    <IndexRoute component={DrawingIndex}/>
     <Route path="/new" component={CanvasTest}/>
     <Route path="/stamps" component={StampIndex}/>
     <Route path="/drawings" component={DrawingIndex}/>

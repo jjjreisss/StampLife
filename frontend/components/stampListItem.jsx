@@ -2,6 +2,7 @@ var React = require('react');
 var History = require('react-router').History;
 var ApiUtil = require('../util/apiUtil');
 var ApiActions = require('../actions/apiActions');
+var StampStore = require('../stores/stampStore');
 
 var StampListItem = React.createClass({
   mixins: [History],
@@ -51,6 +52,9 @@ var StampListItem = React.createClass({
         <div className="delete"
           onClick={this.deleteStamp}>
           Delete
+        </div>
+        <div className="stamp-author">
+          {this.props.stamp.author}
         </div>
       </div>
     );
