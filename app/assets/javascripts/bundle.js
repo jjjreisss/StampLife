@@ -33091,7 +33091,8 @@
 	    return {
 	      caption: "caption",
 	      stamping: false,
-	      recentColors: ["#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff"]
+	      recentColors: ["#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff"],
+	      saved: false
 	    };
 	  },
 	  componentDidMount: function () {
@@ -33127,12 +33128,13 @@
 	      url: "api/images",
 	      method: "POST",
 	      data: { img: img },
-	      success: function (imageReceived) {
+	      success: (function (imageReceived) {
 	        ApiUtil.createStamp({
 	          name: "default name",
 	          image_url: imageReceived.public_id
 	        });
-	      }
+	        this.setState({ saved: true });
+	      }).bind(this)
 	    });
 	  },
 	  saveToMyStamps: function () {
@@ -33141,13 +33143,19 @@
 	      url: "api/images",
 	      method: "POST",
 	      data: { img: img },
-	      success: function (imageReceived) {
+	      success: (function (imageReceived) {
 	        ApiUtil.createMyStamp({
 	          name: "default name",
 	          image_url: imageReceived.public_id
 	        });
-	      }
+	        this.setState({ saved: true });
+	      }).bind(this)
 	    });
+	  },
+	  saveText: function () {
+	    var text;
+	    this.state.saved ? text = "Saved" : text = "Save Stamp";
+	    return text;
 	  },
 
 	  // Methods for changing Color
@@ -33320,7 +33328,7 @@
 	          {
 	            className: 'save-stamp',
 	            onClick: this.saveStamp },
-	          'Save Stamp'
+	          this.saveText()
 	        ),
 	        React.createElement(
 	          'button',

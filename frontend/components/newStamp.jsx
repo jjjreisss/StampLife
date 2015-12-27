@@ -18,7 +18,8 @@ var CanvasTest = React.createClass({
       caption: "caption",
       stamping: false,
       recentColors: ["#fff","#fff","#fff","#fff","#fff",
-                      "#fff","#fff","#fff","#fff","#fff",]
+                      "#fff","#fff","#fff","#fff","#fff",],
+      saved: false
     });
   },
   componentDidMount: function() {
@@ -63,7 +64,8 @@ var CanvasTest = React.createClass({
           name: "default name",
           image_url: imageReceived.public_id
         });
-      }
+      this.setState({saved: true});
+    }.bind(this)
     });
   },
   saveToMyStamps: function() {
@@ -77,8 +79,14 @@ var CanvasTest = React.createClass({
           name: "default name",
           image_url: imageReceived.public_id
         });
-      }
+        this.setState({saved: true});
+      }.bind(this)
     });
+  },
+  saveText: function() {
+    var text;
+    this.state.saved ? text = "Saved" : text = "Save Stamp";
+    return text;
   },
 
 // Methods for changing Color
@@ -245,7 +253,7 @@ var CanvasTest = React.createClass({
         <button
           className="save-stamp"
           onClick={this.saveStamp}>
-          Save Stamp
+          {this.saveText()}
         </button>
         <button
           className="save-to-my-stamps"
