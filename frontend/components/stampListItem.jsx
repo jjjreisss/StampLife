@@ -24,7 +24,8 @@ var StampListItem = React.createClass({
     $.ajax({
       url: "api/stamps/" + this.props.stampId,
       method: "DELETE",
-      success: function() {
+      success: function(message) {
+        console.log(message.message);
         console.log("delete successful");
       },
       error: function(message) {
