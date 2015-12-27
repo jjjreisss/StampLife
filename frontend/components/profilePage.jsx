@@ -36,7 +36,7 @@ var ProfilePage = React.createClass({
   render: function() {
     var drawingsList = "";
     if (this.state.drawings) {
-      drawingsList = this.state.drawings.map(function(drawing, idx){
+      drawingsList = this.state.drawings.reverse().map(function(drawing, idx){
         return (
           <DrawingListItem
             key={idx}

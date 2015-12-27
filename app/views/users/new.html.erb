@@ -1,22 +1,24 @@
-<div class="intro">
-  <h2 class="sign-in-header">Sign Up</h2>
+<div class="intro-page">
+  <div class="intro">
+    <h2 class="sign-in-header">Sign Up</h2>
 
-  <form
-    action="<%= users_url %>"
-    method="post"
-    class="sign-in">
-    <%= auth_token_input %>
+    <form
+      action="<%= users_url %>"
+      method="post"
+      class="sign-in">
+      <%= auth_token_input %>
 
-    <label class="sign-in-label">
-      Username
-      <input type="text" name="user[username]" value="">
-    </label>
+      <label class="sign-in-label">
+        Username
+        <input type="text" name="user[username]" value="">
+      </label>
 
-    <label class="sign-in-label">
-      Password
-      <input type="password" name="user[password]" value="">
-    </label>
+      <label class="sign-in-label">
+        Password
+        <input type="password" name="user[password]" value="">
+      </label>
 
-    <input class="sign-in-submit" type="submit" value="Sign Up">
-  </form>
+      <input class="sign-in-submit" type="submit" value="Sign Up">
+    </form>
+  </div>
 </div>
