@@ -280,13 +280,14 @@
  .drawing-detail {
    text-align: center;
    position: relative;
-   margin-top: 3%
+   margin-top: 5%;
  }
 
  .drawing-detail-picture {
    background: white;
    width: 500px;
    display: inline-block;
+   border: 2px solid black;
  }
 
  .select-stamp-icon {
