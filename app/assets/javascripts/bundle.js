@@ -33059,7 +33059,7 @@
 	      null,
 	      React.createElement(
 	        'div',
-	        { className: 'drawings-index' },
+	        { className: 'index' },
 	        React.createElement(
 	          'h2',
 	          null,
@@ -33069,7 +33069,7 @@
 	      ),
 	      React.createElement(
 	        'div',
-	        null,
+	        { className: 'index' },
 	        React.createElement(
 	          'h2',
 	          null,
