@@ -15,7 +15,7 @@ var DrawingCanvas = function(id, length, width) {
   this.rgbString = "black";
   this.ctx.lineJoin = this.ctx.lineCap = 'round';
   this.blankImageData = this.getImageData();
-  this.history = [this.blankImageData, this.blankImageData, this.blankImageData, this.blankImageData, this.blankImageData];
+  this.history = [this.blankImageData, this.blankImageData, this.blankImageData, this.blankImageData, this.blankImageData, this.blankImageData];
 
   this.drawing = false;
   this.stamping = false;
@@ -75,8 +75,7 @@ DrawingCanvas.prototype.setSize = function (size) {
 };
 
 DrawingCanvas.prototype.undo = function () {
-  this.history.unshift(this.blankImageData);
-  this.history.pop();
+  this.history.unshift(this.history.pop());
   this.setToLastFrame();
 };
 
