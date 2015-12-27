@@ -24,19 +24,19 @@ var ProfilePage = React.createClass({
   },
   _drawingsChanged: function() {
     this.setState({
-      drawings: DrawingStore.all()
+      drawings: DrawingStore.all().reverse()
     });
   },
   _stampsChanged: function() {
     this.setState({
-      stamps: StampStore.all()
+      stamps: StampStore.all().reverse()
     });
   },
 
   render: function() {
     var drawingsList = "";
     if (this.state.drawings) {
-      drawingsList = this.state.drawings.reverse().map(function(drawing, idx){
+      drawingsList = this.state.drawings.map(function(drawing, idx){
         return (
           <DrawingListItem
             key={idx}

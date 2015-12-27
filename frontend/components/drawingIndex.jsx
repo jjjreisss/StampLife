@@ -6,7 +6,7 @@ var DrawingListItem = require('./drawingListItem');
 var DrawingIndex = React.createClass({
   getInitialState: function() {
     return({
-      drawings: DrawingStore.all().reverse()
+      drawings: null
     });
   },
   componentDidMount: function() {
