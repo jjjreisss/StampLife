@@ -38,6 +38,8 @@ var DrawingDetail = React.createClass({
             className="username"
             onClick={this.goToProfile}>
             {"Drawn by " + this.state.drawing.username}
+            <br/>
+            {this.state.drawing.time_ago + " ago"}
           </div>
         </div>
       );

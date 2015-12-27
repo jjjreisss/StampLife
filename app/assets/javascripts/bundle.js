@@ -32899,7 +32899,9 @@
 	          {
 	            className: 'username',
 	            onClick: this.goToProfile },
-	          "Drawn by " + this.state.drawing.username
+	          "Drawn by " + this.state.drawing.username,
+	          React.createElement('br', null),
+	          this.state.drawing.time_ago + " ago"
 	        )
 	      );
 	    }
