@@ -53,7 +53,8 @@ var ProfilePage = React.createClass({
             key={idx}
             stampId={stamp.id}
             imageUrl={stamp.image_url}
-            size={100}/>
+            size={100}
+            stamp={stamp}/>
         );
       });
     }
