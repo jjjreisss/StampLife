@@ -19,6 +19,7 @@ var CanvasTest = React.createClass({
       stamping: false,
       recentColors: ["#fff","#fff","#fff","#fff","#fff",
                       "#fff","#fff","#fff","#fff","#fff",],
+      saveStarted: false,
       saved: false
     });
   },
@@ -55,6 +56,7 @@ var CanvasTest = React.createClass({
   },
   saveStamp: function() {
     var img = this.drawingCanvas.toData();
+    this.setState({saveStarted: true});
     $.ajax({
       url: "api/images",
       method: "POST",
@@ -65,11 +67,15 @@ var CanvasTest = React.createClass({
           image_url: imageReceived.public_id
         });
       this.setState({saved: true});
-    }.bind(this)
+    }.bind(this),
+      error: function() {
+        this.setState({saveStarted: false});
+      }.bind(this)
     });
   },
   saveToMyStamps: function() {
     var img = this.drawingCanvas.toData();
+    this.setState({saveStarted: true});
     $.ajax({
       url: "api/images",
       method: "POST",
@@ -80,12 +86,20 @@ var CanvasTest = React.createClass({
           image_url: imageReceived.public_id
         });
         this.setState({saved: true});
+      }.bind(this),
+      error: function() {
+        this.setState({saveStarted: false});
       }.bind(this)
     });
   },
   saveText: function() {
     var text;
     this.state.saved ? text = "Saved" : text = "Save Stamp";
+    return text;
+  },
+  saveDisabled: function() {
+    var text;
+    this.state.saveStarted ? text = true : text = false;
     return text;
   },
 
@@ -252,12 +266,14 @@ var CanvasTest = React.createClass({
         id="right-buttons">
         <button
           className="save-stamp"
-          onClick={this.saveStamp}>
+          onClick={this.saveStamp}
+          disabled={this.saveDisabled()}>
           {this.saveText()}
         </button>
         <button
           className="save-to-my-stamps"
-          onClick={this.saveToMyStamps}>
+          onClick={this.saveToMyStamps}
+          disabled={this.saveDisabled()}>
           Save To My Stamps
         </button>
       </span>
