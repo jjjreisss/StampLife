@@ -25,6 +25,18 @@ class Api::StampsController < ApplicationController
     render json: @stamp
   end
 
+
+  def destroy
+    @stamp = Stamp.find(params[:id])
+
+    if current_user.username == "canada"
+      @stamp.destroy
+    else
+      render json: {message: "improper authorization"}
+    end
+  end
+
+private
   def stamp_params
     params.require(:stamp).permit(:name, :image_url)
   end

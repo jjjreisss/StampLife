@@ -23,6 +23,16 @@ class Api::DrawingsController < ApplicationController
     @drawing = Drawing.find(params[:id])
   end
 
+  def destroy
+    @drawing = Drawing.find(params[:id])
+
+    if current_user.username == "canada"
+      @drawing.destroy
+    else
+      render json: {message: "improper authorization"}
+    end
+  end
+
   private
   def drawing_params
     params.require(:drawing).permit(:content, :caption, :image_url);

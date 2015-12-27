@@ -20,6 +20,18 @@ var StampListItem = React.createClass({
   hideText: function() {
     this.setState({text: false});
   },
+  deleteStamp: function() {
+    $.ajax({
+      url: "api/stamps/" + this.props.stampId,
+      method: "DELETE",
+      success: function() {
+        console.log("delete successful");
+      },
+      error: function(message) {
+        console.log(message.message);
+      }
+    });
+  },
   render: function() {
     var size = 250;
     var sizeString = "w_"+size+",h_"+size+"/";
@@ -34,6 +46,10 @@ var StampListItem = React.createClass({
         <img src={url}/>
         <div
           className={selectStampText}>
+        </div>
+        <div
+          onClick={this.deleteStamp}>
+          Delete
         </div>
       </div>
     );
