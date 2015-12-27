@@ -48,7 +48,7 @@ var StampListItem = React.createClass({
         <div
           className={selectStampText}>
         </div>
-        <div
+        <div className="delete"
           onClick={this.deleteStamp}>
           Delete
         </div>
