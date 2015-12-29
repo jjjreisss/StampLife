@@ -59,15 +59,16 @@ var App = React.createClass({
               </li>
             </ul>
           </li>
-          <li>
-            <button
-              onClick={this.signOut}>
-              Sign Out
-            </button>
-          </li>
+
+
 
 
         </ul>
+            <button
+              className="sign-out"
+              onClick={this.signOut}>
+              Sign Out
+            </button>
       </div>
 
 

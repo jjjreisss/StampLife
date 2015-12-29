@@ -34,6 +34,7 @@ var DrawingIndex = React.createClass({
     }
     return(
       <div className="index">
+        <h1>Newest Drawings</h1>
         {drawingsList}
       </div>
     );

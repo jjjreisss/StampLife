@@ -24,20 +24,26 @@ var DrawingDetail = React.createClass({
   goToProfile: function() {
     this.history.push('/users/' + this.state.drawing.username);
   },
+  goBack: function() {
+    this.history.goBack();
+  },
   render: function() {
     var contents = "";
+    var profileUrl;
+    if (this.state.drawing) {
+      profileUrl = '#/users/' + this.state.drawing.username;
+    }
     if (this.state.drawing){
       var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + this.state.drawing.image_url + ".png";
       contents = (
         <div>
           <div
-            className="drawing-detail-picture">
-            <img src={url}/>
+            className="index-element">
+            <img src={url}
+            onClick={this.goBack}/>
           </div>
-          <div
-            className="username"
-            onClick={this.goToProfile}>
-            {"Drawn by " + this.state.drawing.username}
+          <div>
+            Drawn by <a href={profileUrl}>{this.state.drawing.username}</a>
             <br/>
             {this.state.drawing.time_ago + " ago"}
           </div>

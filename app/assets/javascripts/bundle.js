@@ -24525,17 +24525,14 @@
 	                'All Drawings'
 	              )
 	            )
-	          ),
-	          React.createElement(
-	            'li',
-	            null,
-	            React.createElement(
-	              'button',
-	              {
-	                onClick: this.signOut },
-	              'Sign Out'
-	            )
 	          )
+	        ),
+	        React.createElement(
+	          'button',
+	          {
+	            className: 'sign-out',
+	            onClick: this.signOut },
+	          'Sign Out'
 	        )
 	      ),
 	      React.createElement(
@@ -31886,6 +31883,11 @@
 	    return React.createElement(
 	      'div',
 	      { className: 'index' },
+	      React.createElement(
+	        'h1',
+	        null,
+	        'Newest Drawings'
+	      ),
 	      drawingsList
 	    );
 	  }
@@ -32957,8 +32959,15 @@
 	  goToProfile: function () {
 	    this.history.push('/users/' + this.state.drawing.username);
 	  },
+	  goBack: function () {
+	    this.history.goBack();
+	  },
 	  render: function () {
 	    var contents = "";
+	    var profileUrl;
+	    if (this.state.drawing) {
+	      profileUrl = '#/users/' + this.state.drawing.username;
+	    }
 	    if (this.state.drawing) {
 	      var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + this.state.drawing.image_url + ".png";
 	      contents = React.createElement(
@@ -32967,15 +32976,19 @@
 	        React.createElement(
 	          'div',
 	          {
-	            className: 'drawing-detail-picture' },
-	          React.createElement('img', { src: url })
+	            className: 'index-element' },
+	          React.createElement('img', { src: url,
+	            onClick: this.goBack })
 	        ),
 	        React.createElement(
 	          'div',
-	          {
-	            className: 'username',
-	            onClick: this.goToProfile },
-	          "Drawn by " + this.state.drawing.username,
+	          null,
+	          'Drawn by ',
+	          React.createElement(
+	            'a',
+	            { href: profileUrl },
+	            this.state.drawing.username
+	          ),
 	          React.createElement('br', null),
 	          this.state.drawing.time_ago + " ago"
 	        )
