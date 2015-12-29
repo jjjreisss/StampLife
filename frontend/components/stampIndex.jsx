@@ -25,7 +25,7 @@ var StampIndex = React.createClass({
     var stampsList = "";
     if (this.state.stamps) {
       var sortedStamps = this.state.stamps.sort(function(a, b) {
-        return a.id < b.id;
+        return a["id"] < b["id"];
       });
       stampsList = sortedStamps.map(function(stamp, idx){
         return (
