@@ -22,7 +22,6 @@ var StampIndex = React.createClass({
   },
 
   render: function() {
-    debugger
     var stampsList = "";
     if (this.state.stamps) {
       stampsList = this.state.stamps.map(function(stamp, idx){
