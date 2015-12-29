@@ -38,10 +38,7 @@ var StampIndex = React.createClass({
         );
       });
     }
-    console.log('one')
-    console.log(this.state.stamps)
-    console.log('two')
-    console.log(sortedStamps);
+    debugger
     return(
       <div className="index">
         <h1>Most Popular Stamps</h1>
