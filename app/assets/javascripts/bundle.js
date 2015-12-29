@@ -24601,7 +24601,7 @@
 	          stamp: stamp });
 	      });
 	    }
-	    debugger;
+	    console.log(sortedStamps);
 	    return React.createElement(
 	      'div',
 	      { className: 'index' },
