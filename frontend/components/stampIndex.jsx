@@ -25,7 +25,7 @@ var StampIndex = React.createClass({
     var stampsList = "";
     if (this.state.stamps) {
       var sortedStamps = this.state.stamps.sort(function(a, b) {
-        return a.stamp_uses.length < b.stamp_uses.length;
+        return a.id < b.id;
       });
       stampsList = sortedStamps.map(function(stamp, idx){
         return (
@@ -38,7 +38,7 @@ var StampIndex = React.createClass({
         );
       });
     }
-    console.log(sortedStamps);
+    debugger
     return(
       <div className="index">
         <h1>Most Popular Stamps</h1>

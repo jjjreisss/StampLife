@@ -24590,7 +24590,7 @@
 	    var stampsList = "";
 	    if (this.state.stamps) {
 	      var sortedStamps = this.state.stamps.sort(function (a, b) {
-	        return a.stamp_uses.length < b.stamp_uses.length;
+	        return a.id < b.id;
 	      });
 	      stampsList = sortedStamps.map(function (stamp, idx) {
 	        return React.createElement(StampListItem, {
@@ -24601,7 +24601,7 @@
 	          stamp: stamp });
 	      });
 	    }
-	    console.log(sortedStamps);
+	    debugger;
 	    return React.createElement(
 	      'div',
 	      { className: 'index' },
