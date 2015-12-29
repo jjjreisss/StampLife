@@ -8,5 +8,6 @@ Rails.application.routes.draw do
     resources :drawings, only: [:index, :new, :create, :destroy, :edit, :show]
     resources :images
     resources :stamps, only: [:index, :new, :create, :destroy, :show]
+    resources :stamp_uses, only: [:create]
   end
 end

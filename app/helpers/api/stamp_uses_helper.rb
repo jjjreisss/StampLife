@@ -1,0 +1,2 @@
+module Api::StampUsesHelper
+end

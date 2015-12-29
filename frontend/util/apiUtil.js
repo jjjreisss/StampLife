@@ -127,6 +127,17 @@ var ApiUtil = {
     });
   },
 
+  useStamps: function(stampsUsed) {
+    $.ajax({
+      url: "api/stamp_uses",
+      method: "POST",
+      data: {stamps_used: stampsUsed},
+      success: function() {
+
+      },
+    });
+  },
+
 };
 
 module.exports = ApiUtil;

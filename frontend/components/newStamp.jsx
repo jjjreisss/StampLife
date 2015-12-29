@@ -164,6 +164,10 @@ var CanvasTest = React.createClass({
 // Methods for drawing
   clearDrawingCanvas: function() {
     this.drawingCanvas.hardReset();
+    this.setState({
+      saveStarted: false,
+      saved: false
+    })
   },
   mouseDownHandler: function(e) {
     this.drawingCanvas.mouseDown(e, this.color, this.size);

@@ -24,7 +24,8 @@ var CanvasTest = React.createClass({
       stamp: StampStore.single(),
       stampSize: 150,
       saveStarted: false,
-      saved: false
+      saved: false,
+      stampsUsed: []
     });
   },
   componentDidMount: function() {
@@ -86,6 +87,7 @@ var CanvasTest = React.createClass({
           caption: this.state.caption,
           image_url: imageReceived.public_id
         });
+        ApiUtil.useStamps(this.state.stampsUsed);
         this.setState({saved: true});
         this.history.push("drawings/" + imageReceived.id);
       }.bind(this),
@@ -188,6 +190,17 @@ var CanvasTest = React.createClass({
   },
   mouseDownHandler: function(e) {
     this.drawingCanvas.mouseDown(e, this.color, this.size);
+
+    if (this.state.stamping) {
+      var currentStamp = this.state.stamp.id;
+      if (this.state.stampsUsed.indexOf(currentStamp) === -1) {
+        var stampsUsed = this.state.stampsUsed;
+        stampsUsed.push(currentStamp);
+        this.setState({stampsUsed: stampsUsed});
+      }
+    }
+
+    console.log(this.state.stampsUsed);
   },
   mouseUpHandler: function(e) {
     this.drawingCanvas.mouseUp(e, this.color, this.size);

@@ -24738,6 +24738,15 @@
 	        ApiActions.addToMyStamp(stamp);
 	      }
 	    });
+	  },
+
+	  useStamps: function (stampsUsed) {
+	    $.ajax({
+	      url: "api/stamp_uses",
+	      method: "POST",
+	      data: { stamps_used: stampsUsed },
+	      success: function () {}
+	    });
 	  }
 
 	};
@@ -32043,7 +32052,8 @@
 	      stamp: StampStore.single(),
 	      stampSize: 150,
 	      saveStarted: false,
-	      saved: false
+	      saved: false,
+	      stampsUsed: []
 	    };
 	  },
 	  componentDidMount: function () {
@@ -32101,6 +32111,7 @@
 	          caption: this.state.caption,
 	          image_url: imageReceived.public_id
 	        });
+	        ApiUtil.useStamps(this.state.stampsUsed);
 	        this.setState({ saved: true });
 	        this.history.push("drawings/" + imageReceived.id);
 	      }).bind(this),
@@ -32203,6 +32214,17 @@
 	  },
 	  mouseDownHandler: function (e) {
 	    this.drawingCanvas.mouseDown(e, this.color, this.size);
+
+	    if (this.state.stamping) {
+	      var currentStamp = this.state.stamp.id;
+	      if (this.state.stampsUsed.indexOf(currentStamp) === -1) {
+	        var stampsUsed = this.state.stampsUsed;
+	        stampsUsed.push(currentStamp);
+	        this.setState({ stampsUsed: stampsUsed });
+	      }
+	    }
+
+	    console.log(this.state.stampsUsed);
 	  },
 	  mouseUpHandler: function (e) {
 	    this.drawingCanvas.mouseUp(e, this.color, this.size);
@@ -33323,6 +33345,10 @@
 	  // Methods for drawing
 	  clearDrawingCanvas: function () {
 	    this.drawingCanvas.hardReset();
+	    this.setState({
+	      saveStarted: false,
+	      saved: false
+	    });
 	  },
 	  mouseDownHandler: function (e) {
 	    this.drawingCanvas.mouseDown(e, this.color, this.size);
