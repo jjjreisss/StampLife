@@ -25180,17 +25180,22 @@
 
 	  getInitialState: function () {
 	    return {
-	      text: false
+	      hover: false,
+	      usesClicked: false
 	    };
 	  },
 	  setStamp: function () {
 	    ApiUtil.addToMyStamp(this.props.stampId);
 	  },
 	  displayText: function () {
-	    this.setState({ text: true });
+	    this.setState({ hover: true });
 	  },
 	  hideText: function () {
-	    this.setState({ text: false });
+	    this.setState({ hover: false });
+	  },
+	  toggleList: function (e) {
+	    e.preventDefault();
+	    this.setState({ usesClicked: !this.state.usesClicked });
 	  },
 	  deleteStamp: function () {
 	    $.ajax({
@@ -25209,26 +25214,40 @@
 	    var size = 250;
 	    var sizeString = "w_" + size + ",h_" + size + "/";
 	    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_250,h_250/" + this.props.imageUrl + ".png";
-	    var selectStampText = this.state.text ? "select-stamp-icon" : "hidden";
+	    var selectStampText = this.state.hover ? "select-stamp-icon" : "hidden";
+	    var stampUseCount = this.state.hover ? "stamp-use-count" : "hidden";
+	    var stampUseList = this.state.usesClicked ? "stamp-use-list" : "hidden";
 	    return React.createElement(
 	      'div',
 	      {
 	        className: 'index-element',
-	        onClick: this.setStamp,
 	        onMouseEnter: this.displayText,
 	        onMouseLeave: this.hideText },
 	      React.createElement('img', { src: url }),
 	      React.createElement(
 	        'div',
 	        {
-	          className: selectStampText,
-	          id: 'stamp-use-count' },
+	          className: stampUseCount,
+	          onClick: this.toggleList },
 	        'Used ',
 	        this.props.stamp.stamp_uses.length,
-	        ' Times'
+	        ' Times',
+	        React.createElement(
+	          'div',
+	          {
+	            className: stampUseList },
+	          this.props.stamp.stamp_uses.map(function (use, i) {
+	            return React.createElement(
+	              'div',
+	              { key: i },
+	              use
+	            );
+	          })
+	        )
 	      ),
 	      React.createElement('div', {
-	        className: selectStampText }),
+	        className: selectStampText,
+	        onClick: this.setStamp }),
 	      React.createElement(
 	        'div',
 	        { className: 'delete',

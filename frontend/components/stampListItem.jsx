@@ -9,17 +9,22 @@ var StampListItem = React.createClass({
 
   getInitialState: function() {
     return({
-      text: false
+      hover: false,
+      usesClicked: false
     });
   },
   setStamp: function() {
     ApiUtil.addToMyStamp(this.props.stampId);
   },
   displayText: function() {
-    this.setState({text: true});
+    this.setState({hover: true});
   },
   hideText: function() {
-    this.setState({text: false});
+    this.setState({hover: false});
+  },
+  toggleList: function(e) {
+    e.preventDefault();
+    this.setState({usesClicked: !this.state.usesClicked});
   },
   deleteStamp: function() {
     $.ajax({
@@ -38,21 +43,29 @@ var StampListItem = React.createClass({
     var size = 250;
     var sizeString = "w_"+size+",h_"+size+"/";
     var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_250,h_250/" + this.props.imageUrl + ".png";
-    var selectStampText = (this.state.text ? "select-stamp-icon" : "hidden");
+    var selectStampText = (this.state.hover ? "select-stamp-icon" : "hidden");
+    var stampUseCount = (this.state.hover ? "stamp-use-count" : "hidden");
+    var stampUseList = (this.state.usesClicked ? "stamp-use-list" : "hidden");
     return (
       <div
         className="index-element"
-        onClick={this.setStamp}
         onMouseEnter={this.displayText}
         onMouseLeave={this.hideText}>
         <img src={url}/>
         <div
-          className={selectStampText}
-          id="stamp-use-count">
+          className={stampUseCount}
+          onClick={this.toggleList}>
           Used {this.props.stamp.stamp_uses.length} Times
+          <div
+            className={stampUseList}>
+            {this.props.stamp.stamp_uses.map(function(use, i) {
+              return <div key={i}>{use}</div>;
+            })}
+          </div>
         </div>
         <div
-          className={selectStampText}>
+          className={selectStampText}
+          onClick={this.setStamp}>
         </div>
         <div className="delete"
           onClick={this.deleteStamp}>
