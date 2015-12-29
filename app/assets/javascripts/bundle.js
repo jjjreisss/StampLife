@@ -24587,6 +24587,7 @@
 	  },
 
 	  render: function () {
+	    debugger;
 	    var stampsList = "";
 	    if (this.state.stamps) {
 	      stampsList = this.state.stamps.map(function (stamp, idx) {
@@ -25172,7 +25173,7 @@
 	  render: function () {
 	    var size = 250;
 	    var sizeString = "w_" + size + ",h_" + size + "/";
-	    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + sizeString + this.props.imageUrl + ".png";
+	    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_250,h_250/" + this.props.imageUrl + ".png";
 	    var selectStampText = this.state.text ? "select-stamp-icon" : "hidden";
 	    return React.createElement(
 	      'div',
