@@ -24587,10 +24587,12 @@
 	  },
 
 	  render: function () {
-
 	    var stampsList = "";
 	    if (this.state.stamps) {
-	      stampsList = this.state.stamps.map(function (stamp, idx) {
+	      var sortedStamps = this.state.stamps.sort(function (a, b) {
+	        return a.stamp_uses.length < b.stamp_uses.length;
+	      });
+	      stampsList = sortedStamps.map(function (stamp, idx) {
 	        return React.createElement(StampListItem, {
 	          key: idx,
 	          stampId: stamp.id,
@@ -24602,6 +24604,11 @@
 	    return React.createElement(
 	      'div',
 	      { className: 'index' },
+	      React.createElement(
+	        'h1',
+	        null,
+	        'Most Popular Stamps'
+	      ),
 	      stampsList
 	    );
 	  }
