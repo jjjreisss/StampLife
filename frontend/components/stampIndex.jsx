@@ -38,6 +38,9 @@ var StampIndex = React.createClass({
         );
       });
     }
+    console.log('one')
+    console.log(this.state.stamps)
+    console.log('two')
     console.log(sortedStamps);
     return(
       <div className="index">
