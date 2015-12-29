@@ -24592,7 +24592,7 @@
 	      var sortedStamps = this.state.stamps.sort(function (a, b) {
 	        return a.stamp_uses.length < b.stamp_uses.length;
 	      });
-	      stampsList = this.state.stamps.map(function (stamp, idx) {
+	      stampsList = this.state.stamps.reverse().map(function (stamp, idx) {
 	        return React.createElement(StampListItem, {
 	          key: idx,
 	          stampId: stamp.id,
