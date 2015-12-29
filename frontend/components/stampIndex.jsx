@@ -25,9 +25,9 @@ var StampIndex = React.createClass({
     var stampsList = "";
     if (this.state.stamps) {
       var sortedStamps = this.state.stamps.sort(function(a, b) {
-        return a.stamp_uses.length < b.stamp_uses.length;
+        return a.stamp_uses < b.stamp_uses;
       });
-      stampsList = this.state.stamps.reverse().map(function(stamp, idx){
+      stampsList = sortedStamps.map(function(stamp, idx){
         return (
           <StampListItem
             key={idx}
