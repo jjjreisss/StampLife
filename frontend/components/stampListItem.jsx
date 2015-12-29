@@ -47,6 +47,11 @@ var StampListItem = React.createClass({
         onMouseLeave={this.hideText}>
         <img src={url}/>
         <div
+          className={selectStampText}
+          id="stamp-use-count">
+          Used {this.props.stamp.stamp_uses.length} Times
+        </div>
+        <div
           className={selectStampText}>
         </div>
         <div className="delete"

@@ -383,3 +383,16 @@
   right: 1%;
   top: 4px;
 }
+
+#stamp-use-count {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  background: rgba(0,0,0,0);
+  font-weight: 700;
+  font-size: 16px;
+  width: 50%;
+  background: white;
+  border: 2px solid black;
+  border-radius: 5px;
+}

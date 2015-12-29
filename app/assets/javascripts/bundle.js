@@ -24587,6 +24587,7 @@
 	  },
 
 	  render: function () {
+
 	    var stampsList = "";
 	    if (this.state.stamps) {
 	      stampsList = this.state.stamps.map(function (stamp, idx) {
@@ -25182,6 +25183,15 @@
 	        onMouseEnter: this.displayText,
 	        onMouseLeave: this.hideText },
 	      React.createElement('img', { src: url }),
+	      React.createElement(
+	        'div',
+	        {
+	          className: selectStampText,
+	          id: 'stamp-use-count' },
+	        'Used ',
+	        this.props.stamp.stamp_uses.length,
+	        ' Times'
+	      ),
 	      React.createElement('div', {
 	        className: selectStampText }),
 	      React.createElement(
