@@ -385,6 +385,7 @@
   border: 2px solid black;
   border-radius: 5px;
   cursor: pointer;
+  overflow: auto;
 }
 
 .sign-out {
@@ -432,9 +433,6 @@
   border-radius: 10px 10px 0px 0px;
 }
 
-.stamp-author {
-  overflow: auto;
-}
 
 
 .my-stamp-index-element {
@@ -452,4 +450,55 @@
 .my-stamp-index-element:focus,
 .my-stamp-index-element:active {
     transform: scale(.97);
+}
+
+.drawing-author {
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  background: rgba(0,0,0,0);
+  font-weight: 700;
+  font-size: 20px;
+  width: 30%;
+  background: white;
+  border: 2px solid black;
+  border-radius: 5px;
+  cursor: pointer;
+  overflow: auto;
+}
+
+.drawing-likes-box {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  width: 30%;
+}
+
+.drawing-likes-count {
+
+  background: rgba(0,0,0,0);
+  font-weight: 700;
+  font-size: 20px;
+  width: 100%;
+  background: white;
+  border-radius: 5px;
+  cursor: pointer;
+  overflow: auto;
+  position: relative;
+  bottom: 5px;
+  box-shadow: black 0 0 0 2px;
+}
+
+.like-drawing-class {
+
+  background: rgba(0,0,0,0);
+  font-weight: 700;
+  font-size: 20px;
+  width: 100%;
+  background: white;
+  border: 1px solid red;
+  box-shadow: black 0 0 0 2px;
+  border-radius: 5px;
+  cursor: pointer;
+  overflow: auto;
 }

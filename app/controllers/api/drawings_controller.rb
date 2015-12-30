@@ -7,7 +7,7 @@ class Api::DrawingsController < ApplicationController
       @drawings = Drawing.all
     end
 
-    render json: @drawings
+    
   end
 
   def create

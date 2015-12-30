@@ -24814,6 +24814,28 @@
 	      data: { stamps_used: stampsUsed },
 	      success: function () {}
 	    });
+	  },
+
+	  likeDrawing: function (drawingId) {
+	    $.ajax({
+	      url: "api/likes",
+	      method: "POST",
+	      data: { drawing_id: drawingId },
+	      success: function () {
+	        ApiUtil.fetchAllDrawings();
+	      }
+	    });
+	  },
+
+	  unlikeDrawing: function (drawingId) {
+	    $.ajax({
+	      url: "api/likes/",
+	      method: "DELETE",
+	      data: { drawing_id: drawingId },
+	      success: function () {
+	        ApiUtil.fetchAllDrawings();
+	      }
+	    });
 	  }
 
 	};
@@ -25253,6 +25275,7 @@
 	    }).bind(this));
 	  },
 	  goToUser: function (e) {
+	    e.stopPropagation();
 	    var username = this.props.stamp.author;
 	    this.history.push('users/' + username);
 	  },
@@ -32000,7 +32023,8 @@
 	        return React.createElement(DrawingListItem, {
 	          key: idx,
 	          drawingId: drawing.id,
-	          imageUrl: drawing.image_url });
+	          imageUrl: drawing.image_url,
+	          drawing: drawing });
 	      });
 	    }
 	    return React.createElement(
@@ -32102,6 +32126,7 @@
 
 	var React = __webpack_require__(1);
 	var History = __webpack_require__(159).History;
+	var ApiUtil = __webpack_require__(212);
 
 	var DrawingListItem = React.createClass({
 	  displayName: 'DrawingListItem',
@@ -32109,7 +32134,9 @@
 	  mixins: [History],
 
 	  getInitialState: function () {
-	    return {};
+	    return {
+	      hover: false
+	    };
 	  },
 	  goToShow: function () {
 	    this.history.push('drawings/' + this.props.drawingId);
@@ -32127,13 +32154,70 @@
 	      }
 	    });
 	  },
+	  enhover: function () {
+	    this.setState({ hover: true });
+	  },
+	  dehover: function () {
+	    this.setState({ hover: false });
+	  },
+	  goToUser: function (e) {
+	    e.stopPropagation();
+	    var username = this.props.drawing.username;
+	    this.history.push('users/' + username);
+	  },
+	  toggleLike: function (e) {
+	    e.stopPropagation();
+	    if (!this.state.liked) {
+	      ApiUtil.likeDrawing(this.props.drawing.id);
+	    }
+	    if (this.state.liked) {
+	      ApiUtil.unlikeDrawing(this.props.drawing.id);
+	    }
+	  },
 	  render: function () {
+	    var drawingAuthor = this.state.hover ? "drawing-author" : "hidden";
+	    var drawingLikesCount = this.state.hover ? "drawing-likes-count" : "hidden";
+	    var likeDrawingClass = this.state.hover ? "like-drawing-class" : "hidden";
+	    var likeText = this.props.drawing.liked_by_current_user ? "Unlike" : "Like";
+	    var timeAgo = this.props.drawing.time_ago;
+	    if (timeAgo.slice(0, 5) === "about") {
+	      timeAgo = timeAgo.slice(6);
+	    }
 	    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_500,h_500/" + this.props.imageUrl + ".png";
 	    return React.createElement(
 	      'div',
-	      { className: 'index-element' },
-	      React.createElement('img', { src: url,
-	        onClick: this.goToShow }),
+	      { className: 'index-element',
+	        onClick: this.goToShow,
+	        onMouseEnter: this.enhover,
+	        onMouseLeave: this.dehover },
+	      React.createElement('img', { src: url }),
+	      React.createElement(
+	        'div',
+	        {
+	          className: drawingAuthor,
+	          onClick: this.goToUser },
+	        this.props.drawing.username,
+	        React.createElement('br', null),
+	        timeAgo
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'drawing-likes-box' },
+	        React.createElement(
+	          'div',
+	          {
+	            className: drawingLikesCount },
+	          this.props.drawing.likes.length,
+	          ' Likes'
+	        ),
+	        React.createElement(
+	          'div',
+	          {
+	            className: likeDrawingClass,
+	            onClick: this.toggleLike },
+	          likeText
+	        )
+	      ),
 	      React.createElement(
 	        'div',
 	        { className: 'delete',
@@ -33199,7 +33283,8 @@
 	        return React.createElement(DrawingListItem, {
 	          key: idx,
 	          drawingId: drawing.id,
-	          imageUrl: drawing.image_url });
+	          imageUrl: drawing.image_url,
+	          drawing: drawing });
 	      });
 	    }
 	    var stampsList = "";

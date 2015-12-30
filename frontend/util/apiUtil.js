@@ -138,6 +138,28 @@ var ApiUtil = {
     });
   },
 
+  likeDrawing: function(drawingId) {
+    $.ajax({
+      url: "api/likes",
+      method: "POST",
+      data: {drawing_id: drawingId},
+      success: function() {
+        ApiUtil.fetchAllDrawings();
+      },
+    });
+  },
+
+  unlikeDrawing: function(drawingId) {
+    $.ajax({
+      url: "api/likes/",
+      method: "DELETE",
+      data: {drawing_id: drawingId},
+      success: function() {
+        ApiUtil.fetchAllDrawings();
+      },
+    });
+  },
+
 };
 
 module.exports = ApiUtil;

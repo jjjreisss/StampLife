@@ -9,5 +9,6 @@ Rails.application.routes.draw do
     resources :images
     resources :stamps, only: [:index, :new, :create, :destroy, :show]
     resources :stamp_uses, only: [:create]
+    resources :likes, only: [:create, :destroy]
   end
 end

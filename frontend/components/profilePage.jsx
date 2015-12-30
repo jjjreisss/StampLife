@@ -41,7 +41,8 @@ var ProfilePage = React.createClass({
           <DrawingListItem
             key={idx}
             drawingId={drawing.id}
-            imageUrl={drawing.image_url}/>
+            imageUrl={drawing.image_url}
+            drawing={drawing}/>
         );
       });
     }

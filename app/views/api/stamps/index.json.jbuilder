@@ -8,7 +8,6 @@ json.array! @stamps do |stamp|
     user = User.where(id: use.user_id).first
     user ? user.username : "user unknown"
   end
-puts stamp_users
 
   json.stamp_uses stamp_users
 
