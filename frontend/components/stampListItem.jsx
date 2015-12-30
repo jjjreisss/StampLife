@@ -51,7 +51,7 @@ var StampListItem = React.createClass({
     }.bind(this));
   },
   goToUser: function(e) {
-    var username = e.target.innerHTML;
+    var username = this.props.stamp.author;
     this.history.push('users/' + username);
   },
   render: function() {
