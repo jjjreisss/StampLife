@@ -24650,7 +24650,7 @@
 	        React.createElement(
 	          'span',
 	          {
-	            className: 'most-popular',
+	            className: 'index-tab',
 	            onClick: this.sortByPopularity,
 	            id: popularitySelected },
 	          'Most Popular Stamps'
@@ -24658,7 +24658,7 @@
 	        React.createElement(
 	          'span',
 	          {
-	            className: 'newest',
+	            className: 'index-tab',
 	            onClick: this.sortByNewest,
 	            id: newestSelected },
 	          'Newest Stamps'
@@ -32008,10 +32008,20 @@
 	      { className: 'index' },
 	      React.createElement(
 	        'h1',
-	        null,
-	        'Newest Drawings'
+	        { className: 'index-header' },
+	        React.createElement(
+	          'span',
+	          {
+	            className: 'index-tab',
+	            id: 'selected-tab' },
+	          'Newest Drawings'
+	        )
 	      ),
-	      drawingsList
+	      React.createElement(
+	        'div',
+	        { className: 'index-contents' },
+	        drawingsList
+	      )
 	    );
 	  }
 
@@ -33211,20 +33221,40 @@
 	        { className: 'index' },
 	        React.createElement(
 	          'h2',
-	          null,
-	          this.props.params.username + "'s Drawings"
+	          { className: 'index-header' },
+	          React.createElement(
+	            'span',
+	            {
+	              className: 'index-tab',
+	              id: 'selected-tab' },
+	            this.props.params.username + "'s Drawings"
+	          )
 	        ),
-	        drawingsList
+	        React.createElement(
+	          'div',
+	          { className: 'index-contents' },
+	          drawingsList
+	        )
 	      ),
 	      React.createElement(
 	        'div',
 	        { className: 'index' },
 	        React.createElement(
 	          'h2',
-	          null,
-	          this.props.params.username + "'s Stamps"
+	          { className: 'index-header' },
+	          React.createElement(
+	            'span',
+	            {
+	              className: 'index-tab',
+	              id: 'selected-tab' },
+	            this.props.params.username + "'s Stamps"
+	          )
 	        ),
-	        stampsList
+	        React.createElement(
+	          'div',
+	          { className: 'index-contents' },
+	          stampsList
+	        )
 	      )
 	    );
 	  }

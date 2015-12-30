@@ -34,8 +34,16 @@ var DrawingIndex = React.createClass({
     }
     return(
       <div className="index">
-        <h1>Newest Drawings</h1>
-        {drawingsList}
+        <h1 className="index-header">
+          <span
+            className="index-tab"
+            id="selected-tab">
+            Newest Drawings
+          </span>
+        </h1>
+          <div className="index-contents">
+            {drawingsList}
+          </div>
       </div>
     );
   }

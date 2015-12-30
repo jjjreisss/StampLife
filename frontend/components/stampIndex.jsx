@@ -67,7 +67,7 @@ var StampIndex = React.createClass({
   render: function() {
     var popularitySelected =
       this.state.selectedTab === "popularity" ? "selected-tab" : "";
-    var newestSelected = 
+    var newestSelected =
       this.state.selectedTab === "newest" ? "selected-tab" : "";
     var stampsList = "";
     if (this.state.stamps) {
@@ -87,13 +87,13 @@ var StampIndex = React.createClass({
       <div className="index">
         <h1 className="index-header">
           <span
-            className="most-popular"
+            className="index-tab"
             onClick={this.sortByPopularity}
             id={popularitySelected}>
             Most Popular Stamps
           </span>
           <span
-            className="newest"
+            className="index-tab"
             onClick={this.sortByNewest}
             id={newestSelected}>
             Newest Stamps

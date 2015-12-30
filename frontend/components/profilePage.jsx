@@ -61,12 +61,28 @@ var ProfilePage = React.createClass({
     return(
       <div>
         <div className="index">
-          <h2>{this.props.params.username + "'s Drawings"}</h2>
-          {drawingsList}
+          <h2 className="index-header">
+            <span
+              className="index-tab"
+              id="selected-tab">
+              {this.props.params.username + "'s Drawings"}
+            </span>
+          </h2>
+          <div className="index-contents">
+            {drawingsList}
+          </div>
         </div>
         <div className="index">
-          <h2>{this.props.params.username + "'s Stamps"}</h2>
-          {stampsList}
+          <h2 className="index-header">
+            <span
+              className="index-tab"
+              id="selected-tab">
+              {this.props.params.username + "'s Stamps"}
+            </span>
+          </h2>
+          <div className="index-contents">
+            {stampsList}
+          </div>
         </div>
       </div>
     );

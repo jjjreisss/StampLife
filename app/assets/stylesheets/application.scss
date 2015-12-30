@@ -72,7 +72,7 @@
  }
 
 .index {
-  overflow: auto;
+  overflow: hidden;
   margin: 3% 0% 10% 0%;
   text-align: center;
 }
@@ -408,34 +408,29 @@
   cursor: pointer;
 }
 
-.most-popular {
+.index-tab {
   position: relative;
-  left: -20%;
   cursor: pointer;
-
-}
-
-.newest {
-  position: relative;
-  right: -20%;
-  cursor: pointer;
-
+  margin: 20px;
+  padding: 0px 10px;
 }
 
 
 .index-header {
   position: relative;
   top: 8px;
+  text-align: center;
+  left: 20px;
 }
 
 .index-contents {
-  border: 1px solid black;
-  border-radius: 8px;
+  background: rgb(246, 246, 246);
+  border-radius: 28px;
 }
 
 #selected-tab {
-  border: 1px solid black;
-  border-radius: 8px;
+  background: rgb(246, 246, 246);
+  border-radius: 10px 10px 0px 0px;
 }
 
 .stamp-author {
