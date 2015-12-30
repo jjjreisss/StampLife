@@ -25210,12 +25210,28 @@
 	      }
 	    });
 	  },
+	  stampUserList: function () {
+	    return this.props.stamp.stamp_uses.map((function (use, i) {
+	      return React.createElement(
+	        'div',
+	        {
+	          key: i,
+	          onClick: this.goToUser },
+	        use
+	      );
+	    }).bind(this));
+	  },
+	  goToUser: function (e) {
+	    var username = e.target.innerHTML;
+	    this.history.push('users/' + username);
+	  },
 	  render: function () {
 	    var size = 250;
 	    var sizeString = "w_" + size + ",h_" + size + "/";
 	    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_250,h_250/" + this.props.imageUrl + ".png";
 	    var selectStampText = this.state.hover ? "select-stamp-icon" : "hidden";
 	    var stampUseCount = this.state.hover ? "stamp-use-count" : "hidden";
+	    var stampAuthor = this.state.hover ? "stamp-author" : "hidden";
 	    var stampUseList = this.state.usesClicked ? "stamp-use-list" : "hidden";
 	    return React.createElement(
 	      'div',
@@ -25236,13 +25252,7 @@
 	          'div',
 	          {
 	            className: stampUseList },
-	          this.props.stamp.stamp_uses.map(function (use, i) {
-	            return React.createElement(
-	              'div',
-	              { key: i },
-	              use
-	            );
-	          })
+	          this.stampUserList()
 	        )
 	      ),
 	      React.createElement('div', {
@@ -25256,7 +25266,9 @@
 	      ),
 	      React.createElement(
 	        'div',
-	        { className: 'stamp-author' },
+	        {
+	          className: stampAuthor,
+	          onClick: this.goToUser },
 	        this.props.stamp.author
 	      )
 	    );

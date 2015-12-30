@@ -39,12 +39,28 @@ var StampListItem = React.createClass({
       }
     });
   },
+  stampUserList: function() {
+    return this.props.stamp.stamp_uses.map(function(use, i) {
+      return (
+        <div
+          key={i}
+          onClick={this.goToUser}>
+          {use}
+        </div>
+      );
+    }.bind(this));
+  },
+  goToUser: function(e) {
+    var username = e.target.innerHTML;
+    this.history.push('users/' + username);
+  },
   render: function() {
     var size = 250;
     var sizeString = "w_"+size+",h_"+size+"/";
     var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_250,h_250/" + this.props.imageUrl + ".png";
     var selectStampText = (this.state.hover ? "select-stamp-icon" : "hidden");
     var stampUseCount = (this.state.hover ? "stamp-use-count" : "hidden");
+    var stampAuthor = (this.state.hover ? "stamp-author" : "hidden");
     var stampUseList = (this.state.usesClicked ? "stamp-use-list" : "hidden");
     return (
       <div
@@ -58,9 +74,7 @@ var StampListItem = React.createClass({
           Used {this.props.stamp.stamp_uses.length} Times
           <div
             className={stampUseList}>
-            {this.props.stamp.stamp_uses.map(function(use, i) {
-              return <div key={i}>{use}</div>;
-            })}
+            {this.stampUserList()}
           </div>
         </div>
         <div
@@ -71,7 +85,9 @@ var StampListItem = React.createClass({
           onClick={this.deleteStamp}>
           Delete
         </div>
-        <div className="stamp-author">
+        <div
+          className={stampAuthor}
+          onClick={this.goToUser}>
           {this.props.stamp.author}
         </div>
       </div>
