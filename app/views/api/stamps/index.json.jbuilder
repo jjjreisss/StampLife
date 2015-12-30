@@ -12,4 +12,6 @@ puts stamp_users
 
   json.stamp_uses stamp_users
 
+  json.created_at stamp.created_at
+
 end

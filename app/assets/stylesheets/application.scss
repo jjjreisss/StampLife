@@ -407,3 +407,37 @@
   border-radius: 5px;
   cursor: pointer;
 }
+
+.most-popular {
+  position: relative;
+  left: -20%;
+  cursor: pointer;
+
+}
+
+.newest {
+  position: relative;
+  right: -20%;
+  cursor: pointer;
+
+}
+
+
+.index-header {
+  position: relative;
+  top: 8px;
+}
+
+.index-contents {
+  border: 1px solid black;
+  border-radius: 8px;
+}
+
+#selected-tab {
+  border: 1px solid black;
+  border-radius: 8px;
+}
+
+.stamp-author {
+  overflow: auto;
+}

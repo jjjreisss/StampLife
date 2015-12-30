@@ -6,7 +6,18 @@ var StampStore = require('../stores/stampStore');
 var StampIndex = React.createClass({
   getInitialState: function() {
     return({
-      stamps: null
+      stamps: null,
+      comparator:
+        function(a, b) {
+          if (a.stamp_uses.length < b.stamp_uses.length) {
+            return 1;
+          } else if (a.stamp_uses.length === b.stamp_uses.length) {
+            return 0;
+          } else {
+            return -1;
+          }
+        },
+      selectedTab: "popularity"
     });
   },
   componentDidMount: function() {
@@ -20,33 +31,25 @@ var StampIndex = React.createClass({
     var allStamps = StampStore.all().reverse();
     this.setState({stamps: allStamps});
   },
-  // mergeSort: function(array, comparator) {
-  //   if (array.length < 2) {
-  //     return array;
-  //   }
-  //
-  //   var middle = Math.floor(array.length / 2);
-  //   var left = array.slice(0, middle);
-  //   var right = array.slice(middle);
-  //
-  //   return this.merge(
-  //     this.mergeSort(left, comparator), this.mergeSort(right, comparator), comparator
-  //   );
-  // },
-  // merge: function(left, right, comparator) {
-  //   var result = [];
-  //   var i = 0;
-  //   var j = 0;
-  //
-  //   while (i < left.length && j < right.length) {
-  //     if (comparator(left[i], right[j]) === -1)
-  //   }
-  // },
-
-  render: function() {
-    var stampsList = "";
-    if (this.state.stamps) {
-      var sortedStamps = this.state.stamps.sort(function(a, b) {
+  sortByNewest: function() {
+    var comparator =
+      function(a, b) {
+        if (a.created_at < b.created_at) {
+          return 1;
+        } else if (a.created_at === b.created_at) {
+          return 0;
+        } else {
+          return -1;
+        }
+      };
+    this.setState({
+      comparator: comparator,
+      selectedTab: "newest"
+    });
+  },
+  sortByPopularity: function(e) {
+    var comparator =
+      function(a, b) {
         if (a.stamp_uses.length < b.stamp_uses.length) {
           return 1;
         } else if (a.stamp_uses.length === b.stamp_uses.length) {
@@ -54,7 +57,21 @@ var StampIndex = React.createClass({
         } else {
           return -1;
         }
-      });
+      };
+    this.setState({
+      comparator: comparator,
+      selectedTab: "popularity"
+    });
+  },
+
+  render: function() {
+    var popularitySelected =
+      this.state.selectedTab === "popularity" ? "selected-tab" : "";
+    var newestSelected = 
+      this.state.selectedTab === "newest" ? "selected-tab" : "";
+    var stampsList = "";
+    if (this.state.stamps) {
+      var sortedStamps = this.state.stamps.sort(this.state.comparator);
       stampsList = sortedStamps.map(function(stamp, idx){
         return (
           <StampListItem
@@ -68,8 +85,23 @@ var StampIndex = React.createClass({
     }
     return(
       <div className="index">
-        <h1>Most Popular Stamps</h1>
-        {stampsList}
+        <h1 className="index-header">
+          <span
+            className="most-popular"
+            onClick={this.sortByPopularity}
+            id={popularitySelected}>
+            Most Popular Stamps
+          </span>
+          <span
+            className="newest"
+            onClick={this.sortByNewest}
+            id={newestSelected}>
+            Newest Stamps
+          </span>
+        </h1>
+        <div className="index-contents">
+          {stampsList}
+        </div>
       </div>
     );
   }

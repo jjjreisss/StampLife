@@ -62,6 +62,10 @@ var StampListItem = React.createClass({
     var stampUseCount = (this.state.hover ? "stamp-use-count" : "hidden");
     var stampAuthor = (this.state.hover ? "stamp-author" : "hidden");
     var stampUseList = (this.state.usesClicked ? "stamp-use-list" : "hidden");
+    var timeAgo = this.props.stamp.time_ago;
+    if (timeAgo.slice(0,5) === "about") {
+      timeAgo = timeAgo.slice(6);
+    }
     return (
       <div
         className="index-element"
@@ -89,6 +93,8 @@ var StampListItem = React.createClass({
           className={stampAuthor}
           onClick={this.goToUser}>
           {this.props.stamp.author}
+          <br/>
+          {timeAgo} ago
         </div>
       </div>
     );
