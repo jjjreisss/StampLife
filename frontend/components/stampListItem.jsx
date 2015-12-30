@@ -23,7 +23,7 @@ var StampListItem = React.createClass({
     this.setState({hover: false});
   },
   toggleList: function(e) {
-    e.preventDefault();
+    e.stopPropagation();
     this.setState({usesClicked: !this.state.usesClicked});
   },
   deleteStamp: function() {
@@ -66,7 +66,8 @@ var StampListItem = React.createClass({
       <div
         className="index-element"
         onMouseEnter={this.displayText}
-        onMouseLeave={this.hideText}>
+        onMouseLeave={this.hideText}
+        onClick={this.setStamp}>
         <img src={url}/>
         <div
           className={stampUseCount}
@@ -78,8 +79,7 @@ var StampListItem = React.createClass({
           </div>
         </div>
         <div
-          className={selectStampText}
-          onClick={this.setStamp}>
+          className={selectStampText}>
         </div>
         <div className="delete"
           onClick={this.deleteStamp}>

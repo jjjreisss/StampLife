@@ -25194,7 +25194,7 @@
 	    this.setState({ hover: false });
 	  },
 	  toggleList: function (e) {
-	    e.preventDefault();
+	    e.stopPropagation();
 	    this.setState({ usesClicked: !this.state.usesClicked });
 	  },
 	  deleteStamp: function () {
@@ -25238,7 +25238,8 @@
 	      {
 	        className: 'index-element',
 	        onMouseEnter: this.displayText,
-	        onMouseLeave: this.hideText },
+	        onMouseLeave: this.hideText,
+	        onClick: this.setStamp },
 	      React.createElement('img', { src: url }),
 	      React.createElement(
 	        'div',
@@ -25256,8 +25257,7 @@
 	        )
 	      ),
 	      React.createElement('div', {
-	        className: selectStampText,
-	        onClick: this.setStamp }),
+	        className: selectStampText }),
 	      React.createElement(
 	        'div',
 	        { className: 'delete',
