@@ -32134,7 +32134,8 @@
 
 	  getInitialState: function () {
 	    return {
-	      hover: false
+	      hover: false,
+	      likesClicked: false
 	    };
 	  },
 	  goToShow: function () {
@@ -32173,11 +32174,16 @@
 	      ApiUtil.unlikeDrawing(this.props.drawing.current_like_id);
 	    }
 	  },
+	  toggleList: function (e) {
+	    e.stopPropagation();
+	    this.setState({ likesClicked: !this.state.likesClicked });
+	  },
 	  render: function () {
 	    var drawingAuthor = this.state.hover ? "drawing-author" : "hidden";
 	    var drawingLikesCount = this.state.hover ? "drawing-likes-count" : "hidden";
 	    var likeDrawingClass = this.state.hover ? "like-drawing-class" : "hidden";
 	    var likeText = this.props.drawing.liked_by_current_user ? "Unlike" : "Like";
+	    var drawingLikeList = this.state.likesClicked ? "drawing-like-list" : "hidden";
 	    var timeAgo = this.props.drawing.time_ago;
 	    if (timeAgo.slice(0, 5) === "about") {
 	      timeAgo = timeAgo.slice(6);
@@ -32205,7 +32211,14 @@
 	        React.createElement(
 	          'div',
 	          {
-	            className: drawingLikesCount },
+	            className: drawingLikesCount,
+	            onClick: this.toggleList },
+	          React.createElement(
+	            'div',
+	            {
+	              className: drawingLikeList },
+	            this.props.drawing.likes
+	          ),
 	          this.props.drawing.likes.length,
 	          ' Likes'
 	        ),
