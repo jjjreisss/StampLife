@@ -32001,7 +32001,17 @@
 
 	  getInitialState: function () {
 	    return {
-	      drawings: null
+	      drawings: null,
+	      selectedTab: "popularity",
+	      comparator: function (a, b) {
+	        if (a.likes.length < b.likes.length) {
+	          return 1;
+	        } else if (a.likes.length === b.likes.length) {
+	          return 0;
+	        } else {
+	          return -1;
+	        }
+	      }
 	    };
 	  },
 	  componentDidMount: function () {
@@ -32014,11 +32024,45 @@
 	  _onChange: function () {
 	    this.setState({ drawings: DrawingStore.all().reverse() });
 	  },
+	  sortByNewest: function () {
+	    var comparator = function (a, b) {
+	      if (a.created_at < b.created_at) {
+	        return 1;
+	      } else if (a.created_at === b.created_at) {
+	        return 0;
+	      } else {
+	        return -1;
+	      }
+	    };
+	    this.setState({
+	      comparator: comparator,
+	      selectedTab: "newest"
+	    });
+	  },
+	  sortByPopularity: function (e) {
+	    var comparator = function (a, b) {
+	      if (a.likes.length < b.likes.length) {
+	        return 1;
+	      } else if (a.likes.length === b.likes.length) {
+	        return 0;
+	      } else {
+	        return -1;
+	      }
+	    };
+	    this.setState({
+	      comparator: comparator,
+	      selectedTab: "popularity"
+	    });
+	  },
 
 	  render: function () {
+	    var popularitySelected = this.state.selectedTab === "popularity" ? "selected-tab" : "";
+	    var newestSelected = this.state.selectedTab === "newest" ? "selected-tab" : "";
+
 	    var drawingsList = "";
 	    if (this.state.drawings) {
-	      drawingsList = this.state.drawings.map(function (drawing, idx) {
+	      var sortedDrawings = this.state.drawings.sort(this.state.comparator);
+	      drawingsList = sortedDrawings.map(function (drawing, idx) {
 	        return React.createElement(DrawingListItem, {
 	          key: idx,
 	          drawingId: drawing.id,
@@ -32036,7 +32080,16 @@
 	          'span',
 	          {
 	            className: 'index-tab',
-	            id: 'selected-tab' },
+	            onClick: this.sortByPopularity,
+	            id: popularitySelected },
+	          'Most Popular Drawings'
+	        ),
+	        React.createElement(
+	          'span',
+	          {
+	            className: 'index-tab',
+	            onClick: this.sortByNewest,
+	            id: newestSelected },
 	          'Newest Drawings'
 	        )
 	      ),
