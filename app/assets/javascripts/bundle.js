@@ -32178,6 +32178,15 @@
 	    e.stopPropagation();
 	    this.setState({ likesClicked: !this.state.likesClicked });
 	  },
+	  drawingLikeList: function () {
+	    return this.props.drawing.likes.map(function (like, i) {
+	      return React.createElement(
+	        'div',
+	        { key: i },
+	        'like'
+	      );
+	    });
+	  },
 	  render: function () {
 	    var drawingAuthor = this.state.hover ? "drawing-author" : "hidden";
 	    var drawingLikesCount = this.state.hover ? "drawing-likes-count" : "hidden";
@@ -32187,6 +32196,9 @@
 	    var timeAgo = this.props.drawing.time_ago;
 	    if (timeAgo.slice(0, 5) === "about") {
 	      timeAgo = timeAgo.slice(6);
+	    }
+	    if (timeAgo.slice(0, 4) === "less") {
+	      timeAgo = timeAgo.slice(10);
 	    }
 	    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_500,h_500/" + this.props.imageUrl + ".png";
 	    return React.createElement(
@@ -32217,7 +32229,7 @@
 	            'div',
 	            {
 	              className: drawingLikeList },
-	            this.props.drawing.likes
+	            this.props.drawing.likes.map()
 	          ),
 	          this.props.drawing.likes.length,
 	          ' Likes'

@@ -53,7 +53,7 @@ var DrawingListItem = React.createClass({
   },
   drawingLikeList: function() {
     return this.props.drawing.likes.map(function(like, i) {
-      return <div key={i}>like</div>;
+      return <div key={i}>{like}</div>;
     });
   },
   render: function() {
