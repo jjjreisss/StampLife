@@ -89,7 +89,7 @@ var DrawingListItem = React.createClass({
             onClick={this.toggleList}>
             <div
               className={drawingLikeList}>
-              {this.props.drawing.likes.map()}
+              {this.drawingLikeList()}
             </div>
             {this.props.drawing.likes.length} Likes
           </div>

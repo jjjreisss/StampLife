@@ -32183,7 +32183,7 @@
 	      return React.createElement(
 	        'div',
 	        { key: i },
-	        'like'
+	        like
 	      );
 	    });
 	  },
@@ -32229,7 +32229,7 @@
 	            'div',
 	            {
 	              className: drawingLikeList },
-	            this.props.drawing.likes.map()
+	            this.drawingLikeList()
 	          ),
 	          this.props.drawing.likes.length,
 	          ' Likes'
