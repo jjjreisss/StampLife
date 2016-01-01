@@ -15,13 +15,10 @@ class Api::LikesController < ApplicationController
   end
 
   def destroy
-    drawing_id = params[:drawing_id]
-    user_id = current_user.id
+    like = Like.find(params[:id])
 
-    like = Like.where(user_id: user_id, drawing_id: drawing_id)
+    like.destroy
 
-    if (like)
-      like.destroy
-    end
+    render json: {}
   end
 end

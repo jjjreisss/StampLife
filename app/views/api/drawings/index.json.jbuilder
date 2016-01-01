@@ -15,4 +15,11 @@ json.array! @drawings do |drawing|
 
   json.liked_by_current_user likes.include?(current_user.username)
 
+  current_like = Like.find_by(user_id: current_user.id)
+
+  if current_like
+    json.current_like_id current_like.id
+  end
+
+
 end

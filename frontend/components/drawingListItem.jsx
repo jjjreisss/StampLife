@@ -39,11 +39,11 @@ var DrawingListItem = React.createClass({
   },
   toggleLike: function(e) {
     e.stopPropagation();
-    if (!this.state.liked){
+    if (!this.props.drawing.liked_by_current_user){
       ApiUtil.likeDrawing(this.props.drawing.id);
     }
-    if (this.state.liked) {
-      ApiUtil.unlikeDrawing(this.props.drawing.id);
+    if (this.props.drawing.liked_by_current_user) {
+      ApiUtil.unlikeDrawing(this.props.drawing.current_like_id);
     }
   },
   render: function() {

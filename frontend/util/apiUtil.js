@@ -149,11 +149,10 @@ var ApiUtil = {
     });
   },
 
-  unlikeDrawing: function(drawingId) {
+  unlikeDrawing: function(likeId) {
     $.ajax({
-      url: "api/likes/",
+      url: "api/likes/" + likeId,
       method: "DELETE",
-      data: {drawing_id: drawingId},
       success: function() {
         ApiUtil.fetchAllDrawings();
       },
