@@ -49,7 +49,12 @@ var DrawingListItem = React.createClass({
   },
   toggleList: function(e) {
     e.stopPropagation();
-    this.setState({likesClicked: !this.state.likesClicked})
+    this.setState({likesClicked: !this.state.likesClicked});
+  },
+  drawingLikeList: function() {
+    return this.props.drawing.likes.map(function(like, i) {
+      return <div key={i}>like</div>;
+    });
   },
   render: function() {
     var drawingAuthor = (this.state.hover ? "drawing-author" : "hidden");
@@ -60,6 +65,9 @@ var DrawingListItem = React.createClass({
     var timeAgo = this.props.drawing.time_ago;
     if (timeAgo.slice(0,5) === "about") {
       timeAgo = timeAgo.slice(6);
+    }
+    if (timeAgo.slice(0,4) === "less") {
+      timeAgo = timeAgo.slice(10);
     }
     var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_500,h_500/" + this.props.imageUrl + ".png";
     return (
@@ -81,7 +89,7 @@ var DrawingListItem = React.createClass({
             onClick={this.toggleList}>
             <div
               className={drawingLikeList}>
-              {this.props.drawing.likes}
+              {this.props.drawing.likes.map()}
             </div>
             {this.props.drawing.likes.length} Likes
           </div>
