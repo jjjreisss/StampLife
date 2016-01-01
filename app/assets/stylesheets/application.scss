@@ -40,7 +40,7 @@
 
  .intro {
     background: #f3ede2;
-    margin: 25% 35%;
+    margin: 25vh 35vw;
     border-radius: 5px;
     min-width: 300px;
     width: 30%
@@ -501,4 +501,9 @@
   border-radius: 5px;
   cursor: pointer;
   overflow: auto;
+}
+
+.new-user-link {
+  margin: -10px;
+  padding:10px 20px;
 }
