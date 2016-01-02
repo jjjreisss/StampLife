@@ -8,6 +8,15 @@
       class="sign-in">
       <%= auth_token_input %>
 
+      <% if flash.now[:errors] %>
+        <label class="errors">
+          <% flash.now[:errors].each do |error| %>
+            <%= error %>
+          <% end %>
+        </label>
+        <br/>
+      <% end %>
+
       <label class="sign-in-label">
         Username
         <input type="text" name="user[username]" value="">
@@ -17,6 +26,7 @@
         Password
         <input type="password" name="user[password]" value="">
       </label>
+
 
       <input class="sign-in-submit" type="submit" value="Sign Up">
     </form>

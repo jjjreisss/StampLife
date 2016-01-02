@@ -264,6 +264,25 @@ var CanvasTest = React.createClass({
 
         <div id="drawing">
           <div id="main-square">
+            <span className="left-side">
+              <canvas
+                id="size-picker"
+                width="80"
+                height="420"
+                onClick={this.pickSize}
+                onMouseDown={this.onSizePicking}
+                onMouseUp={this.offSizePicking}
+                onMouseMove={this.pickSize}
+                onMouseOut={this.offSizePicking}>
+
+              </canvas>
+              <canvas
+                id="stroke-sample"
+                width="80"
+                height="80">
+
+              </canvas>
+            </span>
             <canvas
               id="drawing-canvas"
               onMouseDown={this.mouseDownHandler}
@@ -284,23 +303,7 @@ var CanvasTest = React.createClass({
               onMouseOut={this.outColorPicker}>
 
             </canvas>
-            <canvas
-              id="size-picker"
-              width="500"
-              height="80"
-              onClick={this.pickSize}
-              onMouseDown={this.onSizePicking}
-              onMouseUp={this.offSizePicking}
-              onMouseMove={this.pickSize}
-              onMouseOut={this.offSizePicking}>
 
-            </canvas>
-            <canvas
-              id="stroke-sample"
-              width="80"
-              height="80">
-
-            </canvas>
           </div>
           <div
             id="color-bar">

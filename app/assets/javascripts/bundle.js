@@ -24492,7 +24492,7 @@
 	              React.createElement(
 	                'div',
 	                { className: 'ghost' },
-	                'Click Here'
+	                'Menu'
 	              ),
 	              ' ',
 	              React.createElement('span', { className: 'caret' })
@@ -32584,6 +32584,23 @@
 	            React.createElement(
 	              'div',
 	              { id: 'main-square' },
+	              React.createElement(
+	                'span',
+	                { className: 'left-side' },
+	                React.createElement('canvas', {
+	                  id: 'size-picker',
+	                  width: '80',
+	                  height: '420',
+	                  onClick: this.pickSize,
+	                  onMouseDown: this.onSizePicking,
+	                  onMouseUp: this.offSizePicking,
+	                  onMouseMove: this.pickSize,
+	                  onMouseOut: this.offSizePicking }),
+	                React.createElement('canvas', {
+	                  id: 'stroke-sample',
+	                  width: '80',
+	                  height: '80' })
+	              ),
 	              React.createElement('canvas', {
 	                id: 'drawing-canvas',
 	                onMouseDown: this.mouseDownHandler,
@@ -32599,20 +32616,7 @@
 	                onMouseDown: this.downColorPicker,
 	                onMouseUp: this.upColorPicker,
 	                onMouseMove: this.moveColorPicker,
-	                onMouseOut: this.outColorPicker }),
-	              React.createElement('canvas', {
-	                id: 'size-picker',
-	                width: '500',
-	                height: '80',
-	                onClick: this.pickSize,
-	                onMouseDown: this.onSizePicking,
-	                onMouseUp: this.offSizePicking,
-	                onMouseMove: this.pickSize,
-	                onMouseOut: this.offSizePicking }),
-	              React.createElement('canvas', {
-	                id: 'stroke-sample',
-	                width: '80',
-	                height: '80' })
+	                onMouseOut: this.outColorPicker })
 	            ),
 	            React.createElement(
 	              'div',
@@ -32962,15 +32966,16 @@
 	  this.sizePickerCanvas = document.getElementById(id);
 	  this.sizePickerContext = this.sizePickerCanvas.getContext('2d');
 	  var pickerImg = new Image();
-	  pickerImg.src = './triangle.png';
+	  pickerImg.src = './triangle-v2.png';
 	  pickerImg.onload = (function () {
 	    this.sizePickerContext.drawImage(pickerImg, 0, 0);
 	  }).bind(this);
 	};
 
 	SizePicker.prototype.pickSize = function (e) {
-	  var x = e.clientX - this.sizePickerCanvas.getBoundingClientRect().left;
-	  return (x - 35) * 52 / 423;
+	  var y = e.clientY - this.sizePickerCanvas.getBoundingClientRect().top;
+	  var size = (390 - y) * 52 / 355;
+	  return Math.max(0.1, size);
 	};
 
 	module.exports = SizePicker;
@@ -33717,6 +33722,23 @@
 	          React.createElement(
 	            'div',
 	            { id: 'main-square' },
+	            React.createElement(
+	              'span',
+	              { className: 'left-side' },
+	              React.createElement('canvas', {
+	                id: 'size-picker',
+	                width: '80',
+	                height: '420',
+	                onClick: this.pickSize,
+	                onMouseDown: this.onSizePicking,
+	                onMouseUp: this.offSizePicking,
+	                onMouseMove: this.pickSize,
+	                onMouseOut: this.offSizePicking }),
+	              React.createElement('canvas', {
+	                id: 'stroke-sample',
+	                width: '80',
+	                height: '80' })
+	            ),
 	            React.createElement('canvas', {
 	              id: 'drawing-canvas',
 	              onMouseDown: this.mouseDownHandler,
@@ -33732,20 +33754,7 @@
 	              onMouseDown: this.downColorPicker,
 	              onMouseUp: this.upColorPicker,
 	              onMouseMove: this.moveColorPicker,
-	              onMouseOut: this.outColorPicker }),
-	            React.createElement('canvas', {
-	              id: 'size-picker',
-	              width: '500',
-	              height: '80',
-	              onClick: this.pickSize,
-	              onMouseDown: this.onSizePicking,
-	              onMouseUp: this.offSizePicking,
-	              onMouseMove: this.pickSize,
-	              onMouseOut: this.offSizePicking }),
-	            React.createElement('canvas', {
-	              id: 'stroke-sample',
-	              width: '80',
-	              height: '80' })
+	              onMouseOut: this.outColorPicker })
 	          ),
 	          React.createElement(
 	            'div',

@@ -122,15 +122,13 @@
 
  #size-picker {
    background: white;
-   position: relative;
-   top: -5px;
+   position: absolute;
    outline: 1px solid black;
  }
 
  #stroke-sample {
    background: white;
    position: relative;
-   top: -5px;
    outline: 1px solid black;
  }
 
@@ -141,16 +139,16 @@
 
  .color-square {
    background: white;
-   width: 58px;
-   height: 58px;
+   width: 50px;
+   height: 50px;
    outline: 1px solid black;
    float: left
  }
 
  #color-bar {
    top: -7px;
-   width: 58px;
-   height: 580px;
+   width: 50px;
+   height: 500px;
  }
 
  #drawing-page {
@@ -161,7 +159,7 @@
  }
 
  #drawing{
-   width: 638px;
+   width: 718px;
    height: 650px;
    position: relative;
    margin: auto;
@@ -194,7 +192,7 @@
  }
 
  #main-square {
-   width: 580px;
+   width: 660px;
  }
 
  .stamp-canvas {
@@ -315,7 +313,7 @@
    position: relative;
    top: 3px;
    left: -5px;
-   color: darkgrey;
+   color: black;
  }
 
 
@@ -328,6 +326,29 @@
 
  .navbar-nav > li > a {
    line-height: 0;
+   background: white;
+   left: 30px;
+ }
+
+ .navbar-inverse .navbar-nav > li > a {
+   background: white;
+   border: 1px solid black;
+ }
+
+ .navbar-inverse .navbar-nav > li > a:hover {
+   background: white;
+ }
+
+ .navbar-inverse .navbar-nav > li > a:focus {
+   background: white;
+ }
+
+ .navbar-inverse .navbar-nav > .open > a {
+   background: white;
+ }
+
+ .navbar-nav > li > .dropdown-menu{
+   left: 30px;
  }
 
  .navbar-inverse {
@@ -340,7 +361,7 @@
  }
 
  .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:hover, .navbar-inverse .navbar-nav > .open > a:focus {
-    background-color: rgba(1,1,1,0);
+    background: white;
   }
 
 #page-content {
@@ -412,9 +433,12 @@
   position: relative;
   cursor: pointer;
   margin: 20px;
-  padding: 0px 10px;
+  padding: 0px 20px;
 }
 
+.index-tab:hover {
+  color: #2C7A81
+}
 
 .index-header {
   position: relative;
@@ -424,16 +448,18 @@
 }
 
 .index-contents {
-  background: rgb(246, 246, 246);
+  background: #eee;
   border-radius: 28px;
 }
 
 #selected-tab {
-  background: rgb(246, 246, 246);
+  background: #eee;
   border-radius: 10px 10px 0px 0px;
 }
 
-
+#selected-tab:hover {
+  color: black;
+}
 
 .my-stamp-index-element {
     display: inline-block;
