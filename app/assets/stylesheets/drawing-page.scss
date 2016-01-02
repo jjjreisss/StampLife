@@ -1,0 +1,104 @@
+
+ #drawing-canvas{
+   background: white;
+   outline: 1px solid black;
+ }
+
+ #color-picker {
+   background: white;
+   outline: 1px solid black;
+ }
+
+ #size-picker {
+   background: white;
+   position: absolute;
+   outline: 1px solid black;
+ }
+
+ #stroke-sample {
+   background: white;
+   position: relative;
+   outline: 1px solid black;
+ }
+
+ #stamp-canvas {
+   background: white;
+ }
+
+
+ .color-square {
+   background: white;
+   width: 50px;
+   height: 50px;
+   outline: 1px solid black;
+   float: left
+ }
+
+ #color-bar {
+   top: -7px;
+   width: 50px;
+   height: 500px;
+ }
+
+ #drawing-page {
+   height: 650px;
+   position: relative;
+   text-align: center;
+   display: inline-block;
+ }
+
+ #drawing{
+   width: 718px;
+   height: 650px;
+   position: relative;
+   margin: auto;
+   display: inline-flex;
+ }
+
+ #entire-drawing-page {
+   text-align: center;
+   margin-top: 5%
+ }
+
+ #entire-drawing-page button{
+   height: 100px;
+   width: 100px;
+   margin-bottom: 50px;
+ }
+
+ .drawing-buttons {
+   width: 100px;
+   display: inline-block;
+   position: relative;
+   top: -200px;
+   margin: 20px;
+ }
+
+ #left-buttons {
+ }
+
+ #right-buttons {
+ }
+
+ #main-square {
+   width: 660px;
+ }
+
+ .stamp-canvas {
+   display: none;
+   width: 150px;
+   height: 150px;
+   position: absolute;
+   bottom: 0;
+   right: 0;
+ }
+
+
+  .drawing-toolbar {
+    width: 580px;
+    height: 150px;
+  }
+
+  .drawing-toolbar * {
+    margin: 2px;
+  }

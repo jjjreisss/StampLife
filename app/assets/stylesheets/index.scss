@@ -1,0 +1,53 @@
+
+.index {
+  overflow: hidden;
+  margin: 3% 0% 10% 0%;
+  text-align: center;
+}
+
+ .index-element{
+   background: white;
+   position: relative;
+   margin: 20px 30px;
+   border: 2px solid black;
+   display: inline-block;
+   border-radius: 7px;
+   overflow: hidden;
+ }
+
+ .index-element:hover {
+   box-shadow: 0 0 10px 0;
+ }
+
+
+ .index-tab {
+   position: relative;
+   cursor: pointer;
+   margin: 20px;
+   padding: 0px 20px;
+ }
+
+ .index-tab:hover {
+   color: #2C7A81
+ }
+
+ .index-header {
+   position: relative;
+   top: 8px;
+   text-align: center;
+   left: 20px;
+ }
+
+ .index-contents {
+   background: #eee;
+   border-radius: 28px;
+ }
+
+ #selected-tab {
+   background: #eee;
+   border-radius: 10px 10px 0px 0px;
+ }
+
+ #selected-tab:hover {
+   color: black;
+ }

@@ -12,11 +12,12 @@ var StampDetail = require('./components/stampDetail');
 var NewStamp = require('./components/newStamp');
 var Home = require('./components/home');
 var IndexRoute = require('react-router').IndexRoute;
+var Shepherd = require('tether-shepherd');
 
 
 var routes = (
   <Route path="/" component={App}>
-    <IndexRoute component={DrawingIndex}/>
+    <IndexRoute component={NewStamp}/>
     <Route path="/new" component={CanvasTest}/>
     <Route path="/stamps" component={StampIndex}/>
     <Route path="/drawings" component={DrawingIndex}/>

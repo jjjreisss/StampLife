@@ -1,0 +1,86 @@
+.stamp-sidebar {
+  height: 110px;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  outline: solid black 1px;
+ background: url('../../haring-bwr.jpg');
+ background-position: 200px;
+ background-size: 100%;
+}
+
+.my-stamp-index {
+  width: 0px;
+  min-width: 580px;
+  margin: auto;
+  overflow: auto;
+}
+
+.my-stamp-index-element {
+  float: left;
+  background: white;
+  position: relative;
+  margin: 5px;
+  margin-bottom: 3px;
+  border: 2px solid black;
+  box-shadow: 0 0 4px 1px;
+  bottom: 2px;
+  border-radius: 5px;
+}
+
+#selected {
+  box-shadow: 0 0 8px 4px #FBDF18;
+}
+
+
+ .my-stamp-index-footer {
+   position: absolute;
+   font-size: 12px;
+   width: 92px;
+   bottom: 0px;
+   margin: 15px;
+   margin-left: 9px;
+   display: none;
+ }
+
+ .my-stamp-index-footer button {
+   width: 92px;
+   margin-top: 5px;
+   margin: auto;
+   margin-top: 5px;
+ }
+
+
+.delete-my-stamp-icon {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  font-size: 10px;
+  width: 16px;
+  height: 16px;
+  background: white;
+  background-image: url('../close12.png');
+}
+
+.delete-my-stamp-icon:hover {
+  background-image: url('../cancel24.png');
+}
+
+
+.my-stamp-index-element {
+    display: inline-block;
+    vertical-align: middle;
+    transform: translateZ(0);
+    // box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+    backface-visibility: hidden;
+    -moz-osx-font-smoothing: grayscale;
+    transition-duration: 0.3s;
+    transition-property: transform;
+}
+
+.my-stamp-index-element:hover,
+.my-stamp-index-element:focus,
+.my-stamp-index-element:active {
+    transform: scale(.97);
+}

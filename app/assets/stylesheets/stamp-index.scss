@@ -1,0 +1,50 @@
+.stamp-use-count {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  background: rgba(0,0,0,0);
+  font-weight: 700;
+  font-size: 16px;
+  width: 50%;
+  background: white;
+  border: 2px solid black;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+
+.stamp-author {
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  background: rgba(0,0,0,0);
+  font-weight: 700;
+  font-size: 16px;
+  width: 50%;
+  background: white;
+  border: 2px solid black;
+  border-radius: 5px;
+  cursor: pointer;
+  overflow: auto;
+}
+
+
+ .select-stamp-icon {
+   position: absolute;
+   bottom: 3px;
+   right: 3px;
+   width: 24px;
+   height: 24px;
+   background: white;
+   background-image: url('../plussign5.png');
+ }
+
+ .select-stamp-icon:hover {
+   background-image: url('../add198.png');
+ }
+
+
+  .stamp-index-element{
+    width: 110px;
+    height: 115px;
+  }
