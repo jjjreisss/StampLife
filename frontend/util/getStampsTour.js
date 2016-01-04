@@ -25,7 +25,7 @@ getStampsTour.addStep('sort-stamps', {
     }
   ],
   classes: 'shepherd-theme-arrows',
-  attachTo: '.index-header'
+  attachTo: '.dropdown-toggle bottom'
 });
 
 getStampsTour.addStep('stamp-detail', {
@@ -61,7 +61,7 @@ getStampsTour.addStep('sort-stamps', {
   ],
   advanceOn: '.new-drawing click',
   classes: 'shepherd-theme-arrows',
-  attachTo: '.index-header'
+  attachTo: '.dropdown-toggle bottom'
 });
 
 module.exports = getStampsTour;

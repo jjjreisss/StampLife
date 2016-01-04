@@ -154,7 +154,7 @@ makeStampTour.addStep('get-stamps', {
   ],
   advanceOn: '.get-stamps click',
   classes: 'shepherd-theme-arrows',
-  attachTo: '.ghost bottom'
+  attachTo: '.dropdown-toggle bottom'
 });
 
 

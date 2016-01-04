@@ -58,7 +58,16 @@ var CanvasTest = React.createClass({
 
     this.token = StampStore.addListener(this.selectStamp);
 
-    makeDrawingTour.start();
+    $.ajax({
+      url: 'users/1',
+      method: 'GET',
+      success: function(user) {
+        if (user.tour_three_completed === false) {
+          makeDrawingTour.start();
+          ApiUtil.completeTourThree();
+        }
+      }.bind(this),
+    });
   },
   componentWillUnmount: function() {
     this.token.remove();

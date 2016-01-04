@@ -48,7 +48,17 @@ var CanvasTest = React.createClass({
     this.colorPicking = false;
     this.sizePicking = false;
 
-    makeStampTour.start();
+    $.ajax({
+      url: 'users/1',
+      method: 'GET',
+      success: function(user) {
+        if (user.tour_one_completed === false) {
+          makeStampTour.start();
+          ApiUtil.completeTourOne();
+        }
+      }.bind(this),
+    });
+
   },
 
   colorBar: function() {

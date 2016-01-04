@@ -25,7 +25,16 @@ var DrawingIndex = React.createClass({
     this.listener = DrawingStore.addListener(this._onChange);
     ApiUtil.fetchAllDrawings();
 
-    drawingIndexTour.start();
+    $.ajax({
+      url: 'users/1',
+      method: 'GET',
+      success: function(user) {
+        if (user.tour_four_completed === false) {
+          drawingIndexTour.start();
+          ApiUtil.completeTourFour();
+        }
+      }.bind(this),
+    });
   },
   componentWillUnmount: function() {
     this.listener.remove();

@@ -77,7 +77,7 @@ makeDrawingTour.addStep('save-drawing', {
   ],
   advanceOn: '.all-drawings click',
   classes: 'shepherd-theme-arrows',
-  attachTo: '.ghost bottom'
+  attachTo: '.dropdown-toggle bottom'
 });
 
 

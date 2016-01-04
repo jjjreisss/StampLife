@@ -49,12 +49,15 @@ ActiveRecord::Schema.define(version: 20160104031756) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string   "username",                        null: false
-    t.string   "password_digest",                 null: false
-    t.string   "session_token",                   null: false
+    t.string   "username",                             null: false
+    t.string   "password_digest",                      null: false
+    t.string   "session_token",                        null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "tour_completed",  default: false, null: false
+    t.boolean  "tour_one_completed",   default: false, null: false
+    t.boolean  "tour_two_completed",   default: false, null: false
+    t.boolean  "tour_three_completed", default: false, null: false
+    t.boolean  "tour_four_completed",  default: false, null: false
   end
 
 end

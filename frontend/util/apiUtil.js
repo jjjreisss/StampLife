@@ -159,6 +159,50 @@ var ApiUtil = {
     });
   },
 
+  completeTourOne: function() {
+    $.ajax({
+      url: "users/1",
+      method: "PATCH",
+      data: {user: {tour_one_completed: true}},
+      success: function() {
+
+      }
+    });
+  },
+
+  completeTourTwo: function() {
+    $.ajax({
+      url: "users/1",
+      method: "PATCH",
+      data: {user: {tour_two_completed: true}},
+      success: function() {
+
+      }
+    });
+  },
+
+  completeTourThree: function() {
+    $.ajax({
+      url: "users/1",
+      method: "PATCH",
+      data: {user: {tour_three_completed: true}},
+      success: function() {
+
+      }
+    });
+  },
+
+  completeTourFour: function() {
+    $.ajax({
+      url: "users/1",
+      method: "PATCH",
+      data: {user: {tour_four_completed: true}},
+      success: function() {
+
+      }
+    });
+  },
+
 };
 
 module.exports = ApiUtil;

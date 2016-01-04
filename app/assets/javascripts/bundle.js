@@ -24287,7 +24287,16 @@
 	    this.listener = StampStore.addListener(this._onChange);
 	    ApiUtil.fetchAllStamps();
 
-	    getStampsTour.start();
+	    $.ajax({
+	      url: 'users/1',
+	      method: 'GET',
+	      success: (function (user) {
+	        if (user.tour_two_completed === false) {
+	          getStampsTour.start();
+	          ApiUtil.completeTourTwo();
+	        }
+	      }).bind(this)
+	    });
 	  },
 	  componentWillUnmount: function () {
 	    this.listener.remove();
@@ -24535,6 +24544,42 @@
 	      success: function () {
 	        ApiUtil.fetchAllDrawings();
 	      }
+	    });
+	  },
+
+	  completeTourOne: function () {
+	    $.ajax({
+	      url: "users/1",
+	      method: "PATCH",
+	      data: { user: { tour_one_completed: true } },
+	      success: function () {}
+	    });
+	  },
+
+	  completeTourTwo: function () {
+	    $.ajax({
+	      url: "users/1",
+	      method: "PATCH",
+	      data: { user: { tour_two_completed: true } },
+	      success: function () {}
+	    });
+	  },
+
+	  completeTourThree: function () {
+	    $.ajax({
+	      url: "users/1",
+	      method: "PATCH",
+	      data: { user: { tour_three_completed: true } },
+	      success: function () {}
+	    });
+	  },
+
+	  completeTourFour: function () {
+	    $.ajax({
+	      url: "users/1",
+	      method: "PATCH",
+	      data: { user: { tour_four_completed: true } },
+	      success: function () {}
 	    });
 	  }
 
@@ -31502,7 +31547,7 @@
 	    action: getStampsTour.next
 	  }],
 	  classes: 'shepherd-theme-arrows',
-	  attachTo: '.index-header'
+	  attachTo: '.dropdown-toggle bottom'
 	});
 
 	getStampsTour.addStep('stamp-detail', {
@@ -31528,7 +31573,7 @@
 	  }],
 	  advanceOn: '.new-drawing click',
 	  classes: 'shepherd-theme-arrows',
-	  attachTo: '.index-header'
+	  attachTo: '.dropdown-toggle bottom'
 	});
 
 	module.exports = getStampsTour;
@@ -34150,7 +34195,16 @@
 	    this.listener = DrawingStore.addListener(this._onChange);
 	    ApiUtil.fetchAllDrawings();
 
-	    drawingIndexTour.start();
+	    $.ajax({
+	      url: 'users/1',
+	      method: 'GET',
+	      success: (function (user) {
+	        if (user.tour_four_completed === false) {
+	          drawingIndexTour.start();
+	          ApiUtil.completeTourFour();
+	        }
+	      }).bind(this)
+	    });
 	  },
 	  componentWillUnmount: function () {
 	    this.listener.remove();
@@ -34463,7 +34517,7 @@
 	    action: drawingIndexTour.next
 	  }],
 	  classes: 'shepherd-theme-arrows',
-	  attachTo: '.index-header'
+	  attachTo: '.dropdown-toggle bottom'
 	});
 
 	module.exports = drawingIndexTour;
@@ -34532,7 +34586,16 @@
 
 	    this.token = StampStore.addListener(this.selectStamp);
 
-	    makeDrawingTour.start();
+	    $.ajax({
+	      url: 'users/1',
+	      method: 'GET',
+	      success: (function (user) {
+	        if (user.tour_three_completed === false) {
+	          makeDrawingTour.start();
+	          ApiUtil.completeTourThree();
+	        }
+	      }).bind(this)
+	    });
 	  },
 	  componentWillUnmount: function () {
 	    this.token.remove();
@@ -35750,7 +35813,16 @@
 	    this.colorPicking = false;
 	    this.sizePicking = false;
 
-	    makeStampTour.start();
+	    $.ajax({
+	      url: 'users/1',
+	      method: 'GET',
+	      success: (function (user) {
+	        if (user.tour_one_completed === false) {
+	          makeStampTour.start();
+	          ApiUtil.completeTourOne();
+	        }
+	      }).bind(this)
+	    });
 	  },
 
 	  colorBar: function () {
@@ -36116,7 +36188,7 @@
 	  }],
 	  advanceOn: '.get-stamps click',
 	  classes: 'shepherd-theme-arrows',
-	  attachTo: '.ghost bottom'
+	  attachTo: '.dropdown-toggle bottom'
 	});
 
 	module.exports = makeStampTour;
@@ -36198,7 +36270,7 @@
 	  }],
 	  advanceOn: '.all-drawings click',
 	  classes: 'shepherd-theme-arrows',
-	  attachTo: '.ghost bottom'
+	  attachTo: '.dropdown-toggle bottom'
 	});
 
 	module.exports = makeDrawingTour;

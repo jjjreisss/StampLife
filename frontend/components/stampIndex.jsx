@@ -25,7 +25,16 @@ var StampIndex = React.createClass({
     this.listener = StampStore.addListener(this._onChange);
     ApiUtil.fetchAllStamps();
 
-    getStampsTour.start();
+    $.ajax({
+      url: 'users/1',
+      method: 'GET',
+      success: function(user) {
+        if (user.tour_two_completed === false) {
+          getStampsTour.start();
+          ApiUtil.completeTourTwo();
+        }
+      }.bind(this),
+    });
   },
   componentWillUnmount: function() {
     this.listener.remove();

@@ -19,7 +19,7 @@ drawingIndexTour.addStep('save-drawing', {
     }
   ],
   classes: 'shepherd-theme-arrows',
-  attachTo: '.index-header'
+  attachTo: '.dropdown-toggle bottom'
 });
 
 module.exports = drawingIndexTour;
