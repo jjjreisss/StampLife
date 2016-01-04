@@ -9,6 +9,15 @@
     class="sign-in">
     <%= auth_token_input %>
 
+    <% if flash.now[:errors] %>
+      <label class="errors">
+        <% flash.now[:errors].each do |error| %>
+          <%= error %>
+        <% end %>
+      </label>
+      <br/>
+    <% end %>
+
     <label class="sign-in-label">
       Username
       <input type="text" name="user[username]" value="">
