@@ -57,6 +57,8 @@ var CanvasTest = React.createClass({
           ApiUtil.completeTourOne();
         }
       }.bind(this),
+      error: function() {
+      }
     });
 
   },

@@ -94,6 +94,16 @@
     background: white;
   }
 
+.navbar-right {
+  position: absolute;
+  right: 2%;
+  margin: 5px;
+}
+
+.start-tour {
+  margin-right: 5px;
+}
+
 #page-content {
   overflow: auto;
   top: 5%;
@@ -109,11 +119,7 @@
 }
 
 
-.sign-out {
-  position: absolute;
-  right: 1%;
-  top: 4px;
-}
+
 
 .new-user-link {
   margin: -10px;

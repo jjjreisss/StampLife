@@ -24137,9 +24137,13 @@
 	var React = __webpack_require__(1);
 	var StampIndex = __webpack_require__(209);
 	var MyStampIndex = __webpack_require__(237);
+	var History = __webpack_require__(159).History;
+	var makeStampTour = __webpack_require__(258);
 
 	var App = React.createClass({
 	  displayName: 'App',
+
+	  mixins: [History],
 
 	  componentDidMount: function () {},
 	  goToDrawingsIndex: function () {
@@ -24164,6 +24168,28 @@
 	        window.location.href = '/';
 	      },
 	      error: function (message) {}
+	    });
+	  },
+	  startTour: function () {
+	    $.ajax({
+	      url: "users/1",
+	      method: "PUT",
+	      data: {
+	        user: {
+	          tour_one_completed: false,
+	          tour_two_completed: false,
+	          tour_three_completed: false,
+	          tour_four_completed: false
+	        }
+	      },
+	      success: (function () {
+	        if (this.props.routes[1].path === 'stamp/new') {
+	          makeStampTour.start();
+	          console.log('hi');
+	        } else {
+	          this.history.push('stamp/new');
+	        }
+	      }).bind(this)
 	    });
 	  },
 
@@ -24226,11 +24252,23 @@
 	          )
 	        ),
 	        React.createElement(
-	          'button',
+	          'div',
 	          {
-	            className: 'sign-out',
-	            onClick: this.signOut },
-	          'Sign Out'
+	            className: 'navbar-right' },
+	          React.createElement(
+	            'button',
+	            {
+	              className: 'start-tour',
+	              onClick: this.startTour },
+	            'Start Tour'
+	          ),
+	          React.createElement(
+	            'button',
+	            {
+	              className: 'sign-out',
+	              onClick: this.signOut },
+	            'Sign Out'
+	          )
 	        )
 	      ),
 	      React.createElement(
@@ -34558,7 +34596,6 @@
 	    };
 	  },
 	  componentDidMount: function () {
-	    console.log(window.innerHeight);
 
 	    if (window.innerHeight > 699) {
 	      this.drawingCanvas = new DrawingCanvas('drawing-canvas', 500, 500);
@@ -34755,8 +34792,6 @@
 	        this.setState({ stampsUsed: stampsUsed });
 	      }
 	    }
-
-	    console.log(this.state.stampsUsed);
 	  },
 	  mouseUpHandler: function (e) {
 	    this.drawingCanvas.mouseUp(e, this.color, this.size);
@@ -35821,7 +35856,8 @@
 	          makeStampTour.start();
 	          ApiUtil.completeTourOne();
 	        }
-	      }).bind(this)
+	      }).bind(this),
+	      error: function () {}
 	    });
 	  },
 

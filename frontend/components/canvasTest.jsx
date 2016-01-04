@@ -30,7 +30,6 @@ var CanvasTest = React.createClass({
     });
   },
   componentDidMount: function() {
-    console.log(window.innerHeight);
 
     if (window.innerHeight > 699) {
       this.drawingCanvas = new DrawingCanvas('drawing-canvas', 500, 500);
@@ -232,7 +231,6 @@ var CanvasTest = React.createClass({
       }
     }
 
-    console.log(this.state.stampsUsed);
   },
   mouseUpHandler: function(e) {
     this.drawingCanvas.mouseUp(e, this.color, this.size);

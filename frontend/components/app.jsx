@@ -1,8 +1,13 @@
 var React = require('react');
 var StampIndex = require('./stampIndex');
 var MyStampIndex = require('./myStampIndex');
+var History = require('react-router').History;
+var makeStampTour = require('../util/makeStampTour');
+
 
 var App = React.createClass({
+  mixins: [History],
+
   componentDidMount: function() {
   },
   goToDrawingsIndex: function() {
@@ -30,6 +35,28 @@ var App = React.createClass({
       },
       error: function(message) {
       }
+    });
+  },
+  startTour: function() {
+    $.ajax({
+      url: "users/1",
+      method: "PUT",
+      data: {
+        user: {
+          tour_one_completed: false,
+          tour_two_completed: false,
+          tour_three_completed: false,
+          tour_four_completed: false
+        }
+      },
+      success: function() {
+        if (this.props.routes[1].path === 'stamp/new') {
+          makeStampTour.start();
+          console.log('hi');
+        } else {
+          this.history.push('stamp/new');
+        }
+      }.bind(this)
     });
   },
 
@@ -70,11 +97,19 @@ var App = React.createClass({
 
 
         </ul>
+          <div
+            className="navbar-right">
+            <button
+              className="start-tour"
+              onClick={this.startTour}>
+              Start Tour
+            </button>
             <button
               className="sign-out"
               onClick={this.signOut}>
               Sign Out
             </button>
+          </div>
       </div>
 
 
