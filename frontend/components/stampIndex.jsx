@@ -2,6 +2,7 @@ var React = require('react');
 var ApiUtil = require('../util/apiUtil');
 var StampListItem = require('./stampListItem');
 var StampStore = require('../stores/stampStore');
+var getStampsTour = require('../util/getStampsTour');
 
 var StampIndex = React.createClass({
   getInitialState: function() {
@@ -23,6 +24,8 @@ var StampIndex = React.createClass({
   componentDidMount: function() {
     this.listener = StampStore.addListener(this._onChange);
     ApiUtil.fetchAllStamps();
+
+    getStampsTour.start();
   },
   componentWillUnmount: function() {
     this.listener.remove();

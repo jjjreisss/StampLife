@@ -75,7 +75,9 @@ var DrawingListItem = React.createClass({
             onClick={this.goToShow}
             onMouseEnter={this.enhover}
             onMouseLeave={this.dehover}>
-        <img src={url}/>
+        <img
+          className="drawing-index-image"
+          src={url}/>
         <div
           className={drawingAuthor}
           onClick={this.goToUser}>

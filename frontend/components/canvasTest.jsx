@@ -9,6 +9,7 @@ var LinkedStateMixin = require('react-addons-linked-state-mixin');
 var StampIndex = require('./stampIndex');
 var StampStore = require('../stores/stampStore');
 var History = require('react-router').History;
+var makeDrawingTour = require('../util/makeDrawingTour');
 
 
 var CanvasTest = React.createClass({
@@ -47,6 +48,8 @@ var CanvasTest = React.createClass({
     this.sizePicking = false;
 
     this.token = StampStore.addListener(this.selectStamp);
+
+    makeDrawingTour.start();
   },
   componentWillUnmount: function() {
     this.token.remove();

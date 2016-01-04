@@ -2,6 +2,7 @@ var React = require('react');
 var DrawingStore = require('../stores/drawingStore');
 var ApiUtil = require('../util/apiUtil');
 var DrawingListItem = require('./drawingListItem');
+var drawingIndexTour = require('../util/drawingIndexTour');
 
 var DrawingIndex = React.createClass({
   getInitialState: function() {
@@ -23,6 +24,8 @@ var DrawingIndex = React.createClass({
   componentDidMount: function() {
     this.listener = DrawingStore.addListener(this._onChange);
     ApiUtil.fetchAllDrawings();
+
+    drawingIndexTour.start();
   },
   componentWillUnmount: function() {
     this.listener.remove();

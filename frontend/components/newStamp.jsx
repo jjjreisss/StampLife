@@ -8,6 +8,7 @@ var StrokeSample = require('../util/strokeSample');
 var LinkedStateMixin = require('react-addons-linked-state-mixin');
 var StampIndex = require('./stampIndex');
 var StampStore = require('../stores/stampStore');
+var makeStampTour = require('../util/makeStampTour');
 
 var CanvasTest = React.createClass({
   mixins: [LinkedStateMixin],
@@ -39,6 +40,8 @@ var CanvasTest = React.createClass({
 
     this.colorPicking = false;
     this.sizePicking = false;
+
+    makeStampTour.start();
   },
 
   colorBar: function() {

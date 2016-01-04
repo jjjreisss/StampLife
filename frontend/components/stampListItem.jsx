@@ -73,7 +73,9 @@ var StampListItem = React.createClass({
         onMouseEnter={this.displayText}
         onMouseLeave={this.hideText}
         onClick={this.setStamp}>
-        <img src={url}/>
+        <img
+          className="stamp-index-image"
+          src={url}/>
         <div
           className={stampUseCount}
           onClick={this.toggleList}>

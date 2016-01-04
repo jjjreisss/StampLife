@@ -48,17 +48,17 @@
 	var ReactDOM = __webpack_require__(158);
 	var Router = __webpack_require__(159).Router;
 	var Route = __webpack_require__(159).Route;
-	var App = __webpack_require__(210);
-	var DrawingIndex = __webpack_require__(239);
-	var CanvasTest = __webpack_require__(242);
-	var DrawingDetail = __webpack_require__(252);
-	var ProfilePage = __webpack_require__(253);
-	var StampIndex = __webpack_require__(211);
-	var StampDetail = __webpack_require__(254);
-	var NewStamp = __webpack_require__(255);
-	var Home = __webpack_require__(256);
+	var App = __webpack_require__(208);
+	var DrawingIndex = __webpack_require__(240);
+	var CanvasTest = __webpack_require__(244);
+	var DrawingDetail = __webpack_require__(254);
+	var ProfilePage = __webpack_require__(255);
+	var StampIndex = __webpack_require__(209);
+	var StampDetail = __webpack_require__(256);
+	var NewStamp = __webpack_require__(257);
+	var Home = __webpack_require__(259);
 	var IndexRoute = __webpack_require__(159).IndexRoute;
-	var Shepherd = __webpack_require__(308);
+	var Shepherd = __webpack_require__(235);
 
 	var routes = React.createElement(
 	  Route,
@@ -19689,13 +19689,13 @@
 
 	exports.Router = _Router3['default'];
 
-	var _Link2 = __webpack_require__(198);
+	var _Link2 = __webpack_require__(196);
 
 	var _Link3 = _interopRequireDefault(_Link2);
 
 	exports.Link = _Link3['default'];
 
-	var _IndexLink2 = __webpack_require__(199);
+	var _IndexLink2 = __webpack_require__(197);
 
 	var _IndexLink3 = _interopRequireDefault(_IndexLink2);
 
@@ -19703,25 +19703,25 @@
 
 	/* components (configuration) */
 
-	var _IndexRedirect2 = __webpack_require__(200);
+	var _IndexRedirect2 = __webpack_require__(198);
 
 	var _IndexRedirect3 = _interopRequireDefault(_IndexRedirect2);
 
 	exports.IndexRedirect = _IndexRedirect3['default'];
 
-	var _IndexRoute2 = __webpack_require__(202);
+	var _IndexRoute2 = __webpack_require__(200);
 
 	var _IndexRoute3 = _interopRequireDefault(_IndexRoute2);
 
 	exports.IndexRoute = _IndexRoute3['default'];
 
-	var _Redirect2 = __webpack_require__(201);
+	var _Redirect2 = __webpack_require__(199);
 
 	var _Redirect3 = _interopRequireDefault(_Redirect2);
 
 	exports.Redirect = _Redirect3['default'];
 
-	var _Route2 = __webpack_require__(203);
+	var _Route2 = __webpack_require__(201);
 
 	var _Route3 = _interopRequireDefault(_Route2);
 
@@ -19729,19 +19729,19 @@
 
 	/* mixins */
 
-	var _History2 = __webpack_require__(204);
+	var _History2 = __webpack_require__(202);
 
 	var _History3 = _interopRequireDefault(_History2);
 
 	exports.History = _History3['default'];
 
-	var _Lifecycle2 = __webpack_require__(205);
+	var _Lifecycle2 = __webpack_require__(203);
 
 	var _Lifecycle3 = _interopRequireDefault(_Lifecycle2);
 
 	exports.Lifecycle = _Lifecycle3['default'];
 
-	var _RouteContext2 = __webpack_require__(206);
+	var _RouteContext2 = __webpack_require__(204);
 
 	var _RouteContext3 = _interopRequireDefault(_RouteContext2);
 
@@ -19765,13 +19765,13 @@
 
 	exports.RoutingContext = _RoutingContext3['default'];
 
-	var _PropTypes2 = __webpack_require__(197);
+	var _PropTypes2 = __webpack_require__(195);
 
 	var _PropTypes3 = _interopRequireDefault(_PropTypes2);
 
 	exports.PropTypes = _PropTypes3['default'];
 
-	var _match2 = __webpack_require__(207);
+	var _match2 = __webpack_require__(205);
 
 	var _match3 = _interopRequireDefault(_match2);
 
@@ -19821,7 +19821,7 @@
 
 	var _useRoutes2 = _interopRequireDefault(_useRoutes);
 
-	var _PropTypes = __webpack_require__(197);
+	var _PropTypes = __webpack_require__(195);
 
 	var _React$PropTypes = _react2['default'].PropTypes;
 	var func = _React$PropTypes.func;
@@ -21904,21 +21904,21 @@
 
 	var _historyLibUseQueries2 = _interopRequireDefault(_historyLibUseQueries);
 
-	var _computeChangedRoutes2 = __webpack_require__(191);
+	var _computeChangedRoutes2 = __webpack_require__(189);
 
 	var _computeChangedRoutes3 = _interopRequireDefault(_computeChangedRoutes2);
 
-	var _TransitionUtils = __webpack_require__(192);
+	var _TransitionUtils = __webpack_require__(190);
 
-	var _isActive2 = __webpack_require__(194);
+	var _isActive2 = __webpack_require__(192);
 
 	var _isActive3 = _interopRequireDefault(_isActive2);
 
-	var _getComponents = __webpack_require__(195);
+	var _getComponents = __webpack_require__(193);
 
 	var _getComponents2 = _interopRequireDefault(_getComponents);
 
-	var _matchRoutes = __webpack_require__(196);
+	var _matchRoutes = __webpack_require__(194);
 
 	var _matchRoutes2 = _interopRequireDefault(_matchRoutes);
 
@@ -22195,7 +22195,7 @@
 
 	var _warning2 = _interopRequireDefault(_warning);
 
-	var _queryString = __webpack_require__(257);
+	var _queryString = __webpack_require__(187);
 
 	var _runTransitionHook = __webpack_require__(178);
 
@@ -22356,11 +22356,91 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 187 */,
-/* 188 */,
-/* 189 */,
-/* 190 */,
-/* 191 */
+/* 187 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	var strictUriEncode = __webpack_require__(188);
+
+	exports.extract = function (str) {
+		return str.split('?')[1] || '';
+	};
+
+	exports.parse = function (str) {
+		if (typeof str !== 'string') {
+			return {};
+		}
+
+		str = str.trim().replace(/^(\?|#|&)/, '');
+
+		if (!str) {
+			return {};
+		}
+
+		return str.split('&').reduce(function (ret, param) {
+			var parts = param.replace(/\+/g, ' ').split('=');
+			// Firefox (pre 40) decodes `%3D` to `=`
+			// https://github.com/sindresorhus/query-string/pull/37
+			var key = parts.shift();
+			var val = parts.length > 0 ? parts.join('=') : undefined;
+
+			key = decodeURIComponent(key);
+
+			// missing `=` should be `null`:
+			// http://w3.org/TR/2012/WD-url-20120524/#collect-url-parameters
+			val = val === undefined ? null : decodeURIComponent(val);
+
+			if (!ret.hasOwnProperty(key)) {
+				ret[key] = val;
+			} else if (Array.isArray(ret[key])) {
+				ret[key].push(val);
+			} else {
+				ret[key] = [ret[key], val];
+			}
+
+			return ret;
+		}, {});
+	};
+
+	exports.stringify = function (obj) {
+		return obj ? Object.keys(obj).sort().map(function (key) {
+			var val = obj[key];
+
+			if (val === undefined) {
+				return '';
+			}
+
+			if (val === null) {
+				return key;
+			}
+
+			if (Array.isArray(val)) {
+				return val.sort().map(function (val2) {
+					return strictUriEncode(key) + '=' + strictUriEncode(val2);
+				}).join('&');
+			}
+
+			return strictUriEncode(key) + '=' + strictUriEncode(val);
+		}).filter(function (x) {
+			return x.length > 0;
+		}).join('&') : '';
+	};
+
+
+/***/ },
+/* 188 */
+/***/ function(module, exports) {
+
+	'use strict';
+	module.exports = function (str) {
+		return encodeURIComponent(str).replace(/[!'()*]/g, function (c) {
+			return '%' + c.charCodeAt(0).toString(16);
+		});
+	};
+
+
+/***/ },
+/* 189 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22421,7 +22501,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 192 */
+/* 190 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22430,7 +22510,7 @@
 	exports.runEnterHooks = runEnterHooks;
 	exports.runLeaveHooks = runLeaveHooks;
 
-	var _AsyncUtils = __webpack_require__(193);
+	var _AsyncUtils = __webpack_require__(191);
 
 	function createEnterHook(hook, route) {
 	  return function (a, b, callback) {
@@ -22498,7 +22578,7 @@
 	}
 
 /***/ },
-/* 193 */
+/* 191 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -22561,7 +22641,7 @@
 	}
 
 /***/ },
-/* 194 */
+/* 192 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22689,14 +22769,14 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 195 */
+/* 193 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	exports.__esModule = true;
 
-	var _AsyncUtils = __webpack_require__(193);
+	var _AsyncUtils = __webpack_require__(191);
 
 	function getComponentsForRoute(location, route, callback) {
 	  if (route.component || route.components) {
@@ -22727,7 +22807,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 196 */
+/* 194 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -22740,7 +22820,7 @@
 
 	var _warning2 = _interopRequireDefault(_warning);
 
-	var _AsyncUtils = __webpack_require__(193);
+	var _AsyncUtils = __webpack_require__(191);
 
 	var _PatternUtils = __webpack_require__(184);
 
@@ -22921,7 +23001,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 197 */
+/* 195 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22979,7 +23059,7 @@
 	};
 
 /***/ },
-/* 198 */
+/* 196 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23147,7 +23227,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 199 */
+/* 197 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23166,7 +23246,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Link = __webpack_require__(198);
+	var _Link = __webpack_require__(196);
 
 	var _Link2 = _interopRequireDefault(_Link);
 
@@ -23194,7 +23274,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 200 */
+/* 198 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -23219,11 +23299,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Redirect = __webpack_require__(201);
+	var _Redirect = __webpack_require__(199);
 
 	var _Redirect2 = _interopRequireDefault(_Redirect);
 
-	var _PropTypes = __webpack_require__(197);
+	var _PropTypes = __webpack_require__(195);
 
 	var _React$PropTypes = _react2['default'].PropTypes;
 	var string = _React$PropTypes.string;
@@ -23273,7 +23353,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 201 */
+/* 199 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -23298,7 +23378,7 @@
 
 	var _PatternUtils = __webpack_require__(184);
 
-	var _PropTypes = __webpack_require__(197);
+	var _PropTypes = __webpack_require__(195);
 
 	var _React$PropTypes = _react2['default'].PropTypes;
 	var string = _React$PropTypes.string;
@@ -23386,7 +23466,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 202 */
+/* 200 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -23413,7 +23493,7 @@
 
 	var _RouteUtils = __webpack_require__(180);
 
-	var _PropTypes = __webpack_require__(197);
+	var _PropTypes = __webpack_require__(195);
 
 	var func = _react2['default'].PropTypes.func;
 
@@ -23462,7 +23542,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 203 */
+/* 201 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -23485,7 +23565,7 @@
 
 	var _RouteUtils = __webpack_require__(180);
 
-	var _PropTypes = __webpack_require__(197);
+	var _PropTypes = __webpack_require__(195);
 
 	var _React$PropTypes = _react2['default'].PropTypes;
 	var string = _React$PropTypes.string;
@@ -23535,14 +23615,14 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 204 */
+/* 202 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	exports.__esModule = true;
 
-	var _PropTypes = __webpack_require__(197);
+	var _PropTypes = __webpack_require__(195);
 
 	/**
 	 * A mixin that adds the "history" instance variable to components.
@@ -23563,7 +23643,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 205 */
+/* 203 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -23633,7 +23713,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 206 */
+/* 204 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23676,7 +23756,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 207 */
+/* 205 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -23691,11 +23771,11 @@
 
 	var _invariant2 = _interopRequireDefault(_invariant);
 
-	var _historyLibCreateMemoryHistory = __webpack_require__(208);
+	var _historyLibCreateMemoryHistory = __webpack_require__(206);
 
 	var _historyLibCreateMemoryHistory2 = _interopRequireDefault(_historyLibCreateMemoryHistory);
 
-	var _historyLibUseBasename = __webpack_require__(209);
+	var _historyLibUseBasename = __webpack_require__(207);
 
 	var _historyLibUseBasename2 = _interopRequireDefault(_historyLibUseBasename);
 
@@ -23745,7 +23825,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 208 */
+/* 206 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -23906,7 +23986,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 209 */
+/* 207 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24051,183 +24131,17 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 210 */
+/* 208 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var StampIndex = __webpack_require__(211);
-	var MyStampIndex = __webpack_require__(236);
-	var Shepherd = __webpack_require__(308);
+	var StampIndex = __webpack_require__(209);
+	var MyStampIndex = __webpack_require__(237);
 
 	var App = React.createClass({
 	  displayName: 'App',
 
-	  componentDidMount: function () {
-	    var tour = new Shepherd.Tour({
-	      defaults: {
-	        classes: 'shepherd-theme-arrows'
-	      }
-	    });
-
-	    tour.addStep('example', {
-	      title: 'Welcome!',
-	      text: ["Welcome to Salamander. This app lets you make your own stamps,", "which you can use to draw with and share with other users."],
-	      showCancelLink: true,
-	      buttons: [{
-	        text: 'Next',
-	        action: tour.next
-	      }],
-	      classes: 'shepherd-theme-arrows'
-	    });
-
-	    tour.addStep('pick-color', {
-	      title: 'Pick Color',
-	      text: ["Click anywhere on the spectrum to choose your color.", "Click and drag to watch your color change in real time."],
-	      buttons: [{
-	        text: 'Next',
-	        action: tour.next
-	      }],
-	      classes: 'shepherd-theme-arrows',
-	      attachTo: '#color-picker'
-	    });
-
-	    tour.addStep('recent-colors', {
-	      title: 'Recent Colors',
-	      text: ["Recently used colors show up here.", "Click one to use that color again."],
-	      buttons: [{
-	        text: 'Next',
-	        action: tour.next
-	      }],
-	      classes: 'shepherd-theme-arrows',
-	      attachTo: '#color-bar right'
-	    });
-
-	    tour.addStep('pick-size', {
-	      title: 'Pick Size',
-	      text: ["Click anywhere on this sidebar to choose your stroke size."],
-	      buttons: [{
-	        text: 'Next',
-	        action: tour.next
-	      }],
-	      classes: 'shepherd-theme-arrows',
-	      attachTo: '#size-picker left'
-	    });
-
-	    tour.addStep('mousewheel', {
-	      title: 'Use the Mouse Wheel!',
-	      text: ["You can also use the mousewheel to resize your stroke.", "Try hovering over the canvas and watching the sample stroke", "get bigger and smaller."],
-	      buttons: [{
-	        text: 'Next',
-	        action: tour.next
-	      }],
-	      classes: 'shepherd-theme-arrows',
-	      attachTo: '#drawing-canvas'
-	    });
-
-	    tour.addStep('save', {
-	      title: 'Save Your Stamp',
-	      text: ["Once you've drawn what you like, click here to save your", "stamp so you can use it later."],
-	      buttons: [{
-	        text: 'Next',
-	        action: tour.next
-	      }],
-	      classes: 'shepherd-theme-arrows',
-	      attachTo: '.save-to-my-stamps bottom'
-	    });
-
-	    tour.addStep('my-stamps', {
-	      title: 'Stamp Toolbar',
-	      text: ["Your active stamps live in this toolbar."],
-	      buttons: [{
-	        text: 'Next',
-	        action: tour.next
-	      }],
-	      classes: 'shepherd-theme-arrows',
-	      attachTo: '.stamp-sidebar'
-	    });
-
-	    tour.addStep('get-stamps', {
-	      text: ["But one stamp is not enough... Let's get more!", "Click the 'Menu' button, then 'Get Stamps'"],
-	      buttons: [{
-	        text: 'Next',
-	        action: tour.next
-	      }],
-	      classes: 'shepherd-theme-arrows',
-	      attachTo: '.ghost bottom'
-	    });
-
-	    tour.addStep('sort-stamps', {
-	      text: ["This page contains all the stamps from all the site's users.", "Sort stamps by popularity or by when they were made.", "Click on a stamp to add it to your stamp toolbar.", "Your toolbar can hold up to five stamps."],
-	      buttons: [{
-	        text: 'Next',
-	        action: tour.next
-	      }],
-	      classes: 'shepherd-theme-arrows',
-	      attachTo: '.index-header'
-	    });
-
-	    tour.addStep('stamp-detail', {
-	      text: ["Click the field in the upper left to see who has used a certain stamp."],
-	      buttons: [{
-	        text: 'Next',
-	        action: tour.next
-	      }],
-	      classes: 'shepherd-theme-arrows',
-	      attachTo: '.index-element'
-	    });
-
-	    tour.addStep('sort-stamps', {
-	      text: ["Once you have all the stamps you want to use in your drawing,", "click 'Menu', then 'New Drawing'."],
-	      buttons: [{
-	        text: 'Next',
-	        action: tour.next
-	      }],
-	      classes: 'shepherd-theme-arrows',
-	      attachTo: '.index-header'
-	    });
-
-	    tour.addStep('select-stamp', {
-	      text: ["When making a drawing, you can do everything you could when", "making a stamp.", "You can also select a stamp to USE by clicking on it down here."],
-	      buttons: [{
-	        text: 'Next',
-	        action: tour.next
-	      }],
-	      classes: 'shepherd-theme-arrows',
-	      attachTo: '.stamp-sidebar'
-	    });
-
-	    tour.addStep('turn-stamping-on', {
-	      text: ["After selecting a stamp, click here to turn stamping on, then go", "over to the canvas and use your stamp!", "Just like before, use the mousewheel to make it bigger and smaller."],
-	      buttons: [{
-	        text: 'Next',
-	        action: tour.next
-	      }],
-	      classes: 'shepherd-theme-arrows',
-	      attachTo: '#toggle-stamping bottom'
-	    });
-
-	    tour.addStep('save-drawing', {
-	      text: ["When you're satisfied, save your drawing. Then go to the Menu", "and check out 'All Drawings'."],
-	      buttons: [{
-	        text: 'Next',
-	        action: tour.next
-	      }],
-	      classes: 'shepherd-theme-arrows',
-	      attachTo: '.save-drawing'
-	    });
-
-	    tour.addStep('save-drawing', {
-	      text: ["Feel free to like other people's drawings, see who has been liking", "what, and visit other users' profile pages."],
-	      buttons: [{
-	        text: 'Next',
-	        action: tour.next
-	      }],
-	      classes: 'shepherd-theme-arrows',
-	      attachTo: '.index-element'
-	    });
-
-	    tour.start();
-	  },
+	  componentDidMount: function () {},
 	  goToDrawingsIndex: function () {
 	    this.props.history.push('drawings');
 	  },
@@ -24283,24 +24197,28 @@
 	              React.createElement(
 	                'li',
 	                {
+	                  className: 'make-stamp',
 	                  onClick: this.goToNewStamp },
 	                'Make Stamp'
 	              ),
 	              React.createElement(
 	                'li',
 	                {
+	                  className: 'get-stamps',
 	                  onClick: this.goToStampsIndex },
 	                'Get Stamps'
 	              ),
 	              React.createElement(
 	                'li',
 	                {
+	                  className: 'new-drawing',
 	                  onClick: this.goToNew },
 	                'New Drawing'
 	              ),
 	              React.createElement(
 	                'li',
 	                {
+	                  className: 'all-drawings',
 	                  onClick: this.goToDrawingsIndex },
 	                'All Drawings'
 	              )
@@ -24338,13 +24256,14 @@
 	module.exports = App;
 
 /***/ },
-/* 211 */
+/* 209 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var ApiUtil = __webpack_require__(212);
-	var StampListItem = __webpack_require__(218);
-	var StampStore = __webpack_require__(219);
+	var ApiUtil = __webpack_require__(210);
+	var StampListItem = __webpack_require__(216);
+	var StampStore = __webpack_require__(217);
+	var getStampsTour = __webpack_require__(234);
 
 	var StampIndex = React.createClass({
 	  displayName: 'StampIndex',
@@ -24367,6 +24286,8 @@
 	  componentDidMount: function () {
 	    this.listener = StampStore.addListener(this._onChange);
 	    ApiUtil.fetchAllStamps();
+
+	    getStampsTour.start();
 	  },
 	  componentWillUnmount: function () {
 	    this.listener.remove();
@@ -24457,10 +24378,10 @@
 	module.exports = StampIndex;
 
 /***/ },
-/* 212 */
+/* 210 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var ApiActions = __webpack_require__(213);
+	var ApiActions = __webpack_require__(211);
 
 	var ApiUtil = {
 	  createDrawing: function (drawing) {
@@ -24622,10 +24543,10 @@
 	module.exports = ApiUtil;
 
 /***/ },
-/* 213 */
+/* 211 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Dispatcher = __webpack_require__(214);
+	var Dispatcher = __webpack_require__(212);
 
 	var ApiActions = {
 	  receiveSingleDrawing: function (drawing) {
@@ -24681,14 +24602,14 @@
 	module.exports = ApiActions;
 
 /***/ },
-/* 214 */
+/* 212 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Dispatcher = __webpack_require__(215).Dispatcher;
+	var Dispatcher = __webpack_require__(213).Dispatcher;
 	module.exports = new Dispatcher();
 
 /***/ },
-/* 215 */
+/* 213 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -24700,11 +24621,11 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 
-	module.exports.Dispatcher = __webpack_require__(216);
+	module.exports.Dispatcher = __webpack_require__(214);
 
 
 /***/ },
-/* 216 */
+/* 214 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -24726,7 +24647,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var invariant = __webpack_require__(217);
+	var invariant = __webpack_require__(215);
 
 	var _prefix = 'ID_';
 
@@ -24941,7 +24862,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 217 */
+/* 215 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -24996,14 +24917,14 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 218 */
+/* 216 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var History = __webpack_require__(159).History;
-	var ApiUtil = __webpack_require__(212);
-	var ApiActions = __webpack_require__(213);
-	var StampStore = __webpack_require__(219);
+	var ApiUtil = __webpack_require__(210);
+	var ApiActions = __webpack_require__(211);
+	var StampStore = __webpack_require__(217);
 
 	var StampListItem = React.createClass({
 	  displayName: 'StampListItem',
@@ -25077,7 +24998,9 @@
 	        onMouseEnter: this.displayText,
 	        onMouseLeave: this.hideText,
 	        onClick: this.setStamp },
-	      React.createElement('img', { src: url }),
+	      React.createElement('img', {
+	        className: 'stamp-index-image',
+	        src: url }),
 	      React.createElement(
 	        'div',
 	        {
@@ -25118,11 +25041,11 @@
 	module.exports = StampListItem;
 
 /***/ },
-/* 219 */
+/* 217 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Store = __webpack_require__(220).Store;
-	var AppDispatcher = __webpack_require__(214);
+	var Store = __webpack_require__(218).Store;
+	var AppDispatcher = __webpack_require__(212);
 
 	var StampStore = new Store(AppDispatcher);
 	var _stamps = [];
@@ -25168,7 +25091,7 @@
 	module.exports = StampStore;
 
 /***/ },
-/* 220 */
+/* 218 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -25180,15 +25103,15 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 
-	module.exports.Container = __webpack_require__(221);
-	module.exports.MapStore = __webpack_require__(224);
-	module.exports.Mixin = __webpack_require__(235);
-	module.exports.ReduceStore = __webpack_require__(225);
-	module.exports.Store = __webpack_require__(226);
+	module.exports.Container = __webpack_require__(219);
+	module.exports.MapStore = __webpack_require__(222);
+	module.exports.Mixin = __webpack_require__(233);
+	module.exports.ReduceStore = __webpack_require__(223);
+	module.exports.Store = __webpack_require__(224);
 
 
 /***/ },
-/* 221 */
+/* 219 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25210,10 +25133,10 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var FluxStoreGroup = __webpack_require__(222);
+	var FluxStoreGroup = __webpack_require__(220);
 
-	var invariant = __webpack_require__(217);
-	var shallowEqual = __webpack_require__(223);
+	var invariant = __webpack_require__(215);
+	var shallowEqual = __webpack_require__(221);
 
 	var DEFAULT_OPTIONS = {
 	  pure: true,
@@ -25371,7 +25294,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 222 */
+/* 220 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25390,7 +25313,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var invariant = __webpack_require__(217);
+	var invariant = __webpack_require__(215);
 
 	/**
 	 * FluxStoreGroup allows you to execute a callback on every dispatch after
@@ -25452,7 +25375,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 223 */
+/* 221 */
 /***/ function(module, exports) {
 
 	/**
@@ -25507,7 +25430,7 @@
 	module.exports = shallowEqual;
 
 /***/ },
-/* 224 */
+/* 222 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25528,10 +25451,10 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var FluxReduceStore = __webpack_require__(225);
-	var Immutable = __webpack_require__(234);
+	var FluxReduceStore = __webpack_require__(223);
+	var Immutable = __webpack_require__(232);
 
-	var invariant = __webpack_require__(217);
+	var invariant = __webpack_require__(215);
 
 	/**
 	 * This is a simple store. It allows caching key value pairs. An implementation
@@ -25657,7 +25580,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 225 */
+/* 223 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25678,10 +25601,10 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var FluxStore = __webpack_require__(226);
+	var FluxStore = __webpack_require__(224);
 
-	var abstractMethod = __webpack_require__(233);
-	var invariant = __webpack_require__(217);
+	var abstractMethod = __webpack_require__(231);
+	var invariant = __webpack_require__(215);
 
 	var FluxReduceStore = (function (_FluxStore) {
 	  _inherits(FluxReduceStore, _FluxStore);
@@ -25764,7 +25687,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 226 */
+/* 224 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25783,11 +25706,11 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var _require = __webpack_require__(227);
+	var _require = __webpack_require__(225);
 
 	var EventEmitter = _require.EventEmitter;
 
-	var invariant = __webpack_require__(217);
+	var invariant = __webpack_require__(215);
 
 	/**
 	 * This class should be extended by the stores in your application, like so:
@@ -25947,7 +25870,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 227 */
+/* 225 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -25960,14 +25883,14 @@
 	 */
 
 	var fbemitter = {
-	  EventEmitter: __webpack_require__(228)
+	  EventEmitter: __webpack_require__(226)
 	};
 
 	module.exports = fbemitter;
 
 
 /***/ },
-/* 228 */
+/* 226 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25986,11 +25909,11 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var EmitterSubscription = __webpack_require__(229);
-	var EventSubscriptionVendor = __webpack_require__(231);
+	var EmitterSubscription = __webpack_require__(227);
+	var EventSubscriptionVendor = __webpack_require__(229);
 
-	var emptyFunction = __webpack_require__(232);
-	var invariant = __webpack_require__(217);
+	var emptyFunction = __webpack_require__(230);
+	var invariant = __webpack_require__(215);
 
 	/**
 	 * @class BaseEventEmitter
@@ -26164,7 +26087,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 229 */
+/* 227 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -26185,7 +26108,7 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var EventSubscription = __webpack_require__(230);
+	var EventSubscription = __webpack_require__(228);
 
 	/**
 	 * EmitterSubscription represents a subscription with listener and context data.
@@ -26217,7 +26140,7 @@
 	module.exports = EmitterSubscription;
 
 /***/ },
-/* 230 */
+/* 228 */
 /***/ function(module, exports) {
 
 	/**
@@ -26268,7 +26191,7 @@
 	module.exports = EventSubscription;
 
 /***/ },
-/* 231 */
+/* 229 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26287,7 +26210,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var invariant = __webpack_require__(217);
+	var invariant = __webpack_require__(215);
 
 	/**
 	 * EventSubscriptionVendor stores a set of EventSubscriptions that are
@@ -26377,7 +26300,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 232 */
+/* 230 */
 /***/ function(module, exports) {
 
 	/**
@@ -26420,7 +26343,7 @@
 	module.exports = emptyFunction;
 
 /***/ },
-/* 233 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26437,7 +26360,7 @@
 
 	'use strict';
 
-	var invariant = __webpack_require__(217);
+	var invariant = __webpack_require__(215);
 
 	function abstractMethod(className, methodName) {
 	   true ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Subclasses of %s must override %s() with their own implementation.', className, methodName) : invariant(false) : undefined;
@@ -26447,7 +26370,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 234 */
+/* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -31434,7 +31357,7 @@
 	}));
 
 /***/ },
-/* 235 */
+/* 233 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -31451,9 +31374,9 @@
 
 	'use strict';
 
-	var FluxStoreGroup = __webpack_require__(222);
+	var FluxStoreGroup = __webpack_require__(220);
 
-	var invariant = __webpack_require__(217);
+	var invariant = __webpack_require__(215);
 
 	/**
 	 * `FluxContainer` should be preferred over this mixin, but it requires using
@@ -31557,2178 +31480,68 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 236 */
+/* 234 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var React = __webpack_require__(1);
-	var ApiUtil = __webpack_require__(212);
-	var MyStampListItem = __webpack_require__(237);
-	var MyStampStore = __webpack_require__(238);
-	var History = __webpack_require__(159).History;
+	var Shepherd = __webpack_require__(235);
 
-	var MyStampIndex = React.createClass({
-	  displayName: 'MyStampIndex',
-
-	  mixins: [History],
-
-	  getInitialState: function () {
-	    return {
-	      stamps: null,
-	      selected: null
-	    };
-	  },
-	  componentDidMount: function () {
-	    this.listener = MyStampStore.addListener(this._onChange);
-	    // ApiUtil.fetchMyStamp();
-	  },
-	  componentWillUnmount: function () {
-	    this.listener.remove();
-	  },
-	  _onChange: function () {
-	    this.setState({
-	      stamps: MyStampStore.all()
-	    });
-	  },
-	  selectStamp: function (e) {
-	    this.setState({
-	      selected: parseInt(e.currentTarget.attributes["data-idx"].value)
-	    });
-	  },
-	  goToStampsIndex: function () {
-	    this.history.push('stamps');
-	  },
-	  goToNewStamp: function () {
-	    this.history.push('stamp/new');
-	  },
-
-	  render: function () {
-	    var stampsList = "";
-	    if (this.state.stamps) {
-	      stampsList = this.state.stamps.map((function (stamp, idx) {
-	        var selected = this.state.selected === idx ? "selected-stamp" : "";
-	        return React.createElement(MyStampListItem, {
-	          stampId: stamp.id,
-	          imageUrl: stamp.image_url,
-	          size: 100,
-	          key: idx,
-	          'data-idx': idx,
-	          onClick: this.selectStamp,
-	          id: selected });
-	      }).bind(this));
-	    }
-	    return React.createElement(
-	      'div',
-	      { className: 'my-stamp-index' },
-	      stampsList,
-	      React.createElement(
-	        'div',
-	        { className: 'my-stamp-index-footer' },
-	        React.createElement(
-	          'button',
-	          { onClick: this.goToStampsIndex },
-	          'Get Stamps'
-	        ),
-	        React.createElement(
-	          'button',
-	          { onClick: this.goToNewStamp },
-	          'Make Stamps'
-	        )
-	      )
-	    );
-	  }
-
-	});
-
-	module.exports = MyStampIndex;
-
-/***/ },
-/* 237 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var History = __webpack_require__(159).History;
-	var ApiUtil = __webpack_require__(212);
-	var ApiActions = __webpack_require__(213);
-	var StampStore = __webpack_require__(219);
-
-	var MyStampListItem = React.createClass({
-	  displayName: 'MyStampListItem',
-
-	  mixins: [History],
-
-	  getInitialState: function () {
-	    return {
-	      stamp: null,
-	      imageLoaded: false
-	    };
-	  },
-	  setStamp: function () {
-	    ApiUtil.setStamp(this.props.stampId);
-	  },
-	  deleteMyStamp: function () {
-	    ApiActions.deleteMyStamp(this.props.stampId);
-	  },
-	  selectedText: function () {
-	    var text;
-	    if (StampStore.single()) {
-	      StampStore.single().id === this.props.stampId ? text = "selected" : text = "";
-	    }
-	    return text;
-	  },
-	  addDeleteIcon: function () {
-	    this.setState({ imageLoaded: true });
-	  },
-	  deleteIcon: function () {
-	    var text;
-	    if (this.state.imageLoaded) {
-	      text = React.createElement('div', {
-	        className: 'delete-my-stamp-icon',
-	        onClick: this.deleteMyStamp });
-	    } else {
-	      text = "";
-	    }
-	    return text;
-	  },
-	  render: function () {
-	    var size = this.props.size;
-	    var sizeString = "w_" + size + ",h_" + size + "/";
-	    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + sizeString + this.props.imageUrl + ".png";
-
-	    return React.createElement(
-	      'div',
-	      { className: 'my-stamp-index-element',
-	        id: this.selectedText() },
-	      React.createElement('img', {
-	        src: url,
-	        onClick: this.setStamp,
-	        onLoad: this.addDeleteIcon }),
-	      this.deleteIcon()
-	    );
+	var getStampsTour = new Shepherd.Tour({
+	  defaults: {
+	    classes: 'shepherd-theme-arrows'
 	  }
 	});
 
-	module.exports = MyStampListItem;
-
-/***/ },
-/* 238 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(220).Store;
-	var AppDispatcher = __webpack_require__(214);
-
-	var MyStampStore = new Store(AppDispatcher);
-	var _stamps = [];
-	var _stamp;
-
-	var receiveStamp = function (stamp) {
-	  if (_stamps.length < 5) {
-	    _stamps.push(stamp);
-	  }
-	};
-
-	var setStamp = function (stamp) {
-	  _stamp = stamp;
-	};
-
-	var removeStamp = function (id) {
-	  var stampToRemove = _stamps.find(function (stamp) {
-	    return stamp.id === id;
-	  });
-
-	  var idxToRemove = _stamps.indexOf(stampToRemove);
-
-	  _stamps.splice(idxToRemove, 1);
-	};
-
-	MyStampStore.all = function () {
-	  return _stamps.slice();
-	};
-
-	MyStampStore.current = function () {
-	  return _stamp;
-	};
-
-	MyStampStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case "ADD_STAMP":
-	      receiveStamp(payload.stamp);
-	      MyStampStore.__emitChange();
-	      break;
-	    case "DELETE_MY_STAMP":
-	      removeStamp(payload.id);
-	      MyStampStore.__emitChange();
-	      break;
-	    case "SET_STAMP":
-	      setStamp(payload.stamp);
-	      MyStampStore.__emitChange();
-	      break;
-	  }
-	};
-
-	module.exports = MyStampStore;
-
-/***/ },
-/* 239 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var DrawingStore = __webpack_require__(240);
-	var ApiUtil = __webpack_require__(212);
-	var DrawingListItem = __webpack_require__(241);
-
-	var DrawingIndex = React.createClass({
-	  displayName: 'DrawingIndex',
-
-	  getInitialState: function () {
-	    return {
-	      drawings: null,
-	      selectedTab: "popularity",
-	      comparator: function (a, b) {
-	        if (a.likes.length < b.likes.length) {
-	          return 1;
-	        } else if (a.likes.length === b.likes.length) {
-	          return 0;
-	        } else {
-	          return -1;
-	        }
-	      }
-	    };
-	  },
-	  componentDidMount: function () {
-	    this.listener = DrawingStore.addListener(this._onChange);
-	    ApiUtil.fetchAllDrawings();
-	  },
-	  componentWillUnmount: function () {
-	    this.listener.remove();
-	  },
-	  _onChange: function () {
-	    this.setState({ drawings: DrawingStore.all().reverse() });
-	  },
-	  sortByNewest: function () {
-	    var comparator = function (a, b) {
-	      if (a.created_at < b.created_at) {
-	        return 1;
-	      } else if (a.created_at === b.created_at) {
-	        return 0;
-	      } else {
-	        return -1;
-	      }
-	    };
-	    this.setState({
-	      comparator: comparator,
-	      selectedTab: "newest"
-	    });
-	  },
-	  sortByPopularity: function (e) {
-	    var comparator = function (a, b) {
-	      if (a.likes.length < b.likes.length) {
-	        return 1;
-	      } else if (a.likes.length === b.likes.length) {
-	        return 0;
-	      } else {
-	        return -1;
-	      }
-	    };
-	    this.setState({
-	      comparator: comparator,
-	      selectedTab: "popularity"
-	    });
-	  },
-
-	  render: function () {
-	    var popularitySelected = this.state.selectedTab === "popularity" ? "selected-tab" : "";
-	    var newestSelected = this.state.selectedTab === "newest" ? "selected-tab" : "";
-
-	    var drawingsList = "";
-	    if (this.state.drawings) {
-	      var sortedDrawings = this.state.drawings.sort(this.state.comparator);
-	      drawingsList = sortedDrawings.map(function (drawing, idx) {
-	        return React.createElement(DrawingListItem, {
-	          key: idx,
-	          drawingId: drawing.id,
-	          imageUrl: drawing.image_url,
-	          drawing: drawing });
-	      });
-	    }
-	    return React.createElement(
-	      'div',
-	      { className: 'index' },
-	      React.createElement(
-	        'h1',
-	        { className: 'index-header' },
-	        React.createElement(
-	          'span',
-	          {
-	            className: 'index-tab',
-	            onClick: this.sortByPopularity,
-	            id: popularitySelected },
-	          'Most Popular Drawings'
-	        ),
-	        React.createElement(
-	          'span',
-	          {
-	            className: 'index-tab',
-	            onClick: this.sortByNewest,
-	            id: newestSelected },
-	          'Newest Drawings'
-	        )
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'index-contents' },
-	        drawingsList
-	      )
-	    );
-	  }
-
+	getStampsTour.addStep('sort-stamps', {
+	  text: ["This page contains all the stamps from all the site's users.", "Sort stamps by popularity or by when they were made.", "Click on a stamp to add it to your stamp toolbar.", "Your toolbar can hold up to five stamps."],
+	  showCancelLink: true,
+	  buttons: [{
+	    text: 'Back',
+	    action: getStampsTour.back
+	  }, {
+	    text: 'Next',
+	    action: getStampsTour.next
+	  }],
+	  classes: 'shepherd-theme-arrows',
+	  attachTo: '.index-header'
 	});
 
-	module.exports = DrawingIndex;
-
-	// function draw() {
-	//     	// Erasing line
-	//     	var canvas = document.getElementById("eraseLine");
-	//     	if (canvas.getContext) {
-	//         	var ctx = canvas.getContext("2d");
-	//
-	//         	// Black background square
-	//         	ctx.fillRect(0, 0, 200, 200);
-	//
-	//         	// Erasing curved line
-	//         	ctx.globalCompositeOperation = "destination-out";
-	//
-	//         	ctx.beginPath();
-	//         	ctx.moveTo(160, 40);
-	//         	ctx.bezierCurveTo(90, 10, 60, 20, 10, 90);
-	//
-	//         	ctx.lineWidth = 7;
-	//         	ctx.stroke();
-	//     	}
-	// }
-
-/***/ },
-/* 240 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(220).Store;
-	var AppDispatcher = __webpack_require__(214);
-
-	var DrawingStore = new Store(AppDispatcher);
-	var _drawings = [];
-	var _drawing;
-
-	var resetDrawings = function (drawings) {
-	  _drawings = drawings;
-	};
-
-	var resetDrawing = function (drawing) {
-	  _drawing = drawing;
-	};
-
-	var receiveDrawing = function (drawing) {
-	  _drawings.push(drawing);
-	};
-
-	DrawingStore.single = function () {
-	  return _drawing;
-	};
-
-	DrawingStore.all = function () {
-	  return _drawings.slice();
-	};
-
-	DrawingStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case "DRAWING_RECEIVED":
-	      resetDrawing(payload.drawing);
-	      DrawingStore.__emitChange();
-	      break;
-	    case "DRAWINGS_RECEIVED":
-	      resetDrawings(payload.drawings);
-	      DrawingStore.__emitChange();
-	      break;
-	  }
-	};
-
-	module.exports = DrawingStore;
-
-/***/ },
-/* 241 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var History = __webpack_require__(159).History;
-	var ApiUtil = __webpack_require__(212);
-
-	var DrawingListItem = React.createClass({
-	  displayName: 'DrawingListItem',
-
-	  mixins: [History],
-
-	  getInitialState: function () {
-	    return {
-	      hover: false,
-	      likesClicked: false
-	    };
-	  },
-	  goToShow: function () {
-	    this.history.push('drawings/' + this.props.drawingId);
-	  },
-	  deleteDrawing: function () {
-	    $.ajax({
-	      url: "api/drawings/" + this.props.drawingId,
-	      method: "DELETE",
-	      success: function (message) {
-	        console.log(message.message);
-	        console.log("delete successful");
-	      },
-	      error: function (message) {
-	        console.log(message.message);
-	      }
-	    });
-	  },
-	  enhover: function () {
-	    this.setState({ hover: true });
-	  },
-	  dehover: function () {
-	    this.setState({ hover: false });
-	  },
-	  goToUser: function (e) {
-	    e.stopPropagation();
-	    var username = this.props.drawing.username;
-	    this.history.push('users/' + username);
-	  },
-	  toggleLike: function (e) {
-	    e.stopPropagation();
-	    if (!this.props.drawing.liked_by_current_user) {
-	      ApiUtil.likeDrawing(this.props.drawing.id);
-	    }
-	    if (this.props.drawing.liked_by_current_user) {
-	      ApiUtil.unlikeDrawing(this.props.drawing.current_like_id);
-	    }
-	  },
-	  toggleList: function (e) {
-	    e.stopPropagation();
-	    this.setState({ likesClicked: !this.state.likesClicked });
-	  },
-	  drawingLikeList: function () {
-	    return this.props.drawing.likes.map(function (like, i) {
-	      return React.createElement(
-	        'div',
-	        { key: i },
-	        like
-	      );
-	    });
-	  },
-	  render: function () {
-	    var drawingAuthor = this.state.hover ? "drawing-author" : "hidden";
-	    var drawingLikesCount = this.state.hover ? "drawing-likes-count" : "hidden";
-	    var likeDrawingClass = this.state.hover ? "like-drawing-class" : "hidden";
-	    var likeText = this.props.drawing.liked_by_current_user ? "Unlike" : "Like";
-	    var drawingLikeList = this.state.likesClicked ? "drawing-like-list" : "hidden";
-	    var timeAgo = this.props.drawing.time_ago;
-	    if (timeAgo.slice(0, 5) === "about") {
-	      timeAgo = timeAgo.slice(6);
-	    }
-	    if (timeAgo.slice(0, 4) === "less") {
-	      timeAgo = timeAgo.slice(10);
-	    }
-	    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_500,h_500/" + this.props.imageUrl + ".png";
-	    return React.createElement(
-	      'div',
-	      { className: 'index-element',
-	        onClick: this.goToShow,
-	        onMouseEnter: this.enhover,
-	        onMouseLeave: this.dehover },
-	      React.createElement('img', { src: url }),
-	      React.createElement(
-	        'div',
-	        {
-	          className: drawingAuthor,
-	          onClick: this.goToUser },
-	        this.props.drawing.username,
-	        React.createElement('br', null),
-	        timeAgo
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'drawing-likes-box' },
-	        React.createElement(
-	          'div',
-	          {
-	            className: drawingLikesCount,
-	            onClick: this.toggleList },
-	          React.createElement(
-	            'div',
-	            {
-	              className: drawingLikeList },
-	            this.drawingLikeList()
-	          ),
-	          this.props.drawing.likes.length,
-	          ' Likes'
-	        ),
-	        React.createElement(
-	          'div',
-	          {
-	            className: likeDrawingClass,
-	            onClick: this.toggleLike },
-	          likeText
-	        )
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'delete',
-	          onClick: this.deleteDrawing },
-	        'Delete'
-	      )
-	    );
-	  }
+	getStampsTour.addStep('stamp-detail', {
+	  text: ["Click the field in the upper left to see who has used a certain stamp."],
+	  showCancelLink: true,
+	  buttons: [{
+	    text: 'Back',
+	    action: getStampsTour.back
+	  }, {
+	    text: 'Next',
+	    action: getStampsTour.next
+	  }],
+	  classes: 'shepherd-theme-arrows',
+	  attachTo: '.index-element'
 	});
 
-	module.exports = DrawingListItem;
-
-/***/ },
-/* 242 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var ApiUtil = __webpack_require__(212);
-	var DrawingCanvas = __webpack_require__(243);
-	var StampCanvas = __webpack_require__(244);
-	var ColorPicker = __webpack_require__(245);
-	var SizePicker = __webpack_require__(246);
-	var StrokeSample = __webpack_require__(247);
-	var LinkedStateMixin = __webpack_require__(248);
-	var StampIndex = __webpack_require__(211);
-	var StampStore = __webpack_require__(219);
-	var History = __webpack_require__(159).History;
-
-	var CanvasTest = React.createClass({
-	  displayName: 'CanvasTest',
-
-	  mixins: [LinkedStateMixin, History],
-
-	  // Methods that set state
-	  getInitialState: function () {
-	    return {
-	      caption: "caption",
-	      stamping: false,
-	      recentColors: ["#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff"],
-	      stamp: StampStore.single(),
-	      stampSize: 150,
-	      saveStarted: false,
-	      saved: false,
-	      stampsUsed: []
-	    };
-	  },
-	  componentDidMount: function () {
-	    this.drawingCanvas = new DrawingCanvas('drawing-canvas', 500, 500);
-	    this.sizePicker = new SizePicker('size-picker');
-	    this.colorPicker = new ColorPicker('color-picker');
-	    this.strokeSample = new StrokeSample('stroke-sample');
-	    this.stampCanvas = new StampCanvas('stamp-canvas', 150, 150);
-
-	    this.size = 15;
-	    this.color = "#000";
-	    this.drawingCanvas.setSize(this.size);
-	    this.drawingCanvas.setColor(this.color);
-	    this.addRecentColor(this.color);
-
-	    this.strokeSample.pickSample(this.color, this.size);
-
-	    this.colorPicking = false;
-	    this.sizePicking = false;
-
-	    this.token = StampStore.addListener(this.selectStamp);
-	  },
-	  componentWillUnmount: function () {
-	    this.token.remove();
-	  },
-	  selectStamp: function () {
-	    this.setState({
-	      stamp: StampStore.single()
-	    });
-	    if (this.state.stamp) {
-	      this.stampCanvas.clear();
-	      var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_500,h_500/" + this.state.stamp.image_url + ".png";
-	      this.stampCanvas.loadImage(url);
-	      window.setTimeout(this.setStamp, 500);
-	    }
-	  },
-	  colorBar: function () {
-	    return this.state.recentColors.map((function (color, idx) {
-	      return React.createElement('div', {
-	        key: idx,
-	        className: 'color-square',
-	        style: { background: color },
-	        onClick: this.pickRecentColor });
-	    }).bind(this)).reverse();
-	  },
-	  saveDrawing: function () {
-	    var img = this.drawingCanvas.toData();
-	    this.setState({ saveStarted: true });
-	    $.ajax({
-	      url: "api/images",
-	      method: "POST",
-	      data: { img: img },
-	      success: (function (imageReceived) {
-	        ApiUtil.createDrawing({
-	          caption: this.state.caption,
-	          image_url: imageReceived.public_id
-	        });
-	        ApiUtil.useStamps(this.state.stampsUsed);
-	        this.setState({ saved: true });
-	        this.history.push("drawings/" + imageReceived.id);
-	      }).bind(this),
-	      error: function () {
-	        this.setState({ saveStarted: false });
-	      }
-	    });
-	  },
-	  setStamp: function () {
-	    this.stampImg = this.stampCanvas.toData();
-	    this.stampSize = this.stampCanvas.width();
-	    this.drawingCanvas.setStamp(this.stampImg, this.stampSize);
-	  },
-	  stampingText: function () {
-	    var text = this.state.stamping ? "Turn Stamping Off" : "Turn Stamping On";
-	    return text;
-	  },
-	  toggleStamping: function () {
-	    this.drawingCanvas.toggleStamping();
-	    this.setState({ stamping: !this.state.stamping });
-	    this.setStamp();
-	    this.selectStamp();
-	  },
-	  saveText: function () {
-	    var text;
-	    this.state.saveStarted ? text = "Saving" : text = "Save Drawing";
-	    return text;
-	  },
-	  saveDisabled: function () {
-	    var text;
-	    this.state.saveStarted ? text = true : text = false;
-	    return text;
-	  },
-
-	  // Methods for changing Color
-	  downColorPicker: function (e) {
-	    this.colorPicking = true;
-	    var color = this.colorPicker.pickColor(e);
-	    this.strokeSample.pickSample(color, this.size);
-	  },
-	  upColorPicker: function (e) {
-	    if (this.colorPicking) {
-	      this.pickColor();
-	    }
-	    this.colorPicking = false;
-	  },
-	  moveColorPicker: function (e) {
-	    if (this.colorPicking) {
-	      var color = this.colorPicker.pickColor(e);
-	      this.strokeSample.pickSample(color, this.size);
-	    }
-	  },
-	  outColorPicker: function (e) {
-	    if (this.colorPicking) {
-	      this.pickColor();
-	    }
-	    this.colorPicking = false;
-	  },
-	  pickColor: function (e) {
-	    if (this.colorPicking) {
-	      this.color = this.colorPicker.color();
-	      this.addRecentColor();
-	      this.drawingCanvas.setColor(this.color);
-	    }
-	  },
-	  pickRecentColor: function (e) {
-	    this.color = e.target.style.background;
-	    this.strokeSample.pickSample(this.color, this.size);
-	    this.drawingCanvas.setColor(this.color);
-	  },
-	  addRecentColor: function () {
-	    var recentColors = this.state.recentColors.slice(1, 10);
-	    recentColors.push(this.color);
-	    this.setState({ recentColors: recentColors });
-	  },
-
-	  // Methods for picking size
-	  onSizePicking: function (e) {
-	    this.sizePicking = true;
-	    this.pickSize(e);
-	  },
-	  offSizePicking: function () {
-	    this.sizePicking = false;
-	  },
-	  pickSize: function (e) {
-	    if (this.sizePicking) {
-	      this.size = this.sizePicker.pickSize(e);
-	      this.strokeSample.pickSample(this.color, this.size);
-	      this.drawingCanvas.setSize(this.size);
-	    }
-	  },
-
-	  // Methods for drawing
-	  clearDrawingCanvas: function () {
-	    this.drawingCanvas.hardReset();
-	  },
-	  clearStamp: function () {
-	    this.stampCanvas.clear();
-	    this.setStamp();
-	  },
-	  mouseDownHandler: function (e) {
-	    this.drawingCanvas.mouseDown(e, this.color, this.size);
-
-	    if (this.state.stamping) {
-	      var currentStamp = this.state.stamp.id;
-	      if (this.state.stampsUsed.indexOf(currentStamp) === -1) {
-	        var stampsUsed = this.state.stampsUsed;
-	        stampsUsed.push(currentStamp);
-	        this.setState({ stampsUsed: stampsUsed });
-	      }
-	    }
-
-	    console.log(this.state.stampsUsed);
-	  },
-	  mouseUpHandler: function (e) {
-	    this.drawingCanvas.mouseUp(e, this.color, this.size);
-	  },
-	  mouseOutHandler: function (e) {
-	    this.drawingCanvas.mouseOut(e, this.color, this.size);
-	  },
-
-	  mouseMoveHandler: function (e) {
-	    this.drawingCanvas.mouseMove(e, this.color, this.size);
-	  },
-	  onWheelHandler: function (e) {
-	    e.preventDefault();
-	    if (this.state.stamping) {
-	      if (e.deltaY < 0) {
-	        this.stampCanvas.scaleUp();
-	      } else {
-	        this.stampCanvas.scaleDown();
-	      }
-	      this.setStamp();
-	      this.drawingCanvas.mouseMove(e);
-	    } else {
-	      if (e.deltaY < 0) {
-	        this.size = this.size * 1.2;
-	        this.strokeSample.pickSample(this.color, this.size);
-	        this.drawingCanvas.setSize(this.size);
-	      } else {
-	        this.size = this.size / 1.2;
-	        this.strokeSample.pickSample(this.color, this.size);
-	        this.drawingCanvas.setSize(this.size);
-	      }
-	      this.drawingCanvas.mouseMove(e);
-	    }
-	  },
-	  undo: function (e) {
-	    this.drawingCanvas.undo();
-	  },
-
-	  render: function () {
-
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(
-	        'div',
-	        { id: 'entire-drawing-page' },
-	        React.createElement(
-	          'span',
-	          { className: 'drawing-buttons',
-	            id: 'left-buttons' },
-	          React.createElement(
-	            'button',
-	            {
-	              className: 'clear-drawing-canvas',
-	              onClick: this.clearDrawingCanvas },
-	            'Clear Canvas'
-	          ),
-	          React.createElement(
-	            'button',
-	            {
-	              className: 'undo',
-	              onClick: this.undo },
-	            'Undo'
-	          )
-	        ),
-	        React.createElement(
-	          'span',
-	          { id: 'drawing-page' },
-	          React.createElement(
-	            'div',
-	            { id: 'drawing' },
-	            React.createElement(
-	              'div',
-	              { id: 'main-square' },
-	              React.createElement(
-	                'span',
-	                { className: 'left-side' },
-	                React.createElement('canvas', {
-	                  id: 'size-picker',
-	                  width: '80',
-	                  height: '420',
-	                  onClick: this.pickSize,
-	                  onMouseDown: this.onSizePicking,
-	                  onMouseUp: this.offSizePicking,
-	                  onMouseMove: this.pickSize,
-	                  onMouseOut: this.offSizePicking }),
-	                React.createElement('canvas', {
-	                  id: 'stroke-sample',
-	                  width: '80',
-	                  height: '80' })
-	              ),
-	              React.createElement('canvas', {
-	                id: 'drawing-canvas',
-	                onMouseDown: this.mouseDownHandler,
-	                onMouseUp: this.mouseUpHandler,
-	                onMouseMove: this.mouseMoveHandler,
-	                onMouseOut: this.mouseOutHandler,
-	                onMouseOver: this.mouseOverHandler,
-	                onWheel: this.onWheelHandler }),
-	              React.createElement('canvas', {
-	                id: 'color-picker',
-	                width: '80',
-	                height: '500',
-	                onMouseDown: this.downColorPicker,
-	                onMouseUp: this.upColorPicker,
-	                onMouseMove: this.moveColorPicker,
-	                onMouseOut: this.outColorPicker })
-	            ),
-	            React.createElement(
-	              'div',
-	              {
-	                id: 'color-bar' },
-	              this.colorBar()
-	            )
-	          )
-	        ),
-	        React.createElement(
-	          'span',
-	          { className: 'drawing-buttons',
-	            id: 'right-buttons' },
-	          React.createElement(
-	            'button',
-	            {
-	              id: 'toggle-stamping',
-	              onMouseDown: this.toggleStamping },
-	            this.stampingText()
-	          ),
-	          React.createElement(
-	            'button',
-	            {
-	              className: 'save-drawing',
-	              onClick: this.saveDrawing,
-	              disabled: this.saveDisabled() },
-	            this.saveText()
-	          )
-	        )
-	      ),
-	      React.createElement(
-	        'div',
-	        {
-	          className: 'stamp-canvas' },
-	        React.createElement('canvas', {
-	          id: 'stamp-canvas',
-	          width: '150',
-	          height: '150',
-	          onMouseDown: this.mouseDownHandler,
-	          onMouseUp: this.mouseUpHandler,
-	          onMouseMove: this.mouseMoveHandler })
-	      )
-	    );
-	  }
+	getStampsTour.addStep('sort-stamps', {
+	  text: ["Once you have all the stamps you want to use in your drawing,", "click 'Menu', then 'New Drawing'."],
+	  showCancelLink: true,
+	  buttons: [{
+	    text: 'Back',
+	    action: getStampsTour.back
+	  }],
+	  advanceOn: '.new-drawing click',
+	  classes: 'shepherd-theme-arrows',
+	  attachTo: '.index-header'
 	});
 
-	module.exports = CanvasTest;
+	module.exports = getStampsTour;
 
 /***/ },
-/* 243 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var ApiUtil = __webpack_require__(212);
-	var StampStore = __webpack_require__(219);
-
-	var DrawingCanvas = function (id, length, width) {
-	  this.length = length;
-	  this.width = width;
-	  this.canvas = document.getElementById(id);
-	  this.canvas.width = length;
-	  this.canvas.height = width;
-	  this.ctx = this.canvas.getContext('2d');
-	  this.prevX = 0;
-	  this.prevY = 0;
-	  this.currX = 0;
-	  this.currY = 0;
-	  this.rgbString = "black";
-	  this.ctx.lineJoin = this.ctx.lineCap = 'round';
-	  this.blankImageData = this.getImageData();
-	  this.history = [this.blankImageData, this.blankImageData, this.blankImageData, this.blankImageData, this.blankImageData, this.blankImageData];
-
-	  this.drawing = false;
-	  this.stamping = false;
-	};
-
-	DrawingCanvas.prototype.mouseDown = function (e, color, size) {
-	  this.drawInitialMark();
-	  this.drawing = true;
-	};
-
-	DrawingCanvas.prototype.mouseMove = function (e) {
-	  this.prevX = this.currX;
-	  this.prevY = this.currY;
-
-	  this.currX = e.pageX - this.canvas.getBoundingClientRect().left;
-	  this.currY = e.pageY - this.canvas.getBoundingClientRect().top;
-
-	  if (this.drawing) {
-	    this.draw();
-	  } else {
-	    this.preview();
-	  }
-	};
-
-	DrawingCanvas.prototype.mouseUp = function (e) {
-	  this.saveFrame();
-	  this.drawing = false;
-	};
-
-	DrawingCanvas.prototype.mouseOut = function (e) {
-	  if (this.drawing) {
-	    this.saveFrame();
-	  }
-	  this.setToLastFrame();
-
-	  this.drawing = false;
-	};
-
-	DrawingCanvas.prototype.setToLastFrame = function () {
-	  this.clear();
-	  this.putImageData(this.history[this.history.length - 1]);
-	};
-
-	DrawingCanvas.prototype.saveFrame = function () {
-	  this.history.shift();
-	  this.history.push(this.getImageData());
-	};
-
-	DrawingCanvas.prototype.setColor = function (color) {
-	  this.color = color;
-	};
-
-	DrawingCanvas.prototype.setSize = function (size) {
-	  this.size = size;
-	};
-
-	DrawingCanvas.prototype.undo = function () {
-	  this.history.unshift(this.history.pop());
-	  this.setToLastFrame();
-	};
-
-	DrawingCanvas.prototype.preview = function () {
-	  if (this.stamping) {
-	    this.setToLastFrame();
-	    this.previewStamp();
-	  } else {
-	    this.setToLastFrame();
-	    this.previewStroke();
-	  }
-	};
-
-	DrawingCanvas.prototype.draw = function () {
-	  if (this.stamping) {
-	    this.drawStamp();
-	  } else {
-	    this.drawStroke();
-	  }
-	};
-
-	DrawingCanvas.prototype.previewStamp = function () {
-	  this.ctx.globalAlpha = 0.4;
-	  this.drawStamp();
-	  this.ctx.globalAlpha = 1.0;
-	};
-
-	DrawingCanvas.prototype.drawStamp = function () {
-	  var img = new Image();
-	  img.src = this.stampImg;
-	  this.ctx.drawImage(img, this.currX - this.stampSize / 2, this.currY - this.stampSize / 2);
-	};
-
-	DrawingCanvas.prototype.previewStroke = function () {
-	  this.ctx.globalAlpha = 0.4;
-	  this.ctx.beginPath();
-	  this.ctx.moveTo(this.currX + 1, this.currY + 1);
-	  this.ctx.lineTo(this.currX, this.currY);
-	  this.ctx.strokeStyle = this.color;
-	  this.ctx.lineWidth = this.size;
-	  this.ctx.stroke();
-	  this.ctx.closePath();
-	  this.ctx.globalAlpha = 1.0;
-	};
-
-	DrawingCanvas.prototype.drawStroke = function () {
-	  this.ctx.beginPath();
-	  this.ctx.moveTo(this.prevX, this.prevY);
-	  this.ctx.lineTo(this.currX, this.currY);
-	  this.ctx.strokeStyle = this.color;
-	  this.ctx.lineWidth = this.size;
-	  this.ctx.stroke();
-	  this.ctx.closePath();
-	};
-
-	DrawingCanvas.prototype.drawInitialMark = function () {
-	  if (this.stamping) {
-	    this.drawStamp();
-	  } else {
-	    this.drawInitialStroke();
-	  }
-	};
-
-	DrawingCanvas.prototype.drawInitialStroke = function () {
-	  this.ctx.beginPath();
-	  this.ctx.moveTo(this.currX + 1, this.currY + 1);
-	  this.ctx.lineTo(this.currX, this.currY);
-	  this.ctx.strokeStyle = this.color;
-	  this.ctx.lineWidth = this.size;
-	  this.ctx.stroke();
-	  this.ctx.closePath();
-	};
-
-	DrawingCanvas.prototype.toggleStamping = function () {
-	  this.stamping = !this.stamping;
-	};
-
-	DrawingCanvas.prototype.toData = function () {
-	  return this.canvas.toDataURL("image/png");
-	};
-
-	DrawingCanvas.prototype.setStamp = function (stampImg, stampSize) {
-	  this.stampImg = stampImg;
-	  this.stampSize = stampSize;
-	};
-
-	DrawingCanvas.prototype.clear = function () {
-	  this.ctx.clearRect(0, 0, this.width, this.length);
-	};
-
-	DrawingCanvas.prototype.loadImage = function (url) {
-	  var img = new Image();
-	  img.crossOrigin = "anonymous";
-	  img.src = url;
-	  img.onload = (function () {
-	    this.ctx.drawImage(img, 0, 0);
-	  }).bind(this);
-	};
-
-	DrawingCanvas.prototype.getImageData = function () {
-	  return this.ctx.getImageData(0, 0, this.width, this.length);
-	};
-
-	DrawingCanvas.prototype.putImageData = function (imageData) {
-	  this.clear();
-	  this.ctx.putImageData(imageData, 0, 0);
-	};
-
-	DrawingCanvas.prototype.hardReset = function () {
-	  this.clear();
-	  this.history = [this.getImageData(), this.getImageData(), this.getImageData(), this.getImageData(), this.getImageData()];
-	};
-
-	module.exports = DrawingCanvas;
-
-/***/ },
-/* 244 */
-/***/ function(module, exports) {
-
-	var StampCanvas = function (id, width, height) {
-	  this.canvas = document.getElementById(id);
-	  this.canvas.width = width;
-	  this.canvas.height = height;
-	  this.ctx = this.canvas.getContext('2d');
-	  this.img = new Image();
-	  this.scale = 1;
-	};
-
-	StampCanvas.prototype.width = function () {
-	  return this.canvas.width;
-	};
-
-	StampCanvas.prototype.height = function () {
-	  return this.canvas.height;
-	};
-
-	StampCanvas.prototype.loadImage = function (url) {
-	  this.img = new Image();
-	  this.img.crossOrigin = "anonymous";
-	  this.img.src = url;
-	  this.img.onload = (function () {
-	    this.ctx.drawImage(this.img, 0, 0, 500, 500, 0, 0, this.width(), this.height());
-	  }).bind(this);
-	};
-
-	StampCanvas.prototype.getImageData = function () {
-	  return this.ctx.getImageData(0, 0, this.width(), this.height());
-	};
-
-	StampCanvas.prototype.putImageData = function (imageData) {
-	  this.clear();
-	  this.ctx.putImageData(imageData, 0, 0);
-	};
-
-	StampCanvas.prototype.toData = function () {
-	  return this.canvas.toDataURL("image/png");
-	};
-
-	StampCanvas.prototype.clear = function () {
-	  this.ctx.clearRect(0, 0, this.width(), this.height());
-	};
-
-	StampCanvas.prototype.scaleUp = function () {
-	  this.scale = this.scale * 1.2;
-	  var newWidth = 150 * this.scale;
-	  var newHeight = 150 * this.scale;
-	  this.canvas.width = newWidth;
-	  this.canvas.height = newHeight;
-
-	  this.ctx.drawImage(this.img, 0, 0, 500, 500, 0, 0, newWidth, newHeight);
-	};
-
-	StampCanvas.prototype.scaleDown = function () {
-	  this.scale = this.scale / 1.2;
-	  var newWidth = 150 * this.scale;
-	  var newHeight = 150 * this.scale;
-	  this.canvas.width = newWidth;
-	  this.canvas.height = newHeight;
-
-	  this.ctx.drawImage(this.img, 0, 0, 500, 500, 0, 0, newWidth, newHeight);
-	};
-
-	module.exports = StampCanvas;
-
-/***/ },
-/* 245 */
-/***/ function(module, exports) {
-
-	var ColorPicker = function (id) {
-	  this.colorPickerCanvas = document.getElementById(id);
-	  this.colorPickerContext = this.colorPickerCanvas.getContext('2d');
-	  var pickerImg = new Image();
-	  pickerImg.src = './color-picker-80-500.png';
-	  pickerImg.onload = (function () {
-	    this.colorPickerContext.drawImage(pickerImg, 0, 0);
-	  }).bind(this);
-	};
-
-	ColorPicker.prototype.pickColor = function (e) {
-	  var x = e.clientX - this.colorPickerCanvas.getBoundingClientRect().left;
-	  var y = e.clientY - this.colorPickerCanvas.getBoundingClientRect().top;
-	  var imgData = this.colorPickerContext.getImageData(x, y, 1, 1).data;
-	  var rgbArray = imgData.slice(0, 3);
-	  this.rgbString = "rgb(" + rgbArray.join(",") + ")";
-	  return this.rgbString;
-	};
-
-	ColorPicker.prototype.color = function () {
-	  return this.rgbString;
-	};
-
-	module.exports = ColorPicker;
-
-/***/ },
-/* 246 */
-/***/ function(module, exports) {
-
-	var SizePicker = function (id) {
-	  this.sizePickerCanvas = document.getElementById(id);
-	  this.sizePickerContext = this.sizePickerCanvas.getContext('2d');
-	  var pickerImg = new Image();
-	  pickerImg.src = './triangle-v2.png';
-	  pickerImg.onload = (function () {
-	    this.sizePickerContext.drawImage(pickerImg, 0, 0);
-	  }).bind(this);
-	};
-
-	SizePicker.prototype.pickSize = function (e) {
-	  var y = e.clientY - this.sizePickerCanvas.getBoundingClientRect().top;
-	  var size = (390 - y) * 52 / 355;
-	  return Math.max(0.1, size);
-	};
-
-	module.exports = SizePicker;
-
-/***/ },
-/* 247 */
-/***/ function(module, exports) {
-
-	var StrokeSample = function () {
-	  this.strokeSampleCanvas = document.getElementById('stroke-sample');
-	  this.strokeSampleContext = this.strokeSampleCanvas.getContext('2d');
-	};
-
-	StrokeSample.prototype.pickSample = function (color, size) {
-	  this.strokeSampleContext.clearRect(0, 0, 80, 80);
-	  var centerX = 40;
-	  var centerY = 40;
-	  var left = centerX - size / 2;
-	  var top = centerY - size / 2;
-	  this.strokeSampleContext.lineJoin = this.strokeSampleContext.lineCap = 'round';
-	  this.strokeSampleContext.beginPath();
-	  this.strokeSampleContext.moveTo(centerX, centerY);
-	  this.strokeSampleContext.lineTo(centerX + 1, centerY + 1);
-	  this.strokeSampleContext.strokeStyle = color;
-	  this.strokeSampleContext.lineWidth = size;
-	  this.strokeSampleContext.stroke();
-	  this.strokeSampleContext.closePath();
-
-	  // this.strokeSampleContext.fillRect(top, left, size, size);
-	};
-
-	module.exports = StrokeSample;
-
-/***/ },
-/* 248 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __webpack_require__(249);
-
-/***/ },
-/* 249 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule LinkedStateMixin
-	 * @typechecks static-only
-	 */
-
-	'use strict';
-
-	var ReactLink = __webpack_require__(250);
-	var ReactStateSetters = __webpack_require__(251);
-
-	/**
-	 * A simple mixin around ReactLink.forState().
-	 */
-	var LinkedStateMixin = {
-	  /**
-	   * Create a ReactLink that's linked to part of this component's state. The
-	   * ReactLink will have the current value of this.state[key] and will call
-	   * setState() when a change is requested.
-	   *
-	   * @param {string} key state key to update. Note: you may want to use keyOf()
-	   * if you're using Google Closure Compiler advanced mode.
-	   * @return {ReactLink} ReactLink instance linking to the state.
-	   */
-	  linkState: function (key) {
-	    return new ReactLink(this.state[key], ReactStateSetters.createStateKeySetter(this, key));
-	  }
-	};
-
-	module.exports = LinkedStateMixin;
-
-/***/ },
-/* 250 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule ReactLink
-	 * @typechecks static-only
-	 */
-
-	'use strict';
-
-	/**
-	 * ReactLink encapsulates a common pattern in which a component wants to modify
-	 * a prop received from its parent. ReactLink allows the parent to pass down a
-	 * value coupled with a callback that, when invoked, expresses an intent to
-	 * modify that value. For example:
-	 *
-	 * React.createClass({
-	 *   getInitialState: function() {
-	 *     return {value: ''};
-	 *   },
-	 *   render: function() {
-	 *     var valueLink = new ReactLink(this.state.value, this._handleValueChange);
-	 *     return <input valueLink={valueLink} />;
-	 *   },
-	 *   _handleValueChange: function(newValue) {
-	 *     this.setState({value: newValue});
-	 *   }
-	 * });
-	 *
-	 * We have provided some sugary mixins to make the creation and
-	 * consumption of ReactLink easier; see LinkedValueUtils and LinkedStateMixin.
-	 */
-
-	var React = __webpack_require__(2);
-
-	/**
-	 * @param {*} value current value of the link
-	 * @param {function} requestChange callback to request a change
-	 */
-	function ReactLink(value, requestChange) {
-	  this.value = value;
-	  this.requestChange = requestChange;
-	}
-
-	/**
-	 * Creates a PropType that enforces the ReactLink API and optionally checks the
-	 * type of the value being passed inside the link. Example:
-	 *
-	 * MyComponent.propTypes = {
-	 *   tabIndexLink: ReactLink.PropTypes.link(React.PropTypes.number)
-	 * }
-	 */
-	function createLinkTypeChecker(linkType) {
-	  var shapes = {
-	    value: typeof linkType === 'undefined' ? React.PropTypes.any.isRequired : linkType.isRequired,
-	    requestChange: React.PropTypes.func.isRequired
-	  };
-	  return React.PropTypes.shape(shapes);
-	}
-
-	ReactLink.PropTypes = {
-	  link: createLinkTypeChecker
-	};
-
-	module.exports = ReactLink;
-
-/***/ },
-/* 251 */
-/***/ function(module, exports) {
-
-	/**
-	 * Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule ReactStateSetters
-	 */
-
-	'use strict';
-
-	var ReactStateSetters = {
-	  /**
-	   * Returns a function that calls the provided function, and uses the result
-	   * of that to set the component's state.
-	   *
-	   * @param {ReactCompositeComponent} component
-	   * @param {function} funcReturningState Returned callback uses this to
-	   *                                      determine how to update state.
-	   * @return {function} callback that when invoked uses funcReturningState to
-	   *                    determined the object literal to setState.
-	   */
-	  createStateSetter: function (component, funcReturningState) {
-	    return function (a, b, c, d, e, f) {
-	      var partialState = funcReturningState.call(component, a, b, c, d, e, f);
-	      if (partialState) {
-	        component.setState(partialState);
-	      }
-	    };
-	  },
-
-	  /**
-	   * Returns a single-argument callback that can be used to update a single
-	   * key in the component's state.
-	   *
-	   * Note: this is memoized function, which makes it inexpensive to call.
-	   *
-	   * @param {ReactCompositeComponent} component
-	   * @param {string} key The key in the state that you should update.
-	   * @return {function} callback of 1 argument which calls setState() with
-	   *                    the provided keyName and callback argument.
-	   */
-	  createStateKeySetter: function (component, key) {
-	    // Memoize the setters.
-	    var cache = component.__keySetters || (component.__keySetters = {});
-	    return cache[key] || (cache[key] = createStateKeySetter(component, key));
-	  }
-	};
-
-	function createStateKeySetter(component, key) {
-	  // Partial state is allocated outside of the function closure so it can be
-	  // reused with every call, avoiding memory allocation when this function
-	  // is called.
-	  var partialState = {};
-	  return function stateKeySetter(value) {
-	    partialState[key] = value;
-	    component.setState(partialState);
-	  };
-	}
-
-	ReactStateSetters.Mixin = {
-	  /**
-	   * Returns a function that calls the provided function, and uses the result
-	   * of that to set the component's state.
-	   *
-	   * For example, these statements are equivalent:
-	   *
-	   *   this.setState({x: 1});
-	   *   this.createStateSetter(function(xValue) {
-	   *     return {x: xValue};
-	   *   })(1);
-	   *
-	   * @param {function} funcReturningState Returned callback uses this to
-	   *                                      determine how to update state.
-	   * @return {function} callback that when invoked uses funcReturningState to
-	   *                    determined the object literal to setState.
-	   */
-	  createStateSetter: function (funcReturningState) {
-	    return ReactStateSetters.createStateSetter(this, funcReturningState);
-	  },
-
-	  /**
-	   * Returns a single-argument callback that can be used to update a single
-	   * key in the component's state.
-	   *
-	   * For example, these statements are equivalent:
-	   *
-	   *   this.setState({x: 1});
-	   *   this.createStateKeySetter('x')(1);
-	   *
-	   * Note: this is memoized function, which makes it inexpensive to call.
-	   *
-	   * @param {string} key The key in the state that you should update.
-	   * @return {function} callback of 1 argument which calls setState() with
-	   *                    the provided keyName and callback argument.
-	   */
-	  createStateKeySetter: function (key) {
-	    return ReactStateSetters.createStateKeySetter(this, key);
-	  }
-	};
-
-	module.exports = ReactStateSetters;
-
-/***/ },
-/* 252 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var DrawingStore = __webpack_require__(240);
-	var ApiUtil = __webpack_require__(212);
-	var History = __webpack_require__(159).History;
-
-	var DrawingDetail = React.createClass({
-	  displayName: 'DrawingDetail',
-
-	  mixins: [History],
-
-	  getInitialState: function () {
-	    return {
-	      drawing: null
-	    };
-	  },
-	  componentWillMount: function () {
-	    this.token = DrawingStore.addListener(this._onChange);
-	    ApiUtil.fetchDrawing(parseInt(this.props.params.drawingId));
-	  },
-	  componentWillUnmount: function () {
-	    this.token.remove();
-	  },
-	  _onChange: function () {
-	    this.setState({ drawing: DrawingStore.single(this.props.params.drawingId) });
-	  },
-	  goToProfile: function () {
-	    this.history.push('/users/' + this.state.drawing.username);
-	  },
-	  goBack: function () {
-	    this.history.goBack();
-	  },
-	  render: function () {
-	    var contents = "";
-	    var profileUrl;
-	    if (this.state.drawing) {
-	      profileUrl = '#/users/' + this.state.drawing.username;
-	    }
-	    if (this.state.drawing) {
-	      var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + this.state.drawing.image_url + ".png";
-	      contents = React.createElement(
-	        'div',
-	        null,
-	        React.createElement(
-	          'div',
-	          {
-	            className: 'index-element' },
-	          React.createElement('img', { src: url,
-	            onClick: this.goBack })
-	        ),
-	        React.createElement(
-	          'div',
-	          null,
-	          'Drawn by ',
-	          React.createElement(
-	            'a',
-	            { href: profileUrl },
-	            this.state.drawing.username
-	          ),
-	          React.createElement('br', null),
-	          this.state.drawing.time_ago + " ago"
-	        )
-	      );
-	    }
-	    return React.createElement(
-	      'div',
-	      { className: 'drawing-detail' },
-	      contents
-	    );
-	  }
-
-	});
-
-	module.exports = DrawingDetail;
-
-/***/ },
-/* 253 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var DrawingStore = __webpack_require__(240);
-	var ApiUtil = __webpack_require__(212);
-	var DrawingListItem = __webpack_require__(241);
-	var StampStore = __webpack_require__(219);
-	var StampListItem = __webpack_require__(218);
-
-	var ProfilePage = React.createClass({
-	  displayName: 'ProfilePage',
-
-	  getInitialState: function () {
-	    return {
-	      drawings: null,
-	      stamps: null
-	    };
-	  },
-	  componentDidMount: function () {
-	    this.drawingToken = DrawingStore.addListener(this._drawingsChanged);
-	    this.stampToken = StampStore.addListener(this._stampsChanged);
-	    ApiUtil.fetchUserDrawings(this.props.params.username);
-	    ApiUtil.fetchUserStamps(this.props.params.username);
-	  },
-	  componentWillUnmount: function () {
-	    this.drawingToken.remove();
-	    this.stampToken.remove();
-	  },
-	  _drawingsChanged: function () {
-	    this.setState({
-	      drawings: DrawingStore.all().reverse()
-	    });
-	  },
-	  _stampsChanged: function () {
-	    this.setState({
-	      stamps: StampStore.all().reverse()
-	    });
-	  },
-
-	  render: function () {
-	    var drawingsList = "";
-	    if (this.state.drawings) {
-	      drawingsList = this.state.drawings.map(function (drawing, idx) {
-	        return React.createElement(DrawingListItem, {
-	          key: idx,
-	          drawingId: drawing.id,
-	          imageUrl: drawing.image_url,
-	          drawing: drawing });
-	      });
-	    }
-	    var stampsList = "";
-	    if (this.state.stamps) {
-	      stampsList = this.state.stamps.map(function (stamp, idx) {
-	        return React.createElement(StampListItem, {
-	          key: idx,
-	          stampId: stamp.id,
-	          imageUrl: stamp.image_url,
-	          size: 100,
-	          stamp: stamp });
-	      });
-	    }
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(
-	        'div',
-	        { className: 'index' },
-	        React.createElement(
-	          'h2',
-	          { className: 'index-header' },
-	          React.createElement(
-	            'span',
-	            {
-	              className: 'index-tab',
-	              id: 'selected-tab' },
-	            this.props.params.username + "'s Drawings"
-	          )
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'index-contents' },
-	          drawingsList
-	        )
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'index' },
-	        React.createElement(
-	          'h2',
-	          { className: 'index-header' },
-	          React.createElement(
-	            'span',
-	            {
-	              className: 'index-tab',
-	              id: 'selected-tab' },
-	            this.props.params.username + "'s Stamps"
-	          )
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'index-contents' },
-	          stampsList
-	        )
-	      )
-	    );
-	  }
-	});
-
-	module.exports = ProfilePage;
-
-/***/ },
-/* 254 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var StampStore = __webpack_require__(219);
-	var ApiUtil = __webpack_require__(212);
-	var History = __webpack_require__(159).History;
-
-	var StampDetail = React.createClass({
-	  displayName: 'StampDetail',
-
-	  mixins: [History],
-
-	  getInitialState: function () {
-	    return {
-	      stamp: null
-	    };
-	  },
-	  componentWillMount: function () {
-	    this.token = StampStore.addListener(this._onChange);
-	    ApiUtil.fetchStamp(parseInt(this.props.params.stampId));
-	  },
-	  componentWillUnmount: function () {
-	    this.token.remove();
-	  },
-	  _onChange: function () {
-	    this.setState({ stamp: StampStore.single(this.props.params.stampId) });
-	  },
-	  goToProfile: function () {
-	    this.history.push('/users/' + this.state.stamp.username);
-	  },
-	  render: function () {
-	    var contents = "";
-	    if (this.state.stamp) {
-	      var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + this.state.stamp.image_url + ".png";
-	      contents = React.createElement(
-	        'div',
-	        null,
-	        React.createElement('img', { src: url }),
-	        React.createElement(
-	          'div',
-	          {
-	            className: 'username',
-	            onClick: this.goToProfile },
-	          this.state.stamp.username
-	        )
-	      );
-	    }
-	    return React.createElement(
-	      'div',
-	      null,
-	      contents
-	    );
-	  }
-
-	});
-
-	module.exports = StampDetail;
-
-/***/ },
-/* 255 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var ApiUtil = __webpack_require__(212);
-	var DrawingCanvas = __webpack_require__(243);
-	var StampCanvas = __webpack_require__(244);
-	var ColorPicker = __webpack_require__(245);
-	var SizePicker = __webpack_require__(246);
-	var StrokeSample = __webpack_require__(247);
-	var LinkedStateMixin = __webpack_require__(248);
-	var StampIndex = __webpack_require__(211);
-	var StampStore = __webpack_require__(219);
-
-	var CanvasTest = React.createClass({
-	  displayName: 'CanvasTest',
-
-	  mixins: [LinkedStateMixin],
-
-	  // Methods that set state
-	  getInitialState: function () {
-	    return {
-	      caption: "caption",
-	      stamping: false,
-	      recentColors: ["#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff"],
-	      saveStarted: false,
-	      saved: false
-	    };
-	  },
-	  componentDidMount: function () {
-	    this.drawingCanvas = new DrawingCanvas('drawing-canvas', 500, 500);
-	    this.sizePicker = new SizePicker('size-picker');
-	    this.colorPicker = new ColorPicker('color-picker');
-	    this.strokeSample = new StrokeSample('stroke-sample');
-
-	    this.size = 10;
-	    this.color = "#000";
-	    this.drawingCanvas.setSize(this.size);
-	    this.drawingCanvas.setColor(this.color);
-
-	    this.strokeSample.pickSample(this.color, this.size);
-	    this.addRecentColor();
-
-	    this.colorPicking = false;
-	    this.sizePicking = false;
-	  },
-
-	  colorBar: function () {
-	    return this.state.recentColors.map((function (color, idx) {
-	      return React.createElement('div', {
-	        key: idx,
-	        className: 'color-square',
-	        style: { background: color },
-	        onClick: this.pickRecentColor });
-	    }).bind(this)).reverse();
-	  },
-	  saveStamp: function () {
-	    var img = this.drawingCanvas.toData();
-	    this.setState({ saveStarted: true });
-	    $.ajax({
-	      url: "api/images",
-	      method: "POST",
-	      data: { img: img },
-	      success: (function (imageReceived) {
-	        ApiUtil.createStamp({
-	          name: "default name",
-	          image_url: imageReceived.public_id
-	        });
-	        this.setState({ saved: true });
-	      }).bind(this),
-	      error: (function () {
-	        this.setState({ saveStarted: false });
-	      }).bind(this)
-	    });
-	  },
-	  saveToMyStamps: function () {
-	    var img = this.drawingCanvas.toData();
-	    this.setState({ saveStarted: true });
-	    $.ajax({
-	      url: "api/images",
-	      method: "POST",
-	      data: { img: img },
-	      success: (function (imageReceived) {
-	        ApiUtil.createMyStamp({
-	          name: "default name",
-	          image_url: imageReceived.public_id
-	        });
-	        this.setState({ saved: true });
-	      }).bind(this),
-	      error: (function () {
-	        this.setState({ saveStarted: false });
-	      }).bind(this)
-	    });
-	  },
-	  saveText: function () {
-	    var text;
-	    this.state.saved ? text = "Saved" : text = "Save Stamp";
-	    return text;
-	  },
-	  saveDisabled: function () {
-	    var text;
-	    this.state.saveStarted ? text = true : text = false;
-	    return text;
-	  },
-
-	  // Methods for changing Color
-	  downColorPicker: function (e) {
-	    this.colorPicking = true;
-	    var color = this.colorPicker.pickColor(e);
-	    this.strokeSample.pickSample(color, this.size);
-	  },
-	  upColorPicker: function (e) {
-	    if (this.colorPicking) {
-	      this.pickColor();
-	    }
-	    this.colorPicking = false;
-	  },
-	  moveColorPicker: function (e) {
-	    if (this.colorPicking) {
-	      var color = this.colorPicker.pickColor(e);
-	      this.strokeSample.pickSample(color, this.size);
-	    }
-	  },
-	  outColorPicker: function (e) {
-	    if (this.colorPicking) {
-	      this.pickColor();
-	    }
-	    this.colorPicking = false;
-	  },
-	  pickColor: function (e) {
-	    if (this.colorPicking) {
-	      this.color = this.colorPicker.color();
-	      this.addRecentColor();
-	      this.drawingCanvas.setColor(this.color);
-	    }
-	  },
-	  pickRecentColor: function (e) {
-	    this.color = e.target.style.background;
-	    this.strokeSample.pickSample(this.color, this.size);
-	    this.drawingCanvas.setColor(this.color);
-	  },
-	  addRecentColor: function () {
-	    var recentColors = this.state.recentColors.slice(1, 10);
-	    recentColors.push(this.color);
-	    this.setState({ recentColors: recentColors });
-	  },
-
-	  // Methods for picking size
-	  onSizePicking: function (e) {
-	    this.sizePicking = true;
-	    this.pickSize(e);
-	  },
-	  offSizePicking: function () {
-	    this.sizePicking = false;
-	  },
-	  pickSize: function (e) {
-	    if (this.sizePicking) {
-	      this.size = this.sizePicker.pickSize(e);
-	      this.strokeSample.pickSample(this.color, this.size);
-	      this.drawingCanvas.setSize(this.size);
-	    }
-	  },
-
-	  // Methods for drawing
-	  clearDrawingCanvas: function () {
-	    this.drawingCanvas.hardReset();
-	    this.setState({
-	      saveStarted: false,
-	      saved: false
-	    });
-	  },
-	  mouseDownHandler: function (e) {
-	    this.drawingCanvas.mouseDown(e, this.color, this.size);
-	  },
-	  mouseUpHandler: function (e) {
-	    this.drawingCanvas.mouseUp(e, this.color, this.size);
-	  },
-	  mouseOutHandler: function (e) {
-	    this.drawingCanvas.mouseOut(e, this.color, this.size);
-	  },
-	  mouseMoveHandler: function (e) {
-	    this.drawingCanvas.mouseMove(e, this.color, this.size);
-	  },
-	  onWheelHandler: function (e) {
-	    e.preventDefault();
-	    if (e.deltaY < 0) {
-	      this.size = this.size * 1.2;
-	      this.strokeSample.pickSample(this.color, this.size);
-	      this.drawingCanvas.setSize(this.size);
-	    } else {
-	      this.size = this.size / 1.2;
-	      this.strokeSample.pickSample(this.color, this.size);
-	      this.drawingCanvas.setSize(this.size);
-	    }
-	    this.drawingCanvas.mouseMove(e);
-	  },
-	  undo: function (e) {
-	    this.drawingCanvas.undo();
-	  },
-
-	  render: function () {
-	    return React.createElement(
-	      'div',
-	      { id: 'entire-drawing-page' },
-	      React.createElement(
-	        'span',
-	        { className: 'drawing-buttons',
-	          id: 'left-buttons' },
-	        React.createElement(
-	          'button',
-	          {
-	            className: 'clear-drawing-canvas',
-	            onClick: this.clearDrawingCanvas },
-	          'Clear Canvas'
-	        ),
-	        React.createElement(
-	          'button',
-	          {
-	            className: 'undo',
-	            onClick: this.undo },
-	          'Undo'
-	        )
-	      ),
-	      React.createElement(
-	        'span',
-	        { id: 'drawing-page' },
-	        React.createElement(
-	          'div',
-	          { id: 'drawing' },
-	          React.createElement(
-	            'div',
-	            { id: 'main-square' },
-	            React.createElement(
-	              'span',
-	              { className: 'left-side' },
-	              React.createElement('canvas', {
-	                id: 'size-picker',
-	                width: '80',
-	                height: '420',
-	                onClick: this.pickSize,
-	                onMouseDown: this.onSizePicking,
-	                onMouseUp: this.offSizePicking,
-	                onMouseMove: this.pickSize,
-	                onMouseOut: this.offSizePicking }),
-	              React.createElement('canvas', {
-	                id: 'stroke-sample',
-	                width: '80',
-	                height: '80' })
-	            ),
-	            React.createElement('canvas', {
-	              id: 'drawing-canvas',
-	              onMouseDown: this.mouseDownHandler,
-	              onMouseUp: this.mouseUpHandler,
-	              onMouseMove: this.mouseMoveHandler,
-	              onMouseOut: this.mouseOutHandler,
-	              onMouseOver: this.mouseOverHandler,
-	              onWheel: this.onWheelHandler }),
-	            React.createElement('canvas', {
-	              id: 'color-picker',
-	              width: '80',
-	              height: '500',
-	              onMouseDown: this.downColorPicker,
-	              onMouseUp: this.upColorPicker,
-	              onMouseMove: this.moveColorPicker,
-	              onMouseOut: this.outColorPicker })
-	          ),
-	          React.createElement(
-	            'div',
-	            {
-	              id: 'color-bar' },
-	            this.colorBar()
-	          )
-	        )
-	      ),
-	      React.createElement(
-	        'span',
-	        { className: 'drawing-buttons',
-	          id: 'right-buttons' },
-	        React.createElement(
-	          'button',
-	          {
-	            className: 'save-stamp',
-	            onClick: this.saveStamp,
-	            disabled: this.saveDisabled() },
-	          this.saveText()
-	        ),
-	        React.createElement(
-	          'button',
-	          {
-	            className: 'save-to-my-stamps',
-	            onClick: this.saveToMyStamps,
-	            disabled: this.saveDisabled() },
-	          'Save To My Stamps'
-	        )
-	      )
-	    );
-	  }
-	});
-
-	module.exports = CanvasTest;
-
-/***/ },
-/* 256 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-
-	var Home = React.createClass({
-	  displayName: 'Home',
-
-	  render: function () {
-	    return React.createElement('div', null);
-	  }
-	});
-
-	module.exports = Home;
-
-/***/ },
-/* 257 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	var strictUriEncode = __webpack_require__(258);
-
-	exports.extract = function (str) {
-		return str.split('?')[1] || '';
-	};
-
-	exports.parse = function (str) {
-		if (typeof str !== 'string') {
-			return {};
-		}
-
-		str = str.trim().replace(/^(\?|#|&)/, '');
-
-		if (!str) {
-			return {};
-		}
-
-		return str.split('&').reduce(function (ret, param) {
-			var parts = param.replace(/\+/g, ' ').split('=');
-			// Firefox (pre 40) decodes `%3D` to `=`
-			// https://github.com/sindresorhus/query-string/pull/37
-			var key = parts.shift();
-			var val = parts.length > 0 ? parts.join('=') : undefined;
-
-			key = decodeURIComponent(key);
-
-			// missing `=` should be `null`:
-			// http://w3.org/TR/2012/WD-url-20120524/#collect-url-parameters
-			val = val === undefined ? null : decodeURIComponent(val);
-
-			if (!ret.hasOwnProperty(key)) {
-				ret[key] = val;
-			} else if (Array.isArray(ret[key])) {
-				ret[key].push(val);
-			} else {
-				ret[key] = [ret[key], val];
-			}
-
-			return ret;
-		}, {});
-	};
-
-	exports.stringify = function (obj) {
-		return obj ? Object.keys(obj).sort().map(function (key) {
-			var val = obj[key];
-
-			if (val === undefined) {
-				return '';
-			}
-
-			if (val === null) {
-				return key;
-			}
-
-			if (Array.isArray(val)) {
-				return val.sort().map(function (val2) {
-					return strictUriEncode(key) + '=' + strictUriEncode(val2);
-				}).join('&');
-			}
-
-			return strictUriEncode(key) + '=' + strictUriEncode(val);
-		}).filter(function (x) {
-			return x.length > 0;
-		}).join('&') : '';
-	};
-
-
-/***/ },
-/* 258 */
-/***/ function(module, exports) {
-
-	'use strict';
-	module.exports = function (str) {
-		return encodeURIComponent(str).replace(/[!'()*]/g, function (c) {
-			return '%' + c.charCodeAt(0).toString(16);
-		});
-	};
-
-
-/***/ },
-/* 259 */,
-/* 260 */,
-/* 261 */,
-/* 262 */,
-/* 263 */,
-/* 264 */,
-/* 265 */,
-/* 266 */,
-/* 267 */,
-/* 268 */,
-/* 269 */,
-/* 270 */,
-/* 271 */,
-/* 272 */,
-/* 273 */,
-/* 274 */,
-/* 275 */,
-/* 276 */,
-/* 277 */,
-/* 278 */,
-/* 279 */,
-/* 280 */,
-/* 281 */,
-/* 282 */,
-/* 283 */,
-/* 284 */,
-/* 285 */,
-/* 286 */,
-/* 287 */,
-/* 288 */,
-/* 289 */,
-/* 290 */,
-/* 291 */,
-/* 292 */,
-/* 293 */,
-/* 294 */,
-/* 295 */,
-/* 296 */,
-/* 297 */,
-/* 298 */,
-/* 299 */,
-/* 300 */,
-/* 301 */,
-/* 302 */,
-/* 303 */,
-/* 304 */,
-/* 305 */,
-/* 306 */,
-/* 307 */,
-/* 308 */
+/* 235 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! tether-shepherd 1.2.0 */
 
 	(function(root, factory) {
 	  if (true) {
-	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(309)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(236)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	  } else if (typeof exports === 'object') {
 	    module.exports = factory(require('tether'));
 	  } else {
@@ -34373,7 +32186,7 @@
 
 
 /***/ },
-/* 309 */
+/* 236 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! tether 1.1.0 */
@@ -36092,6 +33905,2259 @@
 
 	}));
 
+
+/***/ },
+/* 237 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var ApiUtil = __webpack_require__(210);
+	var MyStampListItem = __webpack_require__(238);
+	var MyStampStore = __webpack_require__(239);
+	var History = __webpack_require__(159).History;
+
+	var MyStampIndex = React.createClass({
+	  displayName: 'MyStampIndex',
+
+	  mixins: [History],
+
+	  getInitialState: function () {
+	    return {
+	      stamps: null,
+	      selected: null
+	    };
+	  },
+	  componentDidMount: function () {
+	    this.listener = MyStampStore.addListener(this._onChange);
+	    // ApiUtil.fetchMyStamp();
+	  },
+	  componentWillUnmount: function () {
+	    this.listener.remove();
+	  },
+	  _onChange: function () {
+	    this.setState({
+	      stamps: MyStampStore.all()
+	    });
+	  },
+	  selectStamp: function (e) {
+	    this.setState({
+	      selected: parseInt(e.currentTarget.attributes["data-idx"].value)
+	    });
+	  },
+	  goToStampsIndex: function () {
+	    this.history.push('stamps');
+	  },
+	  goToNewStamp: function () {
+	    this.history.push('stamp/new');
+	  },
+
+	  render: function () {
+	    var stampsList = "";
+	    if (this.state.stamps) {
+	      stampsList = this.state.stamps.map((function (stamp, idx) {
+	        var selected = this.state.selected === idx ? "selected-stamp" : "";
+	        return React.createElement(MyStampListItem, {
+	          stampId: stamp.id,
+	          imageUrl: stamp.image_url,
+	          size: 100,
+	          key: idx,
+	          'data-idx': idx,
+	          onClick: this.selectStamp,
+	          id: selected });
+	      }).bind(this));
+	    }
+	    return React.createElement(
+	      'div',
+	      { className: 'my-stamp-index' },
+	      stampsList,
+	      React.createElement(
+	        'div',
+	        { className: 'my-stamp-index-footer' },
+	        React.createElement(
+	          'button',
+	          { onClick: this.goToStampsIndex },
+	          'Get Stamps'
+	        ),
+	        React.createElement(
+	          'button',
+	          { onClick: this.goToNewStamp },
+	          'Make Stamps'
+	        )
+	      )
+	    );
+	  }
+
+	});
+
+	module.exports = MyStampIndex;
+
+/***/ },
+/* 238 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var History = __webpack_require__(159).History;
+	var ApiUtil = __webpack_require__(210);
+	var ApiActions = __webpack_require__(211);
+	var StampStore = __webpack_require__(217);
+
+	var MyStampListItem = React.createClass({
+	  displayName: 'MyStampListItem',
+
+	  mixins: [History],
+
+	  getInitialState: function () {
+	    return {
+	      stamp: null,
+	      imageLoaded: false
+	    };
+	  },
+	  setStamp: function () {
+	    ApiUtil.setStamp(this.props.stampId);
+	  },
+	  deleteMyStamp: function () {
+	    ApiActions.deleteMyStamp(this.props.stampId);
+	  },
+	  selectedText: function () {
+	    var text;
+	    if (StampStore.single()) {
+	      StampStore.single().id === this.props.stampId ? text = "selected" : text = "";
+	    }
+	    return text;
+	  },
+	  addDeleteIcon: function () {
+	    this.setState({ imageLoaded: true });
+	  },
+	  deleteIcon: function () {
+	    var text;
+	    if (this.state.imageLoaded) {
+	      text = React.createElement('div', {
+	        className: 'delete-my-stamp-icon',
+	        onClick: this.deleteMyStamp });
+	    } else {
+	      text = "";
+	    }
+	    return text;
+	  },
+	  render: function () {
+	    var size = this.props.size;
+	    var sizeString = "w_" + size + ",h_" + size + "/";
+	    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + sizeString + this.props.imageUrl + ".png";
+
+	    return React.createElement(
+	      'div',
+	      { className: 'my-stamp-index-element',
+	        id: this.selectedText() },
+	      React.createElement('img', {
+	        src: url,
+	        onClick: this.setStamp,
+	        onLoad: this.addDeleteIcon }),
+	      this.deleteIcon()
+	    );
+	  }
+	});
+
+	module.exports = MyStampListItem;
+
+/***/ },
+/* 239 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(218).Store;
+	var AppDispatcher = __webpack_require__(212);
+
+	var MyStampStore = new Store(AppDispatcher);
+	var _stamps = [];
+	var _stamp;
+
+	var receiveStamp = function (stamp) {
+	  if (_stamps.length < 5) {
+	    _stamps.push(stamp);
+	  }
+	};
+
+	var setStamp = function (stamp) {
+	  _stamp = stamp;
+	};
+
+	var removeStamp = function (id) {
+	  var stampToRemove = _stamps.find(function (stamp) {
+	    return stamp.id === id;
+	  });
+
+	  var idxToRemove = _stamps.indexOf(stampToRemove);
+
+	  _stamps.splice(idxToRemove, 1);
+	};
+
+	MyStampStore.all = function () {
+	  return _stamps.slice();
+	};
+
+	MyStampStore.current = function () {
+	  return _stamp;
+	};
+
+	MyStampStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case "ADD_STAMP":
+	      receiveStamp(payload.stamp);
+	      MyStampStore.__emitChange();
+	      break;
+	    case "DELETE_MY_STAMP":
+	      removeStamp(payload.id);
+	      MyStampStore.__emitChange();
+	      break;
+	    case "SET_STAMP":
+	      setStamp(payload.stamp);
+	      MyStampStore.__emitChange();
+	      break;
+	  }
+	};
+
+	module.exports = MyStampStore;
+
+/***/ },
+/* 240 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var DrawingStore = __webpack_require__(241);
+	var ApiUtil = __webpack_require__(210);
+	var DrawingListItem = __webpack_require__(242);
+	var drawingIndexTour = __webpack_require__(243);
+
+	var DrawingIndex = React.createClass({
+	  displayName: 'DrawingIndex',
+
+	  getInitialState: function () {
+	    return {
+	      drawings: null,
+	      selectedTab: "popularity",
+	      comparator: function (a, b) {
+	        if (a.likes.length < b.likes.length) {
+	          return 1;
+	        } else if (a.likes.length === b.likes.length) {
+	          return 0;
+	        } else {
+	          return -1;
+	        }
+	      }
+	    };
+	  },
+	  componentDidMount: function () {
+	    this.listener = DrawingStore.addListener(this._onChange);
+	    ApiUtil.fetchAllDrawings();
+
+	    drawingIndexTour.start();
+	  },
+	  componentWillUnmount: function () {
+	    this.listener.remove();
+	  },
+	  _onChange: function () {
+	    this.setState({ drawings: DrawingStore.all().reverse() });
+	  },
+	  sortByNewest: function () {
+	    var comparator = function (a, b) {
+	      if (a.created_at < b.created_at) {
+	        return 1;
+	      } else if (a.created_at === b.created_at) {
+	        return 0;
+	      } else {
+	        return -1;
+	      }
+	    };
+	    this.setState({
+	      comparator: comparator,
+	      selectedTab: "newest"
+	    });
+	  },
+	  sortByPopularity: function (e) {
+	    var comparator = function (a, b) {
+	      if (a.likes.length < b.likes.length) {
+	        return 1;
+	      } else if (a.likes.length === b.likes.length) {
+	        return 0;
+	      } else {
+	        return -1;
+	      }
+	    };
+	    this.setState({
+	      comparator: comparator,
+	      selectedTab: "popularity"
+	    });
+	  },
+
+	  render: function () {
+	    var popularitySelected = this.state.selectedTab === "popularity" ? "selected-tab" : "";
+	    var newestSelected = this.state.selectedTab === "newest" ? "selected-tab" : "";
+
+	    var drawingsList = "";
+	    if (this.state.drawings) {
+	      var sortedDrawings = this.state.drawings.sort(this.state.comparator);
+	      drawingsList = sortedDrawings.map(function (drawing, idx) {
+	        return React.createElement(DrawingListItem, {
+	          key: idx,
+	          drawingId: drawing.id,
+	          imageUrl: drawing.image_url,
+	          drawing: drawing });
+	      });
+	    }
+	    return React.createElement(
+	      'div',
+	      { className: 'index' },
+	      React.createElement(
+	        'h1',
+	        { className: 'index-header' },
+	        React.createElement(
+	          'span',
+	          {
+	            className: 'index-tab',
+	            onClick: this.sortByPopularity,
+	            id: popularitySelected },
+	          'Most Popular Drawings'
+	        ),
+	        React.createElement(
+	          'span',
+	          {
+	            className: 'index-tab',
+	            onClick: this.sortByNewest,
+	            id: newestSelected },
+	          'Newest Drawings'
+	        )
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'index-contents' },
+	        drawingsList
+	      )
+	    );
+	  }
+
+	});
+
+	module.exports = DrawingIndex;
+
+	// function draw() {
+	//     	// Erasing line
+	//     	var canvas = document.getElementById("eraseLine");
+	//     	if (canvas.getContext) {
+	//         	var ctx = canvas.getContext("2d");
+	//
+	//         	// Black background square
+	//         	ctx.fillRect(0, 0, 200, 200);
+	//
+	//         	// Erasing curved line
+	//         	ctx.globalCompositeOperation = "destination-out";
+	//
+	//         	ctx.beginPath();
+	//         	ctx.moveTo(160, 40);
+	//         	ctx.bezierCurveTo(90, 10, 60, 20, 10, 90);
+	//
+	//         	ctx.lineWidth = 7;
+	//         	ctx.stroke();
+	//     	}
+	// }
+
+/***/ },
+/* 241 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(218).Store;
+	var AppDispatcher = __webpack_require__(212);
+
+	var DrawingStore = new Store(AppDispatcher);
+	var _drawings = [];
+	var _drawing;
+
+	var resetDrawings = function (drawings) {
+	  _drawings = drawings;
+	};
+
+	var resetDrawing = function (drawing) {
+	  _drawing = drawing;
+	};
+
+	var receiveDrawing = function (drawing) {
+	  _drawings.push(drawing);
+	};
+
+	DrawingStore.single = function () {
+	  return _drawing;
+	};
+
+	DrawingStore.all = function () {
+	  return _drawings.slice();
+	};
+
+	DrawingStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case "DRAWING_RECEIVED":
+	      resetDrawing(payload.drawing);
+	      DrawingStore.__emitChange();
+	      break;
+	    case "DRAWINGS_RECEIVED":
+	      resetDrawings(payload.drawings);
+	      DrawingStore.__emitChange();
+	      break;
+	  }
+	};
+
+	module.exports = DrawingStore;
+
+/***/ },
+/* 242 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var History = __webpack_require__(159).History;
+	var ApiUtil = __webpack_require__(210);
+
+	var DrawingListItem = React.createClass({
+	  displayName: 'DrawingListItem',
+
+	  mixins: [History],
+
+	  getInitialState: function () {
+	    return {
+	      hover: false,
+	      likesClicked: false
+	    };
+	  },
+	  goToShow: function () {
+	    this.history.push('drawings/' + this.props.drawingId);
+	  },
+	  deleteDrawing: function () {
+	    $.ajax({
+	      url: "api/drawings/" + this.props.drawingId,
+	      method: "DELETE",
+	      success: function (message) {
+	        console.log(message.message);
+	        console.log("delete successful");
+	      },
+	      error: function (message) {
+	        console.log(message.message);
+	      }
+	    });
+	  },
+	  enhover: function () {
+	    this.setState({ hover: true });
+	  },
+	  dehover: function () {
+	    this.setState({ hover: false });
+	  },
+	  goToUser: function (e) {
+	    e.stopPropagation();
+	    var username = this.props.drawing.username;
+	    this.history.push('users/' + username);
+	  },
+	  toggleLike: function (e) {
+	    e.stopPropagation();
+	    if (!this.props.drawing.liked_by_current_user) {
+	      ApiUtil.likeDrawing(this.props.drawing.id);
+	    }
+	    if (this.props.drawing.liked_by_current_user) {
+	      ApiUtil.unlikeDrawing(this.props.drawing.current_like_id);
+	    }
+	  },
+	  toggleList: function (e) {
+	    e.stopPropagation();
+	    this.setState({ likesClicked: !this.state.likesClicked });
+	  },
+	  drawingLikeList: function () {
+	    return this.props.drawing.likes.map(function (like, i) {
+	      return React.createElement(
+	        'div',
+	        { key: i },
+	        like
+	      );
+	    });
+	  },
+	  render: function () {
+	    var drawingAuthor = this.state.hover ? "drawing-author" : "hidden";
+	    var drawingLikesCount = this.state.hover ? "drawing-likes-count" : "hidden";
+	    var likeDrawingClass = this.state.hover ? "like-drawing-class" : "hidden";
+	    var likeText = this.props.drawing.liked_by_current_user ? "Unlike" : "Like";
+	    var drawingLikeList = this.state.likesClicked ? "drawing-like-list" : "hidden";
+	    var timeAgo = this.props.drawing.time_ago;
+	    if (timeAgo.slice(0, 5) === "about") {
+	      timeAgo = timeAgo.slice(6);
+	    }
+	    if (timeAgo.slice(0, 4) === "less") {
+	      timeAgo = timeAgo.slice(10);
+	    }
+	    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_500,h_500/" + this.props.imageUrl + ".png";
+	    return React.createElement(
+	      'div',
+	      { className: 'index-element',
+	        onClick: this.goToShow,
+	        onMouseEnter: this.enhover,
+	        onMouseLeave: this.dehover },
+	      React.createElement('img', {
+	        className: 'drawing-index-image',
+	        src: url }),
+	      React.createElement(
+	        'div',
+	        {
+	          className: drawingAuthor,
+	          onClick: this.goToUser },
+	        this.props.drawing.username,
+	        React.createElement('br', null),
+	        timeAgo
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'drawing-likes-box' },
+	        React.createElement(
+	          'div',
+	          {
+	            className: drawingLikesCount,
+	            onClick: this.toggleList },
+	          React.createElement(
+	            'div',
+	            {
+	              className: drawingLikeList },
+	            this.drawingLikeList()
+	          ),
+	          this.props.drawing.likes.length,
+	          ' Likes'
+	        ),
+	        React.createElement(
+	          'div',
+	          {
+	            className: likeDrawingClass,
+	            onClick: this.toggleLike },
+	          likeText
+	        )
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'delete',
+	          onClick: this.deleteDrawing },
+	        'Delete'
+	      )
+	    );
+	  }
+	});
+
+	module.exports = DrawingListItem;
+
+/***/ },
+/* 243 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Shepherd = __webpack_require__(235);
+
+	var drawingIndexTour = new Shepherd.Tour({
+	  defaults: {
+	    classes: 'shepherd-theme-arrows'
+	  }
+	});
+
+	drawingIndexTour.addStep('save-drawing', {
+	  text: ["Feel free to check out other users' drawings, see who has been liking", "what, and visit other users' profile pages."],
+	  showCancelLink: true,
+	  buttons: [{
+	    text: 'Finish',
+	    action: drawingIndexTour.next
+	  }],
+	  classes: 'shepherd-theme-arrows',
+	  attachTo: '.index-header'
+	});
+
+	module.exports = drawingIndexTour;
+
+/***/ },
+/* 244 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var ApiUtil = __webpack_require__(210);
+	var DrawingCanvas = __webpack_require__(245);
+	var StampCanvas = __webpack_require__(246);
+	var ColorPicker = __webpack_require__(247);
+	var SizePicker = __webpack_require__(248);
+	var StrokeSample = __webpack_require__(249);
+	var LinkedStateMixin = __webpack_require__(250);
+	var StampIndex = __webpack_require__(209);
+	var StampStore = __webpack_require__(217);
+	var History = __webpack_require__(159).History;
+	var makeDrawingTour = __webpack_require__(260);
+
+	var CanvasTest = React.createClass({
+	  displayName: 'CanvasTest',
+
+	  mixins: [LinkedStateMixin, History],
+
+	  // Methods that set state
+	  getInitialState: function () {
+	    return {
+	      caption: "caption",
+	      stamping: false,
+	      recentColors: ["#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff"],
+	      stamp: StampStore.single(),
+	      stampSize: 150,
+	      saveStarted: false,
+	      saved: false,
+	      stampsUsed: []
+	    };
+	  },
+	  componentDidMount: function () {
+	    this.drawingCanvas = new DrawingCanvas('drawing-canvas', 500, 500);
+	    this.sizePicker = new SizePicker('size-picker');
+	    this.colorPicker = new ColorPicker('color-picker');
+	    this.strokeSample = new StrokeSample('stroke-sample');
+	    this.stampCanvas = new StampCanvas('stamp-canvas', 150, 150);
+
+	    this.size = 15;
+	    this.color = "#000";
+	    this.drawingCanvas.setSize(this.size);
+	    this.drawingCanvas.setColor(this.color);
+	    this.addRecentColor(this.color);
+
+	    this.strokeSample.pickSample(this.color, this.size);
+
+	    this.colorPicking = false;
+	    this.sizePicking = false;
+
+	    this.token = StampStore.addListener(this.selectStamp);
+
+	    makeDrawingTour.start();
+	  },
+	  componentWillUnmount: function () {
+	    this.token.remove();
+	  },
+	  selectStamp: function () {
+	    this.setState({
+	      stamp: StampStore.single()
+	    });
+	    if (this.state.stamp) {
+	      this.stampCanvas.clear();
+	      var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_500,h_500/" + this.state.stamp.image_url + ".png";
+	      this.stampCanvas.loadImage(url);
+	      window.setTimeout(this.setStamp, 500);
+	    }
+	  },
+	  colorBar: function () {
+	    return this.state.recentColors.map((function (color, idx) {
+	      return React.createElement('div', {
+	        key: idx,
+	        className: 'color-square',
+	        style: { background: color },
+	        onClick: this.pickRecentColor });
+	    }).bind(this)).reverse();
+	  },
+	  saveDrawing: function () {
+	    var img = this.drawingCanvas.toData();
+	    this.setState({ saveStarted: true });
+	    $.ajax({
+	      url: "api/images",
+	      method: "POST",
+	      data: { img: img },
+	      success: (function (imageReceived) {
+	        ApiUtil.createDrawing({
+	          caption: this.state.caption,
+	          image_url: imageReceived.public_id
+	        });
+	        ApiUtil.useStamps(this.state.stampsUsed);
+	        this.setState({ saved: true });
+	        this.history.push("drawings/" + imageReceived.id);
+	      }).bind(this),
+	      error: function () {
+	        this.setState({ saveStarted: false });
+	      }
+	    });
+	  },
+	  setStamp: function () {
+	    this.stampImg = this.stampCanvas.toData();
+	    this.stampSize = this.stampCanvas.width();
+	    this.drawingCanvas.setStamp(this.stampImg, this.stampSize);
+	  },
+	  stampingText: function () {
+	    var text = this.state.stamping ? "Turn Stamping Off" : "Turn Stamping On";
+	    return text;
+	  },
+	  toggleStamping: function () {
+	    this.drawingCanvas.toggleStamping();
+	    this.setState({ stamping: !this.state.stamping });
+	    this.setStamp();
+	    this.selectStamp();
+	  },
+	  saveText: function () {
+	    var text;
+	    this.state.saveStarted ? text = "Saving" : text = "Save Drawing";
+	    return text;
+	  },
+	  saveDisabled: function () {
+	    var text;
+	    this.state.saveStarted ? text = true : text = false;
+	    return text;
+	  },
+
+	  // Methods for changing Color
+	  downColorPicker: function (e) {
+	    this.colorPicking = true;
+	    var color = this.colorPicker.pickColor(e);
+	    this.strokeSample.pickSample(color, this.size);
+	  },
+	  upColorPicker: function (e) {
+	    if (this.colorPicking) {
+	      this.pickColor();
+	    }
+	    this.colorPicking = false;
+	  },
+	  moveColorPicker: function (e) {
+	    if (this.colorPicking) {
+	      var color = this.colorPicker.pickColor(e);
+	      this.strokeSample.pickSample(color, this.size);
+	    }
+	  },
+	  outColorPicker: function (e) {
+	    if (this.colorPicking) {
+	      this.pickColor();
+	    }
+	    this.colorPicking = false;
+	  },
+	  pickColor: function (e) {
+	    if (this.colorPicking) {
+	      this.color = this.colorPicker.color();
+	      this.addRecentColor();
+	      this.drawingCanvas.setColor(this.color);
+	    }
+	  },
+	  pickRecentColor: function (e) {
+	    this.color = e.target.style.background;
+	    this.strokeSample.pickSample(this.color, this.size);
+	    this.drawingCanvas.setColor(this.color);
+	  },
+	  addRecentColor: function () {
+	    var recentColors = this.state.recentColors.slice(1, 10);
+	    recentColors.push(this.color);
+	    this.setState({ recentColors: recentColors });
+	  },
+
+	  // Methods for picking size
+	  onSizePicking: function (e) {
+	    this.sizePicking = true;
+	    this.pickSize(e);
+	  },
+	  offSizePicking: function () {
+	    this.sizePicking = false;
+	  },
+	  pickSize: function (e) {
+	    if (this.sizePicking) {
+	      this.size = this.sizePicker.pickSize(e);
+	      this.strokeSample.pickSample(this.color, this.size);
+	      this.drawingCanvas.setSize(this.size);
+	    }
+	  },
+
+	  // Methods for drawing
+	  clearDrawingCanvas: function () {
+	    this.drawingCanvas.hardReset();
+	  },
+	  clearStamp: function () {
+	    this.stampCanvas.clear();
+	    this.setStamp();
+	  },
+	  mouseDownHandler: function (e) {
+	    this.drawingCanvas.mouseDown(e, this.color, this.size);
+
+	    if (this.state.stamping) {
+	      var currentStamp = this.state.stamp.id;
+	      if (this.state.stampsUsed.indexOf(currentStamp) === -1) {
+	        var stampsUsed = this.state.stampsUsed;
+	        stampsUsed.push(currentStamp);
+	        this.setState({ stampsUsed: stampsUsed });
+	      }
+	    }
+
+	    console.log(this.state.stampsUsed);
+	  },
+	  mouseUpHandler: function (e) {
+	    this.drawingCanvas.mouseUp(e, this.color, this.size);
+	  },
+	  mouseOutHandler: function (e) {
+	    this.drawingCanvas.mouseOut(e, this.color, this.size);
+	  },
+
+	  mouseMoveHandler: function (e) {
+	    this.drawingCanvas.mouseMove(e, this.color, this.size);
+	  },
+	  onWheelHandler: function (e) {
+	    e.preventDefault();
+	    if (this.state.stamping) {
+	      if (e.deltaY < 0) {
+	        this.stampCanvas.scaleUp();
+	      } else {
+	        this.stampCanvas.scaleDown();
+	      }
+	      this.setStamp();
+	      this.drawingCanvas.mouseMove(e);
+	    } else {
+	      if (e.deltaY < 0) {
+	        this.size = this.size * 1.2;
+	        this.strokeSample.pickSample(this.color, this.size);
+	        this.drawingCanvas.setSize(this.size);
+	      } else {
+	        this.size = this.size / 1.2;
+	        this.strokeSample.pickSample(this.color, this.size);
+	        this.drawingCanvas.setSize(this.size);
+	      }
+	      this.drawingCanvas.mouseMove(e);
+	    }
+	  },
+	  undo: function (e) {
+	    this.drawingCanvas.undo();
+	  },
+
+	  render: function () {
+
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'div',
+	        { id: 'entire-drawing-page' },
+	        React.createElement(
+	          'span',
+	          { className: 'drawing-buttons',
+	            id: 'left-buttons' },
+	          React.createElement(
+	            'button',
+	            {
+	              className: 'clear-drawing-canvas',
+	              onClick: this.clearDrawingCanvas },
+	            'Clear Canvas'
+	          ),
+	          React.createElement(
+	            'button',
+	            {
+	              className: 'undo',
+	              onClick: this.undo },
+	            'Undo'
+	          )
+	        ),
+	        React.createElement(
+	          'span',
+	          { id: 'drawing-page' },
+	          React.createElement(
+	            'div',
+	            { id: 'drawing' },
+	            React.createElement(
+	              'div',
+	              { id: 'main-square' },
+	              React.createElement(
+	                'span',
+	                { className: 'left-side' },
+	                React.createElement('canvas', {
+	                  id: 'size-picker',
+	                  width: '80',
+	                  height: '420',
+	                  onClick: this.pickSize,
+	                  onMouseDown: this.onSizePicking,
+	                  onMouseUp: this.offSizePicking,
+	                  onMouseMove: this.pickSize,
+	                  onMouseOut: this.offSizePicking }),
+	                React.createElement('canvas', {
+	                  id: 'stroke-sample',
+	                  width: '80',
+	                  height: '80' })
+	              ),
+	              React.createElement('canvas', {
+	                id: 'drawing-canvas',
+	                onMouseDown: this.mouseDownHandler,
+	                onMouseUp: this.mouseUpHandler,
+	                onMouseMove: this.mouseMoveHandler,
+	                onMouseOut: this.mouseOutHandler,
+	                onMouseOver: this.mouseOverHandler,
+	                onWheel: this.onWheelHandler }),
+	              React.createElement('canvas', {
+	                id: 'color-picker',
+	                width: '80',
+	                height: '500',
+	                onMouseDown: this.downColorPicker,
+	                onMouseUp: this.upColorPicker,
+	                onMouseMove: this.moveColorPicker,
+	                onMouseOut: this.outColorPicker })
+	            ),
+	            React.createElement(
+	              'div',
+	              {
+	                id: 'color-bar' },
+	              this.colorBar()
+	            )
+	          )
+	        ),
+	        React.createElement(
+	          'span',
+	          { className: 'drawing-buttons',
+	            id: 'right-buttons' },
+	          React.createElement(
+	            'button',
+	            {
+	              id: 'toggle-stamping',
+	              onMouseDown: this.toggleStamping },
+	            this.stampingText()
+	          ),
+	          React.createElement(
+	            'button',
+	            {
+	              className: 'save-drawing',
+	              onClick: this.saveDrawing,
+	              disabled: this.saveDisabled() },
+	            this.saveText()
+	          )
+	        )
+	      ),
+	      React.createElement(
+	        'div',
+	        {
+	          className: 'stamp-canvas' },
+	        React.createElement('canvas', {
+	          id: 'stamp-canvas',
+	          width: '150',
+	          height: '150',
+	          onMouseDown: this.mouseDownHandler,
+	          onMouseUp: this.mouseUpHandler,
+	          onMouseMove: this.mouseMoveHandler })
+	      )
+	    );
+	  }
+	});
+
+	module.exports = CanvasTest;
+
+/***/ },
+/* 245 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ApiUtil = __webpack_require__(210);
+	var StampStore = __webpack_require__(217);
+
+	var DrawingCanvas = function (id, length, width) {
+	  this.length = length;
+	  this.width = width;
+	  this.canvas = document.getElementById(id);
+	  this.canvas.width = length;
+	  this.canvas.height = width;
+	  this.ctx = this.canvas.getContext('2d');
+	  this.prevX = 0;
+	  this.prevY = 0;
+	  this.currX = 0;
+	  this.currY = 0;
+	  this.rgbString = "black";
+	  this.ctx.lineJoin = this.ctx.lineCap = 'round';
+	  this.blankImageData = this.getImageData();
+	  this.history = [this.blankImageData, this.blankImageData, this.blankImageData, this.blankImageData, this.blankImageData, this.blankImageData];
+
+	  this.drawing = false;
+	  this.stamping = false;
+	};
+
+	DrawingCanvas.prototype.mouseDown = function (e, color, size) {
+	  this.drawInitialMark();
+	  this.drawing = true;
+	};
+
+	DrawingCanvas.prototype.mouseMove = function (e) {
+	  this.prevX = this.currX;
+	  this.prevY = this.currY;
+
+	  this.currX = e.pageX - this.canvas.getBoundingClientRect().left;
+	  this.currY = e.pageY - this.canvas.getBoundingClientRect().top;
+
+	  if (this.drawing) {
+	    this.draw();
+	  } else {
+	    this.preview();
+	  }
+	};
+
+	DrawingCanvas.prototype.mouseUp = function (e) {
+	  this.saveFrame();
+	  this.drawing = false;
+	};
+
+	DrawingCanvas.prototype.mouseOut = function (e) {
+	  if (this.drawing) {
+	    this.saveFrame();
+	  }
+	  this.setToLastFrame();
+
+	  this.drawing = false;
+	};
+
+	DrawingCanvas.prototype.setToLastFrame = function () {
+	  this.clear();
+	  this.putImageData(this.history[this.history.length - 1]);
+	};
+
+	DrawingCanvas.prototype.saveFrame = function () {
+	  this.history.shift();
+	  this.history.push(this.getImageData());
+	};
+
+	DrawingCanvas.prototype.setColor = function (color) {
+	  this.color = color;
+	};
+
+	DrawingCanvas.prototype.setSize = function (size) {
+	  this.size = size;
+	};
+
+	DrawingCanvas.prototype.undo = function () {
+	  this.history.unshift(this.history.pop());
+	  this.setToLastFrame();
+	};
+
+	DrawingCanvas.prototype.preview = function () {
+	  if (this.stamping) {
+	    this.setToLastFrame();
+	    this.previewStamp();
+	  } else {
+	    this.setToLastFrame();
+	    this.previewStroke();
+	  }
+	};
+
+	DrawingCanvas.prototype.draw = function () {
+	  if (this.stamping) {
+	    this.drawStamp();
+	  } else {
+	    this.drawStroke();
+	  }
+	};
+
+	DrawingCanvas.prototype.previewStamp = function () {
+	  this.ctx.globalAlpha = 0.4;
+	  this.drawStamp();
+	  this.ctx.globalAlpha = 1.0;
+	};
+
+	DrawingCanvas.prototype.drawStamp = function () {
+	  var img = new Image();
+	  img.src = this.stampImg;
+	  this.ctx.drawImage(img, this.currX - this.stampSize / 2, this.currY - this.stampSize / 2);
+	};
+
+	DrawingCanvas.prototype.previewStroke = function () {
+	  this.ctx.globalAlpha = 0.4;
+	  this.ctx.beginPath();
+	  this.ctx.moveTo(this.currX + 1, this.currY + 1);
+	  this.ctx.lineTo(this.currX, this.currY);
+	  this.ctx.strokeStyle = this.color;
+	  this.ctx.lineWidth = this.size;
+	  this.ctx.stroke();
+	  this.ctx.closePath();
+	  this.ctx.globalAlpha = 1.0;
+	};
+
+	DrawingCanvas.prototype.drawStroke = function () {
+	  this.ctx.beginPath();
+	  this.ctx.moveTo(this.prevX, this.prevY);
+	  this.ctx.lineTo(this.currX, this.currY);
+	  this.ctx.strokeStyle = this.color;
+	  this.ctx.lineWidth = this.size;
+	  this.ctx.stroke();
+	  this.ctx.closePath();
+	};
+
+	DrawingCanvas.prototype.drawInitialMark = function () {
+	  if (this.stamping) {
+	    this.drawStamp();
+	  } else {
+	    this.drawInitialStroke();
+	  }
+	};
+
+	DrawingCanvas.prototype.drawInitialStroke = function () {
+	  this.ctx.beginPath();
+	  this.ctx.moveTo(this.currX + 1, this.currY + 1);
+	  this.ctx.lineTo(this.currX, this.currY);
+	  this.ctx.strokeStyle = this.color;
+	  this.ctx.lineWidth = this.size;
+	  this.ctx.stroke();
+	  this.ctx.closePath();
+	};
+
+	DrawingCanvas.prototype.toggleStamping = function () {
+	  this.stamping = !this.stamping;
+	};
+
+	DrawingCanvas.prototype.toData = function () {
+	  return this.canvas.toDataURL("image/png");
+	};
+
+	DrawingCanvas.prototype.setStamp = function (stampImg, stampSize) {
+	  this.stampImg = stampImg;
+	  this.stampSize = stampSize;
+	};
+
+	DrawingCanvas.prototype.clear = function () {
+	  this.ctx.clearRect(0, 0, this.width, this.length);
+	};
+
+	DrawingCanvas.prototype.loadImage = function (url) {
+	  var img = new Image();
+	  img.crossOrigin = "anonymous";
+	  img.src = url;
+	  img.onload = (function () {
+	    this.ctx.drawImage(img, 0, 0);
+	  }).bind(this);
+	};
+
+	DrawingCanvas.prototype.getImageData = function () {
+	  return this.ctx.getImageData(0, 0, this.width, this.length);
+	};
+
+	DrawingCanvas.prototype.putImageData = function (imageData) {
+	  this.clear();
+	  this.ctx.putImageData(imageData, 0, 0);
+	};
+
+	DrawingCanvas.prototype.hardReset = function () {
+	  this.clear();
+	  this.history = [this.getImageData(), this.getImageData(), this.getImageData(), this.getImageData(), this.getImageData()];
+	};
+
+	module.exports = DrawingCanvas;
+
+/***/ },
+/* 246 */
+/***/ function(module, exports) {
+
+	var StampCanvas = function (id, width, height) {
+	  this.canvas = document.getElementById(id);
+	  this.canvas.width = width;
+	  this.canvas.height = height;
+	  this.ctx = this.canvas.getContext('2d');
+	  this.img = new Image();
+	  this.scale = 1;
+	};
+
+	StampCanvas.prototype.width = function () {
+	  return this.canvas.width;
+	};
+
+	StampCanvas.prototype.height = function () {
+	  return this.canvas.height;
+	};
+
+	StampCanvas.prototype.loadImage = function (url) {
+	  this.img = new Image();
+	  this.img.crossOrigin = "anonymous";
+	  this.img.src = url;
+	  this.img.onload = (function () {
+	    this.ctx.drawImage(this.img, 0, 0, 500, 500, 0, 0, this.width(), this.height());
+	  }).bind(this);
+	};
+
+	StampCanvas.prototype.getImageData = function () {
+	  return this.ctx.getImageData(0, 0, this.width(), this.height());
+	};
+
+	StampCanvas.prototype.putImageData = function (imageData) {
+	  this.clear();
+	  this.ctx.putImageData(imageData, 0, 0);
+	};
+
+	StampCanvas.prototype.toData = function () {
+	  return this.canvas.toDataURL("image/png");
+	};
+
+	StampCanvas.prototype.clear = function () {
+	  this.ctx.clearRect(0, 0, this.width(), this.height());
+	};
+
+	StampCanvas.prototype.scaleUp = function () {
+	  this.scale = this.scale * 1.2;
+	  var newWidth = 150 * this.scale;
+	  var newHeight = 150 * this.scale;
+	  this.canvas.width = newWidth;
+	  this.canvas.height = newHeight;
+
+	  this.ctx.drawImage(this.img, 0, 0, 500, 500, 0, 0, newWidth, newHeight);
+	};
+
+	StampCanvas.prototype.scaleDown = function () {
+	  this.scale = this.scale / 1.2;
+	  var newWidth = 150 * this.scale;
+	  var newHeight = 150 * this.scale;
+	  this.canvas.width = newWidth;
+	  this.canvas.height = newHeight;
+
+	  this.ctx.drawImage(this.img, 0, 0, 500, 500, 0, 0, newWidth, newHeight);
+	};
+
+	module.exports = StampCanvas;
+
+/***/ },
+/* 247 */
+/***/ function(module, exports) {
+
+	var ColorPicker = function (id) {
+	  this.colorPickerCanvas = document.getElementById(id);
+	  this.colorPickerContext = this.colorPickerCanvas.getContext('2d');
+	  var pickerImg = new Image();
+	  pickerImg.src = './color-picker-80-500.png';
+	  pickerImg.onload = (function () {
+	    this.colorPickerContext.drawImage(pickerImg, 0, 0);
+	  }).bind(this);
+	};
+
+	ColorPicker.prototype.pickColor = function (e) {
+	  var x = e.clientX - this.colorPickerCanvas.getBoundingClientRect().left;
+	  var y = e.clientY - this.colorPickerCanvas.getBoundingClientRect().top;
+	  var imgData = this.colorPickerContext.getImageData(x, y, 1, 1).data;
+	  var rgbArray = imgData.slice(0, 3);
+	  this.rgbString = "rgb(" + rgbArray.join(",") + ")";
+	  return this.rgbString;
+	};
+
+	ColorPicker.prototype.color = function () {
+	  return this.rgbString;
+	};
+
+	module.exports = ColorPicker;
+
+/***/ },
+/* 248 */
+/***/ function(module, exports) {
+
+	var SizePicker = function (id) {
+	  this.sizePickerCanvas = document.getElementById(id);
+	  this.sizePickerContext = this.sizePickerCanvas.getContext('2d');
+	  var pickerImg = new Image();
+	  pickerImg.src = './triangle-v2.png';
+	  pickerImg.onload = (function () {
+	    this.sizePickerContext.drawImage(pickerImg, 0, 0);
+	  }).bind(this);
+	};
+
+	SizePicker.prototype.pickSize = function (e) {
+	  var y = e.clientY - this.sizePickerCanvas.getBoundingClientRect().top;
+	  var size = (390 - y) * 52 / 355;
+	  return Math.max(0.1, size);
+	};
+
+	module.exports = SizePicker;
+
+/***/ },
+/* 249 */
+/***/ function(module, exports) {
+
+	var StrokeSample = function () {
+	  this.strokeSampleCanvas = document.getElementById('stroke-sample');
+	  this.strokeSampleContext = this.strokeSampleCanvas.getContext('2d');
+	};
+
+	StrokeSample.prototype.pickSample = function (color, size) {
+	  this.strokeSampleContext.clearRect(0, 0, 80, 80);
+	  var centerX = 40;
+	  var centerY = 40;
+	  var left = centerX - size / 2;
+	  var top = centerY - size / 2;
+	  this.strokeSampleContext.lineJoin = this.strokeSampleContext.lineCap = 'round';
+	  this.strokeSampleContext.beginPath();
+	  this.strokeSampleContext.moveTo(centerX, centerY);
+	  this.strokeSampleContext.lineTo(centerX + 1, centerY + 1);
+	  this.strokeSampleContext.strokeStyle = color;
+	  this.strokeSampleContext.lineWidth = size;
+	  this.strokeSampleContext.stroke();
+	  this.strokeSampleContext.closePath();
+
+	  // this.strokeSampleContext.fillRect(top, left, size, size);
+	};
+
+	module.exports = StrokeSample;
+
+/***/ },
+/* 250 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(251);
+
+/***/ },
+/* 251 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule LinkedStateMixin
+	 * @typechecks static-only
+	 */
+
+	'use strict';
+
+	var ReactLink = __webpack_require__(252);
+	var ReactStateSetters = __webpack_require__(253);
+
+	/**
+	 * A simple mixin around ReactLink.forState().
+	 */
+	var LinkedStateMixin = {
+	  /**
+	   * Create a ReactLink that's linked to part of this component's state. The
+	   * ReactLink will have the current value of this.state[key] and will call
+	   * setState() when a change is requested.
+	   *
+	   * @param {string} key state key to update. Note: you may want to use keyOf()
+	   * if you're using Google Closure Compiler advanced mode.
+	   * @return {ReactLink} ReactLink instance linking to the state.
+	   */
+	  linkState: function (key) {
+	    return new ReactLink(this.state[key], ReactStateSetters.createStateKeySetter(this, key));
+	  }
+	};
+
+	module.exports = LinkedStateMixin;
+
+/***/ },
+/* 252 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactLink
+	 * @typechecks static-only
+	 */
+
+	'use strict';
+
+	/**
+	 * ReactLink encapsulates a common pattern in which a component wants to modify
+	 * a prop received from its parent. ReactLink allows the parent to pass down a
+	 * value coupled with a callback that, when invoked, expresses an intent to
+	 * modify that value. For example:
+	 *
+	 * React.createClass({
+	 *   getInitialState: function() {
+	 *     return {value: ''};
+	 *   },
+	 *   render: function() {
+	 *     var valueLink = new ReactLink(this.state.value, this._handleValueChange);
+	 *     return <input valueLink={valueLink} />;
+	 *   },
+	 *   _handleValueChange: function(newValue) {
+	 *     this.setState({value: newValue});
+	 *   }
+	 * });
+	 *
+	 * We have provided some sugary mixins to make the creation and
+	 * consumption of ReactLink easier; see LinkedValueUtils and LinkedStateMixin.
+	 */
+
+	var React = __webpack_require__(2);
+
+	/**
+	 * @param {*} value current value of the link
+	 * @param {function} requestChange callback to request a change
+	 */
+	function ReactLink(value, requestChange) {
+	  this.value = value;
+	  this.requestChange = requestChange;
+	}
+
+	/**
+	 * Creates a PropType that enforces the ReactLink API and optionally checks the
+	 * type of the value being passed inside the link. Example:
+	 *
+	 * MyComponent.propTypes = {
+	 *   tabIndexLink: ReactLink.PropTypes.link(React.PropTypes.number)
+	 * }
+	 */
+	function createLinkTypeChecker(linkType) {
+	  var shapes = {
+	    value: typeof linkType === 'undefined' ? React.PropTypes.any.isRequired : linkType.isRequired,
+	    requestChange: React.PropTypes.func.isRequired
+	  };
+	  return React.PropTypes.shape(shapes);
+	}
+
+	ReactLink.PropTypes = {
+	  link: createLinkTypeChecker
+	};
+
+	module.exports = ReactLink;
+
+/***/ },
+/* 253 */
+/***/ function(module, exports) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactStateSetters
+	 */
+
+	'use strict';
+
+	var ReactStateSetters = {
+	  /**
+	   * Returns a function that calls the provided function, and uses the result
+	   * of that to set the component's state.
+	   *
+	   * @param {ReactCompositeComponent} component
+	   * @param {function} funcReturningState Returned callback uses this to
+	   *                                      determine how to update state.
+	   * @return {function} callback that when invoked uses funcReturningState to
+	   *                    determined the object literal to setState.
+	   */
+	  createStateSetter: function (component, funcReturningState) {
+	    return function (a, b, c, d, e, f) {
+	      var partialState = funcReturningState.call(component, a, b, c, d, e, f);
+	      if (partialState) {
+	        component.setState(partialState);
+	      }
+	    };
+	  },
+
+	  /**
+	   * Returns a single-argument callback that can be used to update a single
+	   * key in the component's state.
+	   *
+	   * Note: this is memoized function, which makes it inexpensive to call.
+	   *
+	   * @param {ReactCompositeComponent} component
+	   * @param {string} key The key in the state that you should update.
+	   * @return {function} callback of 1 argument which calls setState() with
+	   *                    the provided keyName and callback argument.
+	   */
+	  createStateKeySetter: function (component, key) {
+	    // Memoize the setters.
+	    var cache = component.__keySetters || (component.__keySetters = {});
+	    return cache[key] || (cache[key] = createStateKeySetter(component, key));
+	  }
+	};
+
+	function createStateKeySetter(component, key) {
+	  // Partial state is allocated outside of the function closure so it can be
+	  // reused with every call, avoiding memory allocation when this function
+	  // is called.
+	  var partialState = {};
+	  return function stateKeySetter(value) {
+	    partialState[key] = value;
+	    component.setState(partialState);
+	  };
+	}
+
+	ReactStateSetters.Mixin = {
+	  /**
+	   * Returns a function that calls the provided function, and uses the result
+	   * of that to set the component's state.
+	   *
+	   * For example, these statements are equivalent:
+	   *
+	   *   this.setState({x: 1});
+	   *   this.createStateSetter(function(xValue) {
+	   *     return {x: xValue};
+	   *   })(1);
+	   *
+	   * @param {function} funcReturningState Returned callback uses this to
+	   *                                      determine how to update state.
+	   * @return {function} callback that when invoked uses funcReturningState to
+	   *                    determined the object literal to setState.
+	   */
+	  createStateSetter: function (funcReturningState) {
+	    return ReactStateSetters.createStateSetter(this, funcReturningState);
+	  },
+
+	  /**
+	   * Returns a single-argument callback that can be used to update a single
+	   * key in the component's state.
+	   *
+	   * For example, these statements are equivalent:
+	   *
+	   *   this.setState({x: 1});
+	   *   this.createStateKeySetter('x')(1);
+	   *
+	   * Note: this is memoized function, which makes it inexpensive to call.
+	   *
+	   * @param {string} key The key in the state that you should update.
+	   * @return {function} callback of 1 argument which calls setState() with
+	   *                    the provided keyName and callback argument.
+	   */
+	  createStateKeySetter: function (key) {
+	    return ReactStateSetters.createStateKeySetter(this, key);
+	  }
+	};
+
+	module.exports = ReactStateSetters;
+
+/***/ },
+/* 254 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var DrawingStore = __webpack_require__(241);
+	var ApiUtil = __webpack_require__(210);
+	var History = __webpack_require__(159).History;
+
+	var DrawingDetail = React.createClass({
+	  displayName: 'DrawingDetail',
+
+	  mixins: [History],
+
+	  getInitialState: function () {
+	    return {
+	      drawing: null
+	    };
+	  },
+	  componentWillMount: function () {
+	    this.token = DrawingStore.addListener(this._onChange);
+	    ApiUtil.fetchDrawing(parseInt(this.props.params.drawingId));
+	  },
+	  componentWillUnmount: function () {
+	    this.token.remove();
+	  },
+	  _onChange: function () {
+	    this.setState({ drawing: DrawingStore.single(this.props.params.drawingId) });
+	  },
+	  goToProfile: function () {
+	    this.history.push('/users/' + this.state.drawing.username);
+	  },
+	  goBack: function () {
+	    this.history.goBack();
+	  },
+	  render: function () {
+	    var contents = "";
+	    var profileUrl;
+	    if (this.state.drawing) {
+	      profileUrl = '#/users/' + this.state.drawing.username;
+	    }
+	    if (this.state.drawing) {
+	      var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + this.state.drawing.image_url + ".png";
+	      contents = React.createElement(
+	        'div',
+	        null,
+	        React.createElement(
+	          'div',
+	          {
+	            className: 'index-element' },
+	          React.createElement('img', { src: url,
+	            onClick: this.goBack })
+	        ),
+	        React.createElement(
+	          'div',
+	          null,
+	          'Drawn by ',
+	          React.createElement(
+	            'a',
+	            { href: profileUrl },
+	            this.state.drawing.username
+	          ),
+	          React.createElement('br', null),
+	          this.state.drawing.time_ago + " ago"
+	        )
+	      );
+	    }
+	    return React.createElement(
+	      'div',
+	      { className: 'drawing-detail' },
+	      contents
+	    );
+	  }
+
+	});
+
+	module.exports = DrawingDetail;
+
+/***/ },
+/* 255 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var DrawingStore = __webpack_require__(241);
+	var ApiUtil = __webpack_require__(210);
+	var DrawingListItem = __webpack_require__(242);
+	var StampStore = __webpack_require__(217);
+	var StampListItem = __webpack_require__(216);
+
+	var ProfilePage = React.createClass({
+	  displayName: 'ProfilePage',
+
+	  getInitialState: function () {
+	    return {
+	      drawings: null,
+	      stamps: null
+	    };
+	  },
+	  componentDidMount: function () {
+	    this.drawingToken = DrawingStore.addListener(this._drawingsChanged);
+	    this.stampToken = StampStore.addListener(this._stampsChanged);
+	    ApiUtil.fetchUserDrawings(this.props.params.username);
+	    ApiUtil.fetchUserStamps(this.props.params.username);
+	  },
+	  componentWillUnmount: function () {
+	    this.drawingToken.remove();
+	    this.stampToken.remove();
+	  },
+	  _drawingsChanged: function () {
+	    this.setState({
+	      drawings: DrawingStore.all().reverse()
+	    });
+	  },
+	  _stampsChanged: function () {
+	    this.setState({
+	      stamps: StampStore.all().reverse()
+	    });
+	  },
+
+	  render: function () {
+	    var drawingsList = "";
+	    if (this.state.drawings) {
+	      drawingsList = this.state.drawings.map(function (drawing, idx) {
+	        return React.createElement(DrawingListItem, {
+	          key: idx,
+	          drawingId: drawing.id,
+	          imageUrl: drawing.image_url,
+	          drawing: drawing });
+	      });
+	    }
+	    var stampsList = "";
+	    if (this.state.stamps) {
+	      stampsList = this.state.stamps.map(function (stamp, idx) {
+	        return React.createElement(StampListItem, {
+	          key: idx,
+	          stampId: stamp.id,
+	          imageUrl: stamp.image_url,
+	          size: 100,
+	          stamp: stamp });
+	      });
+	    }
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'div',
+	        { className: 'index' },
+	        React.createElement(
+	          'h2',
+	          { className: 'index-header' },
+	          React.createElement(
+	            'span',
+	            {
+	              className: 'index-tab',
+	              id: 'selected-tab' },
+	            this.props.params.username + "'s Drawings"
+	          )
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'index-contents' },
+	          drawingsList
+	        )
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'index' },
+	        React.createElement(
+	          'h2',
+	          { className: 'index-header' },
+	          React.createElement(
+	            'span',
+	            {
+	              className: 'index-tab',
+	              id: 'selected-tab' },
+	            this.props.params.username + "'s Stamps"
+	          )
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'index-contents' },
+	          stampsList
+	        )
+	      )
+	    );
+	  }
+	});
+
+	module.exports = ProfilePage;
+
+/***/ },
+/* 256 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var StampStore = __webpack_require__(217);
+	var ApiUtil = __webpack_require__(210);
+	var History = __webpack_require__(159).History;
+
+	var StampDetail = React.createClass({
+	  displayName: 'StampDetail',
+
+	  mixins: [History],
+
+	  getInitialState: function () {
+	    return {
+	      stamp: null
+	    };
+	  },
+	  componentWillMount: function () {
+	    this.token = StampStore.addListener(this._onChange);
+	    ApiUtil.fetchStamp(parseInt(this.props.params.stampId));
+	  },
+	  componentWillUnmount: function () {
+	    this.token.remove();
+	  },
+	  _onChange: function () {
+	    this.setState({ stamp: StampStore.single(this.props.params.stampId) });
+	  },
+	  goToProfile: function () {
+	    this.history.push('/users/' + this.state.stamp.username);
+	  },
+	  render: function () {
+	    var contents = "";
+	    if (this.state.stamp) {
+	      var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + this.state.stamp.image_url + ".png";
+	      contents = React.createElement(
+	        'div',
+	        null,
+	        React.createElement('img', { src: url }),
+	        React.createElement(
+	          'div',
+	          {
+	            className: 'username',
+	            onClick: this.goToProfile },
+	          this.state.stamp.username
+	        )
+	      );
+	    }
+	    return React.createElement(
+	      'div',
+	      null,
+	      contents
+	    );
+	  }
+
+	});
+
+	module.exports = StampDetail;
+
+/***/ },
+/* 257 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var ApiUtil = __webpack_require__(210);
+	var DrawingCanvas = __webpack_require__(245);
+	var StampCanvas = __webpack_require__(246);
+	var ColorPicker = __webpack_require__(247);
+	var SizePicker = __webpack_require__(248);
+	var StrokeSample = __webpack_require__(249);
+	var LinkedStateMixin = __webpack_require__(250);
+	var StampIndex = __webpack_require__(209);
+	var StampStore = __webpack_require__(217);
+	var makeStampTour = __webpack_require__(258);
+
+	var CanvasTest = React.createClass({
+	  displayName: 'CanvasTest',
+
+	  mixins: [LinkedStateMixin],
+
+	  // Methods that set state
+	  getInitialState: function () {
+	    return {
+	      caption: "caption",
+	      stamping: false,
+	      recentColors: ["#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff"],
+	      saveStarted: false,
+	      saved: false
+	    };
+	  },
+	  componentDidMount: function () {
+	    this.drawingCanvas = new DrawingCanvas('drawing-canvas', 500, 500);
+	    this.sizePicker = new SizePicker('size-picker');
+	    this.colorPicker = new ColorPicker('color-picker');
+	    this.strokeSample = new StrokeSample('stroke-sample');
+
+	    this.size = 10;
+	    this.color = "#000";
+	    this.drawingCanvas.setSize(this.size);
+	    this.drawingCanvas.setColor(this.color);
+
+	    this.strokeSample.pickSample(this.color, this.size);
+	    this.addRecentColor();
+
+	    this.colorPicking = false;
+	    this.sizePicking = false;
+
+	    makeStampTour.start();
+	  },
+
+	  colorBar: function () {
+	    return this.state.recentColors.map((function (color, idx) {
+	      return React.createElement('div', {
+	        key: idx,
+	        className: 'color-square',
+	        style: { background: color },
+	        onClick: this.pickRecentColor });
+	    }).bind(this)).reverse();
+	  },
+	  saveStamp: function () {
+	    var img = this.drawingCanvas.toData();
+	    this.setState({ saveStarted: true });
+	    $.ajax({
+	      url: "api/images",
+	      method: "POST",
+	      data: { img: img },
+	      success: (function (imageReceived) {
+	        ApiUtil.createStamp({
+	          name: "default name",
+	          image_url: imageReceived.public_id
+	        });
+	        this.setState({ saved: true });
+	      }).bind(this),
+	      error: (function () {
+	        this.setState({ saveStarted: false });
+	      }).bind(this)
+	    });
+	  },
+	  saveToMyStamps: function () {
+	    var img = this.drawingCanvas.toData();
+	    this.setState({ saveStarted: true });
+	    $.ajax({
+	      url: "api/images",
+	      method: "POST",
+	      data: { img: img },
+	      success: (function (imageReceived) {
+	        ApiUtil.createMyStamp({
+	          name: "default name",
+	          image_url: imageReceived.public_id
+	        });
+	        this.setState({ saved: true });
+	      }).bind(this),
+	      error: (function () {
+	        this.setState({ saveStarted: false });
+	      }).bind(this)
+	    });
+	  },
+	  saveText: function () {
+	    var text;
+	    this.state.saved ? text = "Saved" : text = "Save Stamp";
+	    return text;
+	  },
+	  saveDisabled: function () {
+	    var text;
+	    this.state.saveStarted ? text = true : text = false;
+	    return text;
+	  },
+
+	  // Methods for changing Color
+	  downColorPicker: function (e) {
+	    this.colorPicking = true;
+	    var color = this.colorPicker.pickColor(e);
+	    this.strokeSample.pickSample(color, this.size);
+	  },
+	  upColorPicker: function (e) {
+	    if (this.colorPicking) {
+	      this.pickColor();
+	    }
+	    this.colorPicking = false;
+	  },
+	  moveColorPicker: function (e) {
+	    if (this.colorPicking) {
+	      var color = this.colorPicker.pickColor(e);
+	      this.strokeSample.pickSample(color, this.size);
+	    }
+	  },
+	  outColorPicker: function (e) {
+	    if (this.colorPicking) {
+	      this.pickColor();
+	    }
+	    this.colorPicking = false;
+	  },
+	  pickColor: function (e) {
+	    if (this.colorPicking) {
+	      this.color = this.colorPicker.color();
+	      this.addRecentColor();
+	      this.drawingCanvas.setColor(this.color);
+	    }
+	  },
+	  pickRecentColor: function (e) {
+	    this.color = e.target.style.background;
+	    this.strokeSample.pickSample(this.color, this.size);
+	    this.drawingCanvas.setColor(this.color);
+	  },
+	  addRecentColor: function () {
+	    var recentColors = this.state.recentColors.slice(1, 10);
+	    recentColors.push(this.color);
+	    this.setState({ recentColors: recentColors });
+	  },
+
+	  // Methods for picking size
+	  onSizePicking: function (e) {
+	    this.sizePicking = true;
+	    this.pickSize(e);
+	  },
+	  offSizePicking: function () {
+	    this.sizePicking = false;
+	  },
+	  pickSize: function (e) {
+	    if (this.sizePicking) {
+	      this.size = this.sizePicker.pickSize(e);
+	      this.strokeSample.pickSample(this.color, this.size);
+	      this.drawingCanvas.setSize(this.size);
+	    }
+	  },
+
+	  // Methods for drawing
+	  clearDrawingCanvas: function () {
+	    this.drawingCanvas.hardReset();
+	    this.setState({
+	      saveStarted: false,
+	      saved: false
+	    });
+	  },
+	  mouseDownHandler: function (e) {
+	    this.drawingCanvas.mouseDown(e, this.color, this.size);
+	  },
+	  mouseUpHandler: function (e) {
+	    this.drawingCanvas.mouseUp(e, this.color, this.size);
+	  },
+	  mouseOutHandler: function (e) {
+	    this.drawingCanvas.mouseOut(e, this.color, this.size);
+	  },
+	  mouseMoveHandler: function (e) {
+	    this.drawingCanvas.mouseMove(e, this.color, this.size);
+	  },
+	  onWheelHandler: function (e) {
+	    e.preventDefault();
+	    if (e.deltaY < 0) {
+	      this.size = this.size * 1.2;
+	      this.strokeSample.pickSample(this.color, this.size);
+	      this.drawingCanvas.setSize(this.size);
+	    } else {
+	      this.size = this.size / 1.2;
+	      this.strokeSample.pickSample(this.color, this.size);
+	      this.drawingCanvas.setSize(this.size);
+	    }
+	    this.drawingCanvas.mouseMove(e);
+	  },
+	  undo: function (e) {
+	    this.drawingCanvas.undo();
+	  },
+
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { id: 'entire-drawing-page' },
+	      React.createElement(
+	        'span',
+	        { className: 'drawing-buttons',
+	          id: 'left-buttons' },
+	        React.createElement(
+	          'button',
+	          {
+	            className: 'clear-drawing-canvas',
+	            onClick: this.clearDrawingCanvas },
+	          'Clear Canvas'
+	        ),
+	        React.createElement(
+	          'button',
+	          {
+	            className: 'undo',
+	            onClick: this.undo },
+	          'Undo'
+	        )
+	      ),
+	      React.createElement(
+	        'span',
+	        { id: 'drawing-page' },
+	        React.createElement(
+	          'div',
+	          { id: 'drawing' },
+	          React.createElement(
+	            'div',
+	            { id: 'main-square' },
+	            React.createElement(
+	              'span',
+	              { className: 'left-side' },
+	              React.createElement('canvas', {
+	                id: 'size-picker',
+	                width: '80',
+	                height: '420',
+	                onClick: this.pickSize,
+	                onMouseDown: this.onSizePicking,
+	                onMouseUp: this.offSizePicking,
+	                onMouseMove: this.pickSize,
+	                onMouseOut: this.offSizePicking }),
+	              React.createElement('canvas', {
+	                id: 'stroke-sample',
+	                width: '80',
+	                height: '80' })
+	            ),
+	            React.createElement('canvas', {
+	              id: 'drawing-canvas',
+	              onMouseDown: this.mouseDownHandler,
+	              onMouseUp: this.mouseUpHandler,
+	              onMouseMove: this.mouseMoveHandler,
+	              onMouseOut: this.mouseOutHandler,
+	              onMouseOver: this.mouseOverHandler,
+	              onWheel: this.onWheelHandler }),
+	            React.createElement('canvas', {
+	              id: 'color-picker',
+	              width: '80',
+	              height: '500',
+	              onMouseDown: this.downColorPicker,
+	              onMouseUp: this.upColorPicker,
+	              onMouseMove: this.moveColorPicker,
+	              onMouseOut: this.outColorPicker })
+	          ),
+	          React.createElement(
+	            'div',
+	            {
+	              id: 'color-bar' },
+	            this.colorBar()
+	          )
+	        )
+	      ),
+	      React.createElement(
+	        'span',
+	        { className: 'drawing-buttons',
+	          id: 'right-buttons' },
+	        React.createElement(
+	          'button',
+	          {
+	            className: 'save-stamp',
+	            onClick: this.saveStamp,
+	            disabled: this.saveDisabled() },
+	          this.saveText()
+	        ),
+	        React.createElement(
+	          'button',
+	          {
+	            className: 'save-to-my-stamps',
+	            onClick: this.saveToMyStamps,
+	            disabled: this.saveDisabled() },
+	          'Save To My Stamps'
+	        )
+	      )
+	    );
+	  }
+	});
+
+	module.exports = CanvasTest;
+
+/***/ },
+/* 258 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Shepherd = __webpack_require__(235);
+
+	var makeStampTour = new Shepherd.Tour({
+	  defaults: {
+	    classes: 'shepherd-theme-arrows'
+	  }
+	});
+
+	makeStampTour.addStep('example', {
+	  text: ["Welcome to Salamander. This app lets you make your own stamps,", "which you can use to draw with and share with other users."],
+	  showCancelLink: true,
+	  buttons: [{
+	    text: 'Next',
+	    action: makeStampTour.next
+	  }],
+	  classes: 'shepherd-theme-arrows'
+	});
+
+	makeStampTour.addStep('pick-color', {
+	  text: ["Click anywhere on the spectrum to choose your color.", "Click and drag to watch your color change in real time."],
+	  showCancelLink: true,
+	  buttons: [{
+	    text: 'Back',
+	    action: makeStampTour.back
+	  }, {
+	    text: 'Next',
+	    action: makeStampTour.next
+	  }],
+	  classes: 'shepherd-theme-arrows',
+	  attachTo: '#color-picker'
+	});
+
+	makeStampTour.addStep('recent-colors', {
+	  text: ["Recently used colors show up here.", "Click one to use that color again."],
+	  showCancelLink: true,
+	  buttons: [{
+	    text: 'Back',
+	    action: makeStampTour.back
+	  }, {
+	    text: 'Next',
+	    action: makeStampTour.next
+	  }],
+	  classes: 'shepherd-theme-arrows',
+	  attachTo: '#color-bar right'
+	});
+
+	makeStampTour.addStep('pick-size', {
+	  text: ["Click anywhere on this sidebar to choose your stroke size."],
+	  showCancelLink: true,
+	  buttons: [{
+	    text: 'Back',
+	    action: makeStampTour.back
+	  }, {
+	    text: 'Next',
+	    action: makeStampTour.next
+	  }],
+	  classes: 'shepherd-theme-arrows',
+	  attachTo: '#size-picker left'
+	});
+
+	makeStampTour.addStep('mousewheel', {
+	  text: ["You can also use the mousewheel to resize your stroke.", "Try hovering over the canvas and watching the sample stroke", "get bigger and smaller as you scroll up and down."],
+	  showCancelLink: true,
+	  buttons: [{
+	    text: 'Back',
+	    action: makeStampTour.back
+	  }, {
+	    text: 'Next',
+	    action: makeStampTour.next
+	  }],
+	  classes: 'shepherd-theme-arrows',
+	  attachTo: '#drawing-canvas'
+	});
+
+	makeStampTour.addStep('save', {
+	  text: ["Once you've drawn what you like, click here to save your", "stamp so you can use it later."],
+	  showCancelLink: true,
+	  buttons: [{
+	    text: 'Back',
+	    action: makeStampTour.back
+	  }, {
+	    text: 'Next',
+	    action: makeStampTour.next
+	  }],
+	  classes: 'shepherd-theme-arrows',
+	  attachTo: '.save-to-my-stamps bottom'
+	});
+
+	makeStampTour.addStep('my-stamps', {
+	  text: ["Your active stamps live in this toolbar."],
+	  showCancelLink: true,
+	  buttons: [{
+	    text: 'Back',
+	    action: makeStampTour.back
+	  }, {
+	    text: 'Next',
+	    action: makeStampTour.next
+	  }],
+	  classes: 'shepherd-theme-arrows',
+	  attachTo: '.stamp-sidebar'
+	});
+
+	makeStampTour.addStep('get-stamps', {
+	  text: ["But one stamp is not enough... Let's get more!", "Click the 'Menu' button, then 'Get Stamps'"],
+	  showCancelLink: true,
+	  buttons: [{
+	    text: 'Back',
+	    action: makeStampTour.back
+	  }],
+	  advanceOn: '.get-stamps click',
+	  classes: 'shepherd-theme-arrows',
+	  attachTo: '.ghost bottom'
+	});
+
+	module.exports = makeStampTour;
+
+/***/ },
+/* 259 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+
+	var Home = React.createClass({
+	  displayName: 'Home',
+
+	  render: function () {
+	    return React.createElement('div', null);
+	  }
+	});
+
+	module.exports = Home;
+
+/***/ },
+/* 260 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Shepherd = __webpack_require__(235);
+
+	var makeDrawingTour = new Shepherd.Tour({
+	  defaults: {
+	    classes: 'shepherd-theme-arrows'
+	  }
+	});
+
+	makeDrawingTour.addStep('select-stamp', {
+	  text: ["When making a drawing, you can do everything you could when", "making a stamp.", "You can also select a stamp to USE by clicking on it down here."],
+	  showCancelLink: true,
+	  buttons: [{
+	    text: 'Next',
+	    action: makeDrawingTour.next
+	  }],
+	  classes: 'shepherd-theme-arrows',
+	  attachTo: '.stamp-sidebar'
+	});
+
+	makeDrawingTour.addStep('turn-stamping-on', {
+	  text: ["After selecting a stamp, click here to turn stamping on, then go", "over to the canvas and use your stamp!", "Just like before, use the mousewheel to make it bigger and smaller."],
+	  buttons: [{
+	    text: 'Back',
+	    action: makeDrawingTour.back
+	  }, {
+	    text: 'Next',
+	    action: makeDrawingTour.next
+	  }],
+	  showCancelLink: true,
+	  classes: 'shepherd-theme-arrows',
+	  attachTo: '#toggle-stamping bottom'
+	});
+
+	makeDrawingTour.addStep('save-drawing', {
+	  text: ["When you're satisfied, save your drawing."],
+	  showCancelLink: true,
+	  buttons: [{
+	    text: 'Back',
+	    action: makeDrawingTour.back
+	  }, {
+	    text: 'Next',
+	    action: makeDrawingTour.next
+	  }],
+	  advanceOn: '.save-drawing click',
+	  classes: 'shepherd-theme-arrows',
+	  attachTo: '.save-drawing bottom'
+	});
+
+	makeDrawingTour.addStep('save-drawing', {
+	  text: ["Then go to the Menu and check out 'All Drawings'"],
+	  showCancelLink: true,
+	  buttons: [{
+	    text: 'Back',
+	    action: makeDrawingTour.back
+	  }],
+	  advanceOn: '.all-drawings click',
+	  classes: 'shepherd-theme-arrows',
+	  attachTo: '.ghost bottom'
+	});
+
+	module.exports = makeDrawingTour;
 
 /***/ }
 /******/ ]);
