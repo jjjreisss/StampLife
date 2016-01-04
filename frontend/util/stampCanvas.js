@@ -1,8 +1,8 @@
 var StampCanvas = function(id, width, height) {
   this.canvas = document.getElementById(id);
+  this.ctx = this.canvas.getContext('2d');
   this.canvas.width = width;
   this.canvas.height = height;
-  this.ctx = this.canvas.getContext('2d');
   this.img = new Image();
   this.scale = 1;
 };

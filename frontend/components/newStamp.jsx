@@ -25,10 +25,17 @@ var CanvasTest = React.createClass({
     });
   },
   componentDidMount: function() {
-    this.drawingCanvas = new DrawingCanvas('drawing-canvas', 500, 500);
-    this.sizePicker = new SizePicker('size-picker');
-    this.colorPicker = new ColorPicker('color-picker');
-    this.strokeSample = new StrokeSample('stroke-sample');
+    if (window.innerHeight > 699) {
+      this.drawingCanvas = new DrawingCanvas('drawing-canvas', 500, 500);
+      this.sizePicker = new SizePicker('size-picker', 80, 420);
+      this.colorPicker = new ColorPicker('color-picker', 80, 500);
+      this.strokeSample = new StrokeSample('stroke-sample', 80, 80);
+    } else {
+      this.drawingCanvas = new DrawingCanvas('drawing-canvas', 400, 400);
+      this.sizePicker = new SizePicker('size-picker', 64, 336);
+      this.colorPicker = new ColorPicker('color-picker', 64, 400);
+      this.strokeSample = new StrokeSample('stroke-sample', 64, 64);
+    }
 
     this.size = 10;
     this.color = "#000";
@@ -226,8 +233,6 @@ var CanvasTest = React.createClass({
             <span className="left-side">
               <canvas
                 id="size-picker"
-                width="80"
-                height="420"
                 onClick={this.pickSize}
                 onMouseDown={this.onSizePicking}
                 onMouseUp={this.offSizePicking}
@@ -236,9 +241,7 @@ var CanvasTest = React.createClass({
 
               </canvas>
               <canvas
-                id="stroke-sample"
-                width="80"
-                height="80">
+                id="stroke-sample">
 
               </canvas>
             </span>
@@ -254,8 +257,6 @@ var CanvasTest = React.createClass({
             </canvas>
             <canvas
               id="color-picker"
-              width="80"
-              height="500"
               onMouseDown={this.downColorPicker}
               onMouseUp={this.upColorPicker}
               onMouseMove={this.moveColorPicker}

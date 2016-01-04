@@ -34511,14 +34511,13 @@
 	      this.sizePicker = new SizePicker('size-picker', 80, 420);
 	      this.colorPicker = new ColorPicker('color-picker', 80, 500);
 	      this.strokeSample = new StrokeSample('stroke-sample', 80, 80);
-	      this.stampCanvas = new StampCanvas('stamp-canvas', 150, 150);
 	    } else {
 	      this.drawingCanvas = new DrawingCanvas('drawing-canvas', 400, 400);
 	      this.sizePicker = new SizePicker('size-picker', 64, 336);
 	      this.colorPicker = new ColorPicker('color-picker', 64, 400);
 	      this.strokeSample = new StrokeSample('stroke-sample', 64, 64);
-	      this.stampCanvas = new StampCanvas('stamp-canvas', 120, 120);
 	    }
+	    this.stampCanvas = new StampCanvas('stamp-canvas', 150, 150);
 
 	    this.size = 15;
 	    this.color = "#000";
@@ -35047,9 +35046,9 @@
 
 	var StampCanvas = function (id, width, height) {
 	  this.canvas = document.getElementById(id);
+	  this.ctx = this.canvas.getContext('2d');
 	  this.canvas.width = width;
 	  this.canvas.height = height;
-	  this.ctx = this.canvas.getContext('2d');
 	  this.img = new Image();
 	  this.scale = 1;
 	};
@@ -35728,10 +35727,17 @@
 	    };
 	  },
 	  componentDidMount: function () {
-	    this.drawingCanvas = new DrawingCanvas('drawing-canvas', 500, 500);
-	    this.sizePicker = new SizePicker('size-picker');
-	    this.colorPicker = new ColorPicker('color-picker');
-	    this.strokeSample = new StrokeSample('stroke-sample');
+	    if (window.innerHeight > 699) {
+	      this.drawingCanvas = new DrawingCanvas('drawing-canvas', 500, 500);
+	      this.sizePicker = new SizePicker('size-picker', 80, 420);
+	      this.colorPicker = new ColorPicker('color-picker', 80, 500);
+	      this.strokeSample = new StrokeSample('stroke-sample', 80, 80);
+	    } else {
+	      this.drawingCanvas = new DrawingCanvas('drawing-canvas', 400, 400);
+	      this.sizePicker = new SizePicker('size-picker', 64, 336);
+	      this.colorPicker = new ColorPicker('color-picker', 64, 400);
+	      this.strokeSample = new StrokeSample('stroke-sample', 64, 64);
+	    }
 
 	    this.size = 10;
 	    this.color = "#000";
@@ -35937,17 +35943,13 @@
 	              { className: 'left-side' },
 	              React.createElement('canvas', {
 	                id: 'size-picker',
-	                width: '80',
-	                height: '420',
 	                onClick: this.pickSize,
 	                onMouseDown: this.onSizePicking,
 	                onMouseUp: this.offSizePicking,
 	                onMouseMove: this.pickSize,
 	                onMouseOut: this.offSizePicking }),
 	              React.createElement('canvas', {
-	                id: 'stroke-sample',
-	                width: '80',
-	                height: '80' })
+	                id: 'stroke-sample' })
 	            ),
 	            React.createElement('canvas', {
 	              id: 'drawing-canvas',
@@ -35959,8 +35961,6 @@
 	              onWheel: this.onWheelHandler }),
 	            React.createElement('canvas', {
 	              id: 'color-picker',
-	              width: '80',
-	              height: '500',
 	              onMouseDown: this.downColorPicker,
 	              onMouseUp: this.upColorPicker,
 	              onMouseMove: this.moveColorPicker,
