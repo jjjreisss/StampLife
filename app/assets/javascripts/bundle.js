@@ -34504,11 +34504,21 @@
 	    };
 	  },
 	  componentDidMount: function () {
-	    this.drawingCanvas = new DrawingCanvas('drawing-canvas', 500, 500);
-	    this.sizePicker = new SizePicker('size-picker');
-	    this.colorPicker = new ColorPicker('color-picker');
-	    this.strokeSample = new StrokeSample('stroke-sample');
-	    this.stampCanvas = new StampCanvas('stamp-canvas', 150, 150);
+	    console.log(window.innerHeight);
+
+	    if (window.innerHeight > 699) {
+	      this.drawingCanvas = new DrawingCanvas('drawing-canvas', 500, 500);
+	      this.sizePicker = new SizePicker('size-picker', 80, 420);
+	      this.colorPicker = new ColorPicker('color-picker', 80, 500);
+	      this.strokeSample = new StrokeSample('stroke-sample', 80, 80);
+	      this.stampCanvas = new StampCanvas('stamp-canvas', 150, 150);
+	    } else {
+	      this.drawingCanvas = new DrawingCanvas('drawing-canvas', 400, 400);
+	      this.sizePicker = new SizePicker('size-picker', 64, 336);
+	      this.colorPicker = new ColorPicker('color-picker', 64, 400);
+	      this.strokeSample = new StrokeSample('stroke-sample', 64, 64);
+	      this.stampCanvas = new StampCanvas('stamp-canvas', 120, 120);
+	    }
 
 	    this.size = 15;
 	    this.color = "#000";
@@ -34540,11 +34550,22 @@
 	    }
 	  },
 	  colorBar: function () {
+	    if (window.innerHeight > 699) {
+	      var squareSize = "50px";
+	    } else {
+	      var squareSize = "40px";
+	    }
+
 	    return this.state.recentColors.map((function (color, idx) {
+	      var squareStyle = {
+	        background: color,
+	        width: squareSize,
+	        height: squareSize
+	      };
 	      return React.createElement('div', {
 	        key: idx,
 	        className: 'color-square',
-	        style: { background: color },
+	        style: squareStyle,
 	        onClick: this.pickRecentColor });
 	    }).bind(this)).reverse();
 	  },
@@ -34753,17 +34774,13 @@
 	                { className: 'left-side' },
 	                React.createElement('canvas', {
 	                  id: 'size-picker',
-	                  width: '80',
-	                  height: '420',
 	                  onClick: this.pickSize,
 	                  onMouseDown: this.onSizePicking,
 	                  onMouseUp: this.offSizePicking,
 	                  onMouseMove: this.pickSize,
 	                  onMouseOut: this.offSizePicking }),
 	                React.createElement('canvas', {
-	                  id: 'stroke-sample',
-	                  width: '80',
-	                  height: '80' })
+	                  id: 'stroke-sample' })
 	              ),
 	              React.createElement('canvas', {
 	                id: 'drawing-canvas',
@@ -34836,12 +34853,12 @@
 	var ApiUtil = __webpack_require__(210);
 	var StampStore = __webpack_require__(217);
 
-	var DrawingCanvas = function (id, length, width) {
-	  this.length = length;
+	var DrawingCanvas = function (id, width, height) {
 	  this.width = width;
+	  this.height = height;
 	  this.canvas = document.getElementById(id);
-	  this.canvas.width = length;
-	  this.canvas.height = width;
+	  this.canvas.width = width;
+	  this.canvas.height = height;
 	  this.ctx = this.canvas.getContext('2d');
 	  this.prevX = 0;
 	  this.prevY = 0;
@@ -34996,7 +35013,7 @@
 	};
 
 	DrawingCanvas.prototype.clear = function () {
-	  this.ctx.clearRect(0, 0, this.width, this.length);
+	  this.ctx.clearRect(0, 0, this.width, this.height);
 	};
 
 	DrawingCanvas.prototype.loadImage = function (url) {
@@ -35009,7 +35026,7 @@
 	};
 
 	DrawingCanvas.prototype.getImageData = function () {
-	  return this.ctx.getImageData(0, 0, this.width, this.length);
+	  return this.ctx.getImageData(0, 0, this.width, this.height);
 	};
 
 	DrawingCanvas.prototype.putImageData = function (imageData) {
@@ -35097,11 +35114,19 @@
 /* 247 */
 /***/ function(module, exports) {
 
-	var ColorPicker = function (id) {
+	var ColorPicker = function (id, width, height) {
 	  this.colorPickerCanvas = document.getElementById(id);
 	  this.colorPickerContext = this.colorPickerCanvas.getContext('2d');
+
+	  this.colorPickerCanvas.width = width;
+	  this.colorPickerCanvas.height = height;
+
 	  var pickerImg = new Image();
-	  pickerImg.src = './color-picker-80-500.png';
+	  if (this.colorPickerCanvas.width === 80) {
+	    pickerImg.src = './color-picker-80-500.png';
+	  } else {
+	    pickerImg.src = './color-picker-64-400.png';
+	  }
 	  pickerImg.onload = (function () {
 	    this.colorPickerContext.drawImage(pickerImg, 0, 0);
 	  }).bind(this);
@@ -35126,11 +35151,20 @@
 /* 248 */
 /***/ function(module, exports) {
 
-	var SizePicker = function (id) {
+	var SizePicker = function (id, width, height) {
 	  this.sizePickerCanvas = document.getElementById(id);
 	  this.sizePickerContext = this.sizePickerCanvas.getContext('2d');
+
+	  this.sizePickerCanvas.width = width;
+	  this.sizePickerCanvas.height = height;
+
 	  var pickerImg = new Image();
-	  pickerImg.src = './triangle-v2.png';
+	  if (this.sizePickerCanvas.width === 80) {
+	    pickerImg.src = './triangle-v2.png';
+	  } else {
+	    pickerImg.src = './triangle-v2-small.png';
+	  }
+
 	  pickerImg.onload = (function () {
 	    this.sizePickerContext.drawImage(pickerImg, 0, 0);
 	  }).bind(this);
@@ -35138,7 +35172,13 @@
 
 	SizePicker.prototype.pickSize = function (e) {
 	  var y = e.clientY - this.sizePickerCanvas.getBoundingClientRect().top;
-	  var size = (390 - y) * 52 / 355;
+
+	  if (this.sizePickerCanvas.width === 80) {
+	    var size = (390 - y) * 52 / 355;
+	  } else {
+	    var size = (312 - y) * 52 / 355;
+	  }
+
 	  return Math.max(0.1, size);
 	};
 
@@ -35148,15 +35188,18 @@
 /* 249 */
 /***/ function(module, exports) {
 
-	var StrokeSample = function () {
-	  this.strokeSampleCanvas = document.getElementById('stroke-sample');
+	var StrokeSample = function (id, width, height) {
+	  this.strokeSampleCanvas = document.getElementById(id);
 	  this.strokeSampleContext = this.strokeSampleCanvas.getContext('2d');
+	  this.strokeSampleCanvas.width = width;
+	  this.strokeSampleCanvas.height = height;
+	  this.size = width;
 	};
 
 	StrokeSample.prototype.pickSample = function (color, size) {
-	  this.strokeSampleContext.clearRect(0, 0, 80, 80);
-	  var centerX = 40;
-	  var centerY = 40;
+	  this.strokeSampleContext.clearRect(0, 0, this.size, this.size);
+	  var centerX = this.size / 2;
+	  var centerY = this.size / 2;
 	  var left = centerX - size / 2;
 	  var top = centerY - size / 2;
 	  this.strokeSampleContext.lineJoin = this.strokeSampleContext.lineCap = 'round';
@@ -35445,7 +35488,7 @@
 	      profileUrl = '#/users/' + this.state.drawing.username;
 	    }
 	    if (this.state.drawing) {
-	      var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + this.state.drawing.image_url + ".png";
+	      var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_500,h_500/" + this.state.drawing.image_url + ".png";
 	      contents = React.createElement(
 	        'div',
 	        null,

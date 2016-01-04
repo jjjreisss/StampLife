@@ -34,7 +34,7 @@ var DrawingDetail = React.createClass({
       profileUrl = '#/users/' + this.state.drawing.username;
     }
     if (this.state.drawing){
-      var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + this.state.drawing.image_url + ".png";
+      var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_500,h_500/" + this.state.drawing.image_url + ".png";
       contents = (
         <div>
           <div

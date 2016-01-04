@@ -1,8 +1,16 @@
-var ColorPicker = function(id) {
+var ColorPicker = function(id, width, height) {
   this.colorPickerCanvas = document.getElementById(id);
   this.colorPickerContext = this.colorPickerCanvas.getContext('2d');
+
+  this.colorPickerCanvas.width = width;
+  this.colorPickerCanvas.height = height;
+
   var pickerImg = new Image();
-  pickerImg.src = './color-picker-80-500.png';
+  if (this.colorPickerCanvas.width === 80) {
+    pickerImg.src = './color-picker-80-500.png';
+  } else {
+    pickerImg.src = './color-picker-64-400.png';
+  }
   pickerImg.onload = function() {
     this.colorPickerContext.drawImage(pickerImg, 0, 0);
   }.bind(this);

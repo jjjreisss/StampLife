@@ -1,12 +1,12 @@
 var ApiUtil = require('./apiUtil');
 var StampStore = require('../stores/stampStore');
 
-var DrawingCanvas = function(id, length, width) {
-  this.length = length;
+var DrawingCanvas = function(id, width, height) {
   this.width = width;
+  this.height = height;
   this.canvas = document.getElementById(id);
-  this.canvas.width = length;
-  this.canvas.height = width;
+  this.canvas.width = width;
+  this.canvas.height = height;
   this.ctx = this.canvas.getContext('2d');
   this.prevX = 0;
   this.prevY = 0;
@@ -163,7 +163,7 @@ DrawingCanvas.prototype.setStamp = function (stampImg, stampSize) {
 };
 
 DrawingCanvas.prototype.clear = function () {
-  this.ctx.clearRect(0, 0, this.width, this.length);
+  this.ctx.clearRect(0, 0, this.width, this.height);
 };
 
 DrawingCanvas.prototype.loadImage = function (url) {
@@ -176,7 +176,7 @@ DrawingCanvas.prototype.loadImage = function (url) {
 };
 
 DrawingCanvas.prototype.getImageData = function () {
-  return this.ctx.getImageData(0,0,this.width,this.length);
+  return this.ctx.getImageData(0,0,this.width,this.height);
 };
 
 DrawingCanvas.prototype.putImageData = function (imageData) {

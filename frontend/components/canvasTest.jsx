@@ -30,11 +30,21 @@ var CanvasTest = React.createClass({
     });
   },
   componentDidMount: function() {
-    this.drawingCanvas = new DrawingCanvas('drawing-canvas', 500, 500);
-    this.sizePicker = new SizePicker('size-picker');
-    this.colorPicker = new ColorPicker('color-picker');
-    this.strokeSample = new StrokeSample('stroke-sample');
-    this.stampCanvas = new StampCanvas('stamp-canvas', 150, 150);
+    console.log(window.innerHeight);
+
+    if (window.innerHeight > 699) {
+      this.drawingCanvas = new DrawingCanvas('drawing-canvas', 500, 500);
+      this.sizePicker = new SizePicker('size-picker', 80, 420);
+      this.colorPicker = new ColorPicker('color-picker', 80, 500);
+      this.strokeSample = new StrokeSample('stroke-sample', 80, 80);
+      this.stampCanvas = new StampCanvas('stamp-canvas', 150, 150);
+    } else {
+      this.drawingCanvas = new DrawingCanvas('drawing-canvas', 400, 400);
+      this.sizePicker = new SizePicker('size-picker', 64, 336);
+      this.colorPicker = new ColorPicker('color-picker', 64, 400);
+      this.strokeSample = new StrokeSample('stroke-sample', 64, 64);
+      this.stampCanvas = new StampCanvas('stamp-canvas', 120, 120);
+    }
 
     this.size = 15;
     this.color = "#000";
@@ -66,12 +76,23 @@ var CanvasTest = React.createClass({
     }
   },
   colorBar: function() {
+    if (window.innerHeight > 699) {
+      var squareSize = "50px";
+    } else {
+      var squareSize = "40px";
+    }
+
     return this.state.recentColors.map(function(color, idx){
+      var squareStyle = {
+        background: color,
+        width: squareSize,
+        height: squareSize
+      };
       return (
         <div
           key={idx}
           className="color-square"
-          style={{background: color}}
+          style={squareStyle}
           onClick={this.pickRecentColor}>
 
         </div>
@@ -270,8 +291,6 @@ var CanvasTest = React.createClass({
             <span className="left-side">
               <canvas
                 id="size-picker"
-                width="80"
-                height="420"
                 onClick={this.pickSize}
                 onMouseDown={this.onSizePicking}
                 onMouseUp={this.offSizePicking}
@@ -280,9 +299,7 @@ var CanvasTest = React.createClass({
 
               </canvas>
               <canvas
-                id="stroke-sample"
-                width="80"
-                height="80">
+                id="stroke-sample">
 
               </canvas>
             </span>
