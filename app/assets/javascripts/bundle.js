@@ -34049,6 +34049,7 @@
 	      { className: 'my-stamp-index-element',
 	        id: this.selectedText() },
 	      React.createElement('img', {
+	        className: 'my-stamp-index-image',
 	        src: url,
 	        onClick: this.setStamp,
 	        onLoad: this.addDeleteIcon }),

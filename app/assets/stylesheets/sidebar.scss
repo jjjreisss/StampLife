@@ -1,5 +1,7 @@
 .stamp-sidebar {
-  height: 110px;
+  max-height: 110px;
+  min-height: 60px;
+  height: 15vh;
   width: 100%;
   position: fixed;
   bottom: 0;

@@ -52,6 +52,7 @@ var MyStampListItem = React.createClass({
       <div className="my-stamp-index-element"
         id={this.selectedText()}>
         <img
+          className="my-stamp-index-image"
           src={url}
           onClick={this.setStamp}
           onLoad={this.addDeleteIcon}/>
