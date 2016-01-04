@@ -34610,7 +34610,7 @@
 	    }
 	    this.stampCanvas = new StampCanvas('stamp-canvas', 150, 150);
 
-	    this.size = 15;
+	    this.size = 30;
 	    this.color = "#000";
 	    this.drawingCanvas.setSize(this.size);
 	    this.drawingCanvas.setColor(this.color);
@@ -35837,7 +35837,7 @@
 	      this.strokeSample = new StrokeSample('stroke-sample', 64, 64);
 	    }
 
-	    this.size = 10;
+	    this.size = 30;
 	    this.color = "#000";
 	    this.drawingCanvas.setSize(this.size);
 	    this.drawingCanvas.setColor(this.color);

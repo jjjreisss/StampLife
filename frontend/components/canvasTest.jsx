@@ -44,7 +44,7 @@ var CanvasTest = React.createClass({
     }
     this.stampCanvas = new StampCanvas('stamp-canvas', 150, 150);
 
-    this.size = 15;
+    this.size = 30;
     this.color = "#000";
     this.drawingCanvas.setSize(this.size);
     this.drawingCanvas.setColor(this.color);
