@@ -35862,11 +35862,22 @@
 	  },
 
 	  colorBar: function () {
+	    if (window.innerHeight > 699) {
+	      var squareSize = "50px";
+	    } else {
+	      var squareSize = "40px";
+	    }
+
 	    return this.state.recentColors.map((function (color, idx) {
+	      var squareStyle = {
+	        background: color,
+	        width: squareSize,
+	        height: squareSize
+	      };
 	      return React.createElement('div', {
 	        key: idx,
 	        className: 'color-square',
-	        style: { background: color },
+	        style: squareStyle,
 	        onClick: this.pickRecentColor });
 	    }).bind(this)).reverse();
 	  },
