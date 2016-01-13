@@ -68,7 +68,7 @@ var CanvasTest = React.createClass({
     //   }.bind(this),
     // });
 
-    if (window.wholeDamnTour.currentStep.id === "done_choosing_stamps"){
+    if (window.wholeDamnTour.currentStep && window.wholeDamnTour.currentStep.id === "done_choosing_stamps"){
       window.wholeDamnTour.next()
     }
   },

@@ -24344,7 +24344,7 @@
 	    //   }.bind(this),
 	    // });
 
-	    if (window.wholeDamnTour.currentStep.id === 'get-stamps') {
+	    if (window.wholeDamnTour.currentStep && window.wholeDamnTour.currentStep.id === 'get-stamps') {
 	      window.wholeDamnTour.next();
 	    }
 	  },
@@ -34868,7 +34868,7 @@
 	    //   }.bind(this),
 	    // });
 
-	    if (window.wholeDamnTour.currentStep.id === "done_choosing_stamps") {
+	    if (window.wholeDamnTour.currentStep && window.wholeDamnTour.currentStep.id === "done_choosing_stamps") {
 	      window.wholeDamnTour.next();
 	    }
 	  },
@@ -35217,8 +35217,8 @@
 	  this.prevX = this.currX;
 	  this.prevY = this.currY;
 
-	  this.currX = e.pageX - this.canvas.getBoundingClientRect().left;
-	  this.currY = e.pageY - this.canvas.getBoundingClientRect().top;
+	  this.currX = e.pageX - this.canvas.getBoundingClientRect().left - window.scrollX;
+	  this.currY = e.pageY - this.canvas.getBoundingClientRect().top - window.scrollY;
 
 	  if (this.drawing) {
 	    this.draw();

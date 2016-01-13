@@ -36,7 +36,7 @@ var StampIndex = React.createClass({
     //   }.bind(this),
     // });
 
-    if (window.wholeDamnTour.currentStep.id === 'get-stamps') {
+    if (window.wholeDamnTour.currentStep && window.wholeDamnTour.currentStep.id === 'get-stamps') {
       window.wholeDamnTour.next();
     }
   },
