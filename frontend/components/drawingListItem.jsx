@@ -18,7 +18,7 @@ var DrawingListItem = React.createClass({
   },
   _onChange: function() {
     var drawingStoreDrawing = DrawingStore.single();
-    if (drawingStoreDrawing.id === this.state.drawing.id) {
+    if (drawingStoreDrawing && drawingStoreDrawing.id === this.state.drawing.id) {
       this.setState({drawing: drawingStoreDrawing});
     }
   },

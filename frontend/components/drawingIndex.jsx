@@ -25,16 +25,19 @@ var DrawingIndex = React.createClass({
     this.listener = DrawingStore.addListener(this._onChange);
     ApiUtil.fetchAllDrawings();
 
-    $.ajax({
-      url: 'users/1',
-      method: 'GET',
-      success: function(user) {
-        if (user.tour_four_completed === false) {
-          drawingIndexTour.start();
-          ApiUtil.completeTourFour();
-        }
-      }.bind(this),
-    });
+    // $.ajax({
+    //   url: 'users/1',
+    //   method: 'GET',
+    //   success: function(user) {
+    //     if (user.tour_four_completed === false) {
+    //       drawingIndexTour.start();
+    //       ApiUtil.completeTourFour();
+    //     }
+    //   }.bind(this),
+    // });
+    // if (window.wholeDamnTour.currentStep.id === "save-drawing") {
+    //   window.wholeDamnTour.next();
+    // };
   },
   componentWillUnmount: function() {
     this.listener.remove();

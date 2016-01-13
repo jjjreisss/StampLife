@@ -8,7 +8,7 @@ var StrokeSample = require('../util/strokeSample');
 var LinkedStateMixin = require('react-addons-linked-state-mixin');
 var StampIndex = require('./stampIndex');
 var StampStore = require('../stores/stampStore');
-var makeStampTour = require('../util/makeStampTour');
+window.wholeDamnTour = require('../util/wholeDamnTour');
 
 var CanvasTest = React.createClass({
   mixins: [LinkedStateMixin],
@@ -53,7 +53,7 @@ var CanvasTest = React.createClass({
       method: 'GET',
       success: function(user) {
         if (user.tour_one_completed === false) {
-          makeStampTour.start();
+          window.wholeDamnTour.start();
           ApiUtil.completeTourOne();
         }
       }.bind(this),

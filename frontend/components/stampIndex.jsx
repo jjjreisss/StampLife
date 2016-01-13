@@ -25,16 +25,20 @@ var StampIndex = React.createClass({
     this.listener = StampStore.addListener(this._onChange);
     ApiUtil.fetchAllStamps();
 
-    $.ajax({
-      url: 'users/1',
-      method: 'GET',
-      success: function(user) {
-        if (user.tour_two_completed === false) {
-          getStampsTour.start();
-          ApiUtil.completeTourTwo();
-        }
-      }.bind(this),
-    });
+    // $.ajax({
+    //   url: 'users/1',
+    //   method: 'GET',
+    //   success: function(user) {
+    //     if (user.tour_two_completed === false) {
+    //       getStampsTour.start();
+    //       ApiUtil.completeTourTwo();
+    //     }
+    //   }.bind(this),
+    // });
+
+    if (window.wholeDamnTour.currentStep.id === 'get-stamps') {
+      window.wholeDamnTour.next();
+    }
   },
   componentWillUnmount: function() {
     this.listener.remove();

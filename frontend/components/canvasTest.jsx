@@ -57,16 +57,20 @@ var CanvasTest = React.createClass({
 
     this.token = StampStore.addListener(this.selectStamp);
 
-    $.ajax({
-      url: 'users/1',
-      method: 'GET',
-      success: function(user) {
-        if (user.tour_three_completed === false) {
-          makeDrawingTour.start();
-          ApiUtil.completeTourThree();
-        }
-      }.bind(this),
-    });
+    // $.ajax({
+    //   url: 'users/1',
+    //   method: 'GET',
+    //   success: function(user) {
+    //     if (user.tour_three_completed === false) {
+    //       makeDrawingTour.start();
+    //       ApiUtil.completeTourThree();
+    //     }
+    //   }.bind(this),
+    // });
+
+    if (window.wholeDamnTour.currentStep.id === "done_choosing_stamps"){
+      window.wholeDamnTour.next()
+    }
   },
   componentWillUnmount: function() {
     this.token.remove();
