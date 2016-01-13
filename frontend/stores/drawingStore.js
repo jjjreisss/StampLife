@@ -13,6 +13,14 @@ var resetDrawing = function(drawing) {
   _drawing = drawing;
 };
 
+var resetSingleDrawing = function(drawing) {
+  _drawings.forEach(function(oldDrawing) {
+    if (oldDrawing.id === drawing.id) {
+      oldDrawing = drawing;
+    }
+  })
+}
+
 var receiveDrawing = function(drawing) {
   _drawings.push(drawing);
 };
@@ -33,6 +41,10 @@ DrawingStore.__onDispatch = function(payload) {
       break;
     case "DRAWINGS_RECEIVED":
       resetDrawings(payload.drawings);
+      DrawingStore.__emitChange();
+      break;
+    case "RESET_SINGLE_DRAWING":
+      resetSingleDrawing(payload.drawing);
       DrawingStore.__emitChange();
       break;
   }

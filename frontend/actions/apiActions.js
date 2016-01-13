@@ -48,6 +48,13 @@ var ApiActions = {
       actionType: "DELETE_MY_STAMP",
       id: id
     })
+  },
+
+  resetSingleDrawing: function(drawing) {
+    Dispatcher.dispatch({
+      actionType: "RESET_SINGLE_DRAWING",
+      drawing: drawing
+    })
   }
 };
 

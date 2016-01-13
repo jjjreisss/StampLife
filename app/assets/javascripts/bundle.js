@@ -49,16 +49,16 @@
 	var Router = __webpack_require__(159).Router;
 	var Route = __webpack_require__(159).Route;
 	var App = __webpack_require__(208);
-	var DrawingIndex = __webpack_require__(240);
-	var CanvasTest = __webpack_require__(244);
-	var DrawingDetail = __webpack_require__(254);
-	var ProfilePage = __webpack_require__(255);
+	var DrawingIndex = __webpack_require__(242);
+	var CanvasTest = __webpack_require__(246);
+	var DrawingDetail = __webpack_require__(257);
+	var ProfilePage = __webpack_require__(258);
 	var StampIndex = __webpack_require__(209);
-	var StampDetail = __webpack_require__(256);
-	var NewStamp = __webpack_require__(257);
-	var Home = __webpack_require__(259);
+	var StampDetail = __webpack_require__(259);
+	var NewStamp = __webpack_require__(260);
+	var Home = __webpack_require__(261);
 	var IndexRoute = __webpack_require__(159).IndexRoute;
-	var Shepherd = __webpack_require__(235);
+	var Shepherd = __webpack_require__(236);
 
 	var routes = React.createElement(
 	  Route,
@@ -1100,7 +1100,7 @@
 	 * will remain to ensure logic does not differ in production.
 	 */
 
-	var invariant = function (condition, format, a, b, c, d, e, f) {
+	function invariant(condition, format, a, b, c, d, e, f) {
 	  if (process.env.NODE_ENV !== 'production') {
 	    if (format === undefined) {
 	      throw new Error('invariant requires an error message argument');
@@ -1114,15 +1114,16 @@
 	    } else {
 	      var args = [a, b, c, d, e, f];
 	      var argIndex = 0;
-	      error = new Error('Invariant Violation: ' + format.replace(/%s/g, function () {
+	      error = new Error(format.replace(/%s/g, function () {
 	        return args[argIndex++];
 	      }));
+	      error.name = 'Invariant Violation';
 	    }
 
 	    error.framesToPop = 1; // we don't care about invariant's own frame
 	    throw error;
 	  }
-	};
+	}
 
 	module.exports = invariant;
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
@@ -10549,8 +10550,8 @@
 	     */
 	    // autoCapitalize and autoCorrect are supported in Mobile Safari for
 	    // keyboard hints.
-	    autoCapitalize: null,
-	    autoCorrect: null,
+	    autoCapitalize: MUST_USE_ATTRIBUTE,
+	    autoCorrect: MUST_USE_ATTRIBUTE,
 	    // autoSave allows WebKit/Blink to persist values of input fields on page reloads
 	    autoSave: null,
 	    // color is for Safari mask-icon link
@@ -10581,9 +10582,7 @@
 	    httpEquiv: 'http-equiv'
 	  },
 	  DOMPropertyNames: {
-	    autoCapitalize: 'autocapitalize',
 	    autoComplete: 'autocomplete',
-	    autoCorrect: 'autocorrect',
 	    autoFocus: 'autofocus',
 	    autoPlay: 'autoplay',
 	    autoSave: 'autosave',
@@ -13662,7 +13661,7 @@
 	    var value = LinkedValueUtils.getValue(props);
 
 	    if (value != null) {
-	      updateOptions(this, props, value);
+	      updateOptions(this, Boolean(props.multiple), value);
 	    }
 	  }
 	}
@@ -16697,11 +16696,14 @@
 	 * @typechecks
 	 */
 
+	/* eslint-disable fb-www/typeof-undefined */
+
 	/**
 	 * Same as document.activeElement but wraps in a try-catch block. In IE it is
 	 * not safe to call document.activeElement if there is nothing focused.
 	 *
-	 * The activeElement will be null only if the document or document body is not yet defined.
+	 * The activeElement will be null only if the document or document body is not
+	 * yet defined.
 	 */
 	'use strict';
 
@@ -16709,7 +16711,6 @@
 	  if (typeof document === 'undefined') {
 	    return null;
 	  }
-
 	  try {
 	    return document.activeElement || document.body;
 	  } catch (e) {
@@ -18449,7 +18450,9 @@
 	  'setValueForProperty': 'update attribute',
 	  'setValueForAttribute': 'update attribute',
 	  'deleteValueForProperty': 'remove attribute',
-	  'dangerouslyReplaceNodeWithMarkupByID': 'replace'
+	  'setValueForStyles': 'update styles',
+	  'replaceNodeWithMarkup': 'replace',
+	  'updateTextContent': 'set textContent'
 	};
 
 	function getTotalTime(measurements) {
@@ -18641,18 +18644,23 @@
 	'use strict';
 
 	var performance = __webpack_require__(145);
-	var curPerformance = performance;
+
+	var performanceNow;
 
 	/**
 	 * Detect if we can use `window.performance.now()` and gracefully fallback to
 	 * `Date.now()` if it doesn't exist. We need to support Firefox < 15 for now
 	 * because of Facebook's testing infrastructure.
 	 */
-	if (!curPerformance || !curPerformance.now) {
-	  curPerformance = Date;
+	if (performance.now) {
+	  performanceNow = function () {
+	    return performance.now();
+	  };
+	} else {
+	  performanceNow = function () {
+	    return Date.now();
+	  };
 	}
-
-	var performanceNow = curPerformance.now.bind(curPerformance);
 
 	module.exports = performanceNow;
 
@@ -18701,7 +18709,7 @@
 
 	'use strict';
 
-	module.exports = '0.14.3';
+	module.exports = '0.14.6';
 
 /***/ },
 /* 147 */
@@ -22434,7 +22442,7 @@
 	'use strict';
 	module.exports = function (str) {
 		return encodeURIComponent(str).replace(/[!'()*]/g, function (c) {
-			return '%' + c.charCodeAt(0).toString(16);
+			return '%' + c.charCodeAt(0).toString(16).toUpperCase();
 		});
 	};
 
@@ -24136,9 +24144,9 @@
 
 	var React = __webpack_require__(1);
 	var StampIndex = __webpack_require__(209);
-	var MyStampIndex = __webpack_require__(237);
+	var MyStampIndex = __webpack_require__(238);
 	var History = __webpack_require__(159).History;
-	var makeStampTour = __webpack_require__(258);
+	var makeStampTour = __webpack_require__(241);
 
 	var App = React.createClass({
 	  displayName: 'App',
@@ -24182,14 +24190,14 @@
 	          tour_four_completed: false
 	        }
 	      },
-	      success: (function () {
+	      success: function () {
 	        if (this.props.routes[1].path === 'stamp/new') {
 	          makeStampTour.start();
 	          console.log('hi');
 	        } else {
 	          this.history.push('stamp/new');
 	        }
-	      }).bind(this)
+	      }.bind(this)
 	    });
 	  },
 
@@ -24301,7 +24309,7 @@
 	var ApiUtil = __webpack_require__(210);
 	var StampListItem = __webpack_require__(216);
 	var StampStore = __webpack_require__(217);
-	var getStampsTour = __webpack_require__(234);
+	var getStampsTour = __webpack_require__(235);
 
 	var StampIndex = React.createClass({
 	  displayName: 'StampIndex',
@@ -24328,12 +24336,12 @@
 	    $.ajax({
 	      url: 'users/1',
 	      method: 'GET',
-	      success: (function (user) {
+	      success: function (user) {
 	        if (user.tour_two_completed === false) {
 	          getStampsTour.start();
 	          ApiUtil.completeTourTwo();
 	        }
-	      }).bind(this)
+	      }.bind(this)
 	    });
 	  },
 	  componentWillUnmount: function () {
@@ -24474,6 +24482,16 @@
 	    });
 	  },
 
+	  resetSingleDrawing: function (id) {
+	    $.ajax({
+	      url: "api/drawings/" + id,
+	      method: "GET",
+	      success: function (drawing) {
+	        ApiActions.resetSingleDrawing(drawing);
+	      }
+	    });
+	  },
+
 	  fetchStamp: function (id) {
 	    $.ajax({
 	      url: "api/stamps/" + id,
@@ -24570,7 +24588,7 @@
 	      method: "POST",
 	      data: { drawing_id: drawingId },
 	      success: function () {
-	        ApiUtil.fetchAllDrawings();
+	        ApiUtil.resetSingleDrawing();
 	      }
 	    });
 	  },
@@ -24580,7 +24598,7 @@
 	      url: "api/likes/" + likeId,
 	      method: "DELETE",
 	      success: function () {
-	        ApiUtil.fetchAllDrawings();
+	        ApiUtil.resetSingleDrawing();
 	      }
 	    });
 	  },
@@ -24678,6 +24696,13 @@
 	    Dispatcher.dispatch({
 	      actionType: "DELETE_MY_STAMP",
 	      id: id
+	    });
+	  },
+
+	  resetSingleDrawing: function (drawing) {
+	    Dispatcher.dispatch({
+	      actionType: "RESET_SINGLE_DRAWING",
+	      drawing: drawing
 	    });
 	  }
 	};
@@ -25047,7 +25072,7 @@
 	    });
 	  },
 	  stampUserList: function () {
-	    return this.props.stamp.stamp_uses.map((function (use, i) {
+	    return this.props.stamp.stamp_uses.map(function (use, i) {
 	      return React.createElement(
 	        'div',
 	        {
@@ -25055,7 +25080,7 @@
 	          onClick: this.goToUser },
 	        use
 	      );
-	    }).bind(this));
+	    }.bind(this));
 	  },
 	  goToUser: function (e) {
 	    e.stopPropagation();
@@ -25188,7 +25213,7 @@
 
 	module.exports.Container = __webpack_require__(219);
 	module.exports.MapStore = __webpack_require__(222);
-	module.exports.Mixin = __webpack_require__(233);
+	module.exports.Mixin = __webpack_require__(234);
 	module.exports.ReduceStore = __webpack_require__(223);
 	module.exports.Store = __webpack_require__(224);
 
@@ -25535,7 +25560,7 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var FluxReduceStore = __webpack_require__(223);
-	var Immutable = __webpack_require__(232);
+	var Immutable = __webpack_require__(233);
 
 	var invariant = __webpack_require__(215);
 
@@ -25686,7 +25711,7 @@
 
 	var FluxStore = __webpack_require__(224);
 
-	var abstractMethod = __webpack_require__(231);
+	var abstractMethod = __webpack_require__(232);
 	var invariant = __webpack_require__(215);
 
 	var FluxReduceStore = (function (_FluxStore) {
@@ -25995,8 +26020,8 @@
 	var EmitterSubscription = __webpack_require__(227);
 	var EventSubscriptionVendor = __webpack_require__(229);
 
-	var emptyFunction = __webpack_require__(230);
-	var invariant = __webpack_require__(215);
+	var emptyFunction = __webpack_require__(231);
+	var invariant = __webpack_require__(230);
 
 	/**
 	 * @class BaseEventEmitter
@@ -26233,7 +26258,7 @@
 	 * This source code is licensed under the BSD-style license found in the
 	 * LICENSE file in the root directory of this source tree. An additional grant
 	 * of patent rights can be found in the PATENTS file in the same directory.
-	 * 
+	 *
 	 * @providesModule EventSubscription
 	 * @typechecks
 	 */
@@ -26265,7 +26290,10 @@
 	   */
 
 	  EventSubscription.prototype.remove = function remove() {
-	    this.subscriber.removeSubscription(this);
+	    if (this.subscriber) {
+	      this.subscriber.removeSubscription(this);
+	      this.subscriber = null;
+	    }
 	  };
 
 	  return EventSubscription;
@@ -26293,7 +26321,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var invariant = __webpack_require__(215);
+	var invariant = __webpack_require__(230);
 
 	/**
 	 * EventSubscriptionVendor stores a set of EventSubscriptions that are
@@ -26384,6 +26412,62 @@
 
 /***/ },
 /* 230 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule invariant
+	 */
+
+	'use strict';
+
+	/**
+	 * Use invariant() to assert state which your program assumes to be true.
+	 *
+	 * Provide sprintf-style format (only %s is supported) and arguments
+	 * to provide information about what broke and what you were
+	 * expecting.
+	 *
+	 * The invariant message will be stripped in production, but the invariant
+	 * will remain to ensure logic does not differ in production.
+	 */
+
+	function invariant(condition, format, a, b, c, d, e, f) {
+	  if (process.env.NODE_ENV !== 'production') {
+	    if (format === undefined) {
+	      throw new Error('invariant requires an error message argument');
+	    }
+	  }
+
+	  if (!condition) {
+	    var error;
+	    if (format === undefined) {
+	      error = new Error('Minified exception occurred; use the non-minified dev environment ' + 'for the full error message and additional helpful warnings.');
+	    } else {
+	      var args = [a, b, c, d, e, f];
+	      var argIndex = 0;
+	      error = new Error(format.replace(/%s/g, function () {
+	        return args[argIndex++];
+	      }));
+	      error.name = 'Invariant Violation';
+	    }
+
+	    error.framesToPop = 1; // we don't care about invariant's own frame
+	    throw error;
+	  }
+	}
+
+	module.exports = invariant;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+
+/***/ },
+/* 231 */
 /***/ function(module, exports) {
 
 	/**
@@ -26426,7 +26510,7 @@
 	module.exports = emptyFunction;
 
 /***/ },
-/* 231 */
+/* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26453,7 +26537,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 232 */
+/* 233 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -31440,7 +31524,7 @@
 	}));
 
 /***/ },
-/* 233 */
+/* 234 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -31563,10 +31647,10 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 234 */
+/* 235 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Shepherd = __webpack_require__(235);
+	var Shepherd = __webpack_require__(236);
 
 	var getStampsTour = new Shepherd.Tour({
 	  defaults: {
@@ -31617,14 +31701,14 @@
 	module.exports = getStampsTour;
 
 /***/ },
-/* 235 */
+/* 236 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! tether-shepherd 1.2.0 */
 
 	(function(root, factory) {
 	  if (true) {
-	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(236)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(237)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	  } else if (typeof exports === 'object') {
 	    module.exports = factory(require('tether'));
 	  } else {
@@ -32269,7 +32353,7 @@
 
 
 /***/ },
-/* 236 */
+/* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! tether 1.1.0 */
@@ -33990,13 +34074,13 @@
 
 
 /***/ },
-/* 237 */
+/* 238 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(210);
-	var MyStampListItem = __webpack_require__(238);
-	var MyStampStore = __webpack_require__(239);
+	var MyStampListItem = __webpack_require__(239);
+	var MyStampStore = __webpack_require__(240);
 	var History = __webpack_require__(159).History;
 
 	var MyStampIndex = React.createClass({
@@ -34037,7 +34121,7 @@
 	  render: function () {
 	    var stampsList = "";
 	    if (this.state.stamps) {
-	      stampsList = this.state.stamps.map((function (stamp, idx) {
+	      stampsList = this.state.stamps.map(function (stamp, idx) {
 	        var selected = this.state.selected === idx ? "selected-stamp" : "";
 	        return React.createElement(MyStampListItem, {
 	          stampId: stamp.id,
@@ -34047,7 +34131,7 @@
 	          'data-idx': idx,
 	          onClick: this.selectStamp,
 	          id: selected });
-	      }).bind(this));
+	      }.bind(this));
 	    }
 	    return React.createElement(
 	      'div',
@@ -34075,7 +34159,7 @@
 	module.exports = MyStampIndex;
 
 /***/ },
-/* 238 */
+/* 239 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -34144,7 +34228,7 @@
 	module.exports = MyStampListItem;
 
 /***/ },
-/* 239 */
+/* 240 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Store = __webpack_require__(218).Store;
@@ -34202,14 +34286,134 @@
 	module.exports = MyStampStore;
 
 /***/ },
-/* 240 */
+/* 241 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Shepherd = __webpack_require__(236);
+
+	var makeStampTour = new Shepherd.Tour({
+	  defaults: {
+	    classes: 'shepherd-theme-arrows'
+	  }
+	});
+
+	makeStampTour.addStep('example', {
+	  text: ["Welcome to Salamander. This app lets you make your own stamps,", "which you can use to draw with and share with other users."],
+	  showCancelLink: true,
+	  buttons: [{
+	    text: 'Next',
+	    action: makeStampTour.next
+	  }],
+	  classes: 'shepherd-theme-arrows'
+	});
+
+	makeStampTour.addStep('pick-color', {
+	  text: ["Click anywhere on the spectrum to choose your color.", "Click and drag to watch your color change in real time."],
+	  showCancelLink: true,
+	  buttons: [{
+	    text: 'Back',
+	    action: makeStampTour.back
+	  }, {
+	    text: 'Next',
+	    action: makeStampTour.next
+	  }],
+	  classes: 'shepherd-theme-arrows',
+	  attachTo: '#color-picker'
+	});
+
+	makeStampTour.addStep('recent-colors', {
+	  text: ["Recently used colors show up here.", "Click one to use that color again."],
+	  showCancelLink: true,
+	  buttons: [{
+	    text: 'Back',
+	    action: makeStampTour.back
+	  }, {
+	    text: 'Next',
+	    action: makeStampTour.next
+	  }],
+	  classes: 'shepherd-theme-arrows',
+	  attachTo: '#color-bar right'
+	});
+
+	makeStampTour.addStep('pick-size', {
+	  text: ["Click anywhere on this sidebar to choose your stroke size."],
+	  showCancelLink: true,
+	  buttons: [{
+	    text: 'Back',
+	    action: makeStampTour.back
+	  }, {
+	    text: 'Next',
+	    action: makeStampTour.next
+	  }],
+	  classes: 'shepherd-theme-arrows',
+	  attachTo: '#size-picker left'
+	});
+
+	makeStampTour.addStep('mousewheel', {
+	  text: ["You can also use the mousewheel to resize your stroke.", "Try hovering over the canvas and watching the sample stroke", "get bigger and smaller as you scroll up and down."],
+	  showCancelLink: true,
+	  buttons: [{
+	    text: 'Back',
+	    action: makeStampTour.back
+	  }, {
+	    text: 'Next',
+	    action: makeStampTour.next
+	  }],
+	  classes: 'shepherd-theme-arrows',
+	  attachTo: '#drawing-canvas'
+	});
+
+	makeStampTour.addStep('save', {
+	  text: ["Once you've drawn what you like, click here to save your", "stamp so you can use it later."],
+	  showCancelLink: true,
+	  buttons: [{
+	    text: 'Back',
+	    action: makeStampTour.back
+	  }, {
+	    text: 'Next',
+	    action: makeStampTour.next
+	  }],
+	  classes: 'shepherd-theme-arrows',
+	  attachTo: '.save-to-my-stamps bottom'
+	});
+
+	makeStampTour.addStep('my-stamps', {
+	  text: ["Your active stamps live in this toolbar."],
+	  showCancelLink: true,
+	  buttons: [{
+	    text: 'Back',
+	    action: makeStampTour.back
+	  }, {
+	    text: 'Next',
+	    action: makeStampTour.next
+	  }],
+	  classes: 'shepherd-theme-arrows',
+	  attachTo: '.stamp-sidebar'
+	});
+
+	makeStampTour.addStep('get-stamps', {
+	  text: ["But one stamp is not enough... Let's get more!", "Click the 'Menu' button, then 'Get Stamps'"],
+	  showCancelLink: true,
+	  buttons: [{
+	    text: 'Back',
+	    action: makeStampTour.back
+	  }],
+	  advanceOn: '.get-stamps click',
+	  classes: 'shepherd-theme-arrows',
+	  attachTo: '.dropdown-toggle bottom'
+	});
+
+	module.exports = makeStampTour;
+
+/***/ },
+/* 242 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var DrawingStore = __webpack_require__(241);
+	var DrawingStore = __webpack_require__(243);
 	var ApiUtil = __webpack_require__(210);
-	var DrawingListItem = __webpack_require__(242);
-	var drawingIndexTour = __webpack_require__(243);
+	var DrawingListItem = __webpack_require__(244);
+	var drawingIndexTour = __webpack_require__(245);
 
 	var DrawingIndex = React.createClass({
 	  displayName: 'DrawingIndex',
@@ -34236,12 +34440,12 @@
 	    $.ajax({
 	      url: 'users/1',
 	      method: 'GET',
-	      success: (function (user) {
+	      success: function (user) {
 	        if (user.tour_four_completed === false) {
 	          drawingIndexTour.start();
 	          ApiUtil.completeTourFour();
 	        }
-	      }).bind(this)
+	      }.bind(this)
 	    });
 	  },
 	  componentWillUnmount: function () {
@@ -34353,7 +34557,7 @@
 	// }
 
 /***/ },
-/* 241 */
+/* 243 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Store = __webpack_require__(218).Store;
@@ -34369,6 +34573,14 @@
 
 	var resetDrawing = function (drawing) {
 	  _drawing = drawing;
+	};
+
+	var resetSingleDrawing = function (drawing) {
+	  _drawings.forEach(function (oldDrawing) {
+	    if (oldDrawing.id === drawing.id) {
+	      oldDrawing = drawing;
+	    }
+	  });
 	};
 
 	var receiveDrawing = function (drawing) {
@@ -34393,13 +34605,17 @@
 	      resetDrawings(payload.drawings);
 	      DrawingStore.__emitChange();
 	      break;
+	    case "RESET_SINGLE_DRAWING":
+	      resetSingleDrawing(payload.drawing);
+	      DrawingStore.__emitChange();
+	      break;
 	  }
 	};
 
 	module.exports = DrawingStore;
 
 /***/ },
-/* 242 */
+/* 244 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -34536,10 +34752,10 @@
 	module.exports = DrawingListItem;
 
 /***/ },
-/* 243 */
+/* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Shepherd = __webpack_require__(235);
+	var Shepherd = __webpack_require__(236);
 
 	var drawingIndexTour = new Shepherd.Tour({
 	  defaults: {
@@ -34561,21 +34777,21 @@
 	module.exports = drawingIndexTour;
 
 /***/ },
-/* 244 */
+/* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(210);
-	var DrawingCanvas = __webpack_require__(245);
-	var StampCanvas = __webpack_require__(246);
-	var ColorPicker = __webpack_require__(247);
-	var SizePicker = __webpack_require__(248);
-	var StrokeSample = __webpack_require__(249);
-	var LinkedStateMixin = __webpack_require__(250);
+	var DrawingCanvas = __webpack_require__(247);
+	var StampCanvas = __webpack_require__(248);
+	var ColorPicker = __webpack_require__(249);
+	var SizePicker = __webpack_require__(250);
+	var StrokeSample = __webpack_require__(251);
+	var LinkedStateMixin = __webpack_require__(252);
 	var StampIndex = __webpack_require__(209);
 	var StampStore = __webpack_require__(217);
 	var History = __webpack_require__(159).History;
-	var makeDrawingTour = __webpack_require__(260);
+	var makeDrawingTour = __webpack_require__(256);
 
 	var CanvasTest = React.createClass({
 	  displayName: 'CanvasTest',
@@ -34626,12 +34842,12 @@
 	    $.ajax({
 	      url: 'users/1',
 	      method: 'GET',
-	      success: (function (user) {
+	      success: function (user) {
 	        if (user.tour_three_completed === false) {
 	          makeDrawingTour.start();
 	          ApiUtil.completeTourThree();
 	        }
-	      }).bind(this)
+	      }.bind(this)
 	    });
 	  },
 	  componentWillUnmount: function () {
@@ -34655,7 +34871,7 @@
 	      var squareSize = "40px";
 	    }
 
-	    return this.state.recentColors.map((function (color, idx) {
+	    return this.state.recentColors.map(function (color, idx) {
 	      var squareStyle = {
 	        background: color,
 	        width: squareSize,
@@ -34666,7 +34882,7 @@
 	        className: 'color-square',
 	        style: squareStyle,
 	        onClick: this.pickRecentColor });
-	    }).bind(this)).reverse();
+	    }.bind(this)).reverse();
 	  },
 	  saveDrawing: function () {
 	    var img = this.drawingCanvas.toData();
@@ -34675,7 +34891,7 @@
 	      url: "api/images",
 	      method: "POST",
 	      data: { img: img },
-	      success: (function (imageReceived) {
+	      success: function (imageReceived) {
 	        ApiUtil.createDrawing({
 	          caption: this.state.caption,
 	          image_url: imageReceived.public_id
@@ -34683,7 +34899,7 @@
 	        ApiUtil.useStamps(this.state.stampsUsed);
 	        this.setState({ saved: true });
 	        this.history.push("drawings/" + imageReceived.id);
-	      }).bind(this),
+	      }.bind(this),
 	      error: function () {
 	        this.setState({ saveStarted: false });
 	      }
@@ -34944,7 +35160,7 @@
 	module.exports = CanvasTest;
 
 /***/ },
-/* 245 */
+/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var ApiUtil = __webpack_require__(210);
@@ -35117,9 +35333,9 @@
 	  var img = new Image();
 	  img.crossOrigin = "anonymous";
 	  img.src = url;
-	  img.onload = (function () {
+	  img.onload = function () {
 	    this.ctx.drawImage(img, 0, 0);
-	  }).bind(this);
+	  }.bind(this);
 	};
 
 	DrawingCanvas.prototype.getImageData = function () {
@@ -35139,7 +35355,7 @@
 	module.exports = DrawingCanvas;
 
 /***/ },
-/* 246 */
+/* 248 */
 /***/ function(module, exports) {
 
 	var StampCanvas = function (id, width, height) {
@@ -35163,9 +35379,9 @@
 	  this.img = new Image();
 	  this.img.crossOrigin = "anonymous";
 	  this.img.src = url;
-	  this.img.onload = (function () {
+	  this.img.onload = function () {
 	    this.ctx.drawImage(this.img, 0, 0, 500, 500, 0, 0, this.width(), this.height());
-	  }).bind(this);
+	  }.bind(this);
 	};
 
 	StampCanvas.prototype.getImageData = function () {
@@ -35208,7 +35424,7 @@
 	module.exports = StampCanvas;
 
 /***/ },
-/* 247 */
+/* 249 */
 /***/ function(module, exports) {
 
 	var ColorPicker = function (id, width, height) {
@@ -35224,9 +35440,9 @@
 	  } else {
 	    pickerImg.src = './color-picker-64-400.png';
 	  }
-	  pickerImg.onload = (function () {
+	  pickerImg.onload = function () {
 	    this.colorPickerContext.drawImage(pickerImg, 0, 0);
-	  }).bind(this);
+	  }.bind(this);
 	};
 
 	ColorPicker.prototype.pickColor = function (e) {
@@ -35245,7 +35461,7 @@
 	module.exports = ColorPicker;
 
 /***/ },
-/* 248 */
+/* 250 */
 /***/ function(module, exports) {
 
 	var SizePicker = function (id, width, height) {
@@ -35262,9 +35478,9 @@
 	    pickerImg.src = './triangle-v2-small.png';
 	  }
 
-	  pickerImg.onload = (function () {
+	  pickerImg.onload = function () {
 	    this.sizePickerContext.drawImage(pickerImg, 0, 0);
-	  }).bind(this);
+	  }.bind(this);
 	};
 
 	SizePicker.prototype.pickSize = function (e) {
@@ -35282,7 +35498,7 @@
 	module.exports = SizePicker;
 
 /***/ },
-/* 249 */
+/* 251 */
 /***/ function(module, exports) {
 
 	var StrokeSample = function (id, width, height) {
@@ -35314,13 +35530,13 @@
 	module.exports = StrokeSample;
 
 /***/ },
-/* 250 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(251);
+	module.exports = __webpack_require__(253);
 
 /***/ },
-/* 251 */
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -35337,8 +35553,8 @@
 
 	'use strict';
 
-	var ReactLink = __webpack_require__(252);
-	var ReactStateSetters = __webpack_require__(253);
+	var ReactLink = __webpack_require__(254);
+	var ReactStateSetters = __webpack_require__(255);
 
 	/**
 	 * A simple mixin around ReactLink.forState().
@@ -35361,7 +35577,7 @@
 	module.exports = LinkedStateMixin;
 
 /***/ },
-/* 252 */
+/* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -35435,7 +35651,7 @@
 	module.exports = ReactLink;
 
 /***/ },
-/* 253 */
+/* 255 */
 /***/ function(module, exports) {
 
 	/**
@@ -35544,11 +35760,77 @@
 	module.exports = ReactStateSetters;
 
 /***/ },
-/* 254 */
+/* 256 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Shepherd = __webpack_require__(236);
+
+	var makeDrawingTour = new Shepherd.Tour({
+	  defaults: {
+	    classes: 'shepherd-theme-arrows'
+	  }
+	});
+
+	makeDrawingTour.addStep('select-stamp', {
+	  text: ["When making a drawing, you can do everything you could when", "making a stamp.", "You can also select a stamp to USE by clicking on it down here."],
+	  showCancelLink: true,
+	  buttons: [{
+	    text: 'Next',
+	    action: makeDrawingTour.next
+	  }],
+	  classes: 'shepherd-theme-arrows',
+	  attachTo: '.stamp-sidebar'
+	});
+
+	makeDrawingTour.addStep('turn-stamping-on', {
+	  text: ["After selecting a stamp, click here to turn stamping on, then go", "over to the canvas and use your stamp!", "Just like before, use the mousewheel to make it bigger and smaller."],
+	  buttons: [{
+	    text: 'Back',
+	    action: makeDrawingTour.back
+	  }, {
+	    text: 'Next',
+	    action: makeDrawingTour.next
+	  }],
+	  showCancelLink: true,
+	  classes: 'shepherd-theme-arrows',
+	  attachTo: '#toggle-stamping bottom'
+	});
+
+	makeDrawingTour.addStep('save-drawing', {
+	  text: ["When you're satisfied, save your drawing."],
+	  showCancelLink: true,
+	  buttons: [{
+	    text: 'Back',
+	    action: makeDrawingTour.back
+	  }, {
+	    text: 'Next',
+	    action: makeDrawingTour.next
+	  }],
+	  advanceOn: '.save-drawing click',
+	  classes: 'shepherd-theme-arrows',
+	  attachTo: '.save-drawing bottom'
+	});
+
+	makeDrawingTour.addStep('save-drawing', {
+	  text: ["Then go to the Menu and check out 'All Drawings'"],
+	  showCancelLink: true,
+	  buttons: [{
+	    text: 'Back',
+	    action: makeDrawingTour.back
+	  }],
+	  advanceOn: '.all-drawings click',
+	  classes: 'shepherd-theme-arrows',
+	  attachTo: '.dropdown-toggle bottom'
+	});
+
+	module.exports = makeDrawingTour;
+
+/***/ },
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var DrawingStore = __webpack_require__(241);
+	var DrawingStore = __webpack_require__(243);
 	var ApiUtil = __webpack_require__(210);
 	var History = __webpack_require__(159).History;
 
@@ -35622,13 +35904,13 @@
 	module.exports = DrawingDetail;
 
 /***/ },
-/* 255 */
+/* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var DrawingStore = __webpack_require__(241);
+	var DrawingStore = __webpack_require__(243);
 	var ApiUtil = __webpack_require__(210);
-	var DrawingListItem = __webpack_require__(242);
+	var DrawingListItem = __webpack_require__(244);
 	var StampStore = __webpack_require__(217);
 	var StampListItem = __webpack_require__(216);
 
@@ -35734,7 +36016,7 @@
 	module.exports = ProfilePage;
 
 /***/ },
-/* 256 */
+/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -35794,20 +36076,20 @@
 	module.exports = StampDetail;
 
 /***/ },
-/* 257 */
+/* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(210);
-	var DrawingCanvas = __webpack_require__(245);
-	var StampCanvas = __webpack_require__(246);
-	var ColorPicker = __webpack_require__(247);
-	var SizePicker = __webpack_require__(248);
-	var StrokeSample = __webpack_require__(249);
-	var LinkedStateMixin = __webpack_require__(250);
+	var DrawingCanvas = __webpack_require__(247);
+	var StampCanvas = __webpack_require__(248);
+	var ColorPicker = __webpack_require__(249);
+	var SizePicker = __webpack_require__(250);
+	var StrokeSample = __webpack_require__(251);
+	var LinkedStateMixin = __webpack_require__(252);
 	var StampIndex = __webpack_require__(209);
 	var StampStore = __webpack_require__(217);
-	var makeStampTour = __webpack_require__(258);
+	var makeStampTour = __webpack_require__(241);
 
 	var CanvasTest = React.createClass({
 	  displayName: 'CanvasTest',
@@ -35851,12 +36133,12 @@
 	    $.ajax({
 	      url: 'users/1',
 	      method: 'GET',
-	      success: (function (user) {
+	      success: function (user) {
 	        if (user.tour_one_completed === false) {
 	          makeStampTour.start();
 	          ApiUtil.completeTourOne();
 	        }
-	      }).bind(this),
+	      }.bind(this),
 	      error: function () {}
 	    });
 	  },
@@ -35868,7 +36150,7 @@
 	      var squareSize = "40px";
 	    }
 
-	    return this.state.recentColors.map((function (color, idx) {
+	    return this.state.recentColors.map(function (color, idx) {
 	      var squareStyle = {
 	        background: color,
 	        width: squareSize,
@@ -35879,7 +36161,7 @@
 	        className: 'color-square',
 	        style: squareStyle,
 	        onClick: this.pickRecentColor });
-	    }).bind(this)).reverse();
+	    }.bind(this)).reverse();
 	  },
 	  saveStamp: function () {
 	    var img = this.drawingCanvas.toData();
@@ -35888,16 +36170,16 @@
 	      url: "api/images",
 	      method: "POST",
 	      data: { img: img },
-	      success: (function (imageReceived) {
+	      success: function (imageReceived) {
 	        ApiUtil.createStamp({
 	          name: "default name",
 	          image_url: imageReceived.public_id
 	        });
 	        this.setState({ saved: true });
-	      }).bind(this),
-	      error: (function () {
+	      }.bind(this),
+	      error: function () {
 	        this.setState({ saveStarted: false });
-	      }).bind(this)
+	      }.bind(this)
 	    });
 	  },
 	  saveToMyStamps: function () {
@@ -35907,16 +36189,16 @@
 	      url: "api/images",
 	      method: "POST",
 	      data: { img: img },
-	      success: (function (imageReceived) {
+	      success: function (imageReceived) {
 	        ApiUtil.createMyStamp({
 	          name: "default name",
 	          image_url: imageReceived.public_id
 	        });
 	        this.setState({ saved: true });
-	      }).bind(this),
-	      error: (function () {
+	      }.bind(this),
+	      error: function () {
 	        this.setState({ saveStarted: false });
-	      }).bind(this)
+	      }.bind(this)
 	    });
 	  },
 	  saveText: function () {
@@ -36121,127 +36403,7 @@
 	module.exports = CanvasTest;
 
 /***/ },
-/* 258 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Shepherd = __webpack_require__(235);
-
-	var makeStampTour = new Shepherd.Tour({
-	  defaults: {
-	    classes: 'shepherd-theme-arrows'
-	  }
-	});
-
-	makeStampTour.addStep('example', {
-	  text: ["Welcome to Salamander. This app lets you make your own stamps,", "which you can use to draw with and share with other users."],
-	  showCancelLink: true,
-	  buttons: [{
-	    text: 'Next',
-	    action: makeStampTour.next
-	  }],
-	  classes: 'shepherd-theme-arrows'
-	});
-
-	makeStampTour.addStep('pick-color', {
-	  text: ["Click anywhere on the spectrum to choose your color.", "Click and drag to watch your color change in real time."],
-	  showCancelLink: true,
-	  buttons: [{
-	    text: 'Back',
-	    action: makeStampTour.back
-	  }, {
-	    text: 'Next',
-	    action: makeStampTour.next
-	  }],
-	  classes: 'shepherd-theme-arrows',
-	  attachTo: '#color-picker'
-	});
-
-	makeStampTour.addStep('recent-colors', {
-	  text: ["Recently used colors show up here.", "Click one to use that color again."],
-	  showCancelLink: true,
-	  buttons: [{
-	    text: 'Back',
-	    action: makeStampTour.back
-	  }, {
-	    text: 'Next',
-	    action: makeStampTour.next
-	  }],
-	  classes: 'shepherd-theme-arrows',
-	  attachTo: '#color-bar right'
-	});
-
-	makeStampTour.addStep('pick-size', {
-	  text: ["Click anywhere on this sidebar to choose your stroke size."],
-	  showCancelLink: true,
-	  buttons: [{
-	    text: 'Back',
-	    action: makeStampTour.back
-	  }, {
-	    text: 'Next',
-	    action: makeStampTour.next
-	  }],
-	  classes: 'shepherd-theme-arrows',
-	  attachTo: '#size-picker left'
-	});
-
-	makeStampTour.addStep('mousewheel', {
-	  text: ["You can also use the mousewheel to resize your stroke.", "Try hovering over the canvas and watching the sample stroke", "get bigger and smaller as you scroll up and down."],
-	  showCancelLink: true,
-	  buttons: [{
-	    text: 'Back',
-	    action: makeStampTour.back
-	  }, {
-	    text: 'Next',
-	    action: makeStampTour.next
-	  }],
-	  classes: 'shepherd-theme-arrows',
-	  attachTo: '#drawing-canvas'
-	});
-
-	makeStampTour.addStep('save', {
-	  text: ["Once you've drawn what you like, click here to save your", "stamp so you can use it later."],
-	  showCancelLink: true,
-	  buttons: [{
-	    text: 'Back',
-	    action: makeStampTour.back
-	  }, {
-	    text: 'Next',
-	    action: makeStampTour.next
-	  }],
-	  classes: 'shepherd-theme-arrows',
-	  attachTo: '.save-to-my-stamps bottom'
-	});
-
-	makeStampTour.addStep('my-stamps', {
-	  text: ["Your active stamps live in this toolbar."],
-	  showCancelLink: true,
-	  buttons: [{
-	    text: 'Back',
-	    action: makeStampTour.back
-	  }, {
-	    text: 'Next',
-	    action: makeStampTour.next
-	  }],
-	  classes: 'shepherd-theme-arrows',
-	  attachTo: '.stamp-sidebar'
-	});
-
-	makeStampTour.addStep('get-stamps', {
-	  text: ["But one stamp is not enough... Let's get more!", "Click the 'Menu' button, then 'Get Stamps'"],
-	  showCancelLink: true,
-	  buttons: [{
-	    text: 'Back',
-	    action: makeStampTour.back
-	  }],
-	  advanceOn: '.get-stamps click',
-	  classes: 'shepherd-theme-arrows',
-	  attachTo: '.dropdown-toggle bottom'
-	});
-
-	module.exports = makeStampTour;
-
-/***/ },
-/* 259 */
+/* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -36255,72 +36417,6 @@
 	});
 
 	module.exports = Home;
-
-/***/ },
-/* 260 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Shepherd = __webpack_require__(235);
-
-	var makeDrawingTour = new Shepherd.Tour({
-	  defaults: {
-	    classes: 'shepherd-theme-arrows'
-	  }
-	});
-
-	makeDrawingTour.addStep('select-stamp', {
-	  text: ["When making a drawing, you can do everything you could when", "making a stamp.", "You can also select a stamp to USE by clicking on it down here."],
-	  showCancelLink: true,
-	  buttons: [{
-	    text: 'Next',
-	    action: makeDrawingTour.next
-	  }],
-	  classes: 'shepherd-theme-arrows',
-	  attachTo: '.stamp-sidebar'
-	});
-
-	makeDrawingTour.addStep('turn-stamping-on', {
-	  text: ["After selecting a stamp, click here to turn stamping on, then go", "over to the canvas and use your stamp!", "Just like before, use the mousewheel to make it bigger and smaller."],
-	  buttons: [{
-	    text: 'Back',
-	    action: makeDrawingTour.back
-	  }, {
-	    text: 'Next',
-	    action: makeDrawingTour.next
-	  }],
-	  showCancelLink: true,
-	  classes: 'shepherd-theme-arrows',
-	  attachTo: '#toggle-stamping bottom'
-	});
-
-	makeDrawingTour.addStep('save-drawing', {
-	  text: ["When you're satisfied, save your drawing."],
-	  showCancelLink: true,
-	  buttons: [{
-	    text: 'Back',
-	    action: makeDrawingTour.back
-	  }, {
-	    text: 'Next',
-	    action: makeDrawingTour.next
-	  }],
-	  advanceOn: '.save-drawing click',
-	  classes: 'shepherd-theme-arrows',
-	  attachTo: '.save-drawing bottom'
-	});
-
-	makeDrawingTour.addStep('save-drawing', {
-	  text: ["Then go to the Menu and check out 'All Drawings'"],
-	  showCancelLink: true,
-	  buttons: [{
-	    text: 'Back',
-	    action: makeDrawingTour.back
-	  }],
-	  advanceOn: '.all-drawings click',
-	  classes: 'shepherd-theme-arrows',
-	  attachTo: '.dropdown-toggle bottom'
-	});
-
-	module.exports = makeDrawingTour;
 
 /***/ }
 /******/ ]);
