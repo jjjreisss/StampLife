@@ -24588,17 +24588,17 @@
 	      method: "POST",
 	      data: { drawing_id: drawingId },
 	      success: function () {
-	        ApiUtil.resetSingleDrawing();
+	        ApiUtil.resetSingleDrawing(drawingId);
 	      }
 	    });
 	  },
 
-	  unlikeDrawing: function (likeId) {
+	  unlikeDrawing: function (likeId, drawingId) {
 	    $.ajax({
 	      url: "api/likes/" + likeId,
 	      method: "DELETE",
 	      success: function () {
-	        ApiUtil.resetSingleDrawing();
+	        ApiUtil.resetSingleDrawing(drawingId);
 	      }
 	    });
 	  },
@@ -34666,7 +34666,7 @@
 	      ApiUtil.likeDrawing(this.props.drawing.id);
 	    }
 	    if (this.props.drawing.liked_by_current_user) {
-	      ApiUtil.unlikeDrawing(this.props.drawing.current_like_id);
+	      ApiUtil.unlikeDrawing(this.props.drawing.current_like_id, this.props.drawing.id);
 	    }
 	  },
 	  toggleList: function (e) {

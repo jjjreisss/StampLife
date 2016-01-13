@@ -44,7 +44,7 @@ var DrawingListItem = React.createClass({
       ApiUtil.likeDrawing(this.props.drawing.id);
     }
     if (this.props.drawing.liked_by_current_user) {
-      ApiUtil.unlikeDrawing(this.props.drawing.current_like_id);
+      ApiUtil.unlikeDrawing(this.props.drawing.current_like_id, this.props.drawing.id);
     }
   },
   toggleList: function(e) {
