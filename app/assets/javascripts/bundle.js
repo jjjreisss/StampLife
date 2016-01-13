@@ -34645,7 +34645,7 @@
 	    }
 	  },
 	  goToShow: function () {
-	    this.history.push('drawings/' + this.state.drawingId);
+	    this.history.push('drawings/' + this.state.drawing.id);
 	  },
 	  deleteDrawing: function () {
 	    $.ajax({
