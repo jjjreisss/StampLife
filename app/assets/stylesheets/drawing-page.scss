@@ -9,6 +9,7 @@
    outline: 1px solid black;
  }
 
+
  #size-picker {
    background: white;
    position: absolute;
@@ -53,7 +54,6 @@
 
  #entire-drawing-page {
    text-align: center;
-   margin-top: 5%
  }
 
  #entire-drawing-page button{
@@ -100,4 +100,21 @@
 
   #entire-drawing-page {
     min-width: 990px;
+    padding-top: 20px;
+    background: #E8E8E8;
+    border-radius: 28px;
+  }
+
+  .drawing-header {
+    text-align: center;
+    top: 10px;
+    position: relative;
+  }
+
+  .drawing-header-text {
+    display: inline-block;
+    top: 8px;
+    background: #E8E8E8;
+    border-radius: 10px 10px 0px 0px;
+    padding: 0 20px;
   }

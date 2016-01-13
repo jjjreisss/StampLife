@@ -35072,7 +35072,16 @@
 
 	    return React.createElement(
 	      'div',
-	      null,
+	      { className: 'drawing-page-with-header' },
+	      React.createElement(
+	        'h1',
+	        { className: 'drawing-header' },
+	        React.createElement(
+	          'span',
+	          { className: 'drawing-header-text' },
+	          'Make a Drawing'
+	        )
+	      ),
 	      React.createElement(
 	        'div',
 	        { id: 'entire-drawing-page' },
@@ -36332,90 +36341,103 @@
 	  render: function () {
 	    return React.createElement(
 	      'div',
-	      { id: 'entire-drawing-page' },
+	      { className: 'drawing-page-with-header' },
 	      React.createElement(
-	        'span',
-	        { className: 'drawing-buttons',
-	          id: 'left-buttons' },
+	        'h1',
+	        { className: 'drawing-header' },
 	        React.createElement(
-	          'button',
-	          {
-	            className: 'clear-drawing-canvas',
-	            onClick: this.clearDrawingCanvas },
-	          'Clear Canvas'
-	        ),
-	        React.createElement(
-	          'button',
-	          {
-	            className: 'undo',
-	            onClick: this.undo },
-	          'Undo'
+	          'span',
+	          { className: 'drawing-header-text' },
+	          'Make a Stamp'
 	        )
 	      ),
 	      React.createElement(
-	        'span',
-	        { id: 'drawing-page' },
+	        'div',
+	        { id: 'entire-drawing-page' },
 	        React.createElement(
-	          'div',
-	          { id: 'drawing' },
+	          'span',
+	          { className: 'drawing-buttons',
+	            id: 'left-buttons' },
 	          React.createElement(
-	            'div',
-	            { id: 'main-square' },
-	            React.createElement(
-	              'span',
-	              { className: 'left-side' },
-	              React.createElement('canvas', {
-	                id: 'size-picker',
-	                onClick: this.pickSize,
-	                onMouseDown: this.onSizePicking,
-	                onMouseUp: this.offSizePicking,
-	                onMouseMove: this.pickSize,
-	                onMouseOut: this.offSizePicking }),
-	              React.createElement('canvas', {
-	                id: 'stroke-sample' })
-	            ),
-	            React.createElement('canvas', {
-	              id: 'drawing-canvas',
-	              onMouseDown: this.mouseDownHandler,
-	              onMouseUp: this.mouseUpHandler,
-	              onMouseMove: this.mouseMoveHandler,
-	              onMouseOut: this.mouseOutHandler,
-	              onMouseOver: this.mouseOverHandler,
-	              onWheel: this.onWheelHandler }),
-	            React.createElement('canvas', {
-	              id: 'color-picker',
-	              onMouseDown: this.downColorPicker,
-	              onMouseUp: this.upColorPicker,
-	              onMouseMove: this.moveColorPicker,
-	              onMouseOut: this.outColorPicker })
+	            'button',
+	            {
+	              className: 'clear-drawing-canvas',
+	              onClick: this.clearDrawingCanvas },
+	            'Clear Canvas'
 	          ),
 	          React.createElement(
-	            'div',
+	            'button',
 	            {
-	              id: 'color-bar' },
-	            this.colorBar()
+	              className: 'undo',
+	              onClick: this.undo },
+	            'Undo'
 	          )
-	        )
-	      ),
-	      React.createElement(
-	        'span',
-	        { className: 'drawing-buttons',
-	          id: 'right-buttons' },
-	        React.createElement(
-	          'button',
-	          {
-	            className: 'save-stamp',
-	            onClick: this.saveStamp,
-	            disabled: this.saveDisabled() },
-	          this.saveText()
 	        ),
 	        React.createElement(
-	          'button',
-	          {
-	            className: 'save-to-my-stamps',
-	            onClick: this.saveToMyStamps,
-	            disabled: this.saveDisabled() },
-	          'Save To My Stamps'
+	          'span',
+	          { id: 'drawing-page' },
+	          React.createElement(
+	            'div',
+	            { id: 'drawing' },
+	            React.createElement(
+	              'div',
+	              { id: 'main-square' },
+	              React.createElement(
+	                'span',
+	                { className: 'left-side' },
+	                React.createElement('canvas', {
+	                  id: 'size-picker',
+	                  onClick: this.pickSize,
+	                  onMouseDown: this.onSizePicking,
+	                  onMouseUp: this.offSizePicking,
+	                  onMouseMove: this.pickSize,
+	                  onMouseOut: this.offSizePicking }),
+	                React.createElement('canvas', {
+	                  id: 'stroke-sample' })
+	              ),
+	              React.createElement('canvas', {
+	                id: 'drawing-canvas',
+	                onMouseDown: this.mouseDownHandler,
+	                onMouseUp: this.mouseUpHandler,
+	                onMouseMove: this.mouseMoveHandler,
+	                onMouseOut: this.mouseOutHandler,
+	                onMouseOver: this.mouseOverHandler,
+	                onWheel: this.onWheelHandler }),
+	              React.createElement('canvas', {
+	                id: 'color-picker',
+	                onMouseDown: this.downColorPicker,
+	                onMouseUp: this.upColorPicker,
+	                onMouseMove: this.moveColorPicker,
+	                onMouseOut: this.outColorPicker })
+	            ),
+	            React.createElement(
+	              'div',
+	              {
+	                id: 'color-bar' },
+	              this.colorBar()
+	            )
+	          )
+	        ),
+	        React.createElement(
+	          'span',
+	          { className: 'drawing-buttons',
+	            id: 'right-buttons' },
+	          React.createElement(
+	            'button',
+	            {
+	              className: 'save-stamp',
+	              onClick: this.saveStamp,
+	              disabled: this.saveDisabled() },
+	            this.saveText()
+	          ),
+	          React.createElement(
+	            'button',
+	            {
+	              className: 'save-to-my-stamps',
+	              onClick: this.saveToMyStamps,
+	              disabled: this.saveDisabled() },
+	            'Save To My Stamps'
+	          )
 	        )
 	      )
 	    );

@@ -233,85 +233,92 @@ var CanvasTest = React.createClass({
 
   render: function() {
     return(
-    <div id="entire-drawing-page">
+      <div className="drawing-page-with-header">
+        <h1 className="drawing-header">
+          <span className="drawing-header-text">
+            Make a Stamp
+          </span>
+        </h1>
+        <div id="entire-drawing-page">
 
-      <span className="drawing-buttons"
-        id="left-buttons">
-        <button
-          className="clear-drawing-canvas"
-          onClick={this.clearDrawingCanvas}>
-          Clear Canvas
-        </button>
-        <button
-          className="undo"
-          onClick={this.undo}>
-          Undo
-        </button>
-      </span>
+          <span className="drawing-buttons"
+            id="left-buttons">
+            <button
+              className="clear-drawing-canvas"
+              onClick={this.clearDrawingCanvas}>
+              Clear Canvas
+            </button>
+            <button
+              className="undo"
+              onClick={this.undo}>
+              Undo
+            </button>
+          </span>
 
-      <span id="drawing-page">
+          <span id="drawing-page">
 
-        <div id="drawing">
-          <div id="main-square">
-            <span className="left-side">
-              <canvas
-                id="size-picker"
-                onClick={this.pickSize}
-                onMouseDown={this.onSizePicking}
-                onMouseUp={this.offSizePicking}
-                onMouseMove={this.pickSize}
-                onMouseOut={this.offSizePicking}>
+            <div id="drawing">
+              <div id="main-square">
+                <span className="left-side">
+                  <canvas
+                    id="size-picker"
+                    onClick={this.pickSize}
+                    onMouseDown={this.onSizePicking}
+                    onMouseUp={this.offSizePicking}
+                    onMouseMove={this.pickSize}
+                    onMouseOut={this.offSizePicking}>
 
-              </canvas>
-              <canvas
-                id="stroke-sample">
+                  </canvas>
+                  <canvas
+                    id="stroke-sample">
 
-              </canvas>
-            </span>
-            <canvas
-              id="drawing-canvas"
-              onMouseDown={this.mouseDownHandler}
-              onMouseUp={this.mouseUpHandler}
-              onMouseMove={this.mouseMoveHandler}
-              onMouseOut={this.mouseOutHandler}
-              onMouseOver={this.mouseOverHandler}
-              onWheel={this.onWheelHandler}>
+                  </canvas>
+                </span>
+                <canvas
+                  id="drawing-canvas"
+                  onMouseDown={this.mouseDownHandler}
+                  onMouseUp={this.mouseUpHandler}
+                  onMouseMove={this.mouseMoveHandler}
+                  onMouseOut={this.mouseOutHandler}
+                  onMouseOver={this.mouseOverHandler}
+                  onWheel={this.onWheelHandler}>
 
-            </canvas>
-            <canvas
-              id="color-picker"
-              onMouseDown={this.downColorPicker}
-              onMouseUp={this.upColorPicker}
-              onMouseMove={this.moveColorPicker}
-              onMouseOut={this.outColorPicker}>
+                </canvas>
+                <canvas
+                  id="color-picker"
+                  onMouseDown={this.downColorPicker}
+                  onMouseUp={this.upColorPicker}
+                  onMouseMove={this.moveColorPicker}
+                  onMouseOut={this.outColorPicker}>
 
-            </canvas>
-          </div>
-          <div
-            id="color-bar">
-            {this.colorBar()}
-          </div>
+                </canvas>
+              </div>
+              <div
+                id="color-bar">
+                {this.colorBar()}
+              </div>
+            </div>
+          </span>
+
+
+          <span className="drawing-buttons"
+            id="right-buttons">
+            <button
+              className="save-stamp"
+              onClick={this.saveStamp}
+              disabled={this.saveDisabled()}>
+              {this.saveText()}
+            </button>
+            <button
+              className="save-to-my-stamps"
+              onClick={this.saveToMyStamps}
+              disabled={this.saveDisabled()}>
+              Save To My Stamps
+            </button>
+          </span>
+
         </div>
-      </span>
-
-
-      <span className="drawing-buttons"
-        id="right-buttons">
-        <button
-          className="save-stamp"
-          onClick={this.saveStamp}
-          disabled={this.saveDisabled()}>
-          {this.saveText()}
-        </button>
-        <button
-          className="save-to-my-stamps"
-          onClick={this.saveToMyStamps}
-          disabled={this.saveDisabled()}>
-          Save To My Stamps
-        </button>
-      </span>
-
-    </div>
+      </div>
     );
   }
 });

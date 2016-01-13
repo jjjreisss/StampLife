@@ -111,10 +111,10 @@
       border-right-color: #fff; }
 
 .shepherd-element.shepherd-theme-arrows-plain-buttons.shepherd-element-attached-top.shepherd-element-attached-center.shepherd-has-title .shepherd-content:before, .shepherd-element.shepherd-theme-arrows-plain-buttons.shepherd-element-attached-top.shepherd-element-attached-right.shepherd-target-attached-bottom.shepherd-has-title .shepherd-content:before, .shepherd-element.shepherd-theme-arrows-plain-buttons.shepherd-element-attached-top.shepherd-element-attached-left.shepherd-target-attached-bottom.shepherd-has-title .shepherd-content:before {
-  border-bottom-color: #eee; }
+  border-bottom-color: #E8E8E8; }
 
 .shepherd-element.shepherd-theme-arrows-plain-buttons.shepherd-has-title .shepherd-content header {
-  background: #eee;
+  background: #E8E8E8;
   padding: 1em; }
   .shepherd-element.shepherd-theme-arrows-plain-buttons.shepherd-has-title .shepherd-content header a.shepherd-cancel-link {
     padding: 0;

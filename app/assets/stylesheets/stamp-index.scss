@@ -37,10 +37,13 @@
    height: 24px;
    background: white;
    background-image: url('../plussign5.png');
+   border-radius: 12px;
  }
 
  .select-stamp-icon:hover {
    background-image: url('../add198.png');
+   cursor: pointer;
+
  }
 
 

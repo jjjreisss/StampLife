@@ -31,6 +31,10 @@
   border-radius: 5px;
 }
 
+.my-stamp-index-element:hover {
+  cursor: pointer;
+}
+
 #selected {
   box-shadow: 0 0 8px 4px #FBDF18;
 }
@@ -63,6 +67,7 @@
   height: 16px;
   background: white;
   background-image: url('../close12.png');
+  border-radius: 8px;
 }
 
 .delete-my-stamp-icon:hover {

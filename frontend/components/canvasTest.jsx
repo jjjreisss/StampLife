@@ -277,7 +277,12 @@ var CanvasTest = React.createClass({
   render: function() {
 
     return(
-    <div>
+    <div className="drawing-page-with-header">
+    <h1 className="drawing-header">
+      <span className="drawing-header-text">
+        Make a Drawing
+      </span>
+    </h1>
     <div id="entire-drawing-page">
       <span className="drawing-buttons"
         id="left-buttons">

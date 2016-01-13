@@ -105,13 +105,14 @@
 }
 
 #page-content {
-  overflow: auto;
   top: 5%;
 }
 
 #page-content-inner {
   margin: auto;
-  width: 90%
+  width: 90%;
+  position: relative;
+  top: 25px;
 }
 
 .delete {
@@ -127,4 +128,8 @@
 .new-user-link {
   margin: -10px;
   padding:10px 20px;
+}
+
+#entire-page {
+  position: absolute;  
 }
