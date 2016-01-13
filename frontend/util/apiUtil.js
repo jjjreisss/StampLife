@@ -154,7 +154,7 @@ var ApiUtil = {
       method: "POST",
       data: {drawing_id: drawingId},
       success: function() {
-        ApiUtil.resetSingleDrawing(drawingId);
+        ApiUtil.fetchDrawing(drawingId);
       },
     });
   },
@@ -164,7 +164,7 @@ var ApiUtil = {
       url: "api/likes/" + likeId,
       method: "DELETE",
       success: function() {
-        ApiUtil.resetSingleDrawing(drawingId);
+        ApiUtil.fetchDrawing(drawingId);
       },
     });
   },

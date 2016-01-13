@@ -24588,7 +24588,7 @@
 	      method: "POST",
 	      data: { drawing_id: drawingId },
 	      success: function () {
-	        ApiUtil.resetSingleDrawing(drawingId);
+	        ApiUtil.fetchDrawing(drawingId);
 	      }
 	    });
 	  },
@@ -24598,7 +24598,7 @@
 	      url: "api/likes/" + likeId,
 	      method: "DELETE",
 	      success: function () {
-	        ApiUtil.resetSingleDrawing(drawingId);
+	        ApiUtil.fetchDrawing(drawingId);
 	      }
 	    });
 	  },
@@ -34621,6 +34621,7 @@
 	var React = __webpack_require__(1);
 	var History = __webpack_require__(159).History;
 	var ApiUtil = __webpack_require__(210);
+	var DrawingStore = __webpack_require__(243);
 
 	var DrawingListItem = React.createClass({
 	  displayName: 'DrawingListItem',
@@ -34630,15 +34631,25 @@
 	  getInitialState: function () {
 	    return {
 	      hover: false,
-	      likesClicked: false
+	      likesClicked: false,
+	      drawing: this.props.drawing
 	    };
 	  },
+	  componentDidMount: function () {
+	    this.drawingStoreListener = DrawingStore.addListener(this._onChange);
+	  },
+	  _onChange: function () {
+	    var drawingStoreDrawing = DrawingStore.single();
+	    if (drawingStoreDrawing.id === this.state.drawing.id) {
+	      this.setState({ drawing: drawingStoreDrawing });
+	    }
+	  },
 	  goToShow: function () {
-	    this.history.push('drawings/' + this.props.drawingId);
+	    this.history.push('drawings/' + this.state.drawingId);
 	  },
 	  deleteDrawing: function () {
 	    $.ajax({
-	      url: "api/drawings/" + this.props.drawingId,
+	      url: "api/drawings/" + this.state.drawingId,
 	      method: "DELETE",
 	      success: function (message) {
 	        console.log(message.message);
@@ -34649,9 +34660,6 @@
 	      }
 	    });
 	  },
-	  componentWillReceiveProps: function () {
-	    this.setState({});
-	  },
 	  enhover: function () {
 	    this.setState({ hover: true });
 	  },
@@ -34660,16 +34668,16 @@
 	  },
 	  goToUser: function (e) {
 	    e.stopPropagation();
-	    var username = this.props.drawing.username;
+	    var username = this.state.drawing.username;
 	    this.history.push('users/' + username);
 	  },
 	  toggleLike: function (e) {
 	    e.stopPropagation();
-	    if (!this.props.drawing.liked_by_current_user) {
-	      ApiUtil.likeDrawing(this.props.drawing.id);
+	    if (!this.state.drawing.liked_by_current_user) {
+	      ApiUtil.likeDrawing(this.state.drawing.id);
 	    }
-	    if (this.props.drawing.liked_by_current_user) {
-	      ApiUtil.unlikeDrawing(this.props.drawing.current_like_id, this.props.drawing.id);
+	    if (this.state.drawing.liked_by_current_user) {
+	      ApiUtil.unlikeDrawing(this.state.drawing.current_like_id, this.state.drawing.id);
 	    }
 	  },
 	  toggleList: function (e) {
@@ -34677,7 +34685,7 @@
 	    this.setState({ likesClicked: !this.state.likesClicked });
 	  },
 	  drawingLikeList: function () {
-	    return this.props.drawing.likes.map(function (like, i) {
+	    return this.state.drawing.likes.map(function (like, i) {
 	      return React.createElement(
 	        'div',
 	        { key: i },
@@ -34689,9 +34697,9 @@
 	    var drawingAuthor = this.state.hover ? "drawing-author" : "hidden";
 	    var drawingLikesCount = this.state.hover ? "drawing-likes-count" : "hidden";
 	    var likeDrawingClass = this.state.hover ? "like-drawing-class" : "hidden";
-	    var likeText = this.props.drawing.liked_by_current_user ? "Unlike" : "Like";
+	    var likeText = this.state.drawing.liked_by_current_user ? "Unlike" : "Like";
 	    var drawingLikeList = this.state.likesClicked ? "drawing-like-list" : "hidden";
-	    var timeAgo = this.props.drawing.time_ago;
+	    var timeAgo = this.state.drawing.time_ago;
 	    if (timeAgo.slice(0, 5) === "about") {
 	      timeAgo = timeAgo.slice(6);
 	    }
@@ -34713,7 +34721,7 @@
 	        {
 	          className: drawingAuthor,
 	          onClick: this.goToUser },
-	        this.props.drawing.username,
+	        this.state.drawing.username,
 	        React.createElement('br', null),
 	        timeAgo
 	      ),
@@ -34731,7 +34739,7 @@
 	              className: drawingLikeList },
 	            this.drawingLikeList()
 	          ),
-	          this.props.drawing.likes.length,
+	          this.state.drawing.likes.length,
 	          ' Likes'
 	        ),
 	        React.createElement(

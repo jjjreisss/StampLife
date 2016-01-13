@@ -1,6 +1,7 @@
 var React = require('react');
 var History = require('react-router').History;
 var ApiUtil = require('../util/apiUtil');
+var DrawingStore = require('../stores/drawingStore');
 
 var DrawingListItem = React.createClass({
   mixins: [History],
@@ -8,15 +9,25 @@ var DrawingListItem = React.createClass({
   getInitialState: function() {
     return({
       hover: false,
-      likesClicked: false
+      likesClicked: false,
+      drawing: this.props.drawing
     });
   },
+  componentDidMount: function() {
+    this.drawingStoreListener = DrawingStore.addListener(this._onChange);
+  },
+  _onChange: function() {
+    var drawingStoreDrawing = DrawingStore.single();
+    if (drawingStoreDrawing.id === this.state.drawing.id) {
+      this.setState({drawing: drawingStoreDrawing});
+    }
+  },
   goToShow: function() {
-    this.history.push('drawings/' + this.props.drawingId);
+    this.history.push('drawings/' + this.state.drawingId);
   },
   deleteDrawing: function() {
     $.ajax({
-      url: "api/drawings/" + this.props.drawingId,
+      url: "api/drawings/" + this.state.drawingId,
       method: "DELETE",
       success: function(message) {
         console.log(message.message);
@@ -27,9 +38,6 @@ var DrawingListItem = React.createClass({
       }
     });
   },
-  componentWillReceiveProps: function() {
-    this.setState({});
-  },
   enhover: function() {
     this.setState({hover: true});
   },
@@ -38,16 +46,16 @@ var DrawingListItem = React.createClass({
   },
   goToUser: function(e) {
     e.stopPropagation();
-    var username = this.props.drawing.username;
+    var username = this.state.drawing.username;
     this.history.push('users/' + username);
   },
   toggleLike: function(e) {
     e.stopPropagation();
-    if (!this.props.drawing.liked_by_current_user){
-      ApiUtil.likeDrawing(this.props.drawing.id);
+    if (!this.state.drawing.liked_by_current_user){
+      ApiUtil.likeDrawing(this.state.drawing.id);
     }
-    if (this.props.drawing.liked_by_current_user) {
-      ApiUtil.unlikeDrawing(this.props.drawing.current_like_id, this.props.drawing.id);
+    if (this.state.drawing.liked_by_current_user) {
+      ApiUtil.unlikeDrawing(this.state.drawing.current_like_id, this.state.drawing.id);
     }
   },
   toggleList: function(e) {
@@ -55,7 +63,7 @@ var DrawingListItem = React.createClass({
     this.setState({likesClicked: !this.state.likesClicked});
   },
   drawingLikeList: function() {
-    return this.props.drawing.likes.map(function(like, i) {
+    return this.state.drawing.likes.map(function(like, i) {
       return <div key={i}>{like}</div>;
     });
   },
@@ -63,9 +71,9 @@ var DrawingListItem = React.createClass({
     var drawingAuthor = (this.state.hover ? "drawing-author" : "hidden");
     var drawingLikesCount = (this.state.hover ? "drawing-likes-count" : "hidden");
     var likeDrawingClass = (this.state.hover ? "like-drawing-class" : "hidden");
-    var likeText = (this.props.drawing.liked_by_current_user ? "Unlike" : "Like");
+    var likeText = (this.state.drawing.liked_by_current_user ? "Unlike" : "Like");
     var drawingLikeList = (this.state.likesClicked ? "drawing-like-list" : "hidden");
-    var timeAgo = this.props.drawing.time_ago;
+    var timeAgo = this.state.drawing.time_ago;
     if (timeAgo.slice(0,5) === "about") {
       timeAgo = timeAgo.slice(6);
     }
@@ -84,7 +92,7 @@ var DrawingListItem = React.createClass({
         <div
           className={drawingAuthor}
           onClick={this.goToUser}>
-          {this.props.drawing.username}
+          {this.state.drawing.username}
           <br/>
           {timeAgo}
         </div>
@@ -96,7 +104,7 @@ var DrawingListItem = React.createClass({
               className={drawingLikeList}>
               {this.drawingLikeList()}
             </div>
-            {this.props.drawing.likes.length} Likes
+            {this.state.drawing.likes.length} Likes
           </div>
           <div
             className={likeDrawingClass}
