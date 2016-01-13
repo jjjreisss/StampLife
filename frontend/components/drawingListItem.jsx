@@ -27,6 +27,9 @@ var DrawingListItem = React.createClass({
       }
     });
   },
+  componentWillReceiveProps: function() {
+    this.setState({});
+  },
   enhover: function() {
     this.setState({hover: true});
   },
