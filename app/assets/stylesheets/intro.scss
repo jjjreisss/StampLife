@@ -20,6 +20,7 @@
    padding: 50px;
    padding-top: 10px;
    padding-bottom: 40px;
+   overflow: auto;
  }
 
 .sign-in-label{
@@ -34,4 +35,13 @@
   padding-top: 30px;
   padding-left: 60px;
   padding-bottom: -30px;
+}
+
+.intro-page label {
+  width: 100%;
+  float: left;
+}
+
+.intro-page input {
+  float: right;
 }

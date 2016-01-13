@@ -118,7 +118,10 @@
   display: none;
 }
 
-
+.dropdown-menu li {
+    position: relative;
+    left: 10px;
+}
 
 
 .new-user-link {
