@@ -88,6 +88,8 @@
    position: fixed;
    width: 100%;
    z-index: 10;
+   border: none;
+   box-shadow: 0 0 8px 2px;
  }
 
  .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:hover, .navbar-inverse .navbar-nav > .open > a:focus {
@@ -114,6 +116,7 @@
   position: relative;
   top: 25px;
   text-align: center;
+  min-width: 760px;
 }
 
 .delete {

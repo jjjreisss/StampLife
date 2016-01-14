@@ -35,7 +35,7 @@ var DrawingIndex = React.createClass({
     //     }
     //   }.bind(this),
     // });
-    if (window.wholeDamnTour.currentStep.id === "save-drawing") {
+    if (window.wholeDamnTour.currentStep && window.wholeDamnTour.currentStep.id === "save-drawing") {
       window.setTimeout(function() {
         window.wholeDamnTour.next();
       }, 200);

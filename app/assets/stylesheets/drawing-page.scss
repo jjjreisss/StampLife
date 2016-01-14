@@ -2,11 +2,17 @@
  #drawing-canvas{
    background: white;
    outline: 1px solid black;
+   cursor: none;
  }
 
  #color-picker {
    background: white;
    outline: 1px solid black;
+   cursor: -webkit-grab;
+ }
+
+ #color-picker:active {
+   cursor: -webkit-grabbing;
  }
 
 
@@ -14,6 +20,11 @@
    background: white;
    position: absolute;
    outline: 1px solid black;
+   cursor: -webkit-grab;
+ }
+
+ #size-picker:active {
+   cursor: -webkit-grabbing;
  }
 
  #stroke-sample {
@@ -108,6 +119,7 @@
     max-width: 1100px;
     width: 100%;
     display: inline-block;
+    max-height: 610px;
   }
 
   .drawing-header {

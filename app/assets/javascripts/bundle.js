@@ -34150,19 +34150,23 @@
 	    return React.createElement(
 	      'div',
 	      { className: 'my-stamp-index' },
-	      stampsList,
 	      React.createElement(
 	        'div',
-	        { className: 'my-stamp-index-footer' },
+	        { className: 'my-stamp-index-screen' },
+	        stampsList,
 	        React.createElement(
-	          'button',
-	          { onClick: this.goToStampsIndex },
-	          'Get Stamps'
-	        ),
-	        React.createElement(
-	          'button',
-	          { onClick: this.goToNewStamp },
-	          'Make Stamps'
+	          'div',
+	          { className: 'my-stamp-index-footer' },
+	          React.createElement(
+	            'button',
+	            { onClick: this.goToStampsIndex },
+	            'Get Stamps'
+	          ),
+	          React.createElement(
+	            'button',
+	            { onClick: this.goToNewStamp },
+	            'Make Stamps'
+	          )
 	        )
 	      )
 	    );
@@ -34461,7 +34465,7 @@
 	    //     }
 	    //   }.bind(this),
 	    // });
-	    if (window.wholeDamnTour.currentStep.id === "save-drawing") {
+	    if (window.wholeDamnTour.currentStep && window.wholeDamnTour.currentStep.id === "save-drawing") {
 	      window.setTimeout(function () {
 	        window.wholeDamnTour.next();
 	      }, 200);

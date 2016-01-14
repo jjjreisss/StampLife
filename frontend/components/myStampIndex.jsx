@@ -59,7 +59,7 @@ var MyStampIndex = React.createClass({
     }
     return(
       <div className="my-stamp-index">
-
+        <div className="my-stamp-index-screen">
         {stampsList}
         <div className="my-stamp-index-footer">
           <button onClick={this.goToStampsIndex}>
@@ -69,6 +69,9 @@ var MyStampIndex = React.createClass({
             Make Stamps
           </button>
         </div>
+
+        </div>
+
       </div>
     );
   }
