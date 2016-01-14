@@ -10,6 +10,7 @@ var StampIndex = require('./stampIndex');
 var StampStore = require('../stores/stampStore');
 var History = require('react-router').History;
 var makeDrawingTour = require('../util/makeDrawingTour');
+var MyStampStore = require('../stores/myStampStore');
 
 
 var CanvasTest = React.createClass({
@@ -56,6 +57,7 @@ var CanvasTest = React.createClass({
     this.sizePicking = false;
 
     this.token = StampStore.addListener(this.selectStamp);
+    this.myStampStoreListener = MyStampStore.addListener(this.turnStampingOn);
 
     // $.ajax({
     //   url: 'users/1',
@@ -69,11 +71,14 @@ var CanvasTest = React.createClass({
     // });
 
     if (window.wholeDamnTour.currentStep && window.wholeDamnTour.currentStep.id === "done_choosing_stamps"){
-      window.wholeDamnTour.next()
+      window.setTimeout(function() {
+        window.wholeDamnTour.next();
+      }, 200);
     }
   },
   componentWillUnmount: function() {
     this.token.remove();
+    this.myStampStoreListener.remove();
   },
   selectStamp: function() {
     this.setState({
@@ -146,6 +151,12 @@ var CanvasTest = React.createClass({
     this.setStamp();
     this.selectStamp();
   },
+  turnStampingOn: function() {
+    this.drawingCanvas.turnStampingOn();
+    this.setState({stamping: true});
+    this.setStamp();
+    this.selectStamp();
+  },
   saveText: function() {
     var text;
     this.state.saveStarted ? text = "Saving" : text = "Save Drawing";
@@ -159,27 +170,35 @@ var CanvasTest = React.createClass({
 
 // Methods for changing Color
   downColorPicker: function(e) {
-    this.colorPicking = true;
-    var color = this.colorPicker.pickColor(e);
-    this.strokeSample.pickSample(color, this.size);
-  },
-  upColorPicker: function(e) {
-    if (this.colorPicking) {
-      this.pickColor();
-    }
-    this.colorPicking = false;
-  },
-  moveColorPicker: function(e) {
-    if(this.colorPicking) {
+    if (!(this.state.stamping)){
+      this.colorPicking = true;
       var color = this.colorPicker.pickColor(e);
       this.strokeSample.pickSample(color, this.size);
     }
   },
-  outColorPicker: function(e) {
-    if (this.colorPicking) {
-      this.pickColor();
+  upColorPicker: function(e) {
+    if (!(this.state.stamping)){
+      if (this.colorPicking) {
+        this.pickColor();
+      }
+      this.colorPicking = false;
     }
-    this.colorPicking = false;
+  },
+  moveColorPicker: function(e) {
+    if (!(this.state.stamping)){
+      if(this.colorPicking) {
+        var color = this.colorPicker.pickColor(e);
+        this.strokeSample.pickSample(color, this.size);
+      }
+    }
+  },
+  outColorPicker: function(e) {
+    if (!(this.state.stamping)){
+      if (this.colorPicking) {
+        this.pickColor();
+      }
+      this.colorPicking = false;
+    }
   },
   pickColor: function(e) {
     if (this.colorPicking) {
@@ -201,17 +220,23 @@ var CanvasTest = React.createClass({
 
   // Methods for picking size
   onSizePicking: function(e) {
-    this.sizePicking = true;
-    this.pickSize(e);
+    if (!(this.state.stamping)){
+      this.sizePicking = true;
+      this.pickSize(e);
+    }
   },
   offSizePicking: function() {
-    this.sizePicking = false;
+    if (!(this.state.stamping)){
+      this.sizePicking = false;
+    }
   },
   pickSize: function(e) {
-    if (this.sizePicking) {
-      this.size = this.sizePicker.pickSize(e);
-      this.strokeSample.pickSample(this.color, this.size);
-      this.drawingCanvas.setSize(this.size);
+    if (!(this.state.stamping)){
+      if (this.sizePicking) {
+        this.size = this.sizePicker.pickSize(e);
+        this.strokeSample.pickSample(this.color, this.size);
+        this.drawingCanvas.setSize(this.size);
+      }
     }
   },
 
@@ -280,7 +305,9 @@ var CanvasTest = React.createClass({
     <div className="drawing-page-with-header">
     <h1 className="drawing-header">
       <span className="drawing-header-text">
-        Make a Drawing
+        <span>
+          Make a Drawing
+        </span>
       </span>
     </h1>
     <div id="entire-drawing-page">

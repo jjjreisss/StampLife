@@ -37,7 +37,9 @@ var StampIndex = React.createClass({
     // });
 
     if (window.wholeDamnTour.currentStep && window.wholeDamnTour.currentStep.id === 'get-stamps') {
-      window.wholeDamnTour.next();
+      window.setTimeout(function() {
+        window.wholeDamnTour.next();
+      }, 200);
     }
   },
   componentWillUnmount: function() {
@@ -106,13 +108,17 @@ var StampIndex = React.createClass({
             className="index-tab"
             onClick={this.sortByPopularity}
             id={popularitySelected}>
-            Most Popular Stamps
+            <span>
+              Most Popular Stamps
+            </span>
           </span>
           <span
             className="index-tab"
             onClick={this.sortByNewest}
             id={newestSelected}>
-            Newest Stamps
+            <span>
+              Newest Stamps
+            </span>
           </span>
         </h1>
         <div className="index-contents">

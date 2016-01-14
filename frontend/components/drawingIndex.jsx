@@ -35,9 +35,11 @@ var DrawingIndex = React.createClass({
     //     }
     //   }.bind(this),
     // });
-    // if (window.wholeDamnTour.currentStep.id === "save-drawing") {
-    //   window.wholeDamnTour.next();
-    // };
+    if (window.wholeDamnTour.currentStep.id === "save-drawing") {
+      window.setTimeout(function() {
+        window.wholeDamnTour.next();
+      }, 200);
+    };
   },
   componentWillUnmount: function() {
     this.listener.remove();
@@ -104,13 +106,17 @@ var DrawingIndex = React.createClass({
             className="index-tab"
             onClick={this.sortByPopularity}
             id={popularitySelected}>
-            Most Popular Drawings
+            <span>
+              Most Popular Drawings
+            </span>
           </span>
           <span
             className="index-tab"
             onClick={this.sortByNewest}
             id={newestSelected}>
-            Newest Drawings
+            <span>
+              Newest Drawings
+            </span>
           </span>
         </h1>
           <div className="index-contents">

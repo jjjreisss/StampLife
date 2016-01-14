@@ -1,6 +1,5 @@
 
 .index {
-  overflow: hidden;
   margin: 0% 0% 10% 0%;
   text-align: center;
 }
@@ -16,15 +15,19 @@
  }
 
  .index-element:hover {
-   box-shadow: 0 0 10px 0;
+   box-shadow: 0 0 3px 0;
  }
 
 
  .index-tab {
-   position: relative;
    cursor: pointer;
    margin: 20px;
    padding: 0px 20px;
+   display: inline-block;
+   position: relative;
+   top: 0px;
+   height: 48px;
+   overflow: hidden;
  }
 
  .index-tab:hover {
@@ -33,19 +36,33 @@
 
  .index-header {
    position: relative;
-   top: 8px;
-   text-align: center;
+       text-align: center;
    left: 20px;
+   z-index: 5;
+
  }
 
  .index-contents {
    background: #E8E8E8;
    border-radius: 28px;
+  box-shadow: 0 0 8px 0;
+  position: relative;
+  top: -37px;
  }
 
  #selected-tab {
+
+ }
+
+ #selected-tab span {
    background: #E8E8E8;
-   border-radius: 10px 10px 0px 0px;
+       border-radius: 10px 10px 0px 0px;
+       box-shadow: 0 0 8px 0;
+       position: relative;
+       bottom: -5px;
+       display: inline-block;
+       height: 53px;
+       padding: 0 10px;
  }
 
  #selected-tab:hover {

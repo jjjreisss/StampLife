@@ -153,6 +153,10 @@ DrawingCanvas.prototype.toggleStamping = function () {
   this.stamping = !this.stamping;
 };
 
+DrawingCanvas.prototype.turnStampingOn = function () {
+  this.stamping = true;
+};
+
 DrawingCanvas.prototype.toData = function () {
   return this.canvas.toDataURL("image/png");
 };

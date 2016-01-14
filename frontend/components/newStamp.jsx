@@ -236,7 +236,9 @@ var CanvasTest = React.createClass({
       <div className="drawing-page-with-header">
         <h1 className="drawing-header">
           <span className="drawing-header-text">
-            Make a Stamp
+            <span>
+              Make a Stamp
+            </span>
           </span>
         </h1>
         <div id="entire-drawing-page">

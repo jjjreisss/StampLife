@@ -87,7 +87,7 @@
    background-size: 75%;
    position: fixed;
    width: 100%;
-   z-index: 2;
+   z-index: 10;
  }
 
  .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:hover, .navbar-inverse .navbar-nav > .open > a:focus {
@@ -113,15 +113,30 @@
   width: 90%;
   position: relative;
   top: 25px;
+  text-align: center;
 }
 
 .delete {
   display: none;
 }
 
+.dropdown-menu {
+  z-index: 10;
+}
+
+.dropdown-menu:hover {
+  cursor: pointer;
+}
+
+.dropdown-menu li:hover {
+  cursor: pointer;
+  color: teal;
+}
+
 .dropdown-menu li {
     position: relative;
     left: 10px;
+    font-size: 20px;
 }
 
 
@@ -131,5 +146,10 @@
 }
 
 #entire-page {
-  position: absolute;  
+  position: absolute;
+  width: 100%
+}
+
+.shepherd-step {
+  z-index: 9;
 }

@@ -56,7 +56,7 @@
 	var StampIndex = __webpack_require__(209);
 	var StampDetail = __webpack_require__(259);
 	var NewStamp = __webpack_require__(260);
-	var Home = __webpack_require__(261);
+	var Home = __webpack_require__(262);
 	var IndexRoute = __webpack_require__(159).IndexRoute;
 	var Shepherd = __webpack_require__(236);
 
@@ -24345,7 +24345,9 @@
 	    // });
 
 	    if (window.wholeDamnTour.currentStep && window.wholeDamnTour.currentStep.id === 'get-stamps') {
-	      window.wholeDamnTour.next();
+	      window.setTimeout(function () {
+	        window.wholeDamnTour.next();
+	      }, 200);
 	    }
 	  },
 	  componentWillUnmount: function () {
@@ -24413,7 +24415,11 @@
 	            className: 'index-tab',
 	            onClick: this.sortByPopularity,
 	            id: popularitySelected },
-	          'Most Popular Stamps'
+	          React.createElement(
+	            'span',
+	            null,
+	            'Most Popular Stamps'
+	          )
 	        ),
 	        React.createElement(
 	          'span',
@@ -24421,7 +24427,11 @@
 	            className: 'index-tab',
 	            onClick: this.sortByNewest,
 	            id: newestSelected },
-	          'Newest Stamps'
+	          React.createElement(
+	            'span',
+	            null,
+	            'Newest Stamps'
+	          )
 	        )
 	      ),
 	      React.createElement(
@@ -34451,9 +34461,11 @@
 	    //     }
 	    //   }.bind(this),
 	    // });
-	    // if (window.wholeDamnTour.currentStep.id === "save-drawing") {
-	    //   window.wholeDamnTour.next();
-	    // };
+	    if (window.wholeDamnTour.currentStep.id === "save-drawing") {
+	      window.setTimeout(function () {
+	        window.wholeDamnTour.next();
+	      }, 200);
+	    };
 	  },
 	  componentWillUnmount: function () {
 	    this.listener.remove();
@@ -34519,7 +34531,11 @@
 	            className: 'index-tab',
 	            onClick: this.sortByPopularity,
 	            id: popularitySelected },
-	          'Most Popular Drawings'
+	          React.createElement(
+	            'span',
+	            null,
+	            'Most Popular Drawings'
+	          )
 	        ),
 	        React.createElement(
 	          'span',
@@ -34527,7 +34543,11 @@
 	            className: 'index-tab',
 	            onClick: this.sortByNewest,
 	            id: newestSelected },
-	          'Newest Drawings'
+	          React.createElement(
+	            'span',
+	            null,
+	            'Newest Drawings'
+	          )
 	        )
 	      ),
 	      React.createElement(
@@ -34810,6 +34830,7 @@
 	var StampStore = __webpack_require__(217);
 	var History = __webpack_require__(159).History;
 	var makeDrawingTour = __webpack_require__(256);
+	var MyStampStore = __webpack_require__(240);
 
 	var CanvasTest = React.createClass({
 	  displayName: 'CanvasTest',
@@ -34856,6 +34877,7 @@
 	    this.sizePicking = false;
 
 	    this.token = StampStore.addListener(this.selectStamp);
+	    this.myStampStoreListener = MyStampStore.addListener(this.turnStampingOn);
 
 	    // $.ajax({
 	    //   url: 'users/1',
@@ -34869,11 +34891,14 @@
 	    // });
 
 	    if (window.wholeDamnTour.currentStep && window.wholeDamnTour.currentStep.id === "done_choosing_stamps") {
-	      window.wholeDamnTour.next();
+	      window.setTimeout(function () {
+	        window.wholeDamnTour.next();
+	      }, 200);
 	    }
 	  },
 	  componentWillUnmount: function () {
 	    this.token.remove();
+	    this.myStampStoreListener.remove();
 	  },
 	  selectStamp: function () {
 	    this.setState({
@@ -34942,6 +34967,12 @@
 	    this.setStamp();
 	    this.selectStamp();
 	  },
+	  turnStampingOn: function () {
+	    this.drawingCanvas.turnStampingOn();
+	    this.setState({ stamping: true });
+	    this.setStamp();
+	    this.selectStamp();
+	  },
 	  saveText: function () {
 	    var text;
 	    this.state.saveStarted ? text = "Saving" : text = "Save Drawing";
@@ -34955,27 +34986,35 @@
 
 	  // Methods for changing Color
 	  downColorPicker: function (e) {
-	    this.colorPicking = true;
-	    var color = this.colorPicker.pickColor(e);
-	    this.strokeSample.pickSample(color, this.size);
-	  },
-	  upColorPicker: function (e) {
-	    if (this.colorPicking) {
-	      this.pickColor();
-	    }
-	    this.colorPicking = false;
-	  },
-	  moveColorPicker: function (e) {
-	    if (this.colorPicking) {
+	    if (!this.state.stamping) {
+	      this.colorPicking = true;
 	      var color = this.colorPicker.pickColor(e);
 	      this.strokeSample.pickSample(color, this.size);
 	    }
 	  },
-	  outColorPicker: function (e) {
-	    if (this.colorPicking) {
-	      this.pickColor();
+	  upColorPicker: function (e) {
+	    if (!this.state.stamping) {
+	      if (this.colorPicking) {
+	        this.pickColor();
+	      }
+	      this.colorPicking = false;
 	    }
-	    this.colorPicking = false;
+	  },
+	  moveColorPicker: function (e) {
+	    if (!this.state.stamping) {
+	      if (this.colorPicking) {
+	        var color = this.colorPicker.pickColor(e);
+	        this.strokeSample.pickSample(color, this.size);
+	      }
+	    }
+	  },
+	  outColorPicker: function (e) {
+	    if (!this.state.stamping) {
+	      if (this.colorPicking) {
+	        this.pickColor();
+	      }
+	      this.colorPicking = false;
+	    }
 	  },
 	  pickColor: function (e) {
 	    if (this.colorPicking) {
@@ -34997,17 +35036,23 @@
 
 	  // Methods for picking size
 	  onSizePicking: function (e) {
-	    this.sizePicking = true;
-	    this.pickSize(e);
+	    if (!this.state.stamping) {
+	      this.sizePicking = true;
+	      this.pickSize(e);
+	    }
 	  },
 	  offSizePicking: function () {
-	    this.sizePicking = false;
+	    if (!this.state.stamping) {
+	      this.sizePicking = false;
+	    }
 	  },
 	  pickSize: function (e) {
-	    if (this.sizePicking) {
-	      this.size = this.sizePicker.pickSize(e);
-	      this.strokeSample.pickSample(this.color, this.size);
-	      this.drawingCanvas.setSize(this.size);
+	    if (!this.state.stamping) {
+	      if (this.sizePicking) {
+	        this.size = this.sizePicker.pickSize(e);
+	        this.strokeSample.pickSample(this.color, this.size);
+	        this.drawingCanvas.setSize(this.size);
+	      }
 	    }
 	  },
 
@@ -35079,7 +35124,11 @@
 	        React.createElement(
 	          'span',
 	          { className: 'drawing-header-text' },
-	          'Make a Drawing'
+	          React.createElement(
+	            'span',
+	            null,
+	            'Make a Drawing'
+	          )
 	        )
 	      ),
 	      React.createElement(
@@ -35345,6 +35394,10 @@
 
 	DrawingCanvas.prototype.toggleStamping = function () {
 	  this.stamping = !this.stamping;
+	};
+
+	DrawingCanvas.prototype.turnStampingOn = function () {
+	  this.stamping = true;
 	};
 
 	DrawingCanvas.prototype.toData = function () {
@@ -36120,7 +36173,7 @@
 	var LinkedStateMixin = __webpack_require__(252);
 	var StampIndex = __webpack_require__(209);
 	var StampStore = __webpack_require__(217);
-	window.wholeDamnTour = __webpack_require__(262);
+	window.wholeDamnTour = __webpack_require__(261);
 
 	var CanvasTest = React.createClass({
 	  displayName: 'CanvasTest',
@@ -36348,7 +36401,11 @@
 	        React.createElement(
 	          'span',
 	          { className: 'drawing-header-text' },
-	          'Make a Stamp'
+	          React.createElement(
+	            'span',
+	            null,
+	            'Make a Stamp'
+	          )
 	        )
 	      ),
 	      React.createElement(
@@ -36448,22 +36505,6 @@
 
 /***/ },
 /* 261 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-
-	var Home = React.createClass({
-	  displayName: 'Home',
-
-	  render: function () {
-	    return React.createElement('div', null);
-	  }
-	});
-
-	module.exports = Home;
-
-/***/ },
-/* 262 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Shepherd = __webpack_require__(236);
@@ -36672,7 +36713,7 @@
 	  attachTo: '.dropdown-toggle bottom'
 	});
 
-	makeStampTour.addStep('save-drawing', {
+	makeStampTour.addStep('drawing-index', {
 	  text: ["Feel free to check out other users' drawings, see who has been liking", "what, and visit other users' profile pages."],
 	  showCancelLink: true,
 	  buttons: [{
@@ -36684,6 +36725,22 @@
 	});
 
 	module.exports = makeStampTour;
+
+/***/ },
+/* 262 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+
+	var Home = React.createClass({
+	  displayName: 'Home',
+
+	  render: function () {
+	    return React.createElement('div', null);
+	  }
+	});
+
+	module.exports = Home;
 
 /***/ }
 /******/ ]);

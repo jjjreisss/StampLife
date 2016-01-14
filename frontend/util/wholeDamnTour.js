@@ -290,7 +290,7 @@ makeStampTour.addStep('save-drawing', {
   attachTo: '.dropdown-toggle bottom'
 });
 
-makeStampTour.addStep('save-drawing', {
+makeStampTour.addStep('drawing-index', {
   text: [
     "Feel free to check out other users' drawings, see who has been liking",
     "what, and visit other users' profile pages."
