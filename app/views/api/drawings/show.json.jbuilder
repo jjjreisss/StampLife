@@ -19,7 +19,7 @@ json.created_at @drawing.created_at
 
 json.liked_by_current_user likes.include?(current_user.username)
 
-current_like = Like.find_by(user_id: current_user.id)
+current_like = Like.find_by(user_id: current_user.id, drawing_id: @drawing.id)
 
 if current_like
   json.current_like_id current_like.id
