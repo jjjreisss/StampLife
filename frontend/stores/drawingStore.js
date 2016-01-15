@@ -14,11 +14,14 @@ var resetDrawing = function(drawing) {
 };
 
 var resetSingleDrawing = function(drawing) {
-  _drawings.forEach(function(oldDrawing) {
-    if (oldDrawing.id === drawing.id) {
-      oldDrawing = drawing;
-    }
+  var drawingsIds = _drawings.map(function(oldDrawing) {
+    oldDrawing.id;
   })
+
+  index = drawingsIds.indexOf(drawing.id);
+
+  _drawings[index] = drawing;
+
 }
 
 var receiveDrawing = function(drawing) {

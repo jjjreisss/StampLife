@@ -48,6 +48,7 @@ var DrawingIndex = React.createClass({
     this.setState({drawings: DrawingStore.all().reverse()});
   },
   sortByNewest: function() {
+    ApiUtil.fetchAllDrawings()
     var comparator =
       function(a, b) {
         if (a.created_at < b.created_at) {
@@ -64,6 +65,7 @@ var DrawingIndex = React.createClass({
     });
   },
   sortByPopularity: function(e) {
+    ApiUtil.fetchAllDrawings()
     var comparator =
       function(a, b) {
         if (a.likes.length < b.likes.length) {

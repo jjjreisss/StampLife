@@ -34478,6 +34478,7 @@
 	    this.setState({ drawings: DrawingStore.all().reverse() });
 	  },
 	  sortByNewest: function () {
+	    ApiUtil.fetchAllDrawings();
 	    var comparator = function (a, b) {
 	      if (a.created_at < b.created_at) {
 	        return 1;
@@ -34493,6 +34494,7 @@
 	    });
 	  },
 	  sortByPopularity: function (e) {
+	    ApiUtil.fetchAllDrawings();
 	    var comparator = function (a, b) {
 	      if (a.likes.length < b.likes.length) {
 	        return 1;
@@ -34607,11 +34609,13 @@
 	};
 
 	var resetSingleDrawing = function (drawing) {
-	  _drawings.forEach(function (oldDrawing) {
-	    if (oldDrawing.id === drawing.id) {
-	      oldDrawing = drawing;
-	    }
+	  var drawingsIds = _drawings.map(function (oldDrawing) {
+	    oldDrawing.id;
 	  });
+
+	  index = drawingsIds.indexOf(drawing.id);
+
+	  _drawings[index] = drawing;
 	};
 
 	var receiveDrawing = function (drawing) {
@@ -34669,18 +34673,21 @@
 	  componentDidMount: function () {
 	    this.drawingStoreListener = DrawingStore.addListener(this._onChange);
 	  },
+	  componentWillReceiveProps: function () {
+	    this.setState({ drawing: this.props.drawing });
+	  },
 	  _onChange: function () {
 	    var drawingStoreDrawing = DrawingStore.single();
-	    if (drawingStoreDrawing && drawingStoreDrawing.id === this.state.drawing.id) {
+	    if (drawingStoreDrawing && drawingStoreDrawing.id === this.props.drawing.id) {
 	      this.setState({ drawing: drawingStoreDrawing });
 	    }
 	  },
 	  goToShow: function () {
-	    this.history.push('drawings/' + this.state.drawing.id);
+	    this.history.push('drawings/' + this.props.drawing.id);
 	  },
 	  deleteDrawing: function () {
 	    $.ajax({
-	      url: "api/drawings/" + this.state.drawingId,
+	      url: "api/drawings/" + this.props.drawingId,
 	      method: "DELETE",
 	      success: function (message) {
 	        console.log(message.message);
@@ -34699,16 +34706,16 @@
 	  },
 	  goToUser: function (e) {
 	    e.stopPropagation();
-	    var username = this.state.drawing.username;
+	    var username = this.props.drawing.username;
 	    this.history.push('users/' + username);
 	  },
 	  toggleLike: function (e) {
 	    e.stopPropagation();
-	    if (!this.state.drawing.liked_by_current_user) {
-	      ApiUtil.likeDrawing(this.state.drawing.id);
+	    if (!this.props.drawing.liked_by_current_user) {
+	      ApiUtil.likeDrawing(this.props.drawing.id);
 	    }
-	    if (this.state.drawing.liked_by_current_user) {
-	      ApiUtil.unlikeDrawing(this.state.drawing.current_like_id, this.state.drawing.id);
+	    if (this.props.drawing.liked_by_current_user) {
+	      ApiUtil.unlikeDrawing(this.props.drawing.current_like_id, this.props.drawing.id);
 	    }
 	  },
 	  toggleList: function (e) {
@@ -34716,7 +34723,7 @@
 	    this.setState({ likesClicked: !this.state.likesClicked });
 	  },
 	  drawingLikeList: function () {
-	    return this.state.drawing.likes.map(function (like, i) {
+	    return this.props.drawing.likes.map(function (like, i) {
 	      return React.createElement(
 	        'div',
 	        { key: i },
@@ -34725,6 +34732,7 @@
 	    });
 	  },
 	  render: function () {
+	    console.log(this.state.drawing);
 	    var drawingAuthor = this.state.hover ? "drawing-author" : "hidden";
 	    var drawingLikesCount = this.state.hover ? "drawing-likes-count" : "hidden";
 	    var likeDrawingClass = this.state.hover ? "like-drawing-class" : "hidden";
