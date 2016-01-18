@@ -1,15 +1,39 @@
-# FresherNote
+# Salamander
 
 [Heroku link][heroku] **NB:** This should be a link to your production site
 
-[heroku]: Ain'tNoWebsiteBih
+[heroku]: http://sssalamander.herokuapp.com
 
+Salamander is a web application built with Ruby on Rails, PostgreSQL, React.js, HTML5 Canvas, and Twitter Bootstrap. It is a drawing app where users draw stamps, which can be used in future works. The goal is to make compelling stamps that other users want to use in their drawings, and to make beautiful drawings using stamps.
+
+Users can:
+
+### Make Stamps:
+* Change color and size of brush stroke
+* Share stamps with other users
+* Users use each others stamps in their drawings
+* Stamps gain popularity the more they are used
+
+### Make Drawings:
+* Use up to 5 stamps in one drawings
+* Stamps can be resized, and used on a drawing as many times as desired
+* Drawings gain popularity the more they are "liked"
+
+### Explore
+* Sort stamps and drawings based on popularity or newness
+* View all stamps and drawings made by a user
+
+## Additional Features:
+* Image hosting on Cloudinary for stamps and drawings
+* React.js communicating with a RESTful json API
+* Custom user authentication on the Rails backend
+* Custom Jbuilder views to render complex json objects
+
+
+<!--
 ## Minimum Viable Product
 
-TransGram is a web application inspired by Instagram built using Ruby on Rails
-and React.js. TransGram allows users to:
-
-<!-- This is a Markdown checklist. Use it to keep track of your progress! -->
+Salamander is a web application for drawing built using Ruby on Rails and React.js. Salamander allows users to:
 
 - [ ] Create an account
 - [ ] Log in / Log out
@@ -91,4 +115,4 @@ Add more functionality to the Drawing Form by allowing users to upload and draw 
 [phase-five]: ./docs/phases/phase5.md
 [phase-six]: ./docs/phases/phase6.md
 [phase-seven]: ./docs/phases/phase7.md
-[phase-eight]: ./docs/phases/phase8.md
+[phase-eight]: ./docs/phases/phase8.md -->
