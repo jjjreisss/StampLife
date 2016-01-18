@@ -1,6 +1,6 @@
 # Salamander
 
-[Heroku link][heroku] **NB:** This should be a link to your production site
+[Check it out live][heroku]
 
 [heroku]: http://sssalamander.herokuapp.com
 
