@@ -1,10 +1,10 @@
-# Salamander
+# StampLife
 
 [Check it out live][heroku]
 
-[heroku]: http://sssalamander.herokuapp.com
+[heroku]: http://stamplife.co
 
-Salamander is a web application built with Ruby on Rails, PostgreSQL, React.js, HTML5 Canvas, and Twitter Bootstrap. It is a drawing app where users draw stamps, which can be used in future works. The goal is to make compelling stamps that other users want to use in their drawings, and to make beautiful drawings using stamps.
+StampLife is a web application built with Ruby on Rails, PostgreSQL, React.js, HTML5 Canvas, and Twitter Bootstrap. It is a drawing app where users draw stamps, which can be used in future works. The goal is to make compelling stamps that other users want to use in their drawings, and to make beautiful drawings using stamps.
 
 Users can:
 
