@@ -24624,33 +24624,6 @@
 	      data: { user: { tour_one_completed: true } },
 	      success: function () {}
 	    });
-	  },
-
-	  completeTourTwo: function () {
-	    $.ajax({
-	      url: "users/1",
-	      method: "PUT",
-	      data: { user: { tour_two_completed: true } },
-	      success: function () {}
-	    });
-	  },
-
-	  completeTourThree: function () {
-	    $.ajax({
-	      url: "users/1",
-	      method: "PUT",
-	      data: { user: { tour_three_completed: true } },
-	      success: function () {}
-	    });
-	  },
-
-	  completeTourFour: function () {
-	    $.ajax({
-	      url: "users/1",
-	      method: "PUT",
-	      data: { user: { tour_four_completed: true } },
-	      success: function () {}
-	    });
 	  }
 
 	};
@@ -34478,7 +34451,7 @@
 	    this.setState({ drawings: DrawingStore.all().reverse() });
 	  },
 	  sortByNewest: function () {
-	    ApiUtil.fetchAllDrawings();
+	    // ApiUtil.fetchAllDrawings()
 	    var comparator = function (a, b) {
 	      if (a.created_at < b.created_at) {
 	        return 1;
@@ -34494,7 +34467,7 @@
 	    });
 	  },
 	  sortByPopularity: function (e) {
-	    ApiUtil.fetchAllDrawings();
+	    // ApiUtil.fetchAllDrawings()
 	    var comparator = function (a, b) {
 	      if (a.likes.length < b.likes.length) {
 	        return 1;
@@ -34610,7 +34583,7 @@
 
 	var resetSingleDrawing = function (drawing) {
 	  var drawingsIds = _drawings.map(function (oldDrawing) {
-	    oldDrawing.id;
+	    return oldDrawing.id;
 	  });
 
 	  index = drawingsIds.indexOf(drawing.id);
@@ -34634,6 +34607,7 @@
 	  switch (payload.actionType) {
 	    case "DRAWING_RECEIVED":
 	      resetDrawing(payload.drawing);
+	      resetSingleDrawing(payload.drawing);
 	      DrawingStore.__emitChange();
 	      break;
 	    case "DRAWINGS_RECEIVED":

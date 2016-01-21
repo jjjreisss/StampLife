@@ -15,7 +15,7 @@ var resetDrawing = function(drawing) {
 
 var resetSingleDrawing = function(drawing) {
   var drawingsIds = _drawings.map(function(oldDrawing) {
-    oldDrawing.id;
+    return oldDrawing.id;
   })
 
   index = drawingsIds.indexOf(drawing.id);
@@ -40,6 +40,7 @@ DrawingStore.__onDispatch = function(payload) {
   switch(payload.actionType) {
     case "DRAWING_RECEIVED":
       resetDrawing(payload.drawing);
+      resetSingleDrawing(payload.drawing);
       DrawingStore.__emitChange();
       break;
     case "DRAWINGS_RECEIVED":
