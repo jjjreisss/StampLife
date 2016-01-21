@@ -18,20 +18,22 @@ var DrawingListItem = React.createClass({
   },
   componentWillReceiveProps: function() {
     this.setState({drawing: this.props.drawing})
+    console.log(this.props.drawing.id);
   },
   _onChange: function() {
     var drawingStoreDrawing = DrawingStore.single();
-    if (drawingStoreDrawing && drawingStoreDrawing.id === this.props.drawing.id) {
+    if (drawingStoreDrawing && drawingStoreDrawing.id === this.state.drawing.id) {
       this.setState({drawing: drawingStoreDrawing});
     }
+    console.log('change');
 
   },
   goToShow: function() {
-    this.history.push('drawings/' + this.props.drawing.id);
+    this.history.push('drawings/' + this.state.drawing.id);
   },
   deleteDrawing: function() {
     $.ajax({
-      url: "api/drawings/" + this.props.drawingId,
+      url: "api/drawings/" + this.state.drawing.id,
       method: "DELETE",
       success: function(message) {
         console.log(message.message);
@@ -50,7 +52,7 @@ var DrawingListItem = React.createClass({
   },
   goToUser: function(e) {
     e.stopPropagation();
-    var username = this.props.drawing.username;
+    var username = this.state.drawing.username;
     this.history.push('users/' + username);
   },
   toggleLike: function(e) {
@@ -67,7 +69,7 @@ var DrawingListItem = React.createClass({
     this.setState({likesClicked: !this.state.likesClicked});
   },
   drawingLikeList: function() {
-    return this.props.drawing.likes.map(function(like, i) {
+    return this.state.drawing.likes.map(function(like, i) {
       return <div key={i}>{like}</div>;
     });
   },
@@ -84,7 +86,7 @@ var DrawingListItem = React.createClass({
     if (timeAgo.slice(0,4) === "less") {
       timeAgo = timeAgo.slice(10);
     }
-    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_500,h_500/" + this.props.imageUrl + ".png";
+    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_500,h_500/" + this.state.drawing.image_url + ".png";
     return (
       <div className="index-element"
             onClick={this.goToShow}

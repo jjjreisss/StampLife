@@ -48,7 +48,7 @@ var DrawingIndex = React.createClass({
     this.setState({drawings: DrawingStore.all().reverse()});
   },
   sortByNewest: function() {
-    // ApiUtil.fetchAllDrawings()
+    ApiUtil.fetchAllDrawings()
     var comparator =
       function(a, b) {
         if (a.created_at < b.created_at) {
@@ -65,7 +65,7 @@ var DrawingIndex = React.createClass({
     });
   },
   sortByPopularity: function(e) {
-    // ApiUtil.fetchAllDrawings()
+    ApiUtil.fetchAllDrawings()
     var comparator =
       function(a, b) {
         if (a.likes.length < b.likes.length) {
@@ -95,11 +95,14 @@ var DrawingIndex = React.createClass({
         return (
           <DrawingListItem
             key={idx}
-            drawingId={drawing.id}
-            imageUrl={drawing.image_url}
             drawing={drawing}/>
         );
       });
+    }
+
+    if (drawingsList !== "") {
+      console.log(drawingsList.map(function(item) {return item.props.drawing.id}));
+
     }
     return(
       <div className="index">
