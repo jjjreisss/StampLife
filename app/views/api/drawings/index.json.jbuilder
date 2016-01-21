@@ -21,9 +21,6 @@ json.array! @drawings do |drawing|
     json.current_like_id current_like.id
   end
 
-  puts "XXX"
-  puts drawing.id
-  puts likes
 
 
 end

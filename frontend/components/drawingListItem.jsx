@@ -55,11 +55,11 @@ var DrawingListItem = React.createClass({
   },
   toggleLike: function(e) {
     e.stopPropagation();
-    if (!this.props.drawing.liked_by_current_user){
-      ApiUtil.likeDrawing(this.props.drawing.id);
+    if (!this.state.drawing.liked_by_current_user){
+      ApiUtil.likeDrawing(this.state.drawing.id);
     }
-    if (this.props.drawing.liked_by_current_user) {
-      ApiUtil.unlikeDrawing(this.props.drawing.current_like_id, this.props.drawing.id);
+    else if (this.state.drawing.liked_by_current_user) {
+      ApiUtil.unlikeDrawing(this.state.drawing.current_like_id, this.state.drawing.id);
     }
   },
   toggleList: function(e) {
@@ -72,7 +72,6 @@ var DrawingListItem = React.createClass({
     });
   },
   render: function() {
-        console.log(this.state.drawing);
     var drawingAuthor = (this.state.hover ? "drawing-author" : "hidden");
     var drawingLikesCount = (this.state.hover ? "drawing-likes-count" : "hidden");
     var likeDrawingClass = (this.state.hover ? "like-drawing-class" : "hidden");
