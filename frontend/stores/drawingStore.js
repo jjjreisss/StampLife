@@ -51,6 +51,9 @@ DrawingStore.__onDispatch = function(payload) {
       resetSingleDrawing(payload.drawing);
       DrawingStore.__emitChange();
       break;
+    case "TRIGGER_DRAWING_STORE":
+      DrawingStore.__emitChange();
+      break;
   }
 }
 

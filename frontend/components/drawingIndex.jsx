@@ -3,6 +3,7 @@ var DrawingStore = require('../stores/drawingStore');
 var ApiUtil = require('../util/apiUtil');
 var DrawingListItem = require('./drawingListItem');
 var drawingIndexTour = require('../util/drawingIndexTour');
+var ApiActions = require('../actions/apiActions');
 
 var DrawingIndex = React.createClass({
   getInitialState: function() {
@@ -48,7 +49,8 @@ var DrawingIndex = React.createClass({
     this.setState({drawings: DrawingStore.all().reverse()});
   },
   sortByNewest: function() {
-    ApiUtil.fetchAllDrawings()
+    // ApiUtil.fetchAllDrawings()
+    ApiActions.triggerDrawingStore();
     var comparator =
       function(a, b) {
         if (a.created_at < b.created_at) {
@@ -65,7 +67,8 @@ var DrawingIndex = React.createClass({
     });
   },
   sortByPopularity: function(e) {
-    ApiUtil.fetchAllDrawings()
+    // ApiUtil.fetchAllDrawings()
+    ApiActions.triggerDrawingStore();
     var comparator =
       function(a, b) {
         if (a.likes.length < b.likes.length) {

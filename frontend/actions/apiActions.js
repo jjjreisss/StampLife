@@ -55,6 +55,12 @@ var ApiActions = {
       actionType: "RESET_SINGLE_DRAWING",
       drawing: drawing
     })
+  },
+
+  triggerDrawingStore: function() {
+    Dispatcher.dispatch({
+      actionType: "TRIGGER_DRAWING_STORE"
+    })
   }
 };
 

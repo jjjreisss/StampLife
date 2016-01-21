@@ -50,13 +50,13 @@
 	var Route = __webpack_require__(159).Route;
 	var App = __webpack_require__(208);
 	var DrawingIndex = __webpack_require__(242);
-	var CanvasTest = __webpack_require__(243);
-	var DrawingDetail = __webpack_require__(254);
-	var ProfilePage = __webpack_require__(256);
+	var CanvasTest = __webpack_require__(246);
+	var DrawingDetail = __webpack_require__(257);
+	var ProfilePage = __webpack_require__(258);
 	var StampIndex = __webpack_require__(209);
-	var StampDetail = __webpack_require__(258);
-	var NewStamp = __webpack_require__(259);
-	var Home = __webpack_require__(261);
+	var StampDetail = __webpack_require__(259);
+	var NewStamp = __webpack_require__(260);
+	var Home = __webpack_require__(262);
 	var IndexRoute = __webpack_require__(159).IndexRoute;
 	var Shepherd = __webpack_require__(236);
 
@@ -24691,6 +24691,12 @@
 	      actionType: "RESET_SINGLE_DRAWING",
 	      drawing: drawing
 	    });
+	  },
+
+	  triggerDrawingStore: function () {
+	    Dispatcher.dispatch({
+	      actionType: "TRIGGER_DRAWING_STORE"
+	    });
 	  }
 	};
 
@@ -34401,10 +34407,11 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var DrawingStore = __webpack_require__(255);
+	var DrawingStore = __webpack_require__(243);
 	var ApiUtil = __webpack_require__(210);
-	var DrawingListItem = __webpack_require__(257);
-	var drawingIndexTour = __webpack_require__(262);
+	var DrawingListItem = __webpack_require__(244);
+	var drawingIndexTour = __webpack_require__(245);
+	var ApiActions = __webpack_require__(211);
 
 	var DrawingIndex = React.createClass({
 	  displayName: 'DrawingIndex',
@@ -34451,7 +34458,8 @@
 	    this.setState({ drawings: DrawingStore.all().reverse() });
 	  },
 	  sortByNewest: function () {
-	    ApiUtil.fetchAllDrawings();
+	    // ApiUtil.fetchAllDrawings()
+	    ApiActions.triggerDrawingStore();
 	    var comparator = function (a, b) {
 	      if (a.created_at < b.created_at) {
 	        return 1;
@@ -34467,7 +34475,8 @@
 	    });
 	  },
 	  sortByPopularity: function (e) {
-	    ApiUtil.fetchAllDrawings();
+	    // ApiUtil.fetchAllDrawings()
+	    ApiActions.triggerDrawingStore();
 	    var comparator = function (a, b) {
 	      if (a.likes.length < b.likes.length) {
 	        return 1;
@@ -34570,18 +34579,259 @@
 /* 243 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var Store = __webpack_require__(218).Store;
+	var AppDispatcher = __webpack_require__(212);
+
+	var DrawingStore = new Store(AppDispatcher);
+	var _drawings = [];
+	var _drawing;
+
+	var resetDrawings = function (drawings) {
+	  _drawings = drawings;
+	};
+
+	var resetDrawing = function (drawing) {
+	  _drawing = drawing;
+	};
+
+	var resetSingleDrawing = function (drawing) {
+	  var drawingsIds = _drawings.map(function (oldDrawing) {
+	    return oldDrawing.id;
+	  });
+
+	  index = drawingsIds.indexOf(drawing.id);
+
+	  _drawings[index] = drawing;
+	};
+
+	var receiveDrawing = function (drawing) {
+	  _drawings.push(drawing);
+	};
+
+	DrawingStore.single = function () {
+	  return _drawing;
+	};
+
+	DrawingStore.all = function () {
+	  return _drawings.slice();
+	};
+
+	DrawingStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case "DRAWING_RECEIVED":
+	      resetDrawing(payload.drawing);
+	      resetSingleDrawing(payload.drawing);
+	      DrawingStore.__emitChange();
+	      break;
+	    case "DRAWINGS_RECEIVED":
+	      resetDrawings(payload.drawings);
+	      DrawingStore.__emitChange();
+	      break;
+	    case "RESET_SINGLE_DRAWING":
+	      resetSingleDrawing(payload.drawing);
+	      DrawingStore.__emitChange();
+	      break;
+	    case "TRIGGER_DRAWING_STORE":
+	      DrawingStore.__emitChange();
+	      break;
+	  }
+	};
+
+	module.exports = DrawingStore;
+
+/***/ },
+/* 244 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var History = __webpack_require__(159).History;
+	var ApiUtil = __webpack_require__(210);
+	var DrawingStore = __webpack_require__(243);
+
+	var DrawingListItem = React.createClass({
+	  displayName: 'DrawingListItem',
+
+	  mixins: [History],
+
+	  getInitialState: function () {
+	    return {
+	      hover: false,
+	      likesClicked: false,
+	      drawing: this.props.drawing
+	    };
+	  },
+	  componentDidMount: function () {
+	    this.drawingStoreListener = DrawingStore.addListener(this._onChange);
+	  },
+	  componentWillReceiveProps: function () {
+	    this.setState({ drawing: this.props.drawing });
+	    console.log(this.props.drawing.id);
+	  },
+	  _onChange: function () {
+	    var drawingStoreDrawing = DrawingStore.single();
+	    if (drawingStoreDrawing && drawingStoreDrawing.id === this.state.drawing.id) {
+	      this.setState({ drawing: drawingStoreDrawing });
+	    }
+	    console.log('change');
+	  },
+	  goToShow: function () {
+	    this.history.push('drawings/' + this.state.drawing.id);
+	  },
+	  deleteDrawing: function () {
+	    $.ajax({
+	      url: "api/drawings/" + this.state.drawing.id,
+	      method: "DELETE",
+	      success: function (message) {
+	        console.log(message.message);
+	        console.log("delete successful");
+	      },
+	      error: function (message) {
+	        console.log(message.message);
+	      }
+	    });
+	  },
+	  enhover: function () {
+	    this.setState({ hover: true });
+	  },
+	  dehover: function () {
+	    this.setState({ hover: false });
+	  },
+	  goToUser: function (e) {
+	    e.stopPropagation();
+	    var username = this.state.drawing.username;
+	    this.history.push('users/' + username);
+	  },
+	  toggleLike: function (e) {
+	    e.stopPropagation();
+	    if (!this.state.drawing.liked_by_current_user) {
+	      ApiUtil.likeDrawing(this.state.drawing.id);
+	    } else if (this.state.drawing.liked_by_current_user) {
+	      ApiUtil.unlikeDrawing(this.state.drawing.current_like_id, this.state.drawing.id);
+	    }
+	  },
+	  toggleList: function (e) {
+	    e.stopPropagation();
+	    this.setState({ likesClicked: !this.state.likesClicked });
+	  },
+	  drawingLikeList: function () {
+	    return this.state.drawing.likes.map(function (like, i) {
+	      return React.createElement(
+	        'div',
+	        { key: i },
+	        like
+	      );
+	    });
+	  },
+	  render: function () {
+	    var drawingAuthor = this.state.hover ? "drawing-author" : "hidden";
+	    var drawingLikesCount = this.state.hover ? "drawing-likes-count" : "hidden";
+	    var likeDrawingClass = this.state.hover ? "like-drawing-class" : "hidden";
+	    var likeText = this.state.drawing.liked_by_current_user ? "Unlike" : "Like";
+	    var drawingLikeList = this.state.likesClicked ? "drawing-like-list" : "hidden";
+	    var timeAgo = this.state.drawing.time_ago;
+	    if (timeAgo.slice(0, 5) === "about") {
+	      timeAgo = timeAgo.slice(6);
+	    }
+	    if (timeAgo.slice(0, 4) === "less") {
+	      timeAgo = timeAgo.slice(10);
+	    }
+	    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_500,h_500/" + this.state.drawing.image_url + ".png";
+	    return React.createElement(
+	      'div',
+	      { className: 'index-element',
+	        onClick: this.goToShow,
+	        onMouseEnter: this.enhover,
+	        onMouseLeave: this.dehover },
+	      React.createElement('img', {
+	        className: 'drawing-index-image',
+	        src: url }),
+	      React.createElement(
+	        'div',
+	        {
+	          className: drawingAuthor,
+	          onClick: this.goToUser },
+	        this.state.drawing.username,
+	        React.createElement('br', null),
+	        timeAgo
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'drawing-likes-box' },
+	        React.createElement(
+	          'div',
+	          {
+	            className: drawingLikesCount,
+	            onClick: this.toggleList },
+	          React.createElement(
+	            'div',
+	            {
+	              className: drawingLikeList },
+	            this.drawingLikeList()
+	          ),
+	          this.state.drawing.likes.length,
+	          ' Likes'
+	        ),
+	        React.createElement(
+	          'div',
+	          {
+	            className: likeDrawingClass,
+	            onClick: this.toggleLike },
+	          likeText
+	        )
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'delete',
+	          onClick: this.deleteDrawing },
+	        'Delete'
+	      )
+	    );
+	  }
+	});
+
+	module.exports = DrawingListItem;
+
+/***/ },
+/* 245 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Shepherd = __webpack_require__(236);
+
+	var drawingIndexTour = new Shepherd.Tour({
+	  defaults: {
+	    classes: 'shepherd-theme-arrows'
+	  }
+	});
+
+	drawingIndexTour.addStep('save-drawing', {
+	  text: ["Feel free to check out other users' drawings, see who has been liking", "what, and visit other users' profile pages."],
+	  showCancelLink: true,
+	  buttons: [{
+	    text: 'Finish',
+	    action: drawingIndexTour.next
+	  }],
+	  classes: 'shepherd-theme-arrows',
+	  attachTo: '.dropdown-toggle bottom'
+	});
+
+	module.exports = drawingIndexTour;
+
+/***/ },
+/* 246 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(210);
-	var DrawingCanvas = __webpack_require__(244);
-	var StampCanvas = __webpack_require__(245);
-	var ColorPicker = __webpack_require__(246);
-	var SizePicker = __webpack_require__(247);
-	var StrokeSample = __webpack_require__(248);
-	var LinkedStateMixin = __webpack_require__(249);
+	var DrawingCanvas = __webpack_require__(247);
+	var StampCanvas = __webpack_require__(248);
+	var ColorPicker = __webpack_require__(249);
+	var SizePicker = __webpack_require__(250);
+	var StrokeSample = __webpack_require__(251);
+	var LinkedStateMixin = __webpack_require__(252);
 	var StampIndex = __webpack_require__(209);
 	var StampStore = __webpack_require__(217);
 	var History = __webpack_require__(159).History;
-	var makeDrawingTour = __webpack_require__(253);
+	var makeDrawingTour = __webpack_require__(256);
 	var MyStampStore = __webpack_require__(240);
 
 	var CanvasTest = React.createClass({
@@ -34992,7 +35242,7 @@
 	module.exports = CanvasTest;
 
 /***/ },
-/* 244 */
+/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var ApiUtil = __webpack_require__(210);
@@ -35191,7 +35441,7 @@
 	module.exports = DrawingCanvas;
 
 /***/ },
-/* 245 */
+/* 248 */
 /***/ function(module, exports) {
 
 	var StampCanvas = function (id, width, height) {
@@ -35260,7 +35510,7 @@
 	module.exports = StampCanvas;
 
 /***/ },
-/* 246 */
+/* 249 */
 /***/ function(module, exports) {
 
 	var ColorPicker = function (id, width, height) {
@@ -35297,7 +35547,7 @@
 	module.exports = ColorPicker;
 
 /***/ },
-/* 247 */
+/* 250 */
 /***/ function(module, exports) {
 
 	var SizePicker = function (id, width, height) {
@@ -35334,7 +35584,7 @@
 	module.exports = SizePicker;
 
 /***/ },
-/* 248 */
+/* 251 */
 /***/ function(module, exports) {
 
 	var StrokeSample = function (id, width, height) {
@@ -35366,13 +35616,13 @@
 	module.exports = StrokeSample;
 
 /***/ },
-/* 249 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(250);
+	module.exports = __webpack_require__(253);
 
 /***/ },
-/* 250 */
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -35389,8 +35639,8 @@
 
 	'use strict';
 
-	var ReactLink = __webpack_require__(251);
-	var ReactStateSetters = __webpack_require__(252);
+	var ReactLink = __webpack_require__(254);
+	var ReactStateSetters = __webpack_require__(255);
 
 	/**
 	 * A simple mixin around ReactLink.forState().
@@ -35413,7 +35663,7 @@
 	module.exports = LinkedStateMixin;
 
 /***/ },
-/* 251 */
+/* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -35487,7 +35737,7 @@
 	module.exports = ReactLink;
 
 /***/ },
-/* 252 */
+/* 255 */
 /***/ function(module, exports) {
 
 	/**
@@ -35596,7 +35846,7 @@
 	module.exports = ReactStateSetters;
 
 /***/ },
-/* 253 */
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Shepherd = __webpack_require__(236);
@@ -35662,11 +35912,11 @@
 	module.exports = makeDrawingTour;
 
 /***/ },
-/* 254 */
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var DrawingStore = __webpack_require__(255);
+	var DrawingStore = __webpack_require__(243);
 	var ApiUtil = __webpack_require__(210);
 	var History = __webpack_require__(159).History;
 
@@ -35740,74 +35990,13 @@
 	module.exports = DrawingDetail;
 
 /***/ },
-/* 255 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(218).Store;
-	var AppDispatcher = __webpack_require__(212);
-
-	var DrawingStore = new Store(AppDispatcher);
-	var _drawings = [];
-	var _drawing;
-
-	var resetDrawings = function (drawings) {
-	  _drawings = drawings;
-	};
-
-	var resetDrawing = function (drawing) {
-	  _drawing = drawing;
-	};
-
-	var resetSingleDrawing = function (drawing) {
-	  var drawingsIds = _drawings.map(function (oldDrawing) {
-	    return oldDrawing.id;
-	  });
-
-	  index = drawingsIds.indexOf(drawing.id);
-
-	  _drawings[index] = drawing;
-	};
-
-	var receiveDrawing = function (drawing) {
-	  _drawings.push(drawing);
-	};
-
-	DrawingStore.single = function () {
-	  return _drawing;
-	};
-
-	DrawingStore.all = function () {
-	  return _drawings.slice();
-	};
-
-	DrawingStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case "DRAWING_RECEIVED":
-	      resetDrawing(payload.drawing);
-	      resetSingleDrawing(payload.drawing);
-	      DrawingStore.__emitChange();
-	      break;
-	    case "DRAWINGS_RECEIVED":
-	      resetDrawings(payload.drawings);
-	      DrawingStore.__emitChange();
-	      break;
-	    case "RESET_SINGLE_DRAWING":
-	      resetSingleDrawing(payload.drawing);
-	      DrawingStore.__emitChange();
-	      break;
-	  }
-	};
-
-	module.exports = DrawingStore;
-
-/***/ },
-/* 256 */
+/* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var DrawingStore = __webpack_require__(255);
+	var DrawingStore = __webpack_require__(243);
 	var ApiUtil = __webpack_require__(210);
-	var DrawingListItem = __webpack_require__(257);
+	var DrawingListItem = __webpack_require__(244);
 	var StampStore = __webpack_require__(217);
 	var StampListItem = __webpack_require__(216);
 
@@ -35913,159 +36102,7 @@
 	module.exports = ProfilePage;
 
 /***/ },
-/* 257 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var History = __webpack_require__(159).History;
-	var ApiUtil = __webpack_require__(210);
-	var DrawingStore = __webpack_require__(255);
-
-	var DrawingListItem = React.createClass({
-	  displayName: 'DrawingListItem',
-
-	  mixins: [History],
-
-	  getInitialState: function () {
-	    return {
-	      hover: false,
-	      likesClicked: false,
-	      drawing: this.props.drawing
-	    };
-	  },
-	  componentDidMount: function () {
-	    this.drawingStoreListener = DrawingStore.addListener(this._onChange);
-	  },
-	  componentWillReceiveProps: function () {
-	    this.setState({ drawing: this.props.drawing });
-	    console.log(this.props.drawing.id);
-	  },
-	  _onChange: function () {
-	    var drawingStoreDrawing = DrawingStore.single();
-	    if (drawingStoreDrawing && drawingStoreDrawing.id === this.state.drawing.id) {
-	      this.setState({ drawing: drawingStoreDrawing });
-	    }
-	    console.log('change');
-	  },
-	  goToShow: function () {
-	    this.history.push('drawings/' + this.state.drawing.id);
-	  },
-	  deleteDrawing: function () {
-	    $.ajax({
-	      url: "api/drawings/" + this.state.drawing.id,
-	      method: "DELETE",
-	      success: function (message) {
-	        console.log(message.message);
-	        console.log("delete successful");
-	      },
-	      error: function (message) {
-	        console.log(message.message);
-	      }
-	    });
-	  },
-	  enhover: function () {
-	    this.setState({ hover: true });
-	  },
-	  dehover: function () {
-	    this.setState({ hover: false });
-	  },
-	  goToUser: function (e) {
-	    e.stopPropagation();
-	    var username = this.state.drawing.username;
-	    this.history.push('users/' + username);
-	  },
-	  toggleLike: function (e) {
-	    e.stopPropagation();
-	    if (!this.state.drawing.liked_by_current_user) {
-	      ApiUtil.likeDrawing(this.state.drawing.id);
-	    } else if (this.state.drawing.liked_by_current_user) {
-	      ApiUtil.unlikeDrawing(this.state.drawing.current_like_id, this.state.drawing.id);
-	    }
-	  },
-	  toggleList: function (e) {
-	    e.stopPropagation();
-	    this.setState({ likesClicked: !this.state.likesClicked });
-	  },
-	  drawingLikeList: function () {
-	    return this.state.drawing.likes.map(function (like, i) {
-	      return React.createElement(
-	        'div',
-	        { key: i },
-	        like
-	      );
-	    });
-	  },
-	  render: function () {
-	    var drawingAuthor = this.state.hover ? "drawing-author" : "hidden";
-	    var drawingLikesCount = this.state.hover ? "drawing-likes-count" : "hidden";
-	    var likeDrawingClass = this.state.hover ? "like-drawing-class" : "hidden";
-	    var likeText = this.state.drawing.liked_by_current_user ? "Unlike" : "Like";
-	    var drawingLikeList = this.state.likesClicked ? "drawing-like-list" : "hidden";
-	    var timeAgo = this.state.drawing.time_ago;
-	    if (timeAgo.slice(0, 5) === "about") {
-	      timeAgo = timeAgo.slice(6);
-	    }
-	    if (timeAgo.slice(0, 4) === "less") {
-	      timeAgo = timeAgo.slice(10);
-	    }
-	    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_500,h_500/" + this.state.drawing.image_url + ".png";
-	    return React.createElement(
-	      'div',
-	      { className: 'index-element',
-	        onClick: this.goToShow,
-	        onMouseEnter: this.enhover,
-	        onMouseLeave: this.dehover },
-	      React.createElement('img', {
-	        className: 'drawing-index-image',
-	        src: url }),
-	      React.createElement(
-	        'div',
-	        {
-	          className: drawingAuthor,
-	          onClick: this.goToUser },
-	        this.state.drawing.username,
-	        React.createElement('br', null),
-	        timeAgo
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'drawing-likes-box' },
-	        React.createElement(
-	          'div',
-	          {
-	            className: drawingLikesCount,
-	            onClick: this.toggleList },
-	          React.createElement(
-	            'div',
-	            {
-	              className: drawingLikeList },
-	            this.drawingLikeList()
-	          ),
-	          this.state.drawing.likes.length,
-	          ' Likes'
-	        ),
-	        React.createElement(
-	          'div',
-	          {
-	            className: likeDrawingClass,
-	            onClick: this.toggleLike },
-	          likeText
-	        )
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'delete',
-	          onClick: this.deleteDrawing },
-	        'Delete'
-	      )
-	    );
-	  }
-	});
-
-	module.exports = DrawingListItem;
-
-/***/ },
-/* 258 */
+/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -36125,20 +36162,20 @@
 	module.exports = StampDetail;
 
 /***/ },
-/* 259 */
+/* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(210);
-	var DrawingCanvas = __webpack_require__(244);
-	var StampCanvas = __webpack_require__(245);
-	var ColorPicker = __webpack_require__(246);
-	var SizePicker = __webpack_require__(247);
-	var StrokeSample = __webpack_require__(248);
-	var LinkedStateMixin = __webpack_require__(249);
+	var DrawingCanvas = __webpack_require__(247);
+	var StampCanvas = __webpack_require__(248);
+	var ColorPicker = __webpack_require__(249);
+	var SizePicker = __webpack_require__(250);
+	var StrokeSample = __webpack_require__(251);
+	var LinkedStateMixin = __webpack_require__(252);
 	var StampIndex = __webpack_require__(209);
 	var StampStore = __webpack_require__(217);
-	window.wholeDamnTour = __webpack_require__(260);
+	window.wholeDamnTour = __webpack_require__(261);
 
 	var CanvasTest = React.createClass({
 	  displayName: 'CanvasTest',
@@ -36469,7 +36506,7 @@
 	module.exports = CanvasTest;
 
 /***/ },
-/* 260 */
+/* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Shepherd = __webpack_require__(236);
@@ -36692,7 +36729,7 @@
 	module.exports = makeStampTour;
 
 /***/ },
-/* 261 */
+/* 262 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -36706,31 +36743,6 @@
 	});
 
 	module.exports = Home;
-
-/***/ },
-/* 262 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Shepherd = __webpack_require__(236);
-
-	var drawingIndexTour = new Shepherd.Tour({
-	  defaults: {
-	    classes: 'shepherd-theme-arrows'
-	  }
-	});
-
-	drawingIndexTour.addStep('save-drawing', {
-	  text: ["Feel free to check out other users' drawings, see who has been liking", "what, and visit other users' profile pages."],
-	  showCancelLink: true,
-	  buttons: [{
-	    text: 'Finish',
-	    action: drawingIndexTour.next
-	  }],
-	  classes: 'shepherd-theme-arrows',
-	  attachTo: '.dropdown-toggle bottom'
-	});
-
-	module.exports = drawingIndexTour;
 
 /***/ }
 /******/ ]);
