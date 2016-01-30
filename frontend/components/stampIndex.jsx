@@ -82,6 +82,15 @@ var StampIndex = React.createClass({
     });
   },
 
+  loader: function() {
+    return (
+      <div className="cssload-loading">
+        <div className="cssload-dot"></div>
+        <div className="cssload-dot2"></div>
+      </div>
+    )
+  },
+
   render: function() {
     var popularitySelected =
       this.state.selectedTab === "popularity" ? "selected-tab" : "";

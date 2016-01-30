@@ -50,13 +50,13 @@
 	var Route = __webpack_require__(159).Route;
 	var App = __webpack_require__(208);
 	var DrawingIndex = __webpack_require__(242);
-	var CanvasTest = __webpack_require__(248);
-	var DrawingDetail = __webpack_require__(259);
-	var ProfilePage = __webpack_require__(260);
+	var CanvasTest = __webpack_require__(249);
+	var DrawingDetail = __webpack_require__(260);
+	var ProfilePage = __webpack_require__(261);
 	var StampIndex = __webpack_require__(209);
-	var StampDetail = __webpack_require__(261);
-	var NewStamp = __webpack_require__(262);
-	var Home = __webpack_require__(264);
+	var StampDetail = __webpack_require__(262);
+	var NewStamp = __webpack_require__(263);
+	var Home = __webpack_require__(265);
 	var IndexRoute = __webpack_require__(159).IndexRoute;
 	var Shepherd = __webpack_require__(236);
 
@@ -24393,6 +24393,15 @@
 	    });
 	  },
 
+	  loader: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'cssload-loading' },
+	      React.createElement('div', { className: 'cssload-dot' }),
+	      React.createElement('div', { className: 'cssload-dot2' })
+	    );
+	  },
+
 	  render: function () {
 	    var popularitySelected = this.state.selectedTab === "popularity" ? "selected-tab" : "";
 	    var newestSelected = this.state.selectedTab === "newest" ? "selected-tab" : "";
@@ -34430,12 +34439,12 @@
 
 	var React = __webpack_require__(1);
 	var DrawingStore = __webpack_require__(243);
-	var DrawingComparatorStore = __webpack_require__(265);
+	var DrawingComparatorStore = __webpack_require__(244);
 	var ApiUtil = __webpack_require__(210);
-	var DrawingListItem = __webpack_require__(244);
-	var drawingIndexTour = __webpack_require__(246);
+	var DrawingListItem = __webpack_require__(245);
+	var drawingIndexTour = __webpack_require__(247);
 	var ApiActions = __webpack_require__(211);
-	var DrawingComparatorActions = __webpack_require__(247);
+	var DrawingComparatorActions = __webpack_require__(248);
 
 	var DrawingIndex = React.createClass({
 	  displayName: 'DrawingIndex',
@@ -34457,10 +34466,7 @@
 	    };
 	  },
 	  componentDidMount: function () {
-	    // this.drawingStoreListener = DrawingStore.addListener(this._onDrawingStoreChange);
-	    // this.drawingComparatorStoreListener = DrawingComparatorStore.addListener(this._onComparatorStoreChange);
 	    this.drawingStoreListener = DrawingStore.addListener(this._onChange);
-	    // this.drawingComparatorStoreListener = DrawingComparatorStore.addListener(this._onChange);
 	    DrawingComparatorActions.receiveDrawingComparator(this.popularityComparator);
 	    ApiUtil.fetchAllDrawings();
 	    if (window.wholeDamnTour.currentStep && window.wholeDamnTour.currentStep.id === "save-drawing") {
@@ -34468,6 +34474,7 @@
 	        window.wholeDamnTour.next();
 	      }, 200);
 	    };
+	    this.setState({ drawingsList: this.loader() });
 	  },
 	  componentWillUnmount: function () {
 	    this.drawingStoreListener.remove();
@@ -34488,6 +34495,7 @@
 	    this.setDrawingsList();
 	  },
 	  sortByNewness: function () {
+	    this.setState({ drawingsList: this.loader() });
 	    DrawingComparatorActions.receiveDrawingComparator(this.newnessComparator);
 	    ApiUtil.fetchAllDrawings();
 	    this.setState({
@@ -34496,6 +34504,7 @@
 	    });
 	  },
 	  sortByPopularity: function (e) {
+	    this.setState({ drawingsList: this.loader() });
 	    DrawingComparatorActions.receiveDrawingComparator(this.popularityComparator);
 	    ApiUtil.fetchAllDrawings();
 	    this.setState({
@@ -34535,9 +34544,19 @@
 	    }
 	  },
 
+	  loader: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'cssload-loading' },
+	      React.createElement('div', { className: 'cssload-dot' }),
+	      React.createElement('div', { className: 'cssload-dot2' })
+	    );
+	  },
+
 	  render: function () {
 	    var popularitySelected = this.state.selectedTab === "popularity" ? "selected-tab" : "";
 	    var newnessSelected = this.state.selectedTab === "newness" ? "selected-tab" : "";
+	    console.log(this.state.drawingsList);
 
 	    // if (this.state.drawingsList == null && this.state.drawings) {
 	    //   var sortedDrawings = this.state.drawings.sort(this.state.comparator);
@@ -34663,10 +34682,39 @@
 /* 244 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var Store = __webpack_require__(218).Store;
+	var AppDispatcher = __webpack_require__(212);
+
+	var DrawingComparatorStore = new Store(AppDispatcher);
+	var _drawingComparator;
+
+	var receiveDrawingComparator = function (drawingComparator) {
+	  _drawingComparator = drawingComparator;
+	};
+
+	DrawingComparatorStore.comparator = function () {
+	  return _drawingComparator;
+	};
+
+	DrawingComparatorStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case "DRAWING_COMPARATOR_RECEIVED":
+	      receiveDrawingComparator(payload.drawingComparator);
+	      DrawingComparatorStore.__emitChange();
+	      break;
+	  }
+	};
+
+	module.exports = DrawingComparatorStore;
+
+/***/ },
+/* 245 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var React = __webpack_require__(1);
 	var History = __webpack_require__(159).History;
 	var ApiUtil = __webpack_require__(210);
-	var ChangedDrawingStore = __webpack_require__(245);
+	var ChangedDrawingStore = __webpack_require__(246);
 
 	var DrawingListItem = React.createClass({
 	  displayName: 'DrawingListItem',
@@ -34816,7 +34864,7 @@
 	module.exports = DrawingListItem;
 
 /***/ },
-/* 245 */
+/* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Store = __webpack_require__(218).Store;
@@ -34845,7 +34893,7 @@
 	module.exports = ChangedDrawingStore;
 
 /***/ },
-/* 246 */
+/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Shepherd = __webpack_require__(236);
@@ -34870,7 +34918,7 @@
 	module.exports = drawingIndexTour;
 
 /***/ },
-/* 247 */
+/* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Dispatcher = __webpack_require__(212);
@@ -34887,21 +34935,21 @@
 	module.exports = DrawingComparatorActions;
 
 /***/ },
-/* 248 */
+/* 249 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(210);
-	var DrawingCanvas = __webpack_require__(249);
-	var StampCanvas = __webpack_require__(250);
-	var ColorPicker = __webpack_require__(251);
-	var SizePicker = __webpack_require__(252);
-	var StrokeSample = __webpack_require__(253);
-	var LinkedStateMixin = __webpack_require__(254);
+	var DrawingCanvas = __webpack_require__(250);
+	var StampCanvas = __webpack_require__(251);
+	var ColorPicker = __webpack_require__(252);
+	var SizePicker = __webpack_require__(253);
+	var StrokeSample = __webpack_require__(254);
+	var LinkedStateMixin = __webpack_require__(255);
 	var StampIndex = __webpack_require__(209);
 	var StampStore = __webpack_require__(217);
 	var History = __webpack_require__(159).History;
-	var makeDrawingTour = __webpack_require__(258);
+	var makeDrawingTour = __webpack_require__(259);
 	var MyStampStore = __webpack_require__(240);
 
 	var CanvasTest = React.createClass({
@@ -35312,7 +35360,7 @@
 	module.exports = CanvasTest;
 
 /***/ },
-/* 249 */
+/* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var ApiUtil = __webpack_require__(210);
@@ -35511,7 +35559,7 @@
 	module.exports = DrawingCanvas;
 
 /***/ },
-/* 250 */
+/* 251 */
 /***/ function(module, exports) {
 
 	var StampCanvas = function (id, width, height) {
@@ -35580,7 +35628,7 @@
 	module.exports = StampCanvas;
 
 /***/ },
-/* 251 */
+/* 252 */
 /***/ function(module, exports) {
 
 	var ColorPicker = function (id, width, height) {
@@ -35617,7 +35665,7 @@
 	module.exports = ColorPicker;
 
 /***/ },
-/* 252 */
+/* 253 */
 /***/ function(module, exports) {
 
 	var SizePicker = function (id, width, height) {
@@ -35654,7 +35702,7 @@
 	module.exports = SizePicker;
 
 /***/ },
-/* 253 */
+/* 254 */
 /***/ function(module, exports) {
 
 	var StrokeSample = function (id, width, height) {
@@ -35686,13 +35734,13 @@
 	module.exports = StrokeSample;
 
 /***/ },
-/* 254 */
+/* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(255);
+	module.exports = __webpack_require__(256);
 
 /***/ },
-/* 255 */
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -35709,8 +35757,8 @@
 
 	'use strict';
 
-	var ReactLink = __webpack_require__(256);
-	var ReactStateSetters = __webpack_require__(257);
+	var ReactLink = __webpack_require__(257);
+	var ReactStateSetters = __webpack_require__(258);
 
 	/**
 	 * A simple mixin around ReactLink.forState().
@@ -35733,7 +35781,7 @@
 	module.exports = LinkedStateMixin;
 
 /***/ },
-/* 256 */
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -35807,7 +35855,7 @@
 	module.exports = ReactLink;
 
 /***/ },
-/* 257 */
+/* 258 */
 /***/ function(module, exports) {
 
 	/**
@@ -35916,7 +35964,7 @@
 	module.exports = ReactStateSetters;
 
 /***/ },
-/* 258 */
+/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Shepherd = __webpack_require__(236);
@@ -35982,7 +36030,7 @@
 	module.exports = makeDrawingTour;
 
 /***/ },
-/* 259 */
+/* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -36060,13 +36108,13 @@
 	module.exports = DrawingDetail;
 
 /***/ },
-/* 260 */
+/* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var DrawingStore = __webpack_require__(243);
 	var ApiUtil = __webpack_require__(210);
-	var DrawingListItem = __webpack_require__(244);
+	var DrawingListItem = __webpack_require__(245);
 	var StampStore = __webpack_require__(217);
 	var StampListItem = __webpack_require__(216);
 
@@ -36172,7 +36220,7 @@
 	module.exports = ProfilePage;
 
 /***/ },
-/* 261 */
+/* 262 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -36232,20 +36280,20 @@
 	module.exports = StampDetail;
 
 /***/ },
-/* 262 */
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(210);
-	var DrawingCanvas = __webpack_require__(249);
-	var StampCanvas = __webpack_require__(250);
-	var ColorPicker = __webpack_require__(251);
-	var SizePicker = __webpack_require__(252);
-	var StrokeSample = __webpack_require__(253);
-	var LinkedStateMixin = __webpack_require__(254);
+	var DrawingCanvas = __webpack_require__(250);
+	var StampCanvas = __webpack_require__(251);
+	var ColorPicker = __webpack_require__(252);
+	var SizePicker = __webpack_require__(253);
+	var StrokeSample = __webpack_require__(254);
+	var LinkedStateMixin = __webpack_require__(255);
 	var StampIndex = __webpack_require__(209);
 	var StampStore = __webpack_require__(217);
-	window.wholeDamnTour = __webpack_require__(263);
+	window.wholeDamnTour = __webpack_require__(264);
 
 	var CanvasTest = React.createClass({
 	  displayName: 'CanvasTest',
@@ -36576,7 +36624,7 @@
 	module.exports = CanvasTest;
 
 /***/ },
-/* 263 */
+/* 264 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Shepherd = __webpack_require__(236);
@@ -36799,7 +36847,7 @@
 	module.exports = makeStampTour;
 
 /***/ },
-/* 264 */
+/* 265 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -36813,35 +36861,6 @@
 	});
 
 	module.exports = Home;
-
-/***/ },
-/* 265 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(218).Store;
-	var AppDispatcher = __webpack_require__(212);
-
-	var DrawingComparatorStore = new Store(AppDispatcher);
-	var _drawingComparator;
-
-	var receiveDrawingComparator = function (drawingComparator) {
-	  _drawingComparator = drawingComparator;
-	};
-
-	DrawingComparatorStore.comparator = function () {
-	  return _drawingComparator;
-	};
-
-	DrawingComparatorStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case "DRAWING_COMPARATOR_RECEIVED":
-	      receiveDrawingComparator(payload.drawingComparator);
-	      DrawingComparatorStore.__emitChange();
-	      break;
-	  }
-	};
-
-	module.exports = DrawingComparatorStore;
 
 /***/ }
 /******/ ]);

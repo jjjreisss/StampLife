@@ -26,10 +26,7 @@ var DrawingIndex = React.createClass({
     });
   },
   componentDidMount: function() {
-    // this.drawingStoreListener = DrawingStore.addListener(this._onDrawingStoreChange);
-    // this.drawingComparatorStoreListener = DrawingComparatorStore.addListener(this._onComparatorStoreChange);
     this.drawingStoreListener = DrawingStore.addListener(this._onChange);
-    // this.drawingComparatorStoreListener = DrawingComparatorStore.addListener(this._onChange);
     DrawingComparatorActions.receiveDrawingComparator(this.popularityComparator);
     ApiUtil.fetchAllDrawings();
     if (window.wholeDamnTour.currentStep && window.wholeDamnTour.currentStep.id === "save-drawing") {
@@ -37,6 +34,7 @@ var DrawingIndex = React.createClass({
         window.wholeDamnTour.next();
       }, 200);
     };
+    this.setState({drawingsList: this.loader()})
   },
   componentWillUnmount: function() {
     this.drawingStoreListener.remove();
@@ -57,6 +55,7 @@ var DrawingIndex = React.createClass({
     this.setDrawingsList();
   },
   sortByNewness: function() {
+    this.setState({drawingsList: this.loader()})
     DrawingComparatorActions.receiveDrawingComparator(this.newnessComparator);
     ApiUtil.fetchAllDrawings();
     this.setState({
@@ -65,6 +64,7 @@ var DrawingIndex = React.createClass({
     });
   },
   sortByPopularity: function(e) {
+    this.setState({drawingsList: this.loader()})
     DrawingComparatorActions.receiveDrawingComparator(this.popularityComparator);
     ApiUtil.fetchAllDrawings()
     this.setState({
@@ -106,11 +106,21 @@ var DrawingIndex = React.createClass({
     }
   },
 
+  loader: function() {
+    return (
+      <div className="cssload-loading">
+        <div className="cssload-dot"></div>
+        <div className="cssload-dot2"></div>
+      </div>
+    )
+  },
+
   render: function() {
     var popularitySelected =
       this.state.selectedTab === "popularity" ? "selected-tab" : "";
     var newnessSelected =
       this.state.selectedTab === "newness" ? "selected-tab" : "";
+      console.log(this.state.drawingsList);
 
     // if (this.state.drawingsList == null && this.state.drawings) {
     //   var sortedDrawings = this.state.drawings.sort(this.state.comparator);
