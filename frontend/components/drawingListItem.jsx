@@ -1,7 +1,7 @@
 var React = require('react');
 var History = require('react-router').History;
 var ApiUtil = require('../util/apiUtil');
-var DrawingStore = require('../stores/drawingStore');
+var ChangedDrawingStore = require('../stores/changedDrawingStore');
 
 var DrawingListItem = React.createClass({
   mixins: [History],
@@ -14,19 +14,22 @@ var DrawingListItem = React.createClass({
     });
   },
   componentDidMount: function() {
-    this.drawingStoreListener = DrawingStore.addListener(this._onChange);
+    this.changedDrawingStoreListener = ChangedDrawingStore.addListener(this._onChange);
   },
-  componentWillReceiveProps: function() {
-    this.setState({drawing: this.props.drawing})
-    console.log(this.props.drawing.id);
+  componentWillUnmount: function() {
+    this.changedDrawingStoreListener.remove();
+  },
+  componentWillReceiveProps: function(newProps) {
+    if(newProps.drawing.id != this.state.drawing.id) {
+
+      this.setState({drawing: newProps.drawing})
+    }
   },
   _onChange: function() {
-    var drawingStoreDrawing = DrawingStore.single();
-    if (drawingStoreDrawing && drawingStoreDrawing.id === this.state.drawing.id) {
-      this.setState({drawing: drawingStoreDrawing});
+    var changedDrawing = ChangedDrawingStore.drawing();
+    if (changedDrawing && changedDrawing.id === this.state.drawing.id) {
+      this.setState({drawing: changedDrawing});
     }
-    console.log('change');
-
   },
   goToShow: function() {
     this.history.push('drawings/' + this.state.drawing.id);

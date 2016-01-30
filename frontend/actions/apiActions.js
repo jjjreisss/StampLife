@@ -8,6 +8,13 @@ var ApiActions = {
     });
   },
 
+  receiveChangedDrawing: function(changedDrawing) {
+    Dispatcher.dispatch({
+      actionType: "CHANGED_DRAWING_RECEIVED",
+      changedDrawing: changedDrawing
+    });
+  },
+
   receiveAllDrawings: function(drawings) {
     Dispatcher.dispatch({
       actionType: "DRAWINGS_RECEIVED",

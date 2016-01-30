@@ -52,7 +52,6 @@ var App = React.createClass({
       success: function() {
         if (this.props.routes[1].path === 'stamp/new') {
           makeStampTour.start();
-          console.log('hi');
         } else {
           this.history.push('stamp/new');
         }

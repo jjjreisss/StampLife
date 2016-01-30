@@ -44,6 +44,16 @@ var ApiUtil = {
     });
   },
 
+  fetchChangedDrawing: function(id) {
+    $.ajax({
+      url: "api/drawings/" + id,
+      method: "GET",
+      success: function(drawing) {
+        ApiActions.receiveChangedDrawing(drawing);
+      }
+    });
+  },
+
   resetSingleDrawing: function(id) {
     $.ajax({
       url: "api/drawings/" + id,
@@ -154,7 +164,7 @@ var ApiUtil = {
       method: "POST",
       data: {drawing_id: drawingId},
       success: function() {
-        ApiUtil.fetchDrawing(drawingId);
+        ApiUtil.fetchChangedDrawing(drawingId);
       },
     });
   },
@@ -164,7 +174,7 @@ var ApiUtil = {
       url: "api/likes/" + likeId,
       method: "DELETE",
       success: function() {
-        ApiUtil.fetchDrawing(drawingId);
+        ApiUtil.fetchChangedDrawing(drawingId);
       },
     });
   },

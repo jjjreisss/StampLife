@@ -1,9 +1,11 @@
 var React = require('react');
 var DrawingStore = require('../stores/drawingStore');
+var DrawingComparatorStore = require('../stores/drawingComparatorStore');
 var ApiUtil = require('../util/apiUtil');
 var DrawingListItem = require('./drawingListItem');
 var drawingIndexTour = require('../util/drawingIndexTour');
 var ApiActions = require('../actions/apiActions');
+var DrawingComparatorActions = require('../actions/drawingComparatorActions');
 
 var DrawingIndex = React.createClass({
   getInitialState: function() {
@@ -20,22 +22,16 @@ var DrawingIndex = React.createClass({
             return -1;
           }
         },
+      drawingsList: null
     });
   },
   componentDidMount: function() {
-    this.listener = DrawingStore.addListener(this._onChange);
+    // this.drawingStoreListener = DrawingStore.addListener(this._onDrawingStoreChange);
+    // this.drawingComparatorStoreListener = DrawingComparatorStore.addListener(this._onComparatorStoreChange);
+    this.drawingStoreListener = DrawingStore.addListener(this._onChange);
+    // this.drawingComparatorStoreListener = DrawingComparatorStore.addListener(this._onChange);
+    DrawingComparatorActions.receiveDrawingComparator(this.popularityComparator);
     ApiUtil.fetchAllDrawings();
-
-    // $.ajax({
-    //   url: 'users/1',
-    //   method: 'GET',
-    //   success: function(user) {
-    //     if (user.tour_four_completed === false) {
-    //       drawingIndexTour.start();
-    //       ApiUtil.completeTourFour();
-    //     }
-    //   }.bind(this),
-    // });
     if (window.wholeDamnTour.currentStep && window.wholeDamnTour.currentStep.id === "save-drawing") {
       window.setTimeout(function() {
         window.wholeDamnTour.next();
@@ -43,70 +39,92 @@ var DrawingIndex = React.createClass({
     };
   },
   componentWillUnmount: function() {
-    this.listener.remove();
+    this.drawingStoreListener.remove();
   },
+  // _onDrawingStoreChange: function() {
+  //   this.setState({drawings: DrawingStore.all().reverse()});
+  //   this.setDrawingsList();
+  // },
+  // _onComparatorStoreChange: function() {
+  //   this.setState({comparator: DrawingComparatorStore.comparator()})
+  //   this.setDrawingsList();
+  // },
   _onChange: function() {
-    this.setState({drawings: DrawingStore.all().reverse()});
-  },
-  sortByNewest: function() {
-    ApiUtil.fetchAllDrawings()
-    // ApiActions.triggerDrawingStore();
-    var comparator =
-      function(a, b) {
-        if (a.created_at < b.created_at) {
-          return 1;
-        } else if (a.created_at === b.created_at) {
-          return 0;
-        } else {
-          return -1;
-        }
-      };
     this.setState({
-      comparator: comparator,
-      selectedTab: "newest"
+      drawings: DrawingStore.all().reverse(),
+      comparator: DrawingComparatorStore.comparator()
+    })
+    this.setDrawingsList();
+  },
+  sortByNewness: function() {
+    DrawingComparatorActions.receiveDrawingComparator(this.newnessComparator);
+    ApiUtil.fetchAllDrawings();
+    this.setState({
+      // comparator: this.popularityComparator,
+      selectedTab: "newness"
     });
   },
   sortByPopularity: function(e) {
+    DrawingComparatorActions.receiveDrawingComparator(this.popularityComparator);
     ApiUtil.fetchAllDrawings()
-    // ApiActions.triggerDrawingStore();
-    var comparator =
-      function(a, b) {
-        if (a.likes.length < b.likes.length) {
-          return 1;
-        } else if (a.likes.length === b.likes.length) {
-          return 0;
-        } else {
-          return -1;
-        }
-      };
     this.setState({
-      comparator: comparator,
+    //   comparator: this.popularityComparator,
       selectedTab: "popularity"
     });
+    // this.setDrawingsList();
+  },
+
+  setDrawingsList: function() {
+    var sortedDrawings = this.state.drawings.sort(this.state.comparator);
+    drawingsList = sortedDrawings.map(function(drawing, idx){
+      return (
+        <DrawingListItem
+          key={idx}
+          drawing={drawing}/>
+      );
+    });
+    this.setState({drawingsList: drawingsList})
+  },
+
+  popularityComparator: function(a, b) {
+    if (a.likes.length < b.likes.length) {
+      return 1;
+    } else if (a.likes.length === b.likes.length) {
+      return 0;
+    } else {
+      return -1;
+    }
+  },
+
+  newnessComparator: function(a, b) {
+    if (a.created_at < b.created_at) {
+      return 1;
+    } else if (a.created_at === b.created_at) {
+      return 0;
+    } else {
+      return -1;
+    }
   },
 
   render: function() {
     var popularitySelected =
       this.state.selectedTab === "popularity" ? "selected-tab" : "";
-    var newestSelected =
-      this.state.selectedTab === "newest" ? "selected-tab" : "";
+    var newnessSelected =
+      this.state.selectedTab === "newness" ? "selected-tab" : "";
 
-    var drawingsList = "";
-    if (this.state.drawings) {
-      var sortedDrawings = this.state.drawings.sort(this.state.comparator);
-      drawingsList = sortedDrawings.map(function(drawing, idx){
-        return (
-          <DrawingListItem
-            key={idx}
-            drawing={drawing}/>
-        );
-      });
-    }
+    // if (this.state.drawingsList == null && this.state.drawings) {
+    //   var sortedDrawings = this.state.drawings.sort(this.state.comparator);
+    //   drawingsList = sortedDrawings.map(function(drawing, idx){
+    //     return (
+    //       <DrawingListItem
+    //         key={idx}
+    //         drawing={drawing}/>
+    //     );
+    //   });
+    // } else {
+    //   drawingsList = this.state.drawingsList
+    // }
 
-    if (drawingsList !== "") {
-      console.log(drawingsList.map(function(item) {return item.props.drawing.id}));
-
-    }
     return(
       <div className="index">
         <h1 className="index-header">
@@ -120,15 +138,15 @@ var DrawingIndex = React.createClass({
           </span>
           <span
             className="index-tab"
-            onClick={this.sortByNewest}
-            id={newestSelected}>
+            onClick={this.sortByNewness}
+            id={newnessSelected}>
             <span>
               Newest Drawings
             </span>
           </span>
         </h1>
           <div className="index-contents">
-            {drawingsList}
+            {this.state.drawingsList}
           </div>
       </div>
     );
@@ -137,25 +155,3 @@ var DrawingIndex = React.createClass({
 });
 
 module.exports = DrawingIndex;
-
-
-// function draw() {
-//     	// Erasing line
-//     	var canvas = document.getElementById("eraseLine");
-//     	if (canvas.getContext) {
-//         	var ctx = canvas.getContext("2d");
-//
-//         	// Black background square
-//         	ctx.fillRect(0, 0, 200, 200);
-//
-//         	// Erasing curved line
-//         	ctx.globalCompositeOperation = "destination-out";
-//
-//         	ctx.beginPath();
-//         	ctx.moveTo(160, 40);
-//         	ctx.bezierCurveTo(90, 10, 60, 20, 10, 90);
-//
-//         	ctx.lineWidth = 7;
-//         	ctx.stroke();
-//     	}
-// }
