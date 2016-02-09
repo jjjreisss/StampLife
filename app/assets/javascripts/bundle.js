@@ -24613,11 +24613,46 @@
 	  },
 
 	  addInitialStamps: function () {
-	    this.addToMyStamp(111);
-	    this.addToMyStamp(112);
-	    this.addToMyStamp(113);
-	    this.addToMyStamp(114);
-	    this.addToMyStamp(115);
+	    // this.addToMyStamp(111);
+	    // this.addToMyStamp(112);
+	    // this.addToMyStamp(114);
+	    // this.addToMyStamp(113);
+	    // this.addToMyStamp(115);
+	    $.ajax({
+	      url: "api/stamps/" + 111,
+	      method: "GET",
+	      success: function (stamp) {
+	        ApiActions.addToMyStamp(stamp);
+	        $.ajax({
+	          url: "api/stamps/" + 112,
+	          method: "GET",
+	          success: function (stamp) {
+	            ApiActions.addToMyStamp(stamp);
+	            $.ajax({
+	              url: "api/stamps/" + 113,
+	              method: "GET",
+	              success: function (stamp) {
+	                ApiActions.addToMyStamp(stamp);
+	                $.ajax({
+	                  url: "api/stamps/" + 114,
+	                  method: "GET",
+	                  success: function (stamp) {
+	                    ApiActions.addToMyStamp(stamp);
+	                    $.ajax({
+	                      url: "api/stamps/" + 115,
+	                      method: "GET",
+	                      success: function (stamp) {
+	                        ApiActions.addToMyStamp(stamp);
+	                      }
+	                    });
+	                  }
+	                });
+	              }
+	            });
+	          }
+	        });
+	      }
+	    });
 	  },
 
 	  useStamps: function (stampsUsed) {
