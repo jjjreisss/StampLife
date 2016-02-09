@@ -147,8 +147,7 @@ var ApiUtil = {
     });
   },
 
-  addInitialStamps: function() {
-    console.log('hi')
+  addInitialStamps: function(callback) {
     $.ajax({
       url: "api/stamps/" + 111,
       method: "GET",
@@ -174,6 +173,7 @@ var ApiUtil = {
                       method: "GET",
                       success: function(stamp) {
                         ApiActions.addToMyStamp(stamp);
+                        callback();
                       }
                     });
                   }

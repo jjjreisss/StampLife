@@ -70,8 +70,8 @@ var CanvasTest = React.createClass({
       method: 'GET',
       success: function(user) {
         if (user.tour_one_completed === false) {
-          ApiUtil.addInitialStamps();
           window.wholeDamnTour.start();
+          ApiUtil.addInitialStamps(this.turnStampingOff.bind(this));
           ApiUtil.completeTourOne();
         }
       }.bind(this),
@@ -158,6 +158,10 @@ var CanvasTest = React.createClass({
     this.setState({stamping: true});
     this.setStamp();
     this.selectStamp();
+  },
+  turnStampingOff: function() {
+    this.drawingCanvas.turnStampingOff();
+    this.setState({stamping: false});
   },
   saveText: function() {
     var text;
