@@ -49,7 +49,7 @@
 	var Router = __webpack_require__(159).Router;
 	var Route = __webpack_require__(159).Route;
 	var App = __webpack_require__(208);
-	var DrawingIndex = __webpack_require__(242);
+	var DrawingIndex = __webpack_require__(244);
 	var CanvasTest = __webpack_require__(249);
 	var DrawingDetail = __webpack_require__(260);
 	var ProfilePage = __webpack_require__(261);
@@ -24150,9 +24150,9 @@
 
 	var React = __webpack_require__(1);
 	var StampIndex = __webpack_require__(209);
-	var MyStampIndex = __webpack_require__(238);
+	var MyStampIndex = __webpack_require__(240);
 	var History = __webpack_require__(159).History;
-	var makeStampTour = __webpack_require__(241);
+	var makeStampTour = __webpack_require__(243);
 
 	var App = React.createClass({
 	  displayName: 'App',
@@ -24315,6 +24315,8 @@
 	var StampListItem = __webpack_require__(216);
 	var StampStore = __webpack_require__(217);
 	var getStampsTour = __webpack_require__(235);
+	var DrawingComparatorActions = __webpack_require__(238);
+	var DrawingComparatorStore = __webpack_require__(239);
 
 	var StampIndex = React.createClass({
 	  displayName: 'StampIndex',
@@ -24322,6 +24324,7 @@
 	  getInitialState: function () {
 	    return {
 	      stamps: null,
+	      selectedTab: "popularity",
 	      comparator: function (a, b) {
 	        if (a.stamp_uses.length < b.stamp_uses.length) {
 	          return 1;
@@ -24331,66 +24334,75 @@
 	          return -1;
 	        }
 	      },
-	      selectedTab: "popularity"
+	      stampsList: null
 	    };
 	  },
 	  componentDidMount: function () {
 	    this.listener = StampStore.addListener(this._onChange);
+	    DrawingComparatorActions.receiveDrawingComparator(this.popularityComparator);
 	    ApiUtil.fetchAllStamps();
-
-	    // $.ajax({
-	    //   url: 'users/1',
-	    //   method: 'GET',
-	    //   success: function(user) {
-	    //     if (user.tour_two_completed === false) {
-	    //       getStampsTour.start();
-	    //       ApiUtil.completeTourTwo();
-	    //     }
-	    //   }.bind(this),
-	    // });
-
 	    if (window.wholeDamnTour.currentStep && window.wholeDamnTour.currentStep.id === 'get-stamps') {
 	      window.setTimeout(function () {
 	        window.wholeDamnTour.next();
 	      }, 200);
 	    }
+	    this.setState({ drawingsList: this.loader() });
 	  },
 	  componentWillUnmount: function () {
 	    this.listener.remove();
 	  },
 	  _onChange: function () {
-	    var allStamps = StampStore.all().reverse();
-	    this.setState({ stamps: allStamps });
-	  },
-	  sortByNewest: function () {
-	    var comparator = function (a, b) {
-	      if (a.created_at < b.created_at) {
-	        return 1;
-	      } else if (a.created_at === b.created_at) {
-	        return 0;
-	      } else {
-	        return -1;
-	      }
-	    };
 	    this.setState({
-	      comparator: comparator,
-	      selectedTab: "newest"
+	      stamps: StampStore.all().reverse(),
+	      comparator: DrawingComparatorStore.comparator()
+	    });
+	    this.setStampsList();
+	  },
+	  sortByNewness: function () {
+	    this.setState({ stampsList: this.loader() });
+	    DrawingComparatorActions.receiveDrawingComparator(this.newnessComparator);
+	    ApiUtil.fetchAllStamps();
+	    this.setState({
+	      selectedTab: "newness"
 	    });
 	  },
 	  sortByPopularity: function (e) {
-	    var comparator = function (a, b) {
-	      if (a.stamp_uses.length < b.stamp_uses.length) {
-	        return 1;
-	      } else if (a.stamp_uses.length === b.stamp_uses.length) {
-	        return 0;
-	      } else {
-	        return -1;
-	      }
-	    };
+	    this.setState({ stampsList: this.loader() });
+	    DrawingComparatorActions.receiveDrawingComparator(this.popularityComparator);
+	    ApiUtil.fetchAllStamps();
 	    this.setState({
-	      comparator: comparator,
 	      selectedTab: "popularity"
 	    });
+	  },
+	  setStampsList: function () {
+	    var sortedStamps = this.state.stamps.sort(this.state.comparator);
+	    stampsList = sortedStamps.map(function (stamp, idx) {
+	      return React.createElement(StampListItem, {
+	        key: idx,
+	        stampId: stamp.id,
+	        imageUrl: stamp.image_url,
+	        size: 150,
+	        stamp: stamp });
+	    });
+	    this.setState({ stampsList: stampsList });
+	  },
+	  popularityComparator: function (a, b) {
+	    if (a.stamp_uses.length < b.stamp_uses.length) {
+	      return 1;
+	    } else if (a.stamp_uses.length === b.stamp_uses.length) {
+	      return 0;
+	    } else {
+	      return -1;
+	    }
+	  },
+	  newnessComparator: function (a, b) {
+	    if (a.created_at < b.created_at) {
+	      return 1;
+	    } else if (a.created_at === b.created_at) {
+	      return 0;
+	    } else {
+	      return -1;
+	    }
 	  },
 
 	  loader: function () {
@@ -24404,19 +24416,8 @@
 
 	  render: function () {
 	    var popularitySelected = this.state.selectedTab === "popularity" ? "selected-tab" : "";
-	    var newestSelected = this.state.selectedTab === "newest" ? "selected-tab" : "";
-	    var stampsList = "";
-	    if (this.state.stamps) {
-	      var sortedStamps = this.state.stamps.sort(this.state.comparator);
-	      stampsList = sortedStamps.map(function (stamp, idx) {
-	        return React.createElement(StampListItem, {
-	          key: idx,
-	          stampId: stamp.id,
-	          imageUrl: stamp.image_url,
-	          size: 150,
-	          stamp: stamp });
-	      });
-	    }
+	    var newestSelected = this.state.selectedTab === "newness" ? "selected-tab" : "";
+
 	    return React.createElement(
 	      'div',
 	      { className: 'index' },
@@ -24439,7 +24440,7 @@
 	          'span',
 	          {
 	            className: 'index-tab',
-	            onClick: this.sortByNewest,
+	            onClick: this.sortByNewness,
 	            id: newestSelected },
 	          React.createElement(
 	            'span',
@@ -24451,7 +24452,7 @@
 	      React.createElement(
 	        'div',
 	        { className: 'index-contents' },
-	        stampsList
+	        this.state.stampsList
 	      )
 	    );
 	  }
@@ -26446,7 +26447,6 @@
 	 * LICENSE file in the root directory of this source tree. An additional grant
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
-	 * @providesModule invariant
 	 */
 
 	'use strict';
@@ -26502,7 +26502,6 @@
 	 * LICENSE file in the root directory of this source tree. An additional grant
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
-	 * @providesModule emptyFunction
 	 */
 
 	"use strict";
@@ -31728,7 +31727,7 @@
 /* 236 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! tether-shepherd 1.2.0 */
+	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! tether-shepherd 1.6.0 */
 
 	(function(root, factory) {
 	  if (true) {
@@ -31746,7 +31745,7 @@
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	var _get = function get(_x5, _x6, _x7) { var _again = true; _function: while (_again) { var object = _x5, property = _x6, receiver = _x7; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x5 = parent; _x6 = property; _x7 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+	var _get = function get(_x5, _x6, _x7) { var _again = true; _function: while (_again) { var object = _x5, property = _x6, receiver = _x7; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x5 = parent; _x6 = property; _x7 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
@@ -31794,6 +31793,32 @@
 	  return matches.call(el, sel);
 	}
 
+	var positionRe = /^(.+) (top|left|right|bottom|center|\[[a-z ]+\])$/;
+
+	function parsePosition(str) {
+	  if (typeof str === 'object') {
+	    if (str.hasOwnProperty("element") && str.hasOwnProperty("on")) {
+	      return str;
+	    }
+	    return null;
+	  }
+
+	  var matches = positionRe.exec(str);
+	  if (!matches) {
+	    return null;
+	  }
+
+	  var on = matches[2];
+	  if (on[0] === '[') {
+	    on = on.substring(1, on.length - 1);
+	  }
+
+	  return {
+	    'element': matches[1],
+	    'on': on
+	  };
+	}
+
 	function parseShorthand(obj, props) {
 	  if (obj === null || typeof obj === 'undefined') {
 	    return obj;
@@ -31802,17 +31827,17 @@
 	  }
 
 	  var vals = obj.split(' ');
-	  var valsLen = vals.length;
-	  var propsLen = props.length;
-	  if (valsLen > propsLen) {
-	    vals[0] = vals.slice(0, valsLen - propsLen + 1).join(' ');
-	    vals.splice(1, (valsLen, propsLen));
-	  }
-
 	  var out = {};
-	  for (var i = 0; i < propsLen; ++i) {
-	    var prop = props[i];
-	    out[prop] = vals[i];
+	  var j = props.length - 1;
+	  for (var i = vals.length - 1; i >= 0; i--) {
+	    if (j === 0) {
+	      out[props[j]] = vals.slice(0, i + 1).join(' ');
+	      break;
+	    } else {
+	      out[props[j]] = vals[i];
+	    }
+
+	    j--;
 	  }
 
 	  return out;
@@ -31836,7 +31861,7 @@
 	    value: function bindMethods() {
 	      var _this = this;
 
-	      var methods = ['_show', 'show', 'hide', 'isOpen', 'cancel', 'complete', 'scrollTo', 'destroy'];
+	      var methods = ['_show', 'show', 'hide', 'isOpen', 'cancel', 'complete', 'scrollTo', 'destroy', 'render'];
 	      methods.map(function (method) {
 	        _this[method] = _this[method].bind(_this);
 	      });
@@ -31910,18 +31935,19 @@
 	  }, {
 	    key: 'getAttachTo',
 	    value: function getAttachTo() {
-	      var opts = parseShorthand(this.options.attachTo, ['element', 'on']) || {};
-	      var selector = opts.element;
+	      var opts = parsePosition(this.options.attachTo) || {};
+	      var returnOpts = extend({}, opts);
 
-	      if (typeof selector === 'string') {
-	        opts.element = document.querySelector(selector);
-
-	        if (!opts.element) {
-	          throw new Error('The element for this Shepherd step was not found ' + selector);
+	      if (typeof opts.element === 'string') {
+	        // Can't override the element in user opts reference because we can't
+	        // guarantee that the element will exist in the future.
+	        returnOpts.element = document.querySelector(opts.element);
+	        if (!returnOpts.element) {
+	          console.error('The element for this Shepherd step was not found ' + opts.element);
 	        }
 	      }
 
-	      return opts;
+	      return returnOpts;
 	    }
 	  }, {
 	    key: 'setupTether',
@@ -31931,7 +31957,7 @@
 	      }
 
 	      var opts = this.getAttachTo();
-	      var attachment = ATTACHMENT[opts.on || 'right'];
+	      var attachment = ATTACHMENT[opts.on || 'right'] || opts.on;
 	      if (typeof opts.element === 'undefined') {
 	        opts.element = 'viewport';
 	        attachment = 'middle center';
@@ -32015,7 +32041,7 @@
 	  }, {
 	    key: 'isOpen',
 	    value: function isOpen() {
-	      return hasClass(this.el, 'shepherd-open');
+	      return this.el && hasClass(this.el, 'shepherd-open');
 	    }
 	  }, {
 	    key: 'cancel',
@@ -32045,8 +32071,8 @@
 	  }, {
 	    key: 'destroy',
 	    value: function destroy() {
-	      if (typeof this.el !== 'undefined') {
-	        document.body.removeChild(this.el);
+	      if (typeof this.el !== 'undefined' && this.el.parentNode) {
+	        this.el.parentNode.removeChild(this.el);
 	        delete this.el;
 	      }
 
@@ -32075,7 +32101,7 @@
 	      var header = document.createElement('header');
 	      content.appendChild(header);
 
-	      if (typeof this.options.title !== 'undefined') {
+	      if (this.options.title) {
 	        header.innerHTML += '<h3 class=\'shepherd-title\'>' + this.options.title + '</h3>';
 	        this.el.className += ' shepherd-has-title';
 	      }
@@ -32251,6 +32277,27 @@
 	      return this;
 	    }
 	  }, {
+	    key: 'removeStep',
+	    value: function removeStep(name) {
+	      var current = this.getCurrentStep();
+
+	      for (var i = 0; i < this.steps.length; ++i) {
+	        var step = this.steps[i];
+	        if (step.id === name) {
+	          step.hide();
+	          step.destroy();
+	          this.steps.splice(i, 1);
+	          break;
+	        }
+	      }
+
+	      if (current && current.id === name) {
+	        this.currentStep = undefined;
+
+	        if (this.steps.length) this.show(0);else this.hide();
+	      }
+	    }
+	  }, {
 	    key: 'getById',
 	    value: function getById(id) {
 	      for (var i = 0; i < this.steps.length; ++i) {
@@ -32287,7 +32334,7 @@
 	  }, {
 	    key: 'cancel',
 	    value: function cancel() {
-	      if (typeof this.currentStep !== 'undefined') {
+	      if (this.currentStep) {
 	        this.currentStep.hide();
 	      }
 	      this.trigger('cancel');
@@ -32296,7 +32343,7 @@
 	  }, {
 	    key: 'complete',
 	    value: function complete() {
-	      if (typeof this.currentStep !== 'undefined') {
+	      if (this.currentStep) {
 	        this.currentStep.hide();
 	      }
 	      this.trigger('complete');
@@ -32305,7 +32352,7 @@
 	  }, {
 	    key: 'hide',
 	    value: function hide() {
-	      if (typeof this.currentStep !== 'undefined') {
+	      if (this.currentStep) {
 	        this.currentStep.hide();
 	      }
 	      this.trigger('hide');
@@ -32351,6 +32398,10 @@
 	            step: next,
 	            previous: this.currentStep
 	          });
+
+	          if (this.currentStep) {
+	            this.currentStep.hide();
+	          }
 
 	          this.currentStep = next;
 	          next.show();
@@ -34101,10 +34152,56 @@
 /* 238 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var Dispatcher = __webpack_require__(212);
+
+	var DrawingComparatorActions = {
+	  receiveDrawingComparator: function (drawingComparator) {
+	    Dispatcher.dispatch({
+	      actionType: "DRAWING_COMPARATOR_RECEIVED",
+	      drawingComparator: drawingComparator
+	    });
+	  }
+	};
+
+	module.exports = DrawingComparatorActions;
+
+/***/ },
+/* 239 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(218).Store;
+	var AppDispatcher = __webpack_require__(212);
+
+	var DrawingComparatorStore = new Store(AppDispatcher);
+	var _drawingComparator;
+
+	var receiveDrawingComparator = function (drawingComparator) {
+	  _drawingComparator = drawingComparator;
+	};
+
+	DrawingComparatorStore.comparator = function () {
+	  return _drawingComparator;
+	};
+
+	DrawingComparatorStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case "DRAWING_COMPARATOR_RECEIVED":
+	      receiveDrawingComparator(payload.drawingComparator);
+	      DrawingComparatorStore.__emitChange();
+	      break;
+	  }
+	};
+
+	module.exports = DrawingComparatorStore;
+
+/***/ },
+/* 240 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(210);
-	var MyStampListItem = __webpack_require__(239);
-	var MyStampStore = __webpack_require__(240);
+	var MyStampListItem = __webpack_require__(241);
+	var MyStampStore = __webpack_require__(242);
 	var History = __webpack_require__(159).History;
 
 	var MyStampIndex = React.createClass({
@@ -34187,7 +34284,7 @@
 	module.exports = MyStampIndex;
 
 /***/ },
-/* 239 */
+/* 241 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -34256,7 +34353,7 @@
 	module.exports = MyStampListItem;
 
 /***/ },
-/* 240 */
+/* 242 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Store = __webpack_require__(218).Store;
@@ -34314,7 +34411,7 @@
 	module.exports = MyStampStore;
 
 /***/ },
-/* 241 */
+/* 243 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Shepherd = __webpack_require__(236);
@@ -34434,17 +34531,17 @@
 	module.exports = makeStampTour;
 
 /***/ },
-/* 242 */
+/* 244 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var DrawingStore = __webpack_require__(243);
-	var DrawingComparatorStore = __webpack_require__(244);
+	var DrawingStore = __webpack_require__(245);
+	var DrawingComparatorStore = __webpack_require__(239);
 	var ApiUtil = __webpack_require__(210);
-	var DrawingListItem = __webpack_require__(245);
-	var drawingIndexTour = __webpack_require__(247);
+	var DrawingListItem = __webpack_require__(246);
+	var drawingIndexTour = __webpack_require__(248);
 	var ApiActions = __webpack_require__(211);
-	var DrawingComparatorActions = __webpack_require__(248);
+	var DrawingComparatorActions = __webpack_require__(238);
 
 	var DrawingIndex = React.createClass({
 	  displayName: 'DrawingIndex',
@@ -34479,14 +34576,6 @@
 	  componentWillUnmount: function () {
 	    this.drawingStoreListener.remove();
 	  },
-	  // _onDrawingStoreChange: function() {
-	  //   this.setState({drawings: DrawingStore.all().reverse()});
-	  //   this.setDrawingsList();
-	  // },
-	  // _onComparatorStoreChange: function() {
-	  //   this.setState({comparator: DrawingComparatorStore.comparator()})
-	  //   this.setDrawingsList();
-	  // },
 	  _onChange: function () {
 	    this.setState({
 	      drawings: DrawingStore.all().reverse(),
@@ -34499,7 +34588,6 @@
 	    DrawingComparatorActions.receiveDrawingComparator(this.newnessComparator);
 	    ApiUtil.fetchAllDrawings();
 	    this.setState({
-	      // comparator: this.popularityComparator,
 	      selectedTab: "newness"
 	    });
 	  },
@@ -34508,10 +34596,8 @@
 	    DrawingComparatorActions.receiveDrawingComparator(this.popularityComparator);
 	    ApiUtil.fetchAllDrawings();
 	    this.setState({
-	      //   comparator: this.popularityComparator,
 	      selectedTab: "popularity"
 	    });
-	    // this.setDrawingsList();
 	  },
 
 	  setDrawingsList: function () {
@@ -34556,20 +34642,6 @@
 	  render: function () {
 	    var popularitySelected = this.state.selectedTab === "popularity" ? "selected-tab" : "";
 	    var newnessSelected = this.state.selectedTab === "newness" ? "selected-tab" : "";
-	    console.log(this.state.drawingsList);
-
-	    // if (this.state.drawingsList == null && this.state.drawings) {
-	    //   var sortedDrawings = this.state.drawings.sort(this.state.comparator);
-	    //   drawingsList = sortedDrawings.map(function(drawing, idx){
-	    //     return (
-	    //       <DrawingListItem
-	    //         key={idx}
-	    //         drawing={drawing}/>
-	    //     );
-	    //   });
-	    // } else {
-	    //   drawingsList = this.state.drawingsList
-	    // }
 
 	    return React.createElement(
 	      'div',
@@ -34615,7 +34687,7 @@
 	module.exports = DrawingIndex;
 
 /***/ },
-/* 243 */
+/* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Store = __webpack_require__(218).Store;
@@ -34679,42 +34751,13 @@
 	module.exports = DrawingStore;
 
 /***/ },
-/* 244 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(218).Store;
-	var AppDispatcher = __webpack_require__(212);
-
-	var DrawingComparatorStore = new Store(AppDispatcher);
-	var _drawingComparator;
-
-	var receiveDrawingComparator = function (drawingComparator) {
-	  _drawingComparator = drawingComparator;
-	};
-
-	DrawingComparatorStore.comparator = function () {
-	  return _drawingComparator;
-	};
-
-	DrawingComparatorStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case "DRAWING_COMPARATOR_RECEIVED":
-	      receiveDrawingComparator(payload.drawingComparator);
-	      DrawingComparatorStore.__emitChange();
-	      break;
-	  }
-	};
-
-	module.exports = DrawingComparatorStore;
-
-/***/ },
-/* 245 */
+/* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var History = __webpack_require__(159).History;
 	var ApiUtil = __webpack_require__(210);
-	var ChangedDrawingStore = __webpack_require__(246);
+	var ChangedDrawingStore = __webpack_require__(247);
 
 	var DrawingListItem = React.createClass({
 	  displayName: 'DrawingListItem',
@@ -34864,7 +34907,7 @@
 	module.exports = DrawingListItem;
 
 /***/ },
-/* 246 */
+/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Store = __webpack_require__(218).Store;
@@ -34893,7 +34936,7 @@
 	module.exports = ChangedDrawingStore;
 
 /***/ },
-/* 247 */
+/* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Shepherd = __webpack_require__(236);
@@ -34918,23 +34961,6 @@
 	module.exports = drawingIndexTour;
 
 /***/ },
-/* 248 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Dispatcher = __webpack_require__(212);
-
-	var DrawingComparatorActions = {
-	  receiveDrawingComparator: function (drawingComparator) {
-	    Dispatcher.dispatch({
-	      actionType: "DRAWING_COMPARATOR_RECEIVED",
-	      drawingComparator: drawingComparator
-	    });
-	  }
-	};
-
-	module.exports = DrawingComparatorActions;
-
-/***/ },
 /* 249 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -34950,7 +34976,7 @@
 	var StampStore = __webpack_require__(217);
 	var History = __webpack_require__(159).History;
 	var makeDrawingTour = __webpack_require__(259);
-	var MyStampStore = __webpack_require__(240);
+	var MyStampStore = __webpack_require__(242);
 
 	var CanvasTest = React.createClass({
 	  displayName: 'CanvasTest',
@@ -36034,7 +36060,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var DrawingStore = __webpack_require__(243);
+	var DrawingStore = __webpack_require__(245);
 	var ApiUtil = __webpack_require__(210);
 	var History = __webpack_require__(159).History;
 
@@ -36112,9 +36138,9 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var DrawingStore = __webpack_require__(243);
+	var DrawingStore = __webpack_require__(245);
 	var ApiUtil = __webpack_require__(210);
-	var DrawingListItem = __webpack_require__(245);
+	var DrawingListItem = __webpack_require__(246);
 	var StampStore = __webpack_require__(217);
 	var StampListItem = __webpack_require__(216);
 
@@ -36854,6 +36880,7 @@
 
 	var Home = React.createClass({
 	  displayName: 'Home',
+
 
 	  render: function () {
 	    return React.createElement('div', null);
