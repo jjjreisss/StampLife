@@ -17,6 +17,7 @@ var MyStampIndex = React.createClass({
   componentDidMount: function() {
     this.listener = MyStampStore.addListener(this._onChange);
     // ApiUtil.fetchMyStamp();
+    ApiUtil.addInitialStamps();
   },
   componentWillUnmount: function() {
     this.listener.remove();
