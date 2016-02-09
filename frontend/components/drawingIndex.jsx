@@ -3,7 +3,6 @@ var DrawingStore = require('../stores/drawingStore');
 var DrawingComparatorStore = require('../stores/drawingComparatorStore');
 var ApiUtil = require('../util/apiUtil');
 var DrawingListItem = require('./drawingListItem');
-var drawingIndexTour = require('../util/drawingIndexTour');
 var ApiActions = require('../actions/apiActions');
 var DrawingComparatorActions = require('../actions/drawingComparatorActions');
 

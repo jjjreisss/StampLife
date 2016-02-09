@@ -9,8 +9,8 @@ var LinkedStateMixin = require('react-addons-linked-state-mixin');
 var StampIndex = require('./stampIndex');
 var StampStore = require('../stores/stampStore');
 var History = require('react-router').History;
-var makeDrawingTour = require('../util/makeDrawingTour');
 var MyStampStore = require('../stores/myStampStore');
+window.wholeDamnTour = require('../util/wholeDamnTour');
 
 
 var CanvasTest = React.createClass({
@@ -59,11 +59,25 @@ var CanvasTest = React.createClass({
     this.token = StampStore.addListener(this.selectStamp);
     this.myStampStoreListener = MyStampStore.addListener(this.turnStampingOn);
 
-    if (window.wholeDamnTour.currentStep && window.wholeDamnTour.currentStep.id === "done_choosing_stamps"){
-      window.setTimeout(function() {
-        window.wholeDamnTour.next();
-      }, 200);
-    }
+    // if (window.wholeDamnTour.currentStep && window.wholeDamnTour.currentStep.id === "done_choosing_stamps"){
+    //   window.setTimeout(function() {
+    //     window.wholeDamnTour.next();
+    //   }, 200);
+    // }
+
+    $.ajax({
+      url: 'users/1',
+      method: 'GET',
+      success: function(user) {
+        if (user.tour_one_completed === false) {
+          ApiUtil.addInitialStamps();
+          window.wholeDamnTour.start();
+          ApiUtil.completeTourOne();
+        }
+      }.bind(this),
+      error: function() {
+      }
+    });
   },
   componentWillUnmount: function() {
     this.token.remove();

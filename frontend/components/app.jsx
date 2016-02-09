@@ -2,8 +2,6 @@ var React = require('react');
 var StampIndex = require('./stampIndex');
 var MyStampIndex = require('./myStampIndex');
 var History = require('react-router').History;
-var makeStampTour = require('../util/makeStampTour');
-
 
 var App = React.createClass({
   mixins: [History],
@@ -44,16 +42,13 @@ var App = React.createClass({
       data: {
         user: {
           tour_one_completed: false,
-          tour_two_completed: false,
-          tour_three_completed: false,
-          tour_four_completed: false
         }
       },
       success: function() {
-        if (this.props.routes[1].path === 'stamp/new') {
-          makeStampTour.start();
+        if (this.props.routes[1].path === 'new') {
+          wholeDamnTour.start();
         } else {
-          this.history.push('stamp/new');
+          this.history.push('new');
         }
       }.bind(this)
     });

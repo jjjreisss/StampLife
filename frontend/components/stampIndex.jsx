@@ -2,7 +2,6 @@ var React = require('react');
 var ApiUtil = require('../util/apiUtil');
 var StampListItem = require('./stampListItem');
 var StampStore = require('../stores/stampStore');
-var getStampsTour = require('../util/getStampsTour');
 var DrawingComparatorActions = require('../actions/drawingComparatorActions');
 var DrawingComparatorStore = require('../stores/drawingComparatorStore');
 

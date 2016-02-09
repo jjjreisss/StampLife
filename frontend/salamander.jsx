@@ -17,7 +17,7 @@ var Shepherd = require('tether-shepherd');
 
 var routes = (
   <Route path="/" component={App}>
-    <IndexRoute component={NewStamp}/>
+    <IndexRoute component={CanvasTest}/>
     <Route path="/new" component={CanvasTest}/>
     <Route path="/stamps" component={StampIndex}/>
     <Route path="/drawings" component={DrawingIndex}/>

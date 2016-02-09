@@ -48,19 +48,19 @@ var CanvasTest = React.createClass({
     this.colorPicking = false;
     this.sizePicking = false;
 
-    $.ajax({
-      url: 'users/1',
-      method: 'GET',
-      success: function(user) {
-        if (user.tour_one_completed === false) {
-          ApiUtil.addInitialStamps();
-          window.wholeDamnTour.start();
-          ApiUtil.completeTourOne();
-        }
-      }.bind(this),
-      error: function() {
-      }
-    });
+    // $.ajax({
+    //   url: 'users/1',
+    //   method: 'GET',
+    //   success: function(user) {
+    //     if (user.tour_one_completed === false) {
+    //       ApiUtil.addInitialStamps();
+    //       window.wholeDamnTour.start();
+    //       ApiUtil.completeTourOne();
+    //     }
+    //   }.bind(this),
+    //   error: function() {
+    //   }
+    // });
 
   },
 

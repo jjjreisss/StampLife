@@ -101,29 +101,31 @@ makeStampTour.addStep('mousewheel', {
   attachTo: '#drawing-canvas'
 });
 
-makeStampTour.addStep('save', {
-  text: [
-    "Once you've drawn what you like, click here to save your",
-    "stamp so you can use it later."
-  ],
-  showCancelLink: true,
-  buttons: [
-    {
-      text: 'Back',
-      action: makeStampTour.back
-    },
-    {
-      text: 'Next',
-      action: makeStampTour.next
-    }
-  ],
-  classes: 'shepherd-theme-arrows',
-  attachTo: '.save-to-my-stamps bottom'
-});
+// makeStampTour.addStep('save', {
+//   text: [
+//     "Once you've drawn what you like, click here to save your",
+//     "stamp so you can use it later."
+//   ],
+//   showCancelLink: true,
+//   buttons: [
+//     {
+//       text: 'Back',
+//       action: makeStampTour.back
+//     },
+//     {
+//       text: 'Next',
+//       action: makeStampTour.next
+//     }
+//   ],
+//   classes: 'shepherd-theme-arrows',
+//   attachTo: '.save-to-my-stamps bottom'
+// });
 
 makeStampTour.addStep('my-stamps', {
   text: [
     "Your active stamps live in this toolbar.",
+    "Click one to use it in your drawing.",
+    "Use the mousewheel to make it bigger and smaller."
   ],
   showCancelLink: true,
   buttons: [
@@ -140,119 +142,117 @@ makeStampTour.addStep('my-stamps', {
   attachTo: '.stamp-sidebar'
 });
 
-makeStampTour.addStep('get-stamps', {
-  text: [
-    "But one stamp is not enough... Let's get more!",
-    "Click the 'Menu' button, then 'Get Stamps'"
-  ],
-  showCancelLink: true,
-  buttons: [
-    {
-      text: 'Back',
-      action: makeStampTour.back
-    }
-  ],
-  advanceOn: '.get-stamps click',
-  classes: 'shepherd-theme-arrows',
-  attachTo: '.dropdown-toggle bottom'
-});
+// makeStampTour.addStep('get-stamps', {
+//   text: [
+//     "But one stamp is not enough... Let's get more!",
+//     "Click the 'Menu' button, then 'Get Stamps'"
+//   ],
+//   showCancelLink: true,
+//   buttons: [
+//     {
+//       text: 'Back',
+//       action: makeStampTour.back
+//     }
+//   ],
+//   advanceOn: '.get-stamps click',
+//   classes: 'shepherd-theme-arrows',
+//   attachTo: '.dropdown-toggle bottom'
+// });
 
 
-makeStampTour.addStep('sort-stamps', {
-  text: [
-    "This page contains all the stamps from all the site's users.",
-    "Sort stamps by popularity or by when they were made.",
-    "Click on a stamp to add it to your stamp toolbar.",
-    "Your toolbar can hold up to five stamps."
-  ],
-  showCancelLink: true,
-  buttons: [
-    {
-      text: 'Back',
-      action: makeStampTour.back
-    },
-    {
-      text: 'Next',
-      action: makeStampTour.next
-    }
-  ],
-  classes: 'shepherd-theme-arrows',
-  attachTo: '.dropdown-toggle bottom'
-});
+// makeStampTour.addStep('sort-stamps', {
+//   text: [
+//     "This page contains all the stamps from all the site's users.",
+//     "Sort stamps by popularity or by when they were made.",
+//     "Click on a stamp to add it to your stamp toolbar.",
+//     "Your toolbar can hold up to five stamps."
+//   ],
+//   showCancelLink: true,
+//   buttons: [
+//     {
+//       text: 'Back',
+//       action: makeStampTour.back
+//     },
+//     {
+//       text: 'Next',
+//       action: makeStampTour.next
+//     }
+//   ],
+//   classes: 'shepherd-theme-arrows',
+//   attachTo: '.dropdown-toggle bottom'
+// });
 
-makeStampTour.addStep('stamp-detail', {
-  text: [
-    "Click the field in the upper left to see who has used a certain stamp.",
-  ],
-  showCancelLink: true,
-  buttons: [
-    {
-      text: 'Back',
-      action: makeStampTour.back
-    },
-    {
-      text: 'Next',
-      action: makeStampTour.next
-    }
-  ],
-  classes: 'shepherd-theme-arrows',
-  attachTo: '.index-element'
-});
+// makeStampTour.addStep('stamp-detail', {
+//   text: [
+//     "Click the field in the upper left to see who has used a certain stamp.",
+//   ],
+//   showCancelLink: true,
+//   buttons: [
+//     {
+//       text: 'Back',
+//       action: makeStampTour.back
+//     },
+//     {
+//       text: 'Next',
+//       action: makeStampTour.next
+//     }
+//   ],
+//   classes: 'shepherd-theme-arrows',
+//   attachTo: '.index-element'
+// });
 
-makeStampTour.addStep('done-choosing-stamps', {
-  text: [
-    "Once you have all the stamps you want to use in your drawing,",
-    "click 'Menu', then 'New Drawing'."
-  ],
-  showCancelLink: true,
-  buttons: [
-    {
-      text: 'Back',
-      action: makeStampTour.back
-    }
-  ],
-  advanceOn: '.new-drawing click',
-  classes: 'shepherd-theme-arrows',
-  attachTo: '.dropdown-toggle bottom'
-});
+// makeStampTour.addStep('done-choosing-stamps', {
+//   text: [
+//     "Once you have all the stamps you want to use in your drawing,",
+//     "click 'Menu', then 'New Drawing'."
+//   ],
+//   showCancelLink: true,
+//   buttons: [
+//     {
+//       text: 'Back',
+//       action: makeStampTour.back
+//     }
+//   ],
+//   advanceOn: '.new-drawing click',
+//   classes: 'shepherd-theme-arrows',
+//   attachTo: '.dropdown-toggle bottom'
+// });
 
-makeStampTour.addStep('select-stamp', {
-  text: [
-    "When making a drawing, you can do everything you could when",
-    "making a stamp.",
-    "You can also select a stamp to USE by clicking on it down here."
-  ],
-  showCancelLink: true,
-  buttons: [
-    {
-      text: 'Next',
-      action: makeStampTour.next
-    }
-  ],
-  classes: 'shepherd-theme-arrows',
-  attachTo: '.stamp-sidebar'
-});
+// makeStampTour.addStep('select-stamp', {
+//   text: [
+//     "When making a drawing, you can do everything you could when",
+//   ],
+//   showCancelLink: true,
+//   buttons: [
+//     {
+//       text: 'Next',
+//       action: makeStampTour.next
+//     }
+//   ],
+//   classes: 'shepherd-theme-arrows',
+//   attachTo: '.stamp-sidebar'
+// });
 
-makeStampTour.addStep('turn-stamping-on', {
-  text: [
-    "After selecting a stamp, click here to turn stamping on, then go",
-    "over to the canvas and use your stamp!",
-    "Just like before, use the mousewheel to make it bigger and smaller."
-  ],
-  buttons: [
-    {
-      text: 'Back',
-      action: makeStampTour.back
-    },
-    {
-      text: 'Next',
-      action: makeStampTour.next
-    }
-  ],
-  showCancelLink: true,
-  classes: 'shepherd-theme-arrows',
-  attachTo: '#toggle-stamping bottom'
-});
+// makeStampTour.addStep('turn-stamping-on', {
+//   text: [
+//     "After selecting a stamp, click here to turn stamping on, then go",
+//     "over to the canvas and use your stamp!",
+//     "Just like before, use the mousewheel to make it bigger and smaller."
+//   ],
+//   buttons: [
+//     {
+//       text: 'Back',
+//       action: makeStampTour.back
+//     },
+//     {
+//       text: 'Next',
+//       action: makeStampTour.next
+//     }
+//   ],
+//   showCancelLink: true,
+//   classes: 'shepherd-theme-arrows',
+//   attachTo: '#toggle-stamping bottom'
+// });
 
 makeStampTour.addStep('save-drawing', {
   text: [
