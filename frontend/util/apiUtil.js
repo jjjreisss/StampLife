@@ -148,13 +148,12 @@ var ApiUtil = {
   },
 
   addInitialStamps: function() {
-    debugger
     this.addToMyStamp(111);
     this.addToMyStamp(112);
     this.addToMyStamp(113);
     this.addToMyStamp(114);
     this.addToMyStamp(115);
-  }
+  },
 
   useStamps: function(stampsUsed) {
     $.ajax({
