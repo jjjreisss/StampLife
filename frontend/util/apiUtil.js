@@ -148,6 +148,7 @@ var ApiUtil = {
   },
 
   addInitialStamps: function() {
+    debugger
     this.addToMyStamp(111);
     this.addToMyStamp(112);
     this.addToMyStamp(113);
