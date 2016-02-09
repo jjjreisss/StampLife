@@ -87,8 +87,7 @@ var CanvasTest = React.createClass({
     if(this.state.stamp) {
       this.stampCanvas.clear();
       var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_500,h_500/" + this.state.stamp.image_url + ".png";
-      this.stampCanvas.loadImage(url);
-      window.setTimeout(this.setStamp, 500);
+      this.stampCanvas.loadImage(url, this.setStamp);
     }
   },
   colorBar: function() {

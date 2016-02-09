@@ -35053,8 +35053,7 @@
 	    if (this.state.stamp) {
 	      this.stampCanvas.clear();
 	      var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_500,h_500/" + this.state.stamp.image_url + ".png";
-	      this.stampCanvas.loadImage(url);
-	      window.setTimeout(this.setStamp, 500);
+	      this.stampCanvas.loadImage(url, this.setStamp);
 	    }
 	  },
 	  colorBar: function () {
@@ -35605,12 +35604,13 @@
 	  return this.canvas.height;
 	};
 
-	StampCanvas.prototype.loadImage = function (url) {
+	StampCanvas.prototype.loadImage = function (url, setStampCallback) {
 	  this.img = new Image();
 	  this.img.crossOrigin = "anonymous";
 	  this.img.src = url;
 	  this.img.onload = function () {
 	    this.ctx.drawImage(this.img, 0, 0, 500, 500, 0, 0, this.width(), this.height());
+	    setStampCallback();
 	  }.bind(this);
 	};
 
