@@ -25,22 +25,13 @@ var StampIndex = React.createClass({
     this.listener = StampStore.addListener(this._onChange);
     ApiUtil.fetchAllStamps();
 
-    // $.ajax({
-    //   url: 'users/1',
-    //   method: 'GET',
-    //   success: function(user) {
-    //     if (user.tour_two_completed === false) {
-    //       getStampsTour.start();
-    //       ApiUtil.completeTourTwo();
-    //     }
-    //   }.bind(this),
-    // });
-
     if (window.wholeDamnTour.currentStep && window.wholeDamnTour.currentStep.id === 'get-stamps') {
       window.setTimeout(function() {
         window.wholeDamnTour.next();
       }, 200);
     }
+
+    this.setState({drawingsList: this.loader()})
   },
   componentWillUnmount: function() {
     this.listener.remove();
@@ -50,6 +41,7 @@ var StampIndex = React.createClass({
     this.setState({stamps: allStamps});
   },
   sortByNewest: function() {
+    this.setState({drawingsList: this.loader()})
     var comparator =
       function(a, b) {
         if (a.created_at < b.created_at) {
@@ -66,6 +58,7 @@ var StampIndex = React.createClass({
     });
   },
   sortByPopularity: function(e) {
+    this.setState({drawingsList: this.loader()})
     var comparator =
       function(a, b) {
         if (a.stamp_uses.length < b.stamp_uses.length) {

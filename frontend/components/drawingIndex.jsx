@@ -39,14 +39,6 @@ var DrawingIndex = React.createClass({
   componentWillUnmount: function() {
     this.drawingStoreListener.remove();
   },
-  // _onDrawingStoreChange: function() {
-  //   this.setState({drawings: DrawingStore.all().reverse()});
-  //   this.setDrawingsList();
-  // },
-  // _onComparatorStoreChange: function() {
-  //   this.setState({comparator: DrawingComparatorStore.comparator()})
-  //   this.setDrawingsList();
-  // },
   _onChange: function() {
     this.setState({
       drawings: DrawingStore.all().reverse(),
@@ -59,7 +51,6 @@ var DrawingIndex = React.createClass({
     DrawingComparatorActions.receiveDrawingComparator(this.newnessComparator);
     ApiUtil.fetchAllDrawings();
     this.setState({
-      // comparator: this.popularityComparator,
       selectedTab: "newness"
     });
   },
@@ -68,10 +59,8 @@ var DrawingIndex = React.createClass({
     DrawingComparatorActions.receiveDrawingComparator(this.popularityComparator);
     ApiUtil.fetchAllDrawings()
     this.setState({
-    //   comparator: this.popularityComparator,
       selectedTab: "popularity"
     });
-    // this.setDrawingsList();
   },
 
   setDrawingsList: function() {
@@ -120,20 +109,6 @@ var DrawingIndex = React.createClass({
       this.state.selectedTab === "popularity" ? "selected-tab" : "";
     var newnessSelected =
       this.state.selectedTab === "newness" ? "selected-tab" : "";
-      console.log(this.state.drawingsList);
-
-    // if (this.state.drawingsList == null && this.state.drawings) {
-    //   var sortedDrawings = this.state.drawings.sort(this.state.comparator);
-    //   drawingsList = sortedDrawings.map(function(drawing, idx){
-    //     return (
-    //       <DrawingListItem
-    //         key={idx}
-    //         drawing={drawing}/>
-    //     );
-    //   });
-    // } else {
-    //   drawingsList = this.state.drawingsList
-    // }
 
     return(
       <div className="index">
