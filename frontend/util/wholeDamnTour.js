@@ -293,7 +293,8 @@ makeStampTour.addStep('save-drawing', {
 makeStampTour.addStep('drawing-index', {
   text: [
     "Feel free to check out other users' drawings, see who has been liking",
-    "what, and visit other users' profile pages."
+    "what, and visit other users' profile pages.",
+    "You can also make your own stamps, and browse other users' stamps."
   ],
   showCancelLink: true,
   buttons: [
