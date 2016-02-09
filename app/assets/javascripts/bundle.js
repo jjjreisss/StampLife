@@ -24613,11 +24613,6 @@
 	  },
 
 	  addInitialStamps: function () {
-	    // this.addToMyStamp(111);
-	    // this.addToMyStamp(112);
-	    // this.addToMyStamp(114);
-	    // this.addToMyStamp(113);
-	    // this.addToMyStamp(115);
 	    $.ajax({
 	      url: "api/stamps/" + 111,
 	      method: "GET",
@@ -25244,7 +25239,15 @@
 	};
 
 	StampStore.all = function () {
-	  return _stamps.slice();
+	  var filterSampleStamps = function (stamp) {
+	    if ([111, 112, 113, 114, 115].indexOf(stamp.id) === -1) {
+	      return true;
+	    } else {
+	      return false;
+	    }
+	  };
+	  var availableStamps = _stamps.filter(filterSampleStamps);
+	  return availableStamps;
 	};
 
 	StampStore.__onDispatch = function (payload) {
@@ -34260,8 +34263,6 @@
 	  },
 	  componentDidMount: function () {
 	    this.listener = MyStampStore.addListener(this._onChange);
-	    // ApiUtil.fetchMyStamp();
-	    ApiUtil.addInitialStamps();
 	  },
 	  componentWillUnmount: function () {
 	    this.listener.remove();
@@ -35068,17 +35069,6 @@
 
 	    this.token = StampStore.addListener(this.selectStamp);
 	    this.myStampStoreListener = MyStampStore.addListener(this.turnStampingOn);
-
-	    // $.ajax({
-	    //   url: 'users/1',
-	    //   method: 'GET',
-	    //   success: function(user) {
-	    //     if (user.tour_three_completed === false) {
-	    //       makeDrawingTour.start();
-	    //       ApiUtil.completeTourThree();
-	    //     }
-	    //   }.bind(this),
-	    // });
 
 	    if (window.wholeDamnTour.currentStep && window.wholeDamnTour.currentStep.id === "done_choosing_stamps") {
 	      window.setTimeout(function () {
@@ -36409,6 +36399,7 @@
 	      method: 'GET',
 	      success: function (user) {
 	        if (user.tour_one_completed === false) {
+	          ApiUtil.addInitialStamps();
 	          window.wholeDamnTour.start();
 	          ApiUtil.completeTourOne();
 	        }

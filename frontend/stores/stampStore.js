@@ -22,7 +22,15 @@ StampStore.single = function() {
 };
 
 StampStore.all = function() {
-  return _stamps.slice();
+  var filterSampleStamps = function(stamp) {
+    if ([111, 112, 113, 114, 115].indexOf(stamp.id) === -1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  var availableStamps = _stamps.filter(filterSampleStamps);
+  return availableStamps;
 };
 
 StampStore.__onDispatch = function(payload) {

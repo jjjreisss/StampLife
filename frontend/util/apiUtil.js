@@ -148,11 +148,6 @@ var ApiUtil = {
   },
 
   addInitialStamps: function() {
-    // this.addToMyStamp(111);
-    // this.addToMyStamp(112);
-    // this.addToMyStamp(114);
-    // this.addToMyStamp(113);
-    // this.addToMyStamp(115);
     $.ajax({
       url: "api/stamps/" + 111,
       method: "GET",

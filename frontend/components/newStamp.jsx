@@ -53,6 +53,7 @@ var CanvasTest = React.createClass({
       method: 'GET',
       success: function(user) {
         if (user.tour_one_completed === false) {
+          ApiUtil.addInitialStamps();
           window.wholeDamnTour.start();
           ApiUtil.completeTourOne();
         }
