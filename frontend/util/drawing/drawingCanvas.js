@@ -1,5 +1,5 @@
-var ApiUtil = require('./apiUtil');
-var StampStore = require('../stores/stampStore');
+var ApiUtil = require('../apiUtil');
+var StampStore = require('../../stores/stampStore');
 
 var DrawingCanvas = function(id, width, height) {
   this.width = width;

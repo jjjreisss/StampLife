@@ -31648,385 +31648,11 @@
 
 /***/ },
 /* 244 */,
-/* 245 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var ApiUtil = __webpack_require__(210);
-	var StampStore = __webpack_require__(217);
-
-	var DrawingCanvas = function (id, width, height) {
-	  this.width = width;
-	  this.height = height;
-	  this.canvas = document.getElementById(id);
-	  this.canvas.width = width;
-	  this.canvas.height = height;
-	  this.ctx = this.canvas.getContext('2d');
-	  this.prevX = 0;
-	  this.prevY = 0;
-	  this.currX = 0;
-	  this.currY = 0;
-	  this.rgbString = "black";
-	  this.ctx.lineJoin = this.ctx.lineCap = 'round';
-	  this.blankImageData = this.getImageData();
-	  this.history = [this.blankImageData, this.blankImageData, this.blankImageData, this.blankImageData, this.blankImageData, this.blankImageData];
-
-	  this.drawing = false;
-	  this.stamping = false;
-	};
-
-	DrawingCanvas.prototype.mouseDown = function (e, color, size) {
-	  this.drawInitialMark();
-	  this.drawing = true;
-	};
-
-	DrawingCanvas.prototype.mouseMove = function (e) {
-	  this.prevX = this.currX;
-	  this.prevY = this.currY;
-
-	  this.currX = e.pageX - this.canvas.getBoundingClientRect().left - window.scrollX;
-	  this.currY = e.pageY - this.canvas.getBoundingClientRect().top - window.scrollY;
-
-	  if (this.drawing) {
-	    this.draw();
-	  } else {
-	    this.preview();
-	  }
-	};
-
-	DrawingCanvas.prototype.mouseUp = function (e) {
-	  this.saveFrame();
-	  this.drawing = false;
-	};
-
-	DrawingCanvas.prototype.mouseOut = function (e) {
-	  if (this.drawing) {
-	    this.saveFrame();
-	  }
-	  this.setToLastFrame();
-
-	  this.drawing = false;
-	};
-
-	DrawingCanvas.prototype.setToLastFrame = function () {
-	  this.clear();
-	  this.putImageData(this.history[this.history.length - 1]);
-	};
-
-	DrawingCanvas.prototype.saveFrame = function () {
-	  this.history.shift();
-	  this.history.push(this.getImageData());
-	};
-
-	DrawingCanvas.prototype.setColor = function (color) {
-	  this.color = color;
-	};
-
-	DrawingCanvas.prototype.setSize = function (size) {
-	  this.size = size;
-	};
-
-	DrawingCanvas.prototype.undo = function () {
-	  this.history.unshift(this.history.pop());
-	  this.setToLastFrame();
-	};
-
-	DrawingCanvas.prototype.preview = function () {
-	  if (this.stamping) {
-	    this.setToLastFrame();
-	    this.previewStamp();
-	  } else {
-	    this.setToLastFrame();
-	    this.previewStroke();
-	  }
-	};
-
-	DrawingCanvas.prototype.draw = function () {
-	  if (this.stamping) {
-	    this.drawStamp();
-	  } else {
-	    this.drawStroke();
-	  }
-	};
-
-	DrawingCanvas.prototype.previewStamp = function () {
-	  this.ctx.globalAlpha = 0.4;
-	  this.drawStamp();
-	  this.ctx.globalAlpha = 1.0;
-	};
-
-	DrawingCanvas.prototype.drawStamp = function () {
-	  var img = new Image();
-	  img.src = this.stampImg;
-	  this.ctx.drawImage(img, this.currX - this.stampSize / 2, this.currY - this.stampSize / 2);
-	};
-
-	DrawingCanvas.prototype.previewStroke = function () {
-	  this.ctx.globalAlpha = 0.4;
-	  this.ctx.beginPath();
-	  this.ctx.moveTo(this.currX + 1, this.currY + 1);
-	  this.ctx.lineTo(this.currX, this.currY);
-	  this.ctx.strokeStyle = this.color;
-	  this.ctx.lineWidth = this.size;
-	  this.ctx.stroke();
-	  this.ctx.closePath();
-	  this.ctx.globalAlpha = 1.0;
-	};
-
-	DrawingCanvas.prototype.drawStroke = function () {
-	  this.ctx.beginPath();
-	  this.ctx.moveTo(this.prevX, this.prevY);
-	  this.ctx.lineTo(this.currX, this.currY);
-	  this.ctx.strokeStyle = this.color;
-	  this.ctx.lineWidth = this.size;
-	  this.ctx.stroke();
-	  this.ctx.closePath();
-	};
-
-	DrawingCanvas.prototype.drawInitialMark = function () {
-	  if (this.stamping) {
-	    this.drawStamp();
-	  } else {
-	    this.drawInitialStroke();
-	  }
-	};
-
-	DrawingCanvas.prototype.drawInitialStroke = function () {
-	  this.ctx.beginPath();
-	  this.ctx.moveTo(this.currX + 1, this.currY + 1);
-	  this.ctx.lineTo(this.currX, this.currY);
-	  this.ctx.strokeStyle = this.color;
-	  this.ctx.lineWidth = this.size;
-	  this.ctx.stroke();
-	  this.ctx.closePath();
-	};
-
-	DrawingCanvas.prototype.toggleStamping = function () {
-	  this.stamping = !this.stamping;
-	};
-
-	DrawingCanvas.prototype.turnStampingOn = function () {
-	  this.stamping = true;
-	};
-
-	DrawingCanvas.prototype.turnStampingOff = function () {
-	  this.stamping = false;
-	};
-
-	DrawingCanvas.prototype.toData = function () {
-	  return this.canvas.toDataURL("image/png");
-	};
-
-	DrawingCanvas.prototype.setStamp = function (stampImg, stampSize) {
-	  this.stampImg = stampImg;
-	  this.stampSize = stampSize;
-	};
-
-	DrawingCanvas.prototype.clear = function () {
-	  this.ctx.clearRect(0, 0, this.width, this.height);
-	};
-
-	DrawingCanvas.prototype.loadImage = function (url) {
-	  var img = new Image();
-	  img.crossOrigin = "anonymous";
-	  img.src = url;
-	  img.onload = function () {
-	    this.ctx.drawImage(img, 0, 0);
-	  }.bind(this);
-	};
-
-	DrawingCanvas.prototype.getImageData = function () {
-	  return this.ctx.getImageData(0, 0, this.width, this.height);
-	};
-
-	DrawingCanvas.prototype.putImageData = function (imageData) {
-	  this.clear();
-	  this.ctx.putImageData(imageData, 0, 0);
-	};
-
-	DrawingCanvas.prototype.hardReset = function () {
-	  this.clear();
-	  this.history = [this.getImageData(), this.getImageData(), this.getImageData(), this.getImageData(), this.getImageData()];
-	};
-
-	module.exports = DrawingCanvas;
-
-/***/ },
-/* 246 */
-/***/ function(module, exports) {
-
-	var StampCanvas = function (id, width, height) {
-	  this.canvas = document.getElementById(id);
-	  this.ctx = this.canvas.getContext('2d');
-	  this.canvas.width = width;
-	  this.canvas.height = height;
-	  this.img = new Image();
-	  this.scale = 1;
-	};
-
-	StampCanvas.prototype.width = function () {
-	  return this.canvas.width;
-	};
-
-	StampCanvas.prototype.height = function () {
-	  return this.canvas.height;
-	};
-
-	StampCanvas.prototype.loadImage = function (url, setStampCallback) {
-	  this.img = new Image();
-	  this.img.crossOrigin = "anonymous";
-	  this.img.src = url;
-	  this.img.onload = function () {
-	    this.ctx.drawImage(this.img, 0, 0, 500, 500, 0, 0, this.width(), this.height());
-	    setStampCallback();
-	  }.bind(this);
-	};
-
-	StampCanvas.prototype.getImageData = function () {
-	  return this.ctx.getImageData(0, 0, this.width(), this.height());
-	};
-
-	StampCanvas.prototype.putImageData = function (imageData) {
-	  this.clear();
-	  this.ctx.putImageData(imageData, 0, 0);
-	};
-
-	StampCanvas.prototype.toData = function () {
-	  return this.canvas.toDataURL("image/png");
-	};
-
-	StampCanvas.prototype.clear = function () {
-	  this.ctx.clearRect(0, 0, this.width(), this.height());
-	};
-
-	StampCanvas.prototype.scaleUp = function () {
-	  this.scale = this.scale * 1.2;
-	  var newWidth = 150 * this.scale;
-	  var newHeight = 150 * this.scale;
-	  this.canvas.width = newWidth;
-	  this.canvas.height = newHeight;
-
-	  this.ctx.drawImage(this.img, 0, 0, 500, 500, 0, 0, newWidth, newHeight);
-	};
-
-	StampCanvas.prototype.scaleDown = function () {
-	  this.scale = this.scale / 1.2;
-	  var newWidth = 150 * this.scale;
-	  var newHeight = 150 * this.scale;
-	  this.canvas.width = newWidth;
-	  this.canvas.height = newHeight;
-
-	  this.ctx.drawImage(this.img, 0, 0, 500, 500, 0, 0, newWidth, newHeight);
-	};
-
-	module.exports = StampCanvas;
-
-/***/ },
-/* 247 */
-/***/ function(module, exports) {
-
-	var ColorPicker = function (id, width, height) {
-	  this.colorPickerCanvas = document.getElementById(id);
-	  this.colorPickerContext = this.colorPickerCanvas.getContext('2d');
-
-	  this.colorPickerCanvas.width = width;
-	  this.colorPickerCanvas.height = height;
-
-	  var pickerImg = new Image();
-	  if (this.colorPickerCanvas.width === 80) {
-	    pickerImg.src = './color-picker-80-500.png';
-	  } else {
-	    pickerImg.src = './color-picker-64-400.png';
-	  }
-	  pickerImg.onload = function () {
-	    this.colorPickerContext.drawImage(pickerImg, 0, 0);
-	  }.bind(this);
-	};
-
-	ColorPicker.prototype.pickColor = function (e) {
-	  var x = e.clientX - this.colorPickerCanvas.getBoundingClientRect().left;
-	  var y = e.clientY - this.colorPickerCanvas.getBoundingClientRect().top;
-	  var imgData = this.colorPickerContext.getImageData(x, y, 1, 1).data;
-	  var rgbArray = imgData.slice(0, 3);
-	  this.rgbString = "rgb(" + rgbArray.join(",") + ")";
-	  return this.rgbString;
-	};
-
-	ColorPicker.prototype.color = function () {
-	  return this.rgbString;
-	};
-
-	module.exports = ColorPicker;
-
-/***/ },
-/* 248 */
-/***/ function(module, exports) {
-
-	var SizePicker = function (id, width, height) {
-	  this.sizePickerCanvas = document.getElementById(id);
-	  this.sizePickerContext = this.sizePickerCanvas.getContext('2d');
-
-	  this.sizePickerCanvas.width = width;
-	  this.sizePickerCanvas.height = height;
-
-	  var pickerImg = new Image();
-	  if (this.sizePickerCanvas.width === 80) {
-	    pickerImg.src = './triangle-v2.png';
-	  } else {
-	    pickerImg.src = './triangle-v2-small.png';
-	  }
-
-	  pickerImg.onload = function () {
-	    this.sizePickerContext.drawImage(pickerImg, 0, 0);
-	  }.bind(this);
-	};
-
-	SizePicker.prototype.pickSize = function (e) {
-	  var y = e.clientY - this.sizePickerCanvas.getBoundingClientRect().top;
-
-	  if (this.sizePickerCanvas.width === 80) {
-	    var size = (390 - y) * 52 / 355;
-	  } else {
-	    var size = (312 - y) * 52 / 355;
-	  }
-
-	  return Math.max(0.1, size);
-	};
-
-	module.exports = SizePicker;
-
-/***/ },
-/* 249 */
-/***/ function(module, exports) {
-
-	var StrokeSample = function (id, width, height) {
-	  this.strokeSampleCanvas = document.getElementById(id);
-	  this.strokeSampleContext = this.strokeSampleCanvas.getContext('2d');
-	  this.strokeSampleCanvas.width = width;
-	  this.strokeSampleCanvas.height = height;
-	  this.size = width;
-	};
-
-	StrokeSample.prototype.pickSample = function (color, size) {
-	  this.strokeSampleContext.clearRect(0, 0, this.size, this.size);
-	  var centerX = this.size / 2;
-	  var centerY = this.size / 2;
-	  var left = centerX - size / 2;
-	  var top = centerY - size / 2;
-	  this.strokeSampleContext.lineJoin = this.strokeSampleContext.lineCap = 'round';
-	  this.strokeSampleContext.beginPath();
-	  this.strokeSampleContext.moveTo(centerX, centerY);
-	  this.strokeSampleContext.lineTo(centerX + 1, centerY + 1);
-	  this.strokeSampleContext.strokeStyle = color;
-	  this.strokeSampleContext.lineWidth = size;
-	  this.strokeSampleContext.stroke();
-	  this.strokeSampleContext.closePath();
-
-	  // this.strokeSampleContext.fillRect(top, left, size, size);
-	};
-
-	module.exports = StrokeSample;
-
-/***/ },
+/* 245 */,
+/* 246 */,
+/* 247 */,
+/* 248 */,
+/* 249 */,
 /* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -35002,11 +34628,11 @@
 
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(210);
-	var DrawingCanvas = __webpack_require__(245);
-	var StampCanvas = __webpack_require__(246);
-	var ColorPicker = __webpack_require__(247);
-	var SizePicker = __webpack_require__(248);
-	var StrokeSample = __webpack_require__(249);
+	var DrawingCanvas = __webpack_require__(275);
+	var StampCanvas = __webpack_require__(277);
+	var ColorPicker = __webpack_require__(274);
+	var SizePicker = __webpack_require__(276);
+	var StrokeSample = __webpack_require__(278);
 	var LinkedStateMixin = __webpack_require__(250);
 	var StampIndex = __webpack_require__(269);
 	var StampStore = __webpack_require__(217);
@@ -35415,11 +35041,11 @@
 
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(210);
-	var DrawingCanvas = __webpack_require__(245);
-	var StampCanvas = __webpack_require__(246);
-	var ColorPicker = __webpack_require__(247);
-	var SizePicker = __webpack_require__(248);
-	var StrokeSample = __webpack_require__(249);
+	var DrawingCanvas = __webpack_require__(275);
+	var StampCanvas = __webpack_require__(277);
+	var ColorPicker = __webpack_require__(274);
+	var SizePicker = __webpack_require__(276);
+	var StrokeSample = __webpack_require__(278);
 	var LinkedStateMixin = __webpack_require__(250);
 	var StampIndex = __webpack_require__(269);
 	var StampStore = __webpack_require__(217);
@@ -36750,6 +36376,385 @@
 	});
 
 	module.exports = StampDetail;
+
+/***/ },
+/* 274 */
+/***/ function(module, exports) {
+
+	var ColorPicker = function (id, width, height) {
+	  this.colorPickerCanvas = document.getElementById(id);
+	  this.colorPickerContext = this.colorPickerCanvas.getContext('2d');
+
+	  this.colorPickerCanvas.width = width;
+	  this.colorPickerCanvas.height = height;
+
+	  var pickerImg = new Image();
+	  if (this.colorPickerCanvas.width === 80) {
+	    pickerImg.src = './color-picker-80-500.png';
+	  } else {
+	    pickerImg.src = './color-picker-64-400.png';
+	  }
+	  pickerImg.onload = function () {
+	    this.colorPickerContext.drawImage(pickerImg, 0, 0);
+	  }.bind(this);
+	};
+
+	ColorPicker.prototype.pickColor = function (e) {
+	  var x = e.clientX - this.colorPickerCanvas.getBoundingClientRect().left;
+	  var y = e.clientY - this.colorPickerCanvas.getBoundingClientRect().top;
+	  var imgData = this.colorPickerContext.getImageData(x, y, 1, 1).data;
+	  var rgbArray = imgData.slice(0, 3);
+	  this.rgbString = "rgb(" + rgbArray.join(",") + ")";
+	  return this.rgbString;
+	};
+
+	ColorPicker.prototype.color = function () {
+	  return this.rgbString;
+	};
+
+	module.exports = ColorPicker;
+
+/***/ },
+/* 275 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ApiUtil = __webpack_require__(210);
+	var StampStore = __webpack_require__(217);
+
+	var DrawingCanvas = function (id, width, height) {
+	  this.width = width;
+	  this.height = height;
+	  this.canvas = document.getElementById(id);
+	  this.canvas.width = width;
+	  this.canvas.height = height;
+	  this.ctx = this.canvas.getContext('2d');
+	  this.prevX = 0;
+	  this.prevY = 0;
+	  this.currX = 0;
+	  this.currY = 0;
+	  this.rgbString = "black";
+	  this.ctx.lineJoin = this.ctx.lineCap = 'round';
+	  this.blankImageData = this.getImageData();
+	  this.history = [this.blankImageData, this.blankImageData, this.blankImageData, this.blankImageData, this.blankImageData, this.blankImageData];
+
+	  this.drawing = false;
+	  this.stamping = false;
+	};
+
+	DrawingCanvas.prototype.mouseDown = function (e, color, size) {
+	  this.drawInitialMark();
+	  this.drawing = true;
+	};
+
+	DrawingCanvas.prototype.mouseMove = function (e) {
+	  this.prevX = this.currX;
+	  this.prevY = this.currY;
+
+	  this.currX = e.pageX - this.canvas.getBoundingClientRect().left - window.scrollX;
+	  this.currY = e.pageY - this.canvas.getBoundingClientRect().top - window.scrollY;
+
+	  if (this.drawing) {
+	    this.draw();
+	  } else {
+	    this.preview();
+	  }
+	};
+
+	DrawingCanvas.prototype.mouseUp = function (e) {
+	  this.saveFrame();
+	  this.drawing = false;
+	};
+
+	DrawingCanvas.prototype.mouseOut = function (e) {
+	  if (this.drawing) {
+	    this.saveFrame();
+	  }
+	  this.setToLastFrame();
+
+	  this.drawing = false;
+	};
+
+	DrawingCanvas.prototype.setToLastFrame = function () {
+	  this.clear();
+	  this.putImageData(this.history[this.history.length - 1]);
+	};
+
+	DrawingCanvas.prototype.saveFrame = function () {
+	  this.history.shift();
+	  this.history.push(this.getImageData());
+	};
+
+	DrawingCanvas.prototype.setColor = function (color) {
+	  this.color = color;
+	};
+
+	DrawingCanvas.prototype.setSize = function (size) {
+	  this.size = size;
+	};
+
+	DrawingCanvas.prototype.undo = function () {
+	  this.history.unshift(this.history.pop());
+	  this.setToLastFrame();
+	};
+
+	DrawingCanvas.prototype.preview = function () {
+	  if (this.stamping) {
+	    this.setToLastFrame();
+	    this.previewStamp();
+	  } else {
+	    this.setToLastFrame();
+	    this.previewStroke();
+	  }
+	};
+
+	DrawingCanvas.prototype.draw = function () {
+	  if (this.stamping) {
+	    this.drawStamp();
+	  } else {
+	    this.drawStroke();
+	  }
+	};
+
+	DrawingCanvas.prototype.previewStamp = function () {
+	  this.ctx.globalAlpha = 0.4;
+	  this.drawStamp();
+	  this.ctx.globalAlpha = 1.0;
+	};
+
+	DrawingCanvas.prototype.drawStamp = function () {
+	  var img = new Image();
+	  img.src = this.stampImg;
+	  this.ctx.drawImage(img, this.currX - this.stampSize / 2, this.currY - this.stampSize / 2);
+	};
+
+	DrawingCanvas.prototype.previewStroke = function () {
+	  this.ctx.globalAlpha = 0.4;
+	  this.ctx.beginPath();
+	  this.ctx.moveTo(this.currX + 1, this.currY + 1);
+	  this.ctx.lineTo(this.currX, this.currY);
+	  this.ctx.strokeStyle = this.color;
+	  this.ctx.lineWidth = this.size;
+	  this.ctx.stroke();
+	  this.ctx.closePath();
+	  this.ctx.globalAlpha = 1.0;
+	};
+
+	DrawingCanvas.prototype.drawStroke = function () {
+	  this.ctx.beginPath();
+	  this.ctx.moveTo(this.prevX, this.prevY);
+	  this.ctx.lineTo(this.currX, this.currY);
+	  this.ctx.strokeStyle = this.color;
+	  this.ctx.lineWidth = this.size;
+	  this.ctx.stroke();
+	  this.ctx.closePath();
+	};
+
+	DrawingCanvas.prototype.drawInitialMark = function () {
+	  if (this.stamping) {
+	    this.drawStamp();
+	  } else {
+	    this.drawInitialStroke();
+	  }
+	};
+
+	DrawingCanvas.prototype.drawInitialStroke = function () {
+	  this.ctx.beginPath();
+	  this.ctx.moveTo(this.currX + 1, this.currY + 1);
+	  this.ctx.lineTo(this.currX, this.currY);
+	  this.ctx.strokeStyle = this.color;
+	  this.ctx.lineWidth = this.size;
+	  this.ctx.stroke();
+	  this.ctx.closePath();
+	};
+
+	DrawingCanvas.prototype.toggleStamping = function () {
+	  this.stamping = !this.stamping;
+	};
+
+	DrawingCanvas.prototype.turnStampingOn = function () {
+	  this.stamping = true;
+	};
+
+	DrawingCanvas.prototype.turnStampingOff = function () {
+	  this.stamping = false;
+	};
+
+	DrawingCanvas.prototype.toData = function () {
+	  return this.canvas.toDataURL("image/png");
+	};
+
+	DrawingCanvas.prototype.setStamp = function (stampImg, stampSize) {
+	  this.stampImg = stampImg;
+	  this.stampSize = stampSize;
+	};
+
+	DrawingCanvas.prototype.clear = function () {
+	  this.ctx.clearRect(0, 0, this.width, this.height);
+	};
+
+	DrawingCanvas.prototype.loadImage = function (url) {
+	  var img = new Image();
+	  img.crossOrigin = "anonymous";
+	  img.src = url;
+	  img.onload = function () {
+	    this.ctx.drawImage(img, 0, 0);
+	  }.bind(this);
+	};
+
+	DrawingCanvas.prototype.getImageData = function () {
+	  return this.ctx.getImageData(0, 0, this.width, this.height);
+	};
+
+	DrawingCanvas.prototype.putImageData = function (imageData) {
+	  this.clear();
+	  this.ctx.putImageData(imageData, 0, 0);
+	};
+
+	DrawingCanvas.prototype.hardReset = function () {
+	  this.clear();
+	  this.history = [this.getImageData(), this.getImageData(), this.getImageData(), this.getImageData(), this.getImageData()];
+	};
+
+	module.exports = DrawingCanvas;
+
+/***/ },
+/* 276 */
+/***/ function(module, exports) {
+
+	var SizePicker = function (id, width, height) {
+	  this.sizePickerCanvas = document.getElementById(id);
+	  this.sizePickerContext = this.sizePickerCanvas.getContext('2d');
+
+	  this.sizePickerCanvas.width = width;
+	  this.sizePickerCanvas.height = height;
+
+	  var pickerImg = new Image();
+	  if (this.sizePickerCanvas.width === 80) {
+	    pickerImg.src = './triangle-v2.png';
+	  } else {
+	    pickerImg.src = './triangle-v2-small.png';
+	  }
+
+	  pickerImg.onload = function () {
+	    this.sizePickerContext.drawImage(pickerImg, 0, 0);
+	  }.bind(this);
+	};
+
+	SizePicker.prototype.pickSize = function (e) {
+	  var y = e.clientY - this.sizePickerCanvas.getBoundingClientRect().top;
+
+	  if (this.sizePickerCanvas.width === 80) {
+	    var size = (390 - y) * 52 / 355;
+	  } else {
+	    var size = (312 - y) * 52 / 355;
+	  }
+
+	  return Math.max(0.1, size);
+	};
+
+	module.exports = SizePicker;
+
+/***/ },
+/* 277 */
+/***/ function(module, exports) {
+
+	var StampCanvas = function (id, width, height) {
+	  this.canvas = document.getElementById(id);
+	  this.ctx = this.canvas.getContext('2d');
+	  this.canvas.width = width;
+	  this.canvas.height = height;
+	  this.img = new Image();
+	  this.scale = 1;
+	};
+
+	StampCanvas.prototype.width = function () {
+	  return this.canvas.width;
+	};
+
+	StampCanvas.prototype.height = function () {
+	  return this.canvas.height;
+	};
+
+	StampCanvas.prototype.loadImage = function (url, setStampCallback) {
+	  this.img = new Image();
+	  this.img.crossOrigin = "anonymous";
+	  this.img.src = url;
+	  this.img.onload = function () {
+	    this.ctx.drawImage(this.img, 0, 0, 500, 500, 0, 0, this.width(), this.height());
+	    setStampCallback();
+	  }.bind(this);
+	};
+
+	StampCanvas.prototype.getImageData = function () {
+	  return this.ctx.getImageData(0, 0, this.width(), this.height());
+	};
+
+	StampCanvas.prototype.putImageData = function (imageData) {
+	  this.clear();
+	  this.ctx.putImageData(imageData, 0, 0);
+	};
+
+	StampCanvas.prototype.toData = function () {
+	  return this.canvas.toDataURL("image/png");
+	};
+
+	StampCanvas.prototype.clear = function () {
+	  this.ctx.clearRect(0, 0, this.width(), this.height());
+	};
+
+	StampCanvas.prototype.scaleUp = function () {
+	  this.scale = this.scale * 1.2;
+	  var newWidth = 150 * this.scale;
+	  var newHeight = 150 * this.scale;
+	  this.canvas.width = newWidth;
+	  this.canvas.height = newHeight;
+
+	  this.ctx.drawImage(this.img, 0, 0, 500, 500, 0, 0, newWidth, newHeight);
+	};
+
+	StampCanvas.prototype.scaleDown = function () {
+	  this.scale = this.scale / 1.2;
+	  var newWidth = 150 * this.scale;
+	  var newHeight = 150 * this.scale;
+	  this.canvas.width = newWidth;
+	  this.canvas.height = newHeight;
+
+	  this.ctx.drawImage(this.img, 0, 0, 500, 500, 0, 0, newWidth, newHeight);
+	};
+
+	module.exports = StampCanvas;
+
+/***/ },
+/* 278 */
+/***/ function(module, exports) {
+
+	var StrokeSample = function (id, width, height) {
+	  this.strokeSampleCanvas = document.getElementById(id);
+	  this.strokeSampleContext = this.strokeSampleCanvas.getContext('2d');
+	  this.strokeSampleCanvas.width = width;
+	  this.strokeSampleCanvas.height = height;
+	  this.size = width;
+	};
+
+	StrokeSample.prototype.pickSample = function (color, size) {
+	  this.strokeSampleContext.clearRect(0, 0, this.size, this.size);
+	  var centerX = this.size / 2;
+	  var centerY = this.size / 2;
+	  var left = centerX - size / 2;
+	  var top = centerY - size / 2;
+	  this.strokeSampleContext.lineJoin = this.strokeSampleContext.lineCap = 'round';
+	  this.strokeSampleContext.beginPath();
+	  this.strokeSampleContext.moveTo(centerX, centerY);
+	  this.strokeSampleContext.lineTo(centerX + 1, centerY + 1);
+	  this.strokeSampleContext.strokeStyle = color;
+	  this.strokeSampleContext.lineWidth = size;
+	  this.strokeSampleContext.stroke();
+	  this.strokeSampleContext.closePath();
+
+	  // this.strokeSampleContext.fillRect(top, left, size, size);
+	};
+
+	module.exports = StrokeSample;
 
 /***/ }
 /******/ ]);
