@@ -50,14 +50,14 @@
 	var Route = __webpack_require__(159).Route;
 	var App = __webpack_require__(208);
 	var DrawingIndex = __webpack_require__(241);
-	var NewDrawing = __webpack_require__(245);
-	var DrawingDetail = __webpack_require__(258);
-	var ProfilePage = __webpack_require__(259);
+	var NewDrawing = __webpack_require__(244);
+	var DrawingDetail = __webpack_require__(257);
+	var ProfilePage = __webpack_require__(258);
 	var StampIndex = __webpack_require__(209);
-	var StampDetail = __webpack_require__(260);
-	var NewStamp = __webpack_require__(261);
+	var StampDetail = __webpack_require__(259);
+	var NewStamp = __webpack_require__(260);
 	var IndexRoute = __webpack_require__(159).IndexRoute;
-	var Shepherd = __webpack_require__(256);
+	var Shepherd = __webpack_require__(255);
 
 	var routes = React.createElement(
 	  Route,
@@ -24668,6 +24668,20 @@
 	      }.bind(this),
 	      error: function () {}
 	    });
+	  },
+
+	  deleteDrawing: function (id) {
+	    $.ajax({
+	      url: "api/drawings/" + id,
+	      method: "DELETE",
+	      success: function (message) {
+	        console.log(message.message);
+	        console.log("delete successful");
+	      },
+	      error: function (message) {
+	        console.log(message.message);
+	      }
+	    });
 	  }
 
 	};
@@ -32202,7 +32216,7 @@
 	var React = __webpack_require__(1);
 	var History = __webpack_require__(159).History;
 	var ApiUtil = __webpack_require__(210);
-	var ChangedDrawingStore = __webpack_require__(244);
+	var ChangedDrawingStore = __webpack_require__(261);
 
 	var DrawingListItem = React.createClass({
 	  displayName: 'DrawingListItem',
@@ -32224,7 +32238,6 @@
 	  },
 	  componentWillReceiveProps: function (newProps) {
 	    if (newProps.drawing.id != this.state.drawing.id) {
-
 	      this.setState({ drawing: newProps.drawing });
 	    }
 	  },
@@ -32238,17 +32251,7 @@
 	    this.history.push('drawings/' + this.state.drawing.id);
 	  },
 	  deleteDrawing: function () {
-	    $.ajax({
-	      url: "api/drawings/" + this.state.drawing.id,
-	      method: "DELETE",
-	      success: function (message) {
-	        console.log(message.message);
-	        console.log("delete successful");
-	      },
-	      error: function (message) {
-	        console.log(message.message);
-	      }
-	    });
+	    ApiUtil.deleteDrawing(this.state.drawing.id);
 	  },
 	  enhover: function () {
 	    this.setState({ hover: true });
@@ -32282,12 +32285,7 @@
 	      );
 	    });
 	  },
-	  render: function () {
-	    var drawingAuthor = this.state.hover ? "drawing-author" : "hidden";
-	    var drawingLikesCount = this.state.hover ? "drawing-likes-count" : "hidden";
-	    var likeDrawingClass = this.state.hover ? "like-drawing-class" : "hidden";
-	    var likeText = this.state.drawing.liked_by_current_user ? "Unlike" : "Like";
-	    var drawingLikeList = this.state.likesClicked ? "drawing-like-list" : "hidden";
+	  timeAgo: function () {
 	    var timeAgo = this.state.drawing.time_ago;
 	    if (timeAgo.slice(0, 5) === "about") {
 	      timeAgo = timeAgo.slice(6);
@@ -32295,7 +32293,20 @@
 	    if (timeAgo.slice(0, 4) === "less") {
 	      timeAgo = timeAgo.slice(10);
 	    }
-	    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_500,h_500/" + this.state.drawing.image_url + ".png";
+	    return timeAgo;
+	  },
+	  displayAttributes: function () {
+	    return {
+	      drawingAuthor: this.state.hover ? "drawing-author" : "hidden",
+	      drawingLikesCount: this.state.hover ? "drawing-likes-count" : "hidden",
+	      likeDrawingClass: this.state.hover ? "like-drawing-class" : "hidden",
+	      likeText: this.state.drawing.liked_by_current_user ? "Unlike" : "Like",
+	      drawingLikeList: this.state.likesClicked ? "drawing-like-list" : "hidden",
+	      timeAgo: this.timeAgo(),
+	      url: "http://res.cloudinary.com/ddhru3qpb/image/upload/w_500,h_500/" + this.state.drawing.image_url + ".png"
+	    };
+	  },
+	  render: function () {
 	    return React.createElement(
 	      'div',
 	      { className: 'index-element',
@@ -32304,15 +32315,15 @@
 	        onMouseLeave: this.dehover },
 	      React.createElement('img', {
 	        className: 'drawing-index-image',
-	        src: url }),
+	        src: this.displayAttributes().url }),
 	      React.createElement(
 	        'div',
 	        {
-	          className: drawingAuthor,
+	          className: this.displayAttributes().drawingAuthor,
 	          onClick: this.goToUser },
 	        this.state.drawing.username,
 	        React.createElement('br', null),
-	        timeAgo
+	        this.displayAttributes().timeAgo
 	      ),
 	      React.createElement(
 	        'div',
@@ -32320,12 +32331,12 @@
 	        React.createElement(
 	          'div',
 	          {
-	            className: drawingLikesCount,
+	            className: this.displayAttributes().drawingLikesCount,
 	            onClick: this.toggleList },
 	          React.createElement(
 	            'div',
 	            {
-	              className: drawingLikeList },
+	              className: this.displayAttributes().drawingLikeList },
 	            this.drawingLikeList()
 	          ),
 	          this.state.drawing.likes.length,
@@ -32334,9 +32345,9 @@
 	        React.createElement(
 	          'div',
 	          {
-	            className: likeDrawingClass,
+	            className: this.displayAttributes().likeDrawingClass,
 	            onClick: this.toggleLike },
-	          likeText
+	          this.displayAttributes().likeText
 	        )
 	      ),
 	      React.createElement(
@@ -32355,48 +32366,19 @@
 /* 244 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Store = __webpack_require__(218).Store;
-	var AppDispatcher = __webpack_require__(212);
-
-	var ChangedDrawingStore = new Store(AppDispatcher);
-	var _changedDrawing;
-
-	var receiveChangedDrawing = function (changedDrawing) {
-	  _changedDrawing = changedDrawing;
-	};
-
-	ChangedDrawingStore.drawing = function () {
-	  return _changedDrawing;
-	};
-
-	ChangedDrawingStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case "CHANGED_DRAWING_RECEIVED":
-	      receiveChangedDrawing(payload.changedDrawing);
-	      ChangedDrawingStore.__emitChange();
-	      break;
-	  }
-	};
-
-	module.exports = ChangedDrawingStore;
-
-/***/ },
-/* 245 */
-/***/ function(module, exports, __webpack_require__) {
-
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(210);
-	var DrawingCanvas = __webpack_require__(246);
-	var StampCanvas = __webpack_require__(247);
-	var ColorPicker = __webpack_require__(248);
-	var SizePicker = __webpack_require__(249);
-	var StrokeSample = __webpack_require__(250);
-	var LinkedStateMixin = __webpack_require__(251);
+	var DrawingCanvas = __webpack_require__(245);
+	var StampCanvas = __webpack_require__(246);
+	var ColorPicker = __webpack_require__(247);
+	var SizePicker = __webpack_require__(248);
+	var StrokeSample = __webpack_require__(249);
+	var LinkedStateMixin = __webpack_require__(250);
 	var StampIndex = __webpack_require__(209);
 	var StampStore = __webpack_require__(217);
 	var History = __webpack_require__(159).History;
 	var MyStampStore = __webpack_require__(240);
-	window.wholeDamnTour = __webpack_require__(255);
+	window.wholeDamnTour = __webpack_require__(254);
 
 	var NewDrawing = React.createClass({
 	  displayName: 'NewDrawing',
@@ -32794,7 +32776,7 @@
 	module.exports = NewDrawing;
 
 /***/ },
-/* 246 */
+/* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var ApiUtil = __webpack_require__(210);
@@ -32997,7 +32979,7 @@
 	module.exports = DrawingCanvas;
 
 /***/ },
-/* 247 */
+/* 246 */
 /***/ function(module, exports) {
 
 	var StampCanvas = function (id, width, height) {
@@ -33067,7 +33049,7 @@
 	module.exports = StampCanvas;
 
 /***/ },
-/* 248 */
+/* 247 */
 /***/ function(module, exports) {
 
 	var ColorPicker = function (id, width, height) {
@@ -33104,7 +33086,7 @@
 	module.exports = ColorPicker;
 
 /***/ },
-/* 249 */
+/* 248 */
 /***/ function(module, exports) {
 
 	var SizePicker = function (id, width, height) {
@@ -33141,7 +33123,7 @@
 	module.exports = SizePicker;
 
 /***/ },
-/* 250 */
+/* 249 */
 /***/ function(module, exports) {
 
 	var StrokeSample = function (id, width, height) {
@@ -33173,13 +33155,13 @@
 	module.exports = StrokeSample;
 
 /***/ },
-/* 251 */
+/* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(252);
+	module.exports = __webpack_require__(251);
 
 /***/ },
-/* 252 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -33196,8 +33178,8 @@
 
 	'use strict';
 
-	var ReactLink = __webpack_require__(253);
-	var ReactStateSetters = __webpack_require__(254);
+	var ReactLink = __webpack_require__(252);
+	var ReactStateSetters = __webpack_require__(253);
 
 	/**
 	 * A simple mixin around ReactLink.forState().
@@ -33220,7 +33202,7 @@
 	module.exports = LinkedStateMixin;
 
 /***/ },
-/* 253 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -33294,7 +33276,7 @@
 	module.exports = ReactLink;
 
 /***/ },
-/* 254 */
+/* 253 */
 /***/ function(module, exports) {
 
 	/**
@@ -33403,10 +33385,10 @@
 	module.exports = ReactStateSetters;
 
 /***/ },
-/* 255 */
+/* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Shepherd = __webpack_require__(256);
+	var Shepherd = __webpack_require__(255);
 
 	var makeStampTour = new Shepherd.Tour({
 	  defaults: {
@@ -33666,14 +33648,14 @@
 	module.exports = makeStampTour;
 
 /***/ },
-/* 256 */
+/* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! tether-shepherd 1.7.0 */
 
 	(function(root, factory) {
 	  if (true) {
-	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(257)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(256)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	  } else if (typeof exports === 'object') {
 	    module.exports = factory(require('tether'));
 	  } else {
@@ -34405,7 +34387,7 @@
 
 
 /***/ },
-/* 257 */
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! tether 1.2.0 */
@@ -36137,7 +36119,7 @@
 
 
 /***/ },
-/* 258 */
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -36215,7 +36197,7 @@
 	module.exports = DrawingDetail;
 
 /***/ },
-/* 259 */
+/* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -36327,7 +36309,7 @@
 	module.exports = ProfilePage;
 
 /***/ },
-/* 260 */
+/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -36387,20 +36369,20 @@
 	module.exports = StampDetail;
 
 /***/ },
-/* 261 */
+/* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(210);
-	var DrawingCanvas = __webpack_require__(246);
-	var StampCanvas = __webpack_require__(247);
-	var ColorPicker = __webpack_require__(248);
-	var SizePicker = __webpack_require__(249);
-	var StrokeSample = __webpack_require__(250);
-	var LinkedStateMixin = __webpack_require__(251);
+	var DrawingCanvas = __webpack_require__(245);
+	var StampCanvas = __webpack_require__(246);
+	var ColorPicker = __webpack_require__(247);
+	var SizePicker = __webpack_require__(248);
+	var StrokeSample = __webpack_require__(249);
+	var LinkedStateMixin = __webpack_require__(250);
 	var StampIndex = __webpack_require__(209);
 	var StampStore = __webpack_require__(217);
-	window.wholeDamnTour = __webpack_require__(255);
+	window.wholeDamnTour = __webpack_require__(254);
 
 	var NewDrawing = React.createClass({
 	  displayName: 'NewDrawing',
@@ -36731,6 +36713,35 @@
 	});
 
 	module.exports = NewDrawing;
+
+/***/ },
+/* 261 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(218).Store;
+	var AppDispatcher = __webpack_require__(212);
+
+	var ChangedDrawingStore = new Store(AppDispatcher);
+	var _changedDrawing;
+
+	var receiveChangedDrawing = function (changedDrawing) {
+	  _changedDrawing = changedDrawing;
+	};
+
+	ChangedDrawingStore.drawing = function () {
+	  return _changedDrawing;
+	};
+
+	ChangedDrawingStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case "CHANGED_DRAWING_RECEIVED":
+	      receiveChangedDrawing(payload.changedDrawing);
+	      ChangedDrawingStore.__emitChange();
+	      break;
+	  }
+	};
+
+	module.exports = ChangedDrawingStore;
 
 /***/ }
 /******/ ]);

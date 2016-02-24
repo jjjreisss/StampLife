@@ -245,6 +245,20 @@ var ApiUtil = {
     });
   },
 
+  deleteDrawing: function(id) {
+    $.ajax({
+      url: "api/drawings/" + id,
+      method: "DELETE",
+      success: function(message) {
+        console.log(message.message);
+        console.log("delete successful");
+      },
+      error: function(message) {
+        console.log(message.message);
+      }
+    });
+  },
+
 };
 
 module.exports = ApiUtil;

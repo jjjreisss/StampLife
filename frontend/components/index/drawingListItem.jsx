@@ -21,7 +21,6 @@ var DrawingListItem = React.createClass({
   },
   componentWillReceiveProps: function(newProps) {
     if(newProps.drawing.id != this.state.drawing.id) {
-
       this.setState({drawing: newProps.drawing})
     }
   },
@@ -35,17 +34,7 @@ var DrawingListItem = React.createClass({
     this.history.push('drawings/' + this.state.drawing.id);
   },
   deleteDrawing: function() {
-    $.ajax({
-      url: "api/drawings/" + this.state.drawing.id,
-      method: "DELETE",
-      success: function(message) {
-        console.log(message.message);
-        console.log("delete successful");
-      },
-      error: function(message) {
-        console.log(message.message);
-      }
-    });
+    ApiUtil.deleteDrawing(this.state.drawing.id);
   },
   enhover: function() {
     this.setState({hover: true});
@@ -73,15 +62,14 @@ var DrawingListItem = React.createClass({
   },
   drawingLikeList: function() {
     return this.state.drawing.likes.map(function(like, i) {
-      return <div key={i}>{like}</div>;
+      return (
+        <div key={i}>
+          {like}
+        </div>
+      );
     });
   },
-  render: function() {
-    var drawingAuthor = (this.state.hover ? "drawing-author" : "hidden");
-    var drawingLikesCount = (this.state.hover ? "drawing-likes-count" : "hidden");
-    var likeDrawingClass = (this.state.hover ? "like-drawing-class" : "hidden");
-    var likeText = (this.state.drawing.liked_by_current_user ? "Unlike" : "Like");
-    var drawingLikeList = (this.state.likesClicked ? "drawing-like-list" : "hidden");
+  timeAgo: function() {
     var timeAgo = this.state.drawing.time_ago;
     if (timeAgo.slice(0,5) === "about") {
       timeAgo = timeAgo.slice(6);
@@ -89,7 +77,20 @@ var DrawingListItem = React.createClass({
     if (timeAgo.slice(0,4) === "less") {
       timeAgo = timeAgo.slice(10);
     }
-    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_500,h_500/" + this.state.drawing.image_url + ".png";
+    return timeAgo;
+  },
+  displayAttributes: function() {
+    return ({
+      drawingAuthor: (this.state.hover ? "drawing-author" : "hidden"),
+      drawingLikesCount: (this.state.hover ? "drawing-likes-count" : "hidden"),
+      likeDrawingClass: (this.state.hover ? "like-drawing-class" : "hidden"),
+      likeText: (this.state.drawing.liked_by_current_user ? "Unlike" : "Like"),
+      drawingLikeList: (this.state.likesClicked ? "drawing-like-list" : "hidden"),
+      timeAgo: this.timeAgo(),
+      url: "http://res.cloudinary.com/ddhru3qpb/image/upload/w_500,h_500/" + this.state.drawing.image_url + ".png",
+    })
+  },
+  render: function() {
     return (
       <div className="index-element"
             onClick={this.goToShow}
@@ -97,28 +98,28 @@ var DrawingListItem = React.createClass({
             onMouseLeave={this.dehover}>
         <img
           className="drawing-index-image"
-          src={url}/>
+          src={this.displayAttributes().url}/>
         <div
-          className={drawingAuthor}
+          className={this.displayAttributes().drawingAuthor}
           onClick={this.goToUser}>
           {this.state.drawing.username}
           <br/>
-          {timeAgo}
+          {this.displayAttributes().timeAgo}
         </div>
         <div className="drawing-likes-box">
           <div
-            className={drawingLikesCount}
+            className={this.displayAttributes().drawingLikesCount}
             onClick={this.toggleList}>
             <div
-              className={drawingLikeList}>
+              className={this.displayAttributes().drawingLikeList}>
               {this.drawingLikeList()}
             </div>
             {this.state.drawing.likes.length} Likes
           </div>
           <div
-            className={likeDrawingClass}
+            className={this.displayAttributes().likeDrawingClass}
             onClick={this.toggleLike}>
-            {likeText}
+            {this.displayAttributes().likeText}
           </div>
         </div>
 
