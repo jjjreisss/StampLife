@@ -34,7 +34,7 @@
   </form>
   <p class="new-user-link">
     Don't have an account? <%= link_to "Sign Up", new_user_url %>
-    Or, you can <%= link_to "log in as a Guest", session_url(user: {username: 'guest', password: 'password'}), method: :post %>
+    Or, you can <%= link_to "log in as a Guest", users_url(user: {username: 'guest', password: 'password'}), method: :post %>
   </p>
 </div>
 
