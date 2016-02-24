@@ -31937,18 +31937,20 @@
 	    }
 	    return text;
 	  },
-	  render: function () {
+	  imageUrl: function () {
 	    var size = this.props.size;
 	    var sizeString = "w_" + size + ",h_" + size + "/";
 	    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + sizeString + this.props.imageUrl + ".png";
-
+	    return url;
+	  },
+	  render: function () {
 	    return React.createElement(
 	      'div',
 	      { className: 'my-stamp-index-element',
 	        id: this.selectedText() },
 	      React.createElement('img', {
 	        className: 'my-stamp-index-image',
-	        src: url,
+	        src: this.imageUrl(),
 	        onClick: this.setStamp,
 	        onLoad: this.addDeleteIcon }),
 	      this.deleteIcon()
