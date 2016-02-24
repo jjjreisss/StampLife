@@ -36,14 +36,12 @@ var MyStampIndex = React.createClass({
   goToNewStamp: function() {
     this.history.push('stamp/new');
   },
-
-  render: function() {
+  stampsList: function() {
     var stampsList = "";
     if (this.state.stamps) {
       stampsList = this.state.stamps.map(function(stamp, idx){
         var selected = (this.state.selected === idx) ? "selected-stamp" : "";
         return (
-
           <MyStampListItem
             stampId={stamp.id}
             imageUrl={stamp.image_url}
@@ -52,25 +50,18 @@ var MyStampIndex = React.createClass({
             data-idx={idx}
             onClick={this.selectStamp}
             id={selected}/>
-
         );
       }.bind(this));
     }
+    return stampsList;
+  },
+
+  render: function() {
     return(
       <div className="my-stamp-index">
         <div className="my-stamp-index-screen">
-        {stampsList}
-        <div className="my-stamp-index-footer">
-          <button onClick={this.goToStampsIndex}>
-            Get Stamps
-          </button>
-          <button onClick={this.goToNewStamp}>
-            Make Stamps
-          </button>
+        {this.stampsList()}
         </div>
-
-        </div>
-
       </div>
     );
   }

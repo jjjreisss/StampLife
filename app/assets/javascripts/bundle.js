@@ -31855,8 +31855,7 @@
 	  goToNewStamp: function () {
 	    this.history.push('stamp/new');
 	  },
-
-	  render: function () {
+	  stampsList: function () {
 	    var stampsList = "";
 	    if (this.state.stamps) {
 	      stampsList = this.state.stamps.map(function (stamp, idx) {
@@ -31871,27 +31870,17 @@
 	          id: selected });
 	      }.bind(this));
 	    }
+	    return stampsList;
+	  },
+
+	  render: function () {
 	    return React.createElement(
 	      'div',
 	      { className: 'my-stamp-index' },
 	      React.createElement(
 	        'div',
 	        { className: 'my-stamp-index-screen' },
-	        stampsList,
-	        React.createElement(
-	          'div',
-	          { className: 'my-stamp-index-footer' },
-	          React.createElement(
-	            'button',
-	            { onClick: this.goToStampsIndex },
-	            'Get Stamps'
-	          ),
-	          React.createElement(
-	            'button',
-	            { onClick: this.goToNewStamp },
-	            'Make Stamps'
-	          )
-	        )
+	        this.stampsList()
 	      )
 	    );
 	  }
