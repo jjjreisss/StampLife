@@ -32075,26 +32075,6 @@
 	    this.setState({ drawingsList: drawingsList });
 	  },
 
-	  popularityComparator: function (a, b) {
-	    if (a.likes.length < b.likes.length) {
-	      return 1;
-	    } else if (a.likes.length === b.likes.length) {
-	      return 0;
-	    } else {
-	      return -1;
-	    }
-	  },
-
-	  newnessComparator: function (a, b) {
-	    if (a.created_at < b.created_at) {
-	      return 1;
-	    } else if (a.created_at === b.created_at) {
-	      return 0;
-	    } else {
-	      return -1;
-	    }
-	  },
-
 	  loader: function () {
 	    return React.createElement(
 	      'div',
