@@ -24378,11 +24378,14 @@
 	      React.createElement('div', { className: 'cssload-dot2' })
 	    );
 	  },
+	  displayAttributes: function () {
+	    return {
+	      popularitySelected: this.state.selectedTab === "popularity" ? "selected-tab" : "",
+	      newestSelected: this.state.selectedTab === "newness" ? "selected-tab" : ""
+	    };
+	  },
 
 	  render: function () {
-	    var popularitySelected = this.state.selectedTab === "popularity" ? "selected-tab" : "";
-	    var newestSelected = this.state.selectedTab === "newness" ? "selected-tab" : "";
-
 	    return React.createElement(
 	      'div',
 	      { className: 'index' },
@@ -24394,7 +24397,7 @@
 	          {
 	            className: 'index-tab',
 	            onClick: this.sortByPopularity,
-	            id: popularitySelected },
+	            id: this.displayAttributes().popularitySelected },
 	          React.createElement(
 	            'span',
 	            null,
@@ -24406,7 +24409,7 @@
 	          {
 	            className: 'index-tab',
 	            onClick: this.sortByNewness,
-	            id: newestSelected },
+	            id: this.displayAttributes().newestSelected },
 	          React.createElement(
 	            'span',
 	            null,

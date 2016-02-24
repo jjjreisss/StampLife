@@ -76,20 +76,23 @@ var StampIndex = React.createClass({
       </div>
     )
   },
+  displayAttributes: function() {
+    return ({
+      popularitySelected:
+        this.state.selectedTab === "popularity" ? "selected-tab" : "",
+      newestSelected:
+        this.state.selectedTab === "newness" ? "selected-tab" : "",
+    })
+  },
 
   render: function() {
-    var popularitySelected =
-      this.state.selectedTab === "popularity" ? "selected-tab" : "";
-    var newestSelected =
-      this.state.selectedTab === "newness" ? "selected-tab" : "";
-
     return(
       <div className="index">
         <h1 className="index-header">
           <span
             className="index-tab"
             onClick={this.sortByPopularity}
-            id={popularitySelected}>
+            id={this.displayAttributes().popularitySelected}>
             <span>
               Most Popular Stamps
             </span>
@@ -97,7 +100,7 @@ var StampIndex = React.createClass({
           <span
             className="index-tab"
             onClick={this.sortByNewness}
-            id={newestSelected}>
+            id={this.displayAttributes().newestSelected}>
             <span>
               Newest Stamps
             </span>
