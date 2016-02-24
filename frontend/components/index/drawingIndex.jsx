@@ -5,28 +5,20 @@ var ApiUtil = require('../../util/apiUtil');
 var DrawingListItem = require('../index/drawingListItem');
 var ApiActions = require('../../actions/apiActions');
 var DrawingComparatorActions = require('../../actions/drawingComparatorActions');
+var Comparators = require('../../util/comparators');
 
 var DrawingIndex = React.createClass({
   getInitialState: function() {
     return({
       drawings: null,
       selectedTab: "popularity",
-      comparator:
-        function(a, b) {
-          if (a.likes.length < b.likes.length) {
-            return 1;
-          } else if (a.likes.length === b.likes.length) {
-            return 0;
-          } else {
-            return -1;
-          }
-        },
+      comparator: Comparators.drawingPopularity,
       drawingsList: null
     });
   },
   componentDidMount: function() {
     this.drawingStoreListener = DrawingStore.addListener(this._onChange);
-    DrawingComparatorActions.receiveDrawingComparator(this.popularityComparator);
+    DrawingComparatorActions.receiveDrawingComparator(Comparators.drawingPopularity);
     ApiUtil.fetchAllDrawings();
     if (window.wholeDamnTour.currentStep && window.wholeDamnTour.currentStep.id === "save-drawing") {
       window.setTimeout(function() {
@@ -47,7 +39,7 @@ var DrawingIndex = React.createClass({
   },
   sortByNewness: function() {
     this.setState({drawingsList: this.loader()})
-    DrawingComparatorActions.receiveDrawingComparator(this.newnessComparator);
+    DrawingComparatorActions.receiveDrawingComparator(Comparators.drawingNewness);
     ApiUtil.fetchAllDrawings();
     this.setState({
       selectedTab: "newness"
@@ -55,7 +47,7 @@ var DrawingIndex = React.createClass({
   },
   sortByPopularity: function(e) {
     this.setState({drawingsList: this.loader()})
-    DrawingComparatorActions.receiveDrawingComparator(this.popularityComparator);
+    DrawingComparatorActions.receiveDrawingComparator(Comparators.drawingPopularity);
     ApiUtil.fetchAllDrawings()
     this.setState({
       selectedTab: "popularity"

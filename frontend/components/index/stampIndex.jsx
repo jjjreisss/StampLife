@@ -4,6 +4,7 @@ var StampListItem = require('../index/stampListItem');
 var StampStore = require('../../stores/stampStore');
 var DrawingComparatorActions = require('../../actions/drawingComparatorActions');
 var DrawingComparatorStore = require('../../stores/drawingComparatorStore');
+var Comparators = require('../../util/comparators');
 
 
 var StampIndex = React.createClass({
@@ -11,22 +12,13 @@ var StampIndex = React.createClass({
     return({
       stamps: null,
       selectedTab: "popularity",
-      comparator:
-        function(a, b) {
-          if (a.stamp_uses.length < b.stamp_uses.length) {
-            return 1;
-          } else if (a.stamp_uses.length === b.stamp_uses.length) {
-            return 0;
-          } else {
-            return -1;
-          }
-        },
+      comparator: Comparators.stampPopularity,
       stampsList: null
     });
   },
   componentDidMount: function() {
     this.listener = StampStore.addListener(this._onChange);
-    DrawingComparatorActions.receiveDrawingComparator(this.popularityComparator);
+    DrawingComparatorActions.receiveDrawingComparator(Comparators.stampPopularity);
     ApiUtil.fetchAllStamps();
     if (window.wholeDamnTour.currentStep && window.wholeDamnTour.currentStep.id === 'get-stamps') {
       window.setTimeout(function() {
@@ -47,7 +39,7 @@ var StampIndex = React.createClass({
   },
   sortByNewness: function() {
     this.setState({stampsList: this.loader()})
-    DrawingComparatorActions.receiveDrawingComparator(this.newnessComparator);
+    DrawingComparatorActions.receiveDrawingComparator(Comparators.stampNewness);
     ApiUtil.fetchAllStamps();
     this.setState({
       selectedTab: "newness"
@@ -55,7 +47,7 @@ var StampIndex = React.createClass({
   },
   sortByPopularity: function(e) {
     this.setState({stampsList: this.loader()})
-    DrawingComparatorActions.receiveDrawingComparator(this.popularityComparator);
+    DrawingComparatorActions.receiveDrawingComparator(Comparators.stampPopularity);
     ApiUtil.fetchAllStamps()
     this.setState({
       selectedTab: "popularity"
@@ -74,24 +66,6 @@ var StampIndex = React.createClass({
       );
     });
     this.setState({stampsList: stampsList});
-  },
-  popularityComparator: function(a, b) {
-    if (a.stamp_uses.length < b.stamp_uses.length) {
-      return 1;
-    } else if (a.stamp_uses.length === b.stamp_uses.length) {
-      return 0;
-    } else {
-      return -1;
-    }
-  },
-  newnessComparator: function(a, b) {
-    if (a.created_at < b.created_at) {
-      return 1;
-    } else if (a.created_at === b.created_at) {
-      return 0;
-    } else {
-      return -1;
-    }
   },
 
   loader: function() {
