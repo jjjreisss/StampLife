@@ -3,14 +3,13 @@ var ReactDOM = require('react-dom');
 var Router = require('react-router').Router;
 var Route = require('react-router').Route;
 var App = require('./components/app');
-var DrawingIndex = require('./components/drawingIndex');
-var NewDrawing = require('./components/newDrawing');
-var DrawingDetail = require('./components/drawingDetail');
-var ProfilePage = require('./components/profilePage');
-var StampIndex = require('./components/stampIndex');
-var StampDetail = require('./components/stampDetail');
-var NewStamp = require('./components/newStamp');
-var Home = require('./components/home');
+var DrawingIndex = require('./components/index/drawingIndex');
+var NewDrawing = require('./components/new/newDrawing');
+var DrawingDetail = require('./components/show/drawingDetail');
+var ProfilePage = require('./components/show/profilePage');
+var StampIndex = require('./components/index/stampIndex');
+var StampDetail = require('./components/show/stampDetail');
+var NewStamp = require('./components/new/newStamp');
 var IndexRoute = require('react-router').IndexRoute;
 var Shepherd = require('tether-shepherd');
 
@@ -33,8 +32,3 @@ var routes = (
 document.addEventListener("DOMContentLoaded", function () {
   ReactDOM.render(<Router>{routes}</Router>, document.getElementById('root'));
 });
-
-
-// document.addEventListener("DOMContentLoaded", function () {
-//   ReactDOM.render(<Canvas/>, document.getElementById('root'));
-// });

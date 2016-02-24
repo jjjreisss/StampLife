@@ -1,14 +1,14 @@
 var React = require('react');
-var ApiUtil = require('../util/apiUtil');
-var DrawingCanvas = require('../util/drawingCanvas');
-var StampCanvas = require('../util/stampCanvas');
-var ColorPicker = require('../util/colorPicker');
-var SizePicker = require('../util/sizePicker');
-var StrokeSample = require('../util/strokeSample');
+var ApiUtil = require('../../util/apiUtil');
+var DrawingCanvas = require('../../util/drawingCanvas');
+var StampCanvas = require('../../util/stampCanvas');
+var ColorPicker = require('../../util/colorPicker');
+var SizePicker = require('../../util/sizePicker');
+var StrokeSample = require('../../util/strokeSample');
 var LinkedStateMixin = require('react-addons-linked-state-mixin');
-var StampIndex = require('./stampIndex');
-var StampStore = require('../stores/stampStore');
-window.wholeDamnTour = require('../util/wholeDamnTour');
+var StampIndex = require('../index/stampIndex');
+var StampStore = require('../../stores/stampStore');
+window.wholeDamnTour = require('../../util/wholeDamnTour');
 
 var NewDrawing = React.createClass({
   mixins: [LinkedStateMixin],

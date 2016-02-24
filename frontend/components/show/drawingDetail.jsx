@@ -1,6 +1,6 @@
 var React = require('react');
-var DrawingStore = require('../stores/drawingStore');
-var ApiUtil = require('../util/apiUtil');
+var DrawingStore = require('../../stores/drawingStore');
+var ApiUtil = require('../../util/apiUtil');
 var History = require('react-router').History;
 
 var DrawingDetail = React.createClass({

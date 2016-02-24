@@ -1,9 +1,9 @@
 var React = require('react');
-var DrawingStore = require('../stores/drawingStore');
-var ApiUtil = require('../util/apiUtil');
-var DrawingListItem = require('./drawingListItem');
-var StampStore = require('../stores/stampStore');
-var StampListItem = require('./stampListItem');
+var DrawingStore = require('../../stores/drawingStore');
+var ApiUtil = require('../../util/apiUtil');
+var DrawingListItem = require('../index/drawingListItem');
+var StampStore = require('../../stores/stampStore');
+var StampListItem = require('../index/stampListItem');
 
 var ProfilePage = React.createClass({
   getInitialState: function() {

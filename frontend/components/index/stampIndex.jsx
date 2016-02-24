@@ -1,9 +1,9 @@
 var React = require('react');
-var ApiUtil = require('../util/apiUtil');
-var StampListItem = require('./stampListItem');
-var StampStore = require('../stores/stampStore');
-var DrawingComparatorActions = require('../actions/drawingComparatorActions');
-var DrawingComparatorStore = require('../stores/drawingComparatorStore');
+var ApiUtil = require('../../util/apiUtil');
+var StampListItem = require('../index/stampListItem');
+var StampStore = require('../../stores/stampStore');
+var DrawingComparatorActions = require('../../actions/drawingComparatorActions');
+var DrawingComparatorStore = require('../../stores/drawingComparatorStore');
 
 
 var StampIndex = React.createClass({

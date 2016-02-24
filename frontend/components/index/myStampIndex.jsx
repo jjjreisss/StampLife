@@ -1,7 +1,7 @@
 var React = require('react');
-var ApiUtil = require('../util/apiUtil');
-var MyStampListItem = require('./myStampListItem');
-var MyStampStore = require('../stores/myStampStore');
+var ApiUtil = require('../../util/apiUtil');
+var MyStampListItem = require('../index/myStampListItem');
+var MyStampStore = require('../../stores/myStampStore');
 var History = require('react-router').History;
 
 

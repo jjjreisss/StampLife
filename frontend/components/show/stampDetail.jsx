@@ -1,6 +1,6 @@
 var React = require('react');
-var StampStore = require('../stores/stampStore');
-var ApiUtil = require('../util/apiUtil');
+var StampStore = require('../../stores/stampStore');
+var ApiUtil = require('../../util/apiUtil');
 var History = require('react-router').History;
 
 var StampDetail = React.createClass({

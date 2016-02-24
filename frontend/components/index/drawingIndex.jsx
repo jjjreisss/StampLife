@@ -1,10 +1,10 @@
 var React = require('react');
-var DrawingStore = require('../stores/drawingStore');
-var DrawingComparatorStore = require('../stores/drawingComparatorStore');
-var ApiUtil = require('../util/apiUtil');
-var DrawingListItem = require('./drawingListItem');
-var ApiActions = require('../actions/apiActions');
-var DrawingComparatorActions = require('../actions/drawingComparatorActions');
+var DrawingStore = require('../../stores/drawingStore');
+var DrawingComparatorStore = require('../../stores/drawingComparatorStore');
+var ApiUtil = require('../../util/apiUtil');
+var DrawingListItem = require('../index/drawingListItem');
+var ApiActions = require('../../actions/apiActions');
+var DrawingComparatorActions = require('../../actions/drawingComparatorActions');
 
 var DrawingIndex = React.createClass({
   getInitialState: function() {

@@ -1,8 +1,8 @@
 var React = require('react');
 var History = require('react-router').History;
-var ApiUtil = require('../util/apiUtil');
-var ApiActions = require('../actions/apiActions');
-var StampStore = require('../stores/stampStore');
+var ApiUtil = require('../../util/apiUtil');
+var ApiActions = require('../../actions/apiActions');
+var StampStore = require('../../stores/stampStore');
 
 var MyStampListItem = React.createClass({
   mixins: [History],

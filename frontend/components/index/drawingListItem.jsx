@@ -1,7 +1,7 @@
 var React = require('react');
 var History = require('react-router').History;
-var ApiUtil = require('../util/apiUtil');
-var ChangedDrawingStore = require('../stores/changedDrawingStore');
+var ApiUtil = require('../../util/apiUtil');
+var ChangedDrawingStore = require('../../stores/changedDrawingStore');
 
 var DrawingListItem = React.createClass({
   mixins: [History],

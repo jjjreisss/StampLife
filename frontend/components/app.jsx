@@ -1,6 +1,6 @@
 var React = require('react');
-var StampIndex = require('./stampIndex');
-var MyStampIndex = require('./myStampIndex');
+var StampIndex = require('./index/stampIndex');
+var MyStampIndex = require('./index/myStampIndex');
 var History = require('react-router').History;
 
 var App = React.createClass({
