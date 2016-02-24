@@ -26,19 +26,6 @@ var StampListItem = React.createClass({
     e.stopPropagation();
     this.setState({usesClicked: !this.state.usesClicked});
   },
-  deleteStamp: function() {
-    $.ajax({
-      url: "api/stamps/" + this.props.stampId,
-      method: "DELETE",
-      success: function(message) {
-        console.log(message.message);
-        console.log("delete successful");
-      },
-      error: function(message) {
-        console.log(message.message);
-      }
-    });
-  },
   stampUserList: function() {
     return this.props.stamp.stamp_uses.map(function(use, i) {
       return (
@@ -55,18 +42,33 @@ var StampListItem = React.createClass({
     var username = this.props.stamp.author;
     this.history.push('users/' + username);
   },
-  render: function() {
-    var size = 250;
-    var sizeString = "w_"+size+",h_"+size+"/";
-    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_250,h_250/" + this.props.imageUrl + ".png";
-    var selectStampText = (this.state.hover ? "select-stamp-icon" : "hidden");
-    var stampUseCount = (this.state.hover ? "stamp-use-count" : "hidden");
-    var stampAuthor = (this.state.hover ? "stamp-author" : "hidden");
-    var stampUseList = (this.state.usesClicked ? "stamp-use-list" : "hidden");
+  timeAgo: function() {
     var timeAgo = this.props.stamp.time_ago;
     if (timeAgo.slice(0,5) === "about") {
       timeAgo = timeAgo.slice(6);
     }
+    if (timeAgo.slice(0,4) === "less") {
+      timeAgo = timeAgo.slice(10);
+    }
+    return timeAgo;
+  },
+  imageUrl: function() {
+    var size = 250;
+    var sizeString = "w_"+size+",h_"+size+"/";
+    var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_250,h_250/" + this.props.imageUrl + ".png";
+    return url;
+  },
+  displayAttributes: function() {
+    return ({
+      url: this.imageUrl(),
+      selectStampText: (this.state.hover ? "select-stamp-icon" : "hidden"),
+      stampUseCount: (this.state.hover ? "stamp-use-count" : "hidden"),
+      stampAuthor: (this.state.hover ? "stamp-author" : "hidden"),
+      stampUseList: (this.state.usesClicked ? "stamp-use-list" : "hidden"),
+      timeAgo: this.timeAgo(),
+    })
+  },
+  render: function() {
     return (
       <div
         className="index-element"
@@ -75,29 +77,25 @@ var StampListItem = React.createClass({
         onClick={this.setStamp}>
         <img
           className="stamp-index-image"
-          src={url}/>
+          src={this.displayAttributes().url}/>
         <div
-          className={stampUseCount}
+          className={this.displayAttributes().stampUseCount}
           onClick={this.toggleList}>
           Used {this.props.stamp.stamp_uses.length} Times
           <div
-            className={stampUseList}>
+            className={this.displayAttributes().stampUseList}>
             {this.stampUserList()}
           </div>
         </div>
         <div
-          className={selectStampText}>
-        </div>
-        <div className="delete"
-          onClick={this.deleteStamp}>
-          Delete
+          className={this.displayAttributes().selectStampText}>
         </div>
         <div
-          className={stampAuthor}
+          className={this.displayAttributes().stampAuthor}
           onClick={this.goToUser}>
           {this.props.stamp.author}
           <br/>
-          {timeAgo} ago
+          {this.displayAttributes().timeAgo} ago
         </div>
       </div>
     );

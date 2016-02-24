@@ -259,6 +259,20 @@ var ApiUtil = {
     });
   },
 
+  deleteStamp: function(id) {
+    $.ajax({
+      url: "api/stamps/" + this.props.stampId,
+      method: "DELETE",
+      success: function(message) {
+        console.log(message.message);
+        console.log("delete successful");
+      },
+      error: function(message) {
+        console.log(message.message);
+      }
+    });
+  }
+
 };
 
 module.exports = ApiUtil;
