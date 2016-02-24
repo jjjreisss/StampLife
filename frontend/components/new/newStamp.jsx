@@ -47,21 +47,6 @@ var NewDrawing = React.createClass({
 
     this.colorPicking = false;
     this.sizePicking = false;
-
-    // $.ajax({
-    //   url: 'users/1',
-    //   method: 'GET',
-    //   success: function(user) {
-    //     if (user.tour_one_completed === false) {
-    //       ApiUtil.addInitialStamps();
-    //       window.wholeDamnTour.start();
-    //       ApiUtil.completeTourOne();
-    //     }
-    //   }.bind(this),
-    //   error: function() {
-    //   }
-    // });
-
   },
 
   colorBar: function() {
@@ -125,16 +110,6 @@ var NewDrawing = React.createClass({
         this.setState({saveStarted: false});
       }.bind(this)
     });
-  },
-  saveText: function() {
-    var text;
-    this.state.saved ? text = "Saved" : text = "Save Stamp";
-    return text;
-  },
-  saveDisabled: function() {
-    var text;
-    this.state.saveStarted ? text = true : text = false;
-    return text;
   },
 
 // Methods for changing Color
@@ -231,6 +206,12 @@ var NewDrawing = React.createClass({
   undo: function(e) {
     this.drawingCanvas.undo();
   },
+  displayAttributes: function() {
+    return ({
+      saveText: this.state.saved ? "Saved" : text = "Save Stamp",
+      saveDisabled: this.state.saveStarted ? true : false,
+    })
+  }
 
   render: function() {
     return(
@@ -310,12 +291,12 @@ var NewDrawing = React.createClass({
               className="save-stamp"
               onClick={this.saveStamp}
               disabled={this.saveDisabled()}>
-              {this.saveText()}
+              {this.displayAttributes().saveText}
             </button>
             <button
               className="save-to-my-stamps"
               onClick={this.saveToMyStamps}
-              disabled={this.saveDisabled()}>
+              disabled={this.displayAttributes().saveDisabled}>
               Save To My Stamps
             </button>
           </span>
