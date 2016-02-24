@@ -229,6 +229,22 @@ var ApiUtil = {
     });
   },
 
+  startTour: function(callback) {
+    $.ajax({
+      url: 'users/1',
+      method: 'GET',
+      success: function(user) {
+        if (user.tour_one_completed === false) {
+          window.wholeDamnTour.start();
+          ApiUtil.addInitialStamps(callback);
+          ApiUtil.completeTourOne();
+        }
+      }.bind(this),
+      error: function() {
+      }
+    });
+  },
+
 };
 
 module.exports = ApiUtil;

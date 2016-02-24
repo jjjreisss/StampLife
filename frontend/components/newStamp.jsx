@@ -10,7 +10,7 @@ var StampIndex = require('./stampIndex');
 var StampStore = require('../stores/stampStore');
 window.wholeDamnTour = require('../util/wholeDamnTour');
 
-var CanvasTest = React.createClass({
+var NewDrawing = React.createClass({
   mixins: [LinkedStateMixin],
 
 // Methods that set state
@@ -326,4 +326,4 @@ var CanvasTest = React.createClass({
   }
 });
 
-module.exports = CanvasTest;
+module.exports = NewDrawing;

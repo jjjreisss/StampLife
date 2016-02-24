@@ -50,21 +50,21 @@
 	var Route = __webpack_require__(159).Route;
 	var App = __webpack_require__(208);
 	var DrawingIndex = __webpack_require__(240);
-	var CanvasTest = __webpack_require__(244);
-	var DrawingDetail = __webpack_require__(254);
-	var ProfilePage = __webpack_require__(255);
+	var NewDrawing = __webpack_require__(262);
+	var DrawingDetail = __webpack_require__(257);
+	var ProfilePage = __webpack_require__(258);
 	var StampIndex = __webpack_require__(209);
-	var StampDetail = __webpack_require__(256);
-	var NewStamp = __webpack_require__(257);
+	var StampDetail = __webpack_require__(259);
+	var NewStamp = __webpack_require__(260);
 	var Home = __webpack_require__(261);
 	var IndexRoute = __webpack_require__(159).IndexRoute;
-	var Shepherd = __webpack_require__(259);
+	var Shepherd = __webpack_require__(255);
 
 	var routes = React.createElement(
 	  Route,
 	  { path: '/', component: App },
-	  React.createElement(IndexRoute, { component: CanvasTest }),
-	  React.createElement(Route, { path: '/new', component: CanvasTest }),
+	  React.createElement(IndexRoute, { component: NewDrawing }),
+	  React.createElement(Route, { path: '/new', component: NewDrawing }),
 	  React.createElement(Route, { path: '/stamps', component: StampIndex }),
 	  React.createElement(Route, { path: '/drawings', component: DrawingIndex }),
 	  React.createElement(Route, { path: '/drawings/:drawingId', component: DrawingDetail }),
@@ -24607,8 +24607,7 @@
 	    });
 	  },
 
-	  addInitialStamps: function () {
-	    console.log('hi');
+	  addInitialStamps: function (callback) {
 	    $.ajax({
 	      url: "api/stamps/" + 111,
 	      method: "GET",
@@ -24634,6 +24633,7 @@
 	                      method: "GET",
 	                      success: function (stamp) {
 	                        ApiActions.addToMyStamp(stamp);
+	                        callback();
 	                      }
 	                    });
 	                  }
@@ -24682,6 +24682,21 @@
 	      method: "PUT",
 	      data: { user: { tour_one_completed: true } },
 	      success: function () {}
+	    });
+	  },
+
+	  startTour: function (callback) {
+	    $.ajax({
+	      url: 'users/1',
+	      method: 'GET',
+	      success: function (user) {
+	        if (user.tour_one_completed === false) {
+	          window.wholeDamnTour.start();
+	          ApiUtil.addInitialStamps(callback);
+	          ApiUtil.completeTourOne();
+	        }
+	      }.bind(this),
+	      error: function () {}
 	    });
 	  }
 
@@ -32377,432 +32392,7 @@
 	module.exports = ChangedDrawingStore;
 
 /***/ },
-/* 244 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var ApiUtil = __webpack_require__(210);
-	var DrawingCanvas = __webpack_require__(245);
-	var StampCanvas = __webpack_require__(246);
-	var ColorPicker = __webpack_require__(247);
-	var SizePicker = __webpack_require__(248);
-	var StrokeSample = __webpack_require__(249);
-	var LinkedStateMixin = __webpack_require__(250);
-	var StampIndex = __webpack_require__(209);
-	var StampStore = __webpack_require__(217);
-	var History = __webpack_require__(159).History;
-	var MyStampStore = __webpack_require__(239);
-	window.wholeDamnTour = __webpack_require__(258);
-
-	var CanvasTest = React.createClass({
-	  displayName: 'CanvasTest',
-
-	  mixins: [LinkedStateMixin, History],
-
-	  // Methods that set state
-	  getInitialState: function () {
-	    return {
-	      caption: "caption",
-	      stamping: false,
-	      recentColors: ["#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff"],
-	      stamp: StampStore.single(),
-	      stampSize: 150,
-	      saveStarted: false,
-	      saved: false,
-	      stampsUsed: []
-	    };
-	  },
-	  componentDidMount: function () {
-
-	    if (window.innerHeight > 699) {
-	      this.drawingCanvas = new DrawingCanvas('drawing-canvas', 500, 500);
-	      this.sizePicker = new SizePicker('size-picker', 80, 420);
-	      this.colorPicker = new ColorPicker('color-picker', 80, 500);
-	      this.strokeSample = new StrokeSample('stroke-sample', 80, 80);
-	    } else {
-	      this.drawingCanvas = new DrawingCanvas('drawing-canvas', 400, 400);
-	      this.sizePicker = new SizePicker('size-picker', 64, 336);
-	      this.colorPicker = new ColorPicker('color-picker', 64, 400);
-	      this.strokeSample = new StrokeSample('stroke-sample', 64, 64);
-	    }
-	    this.stampCanvas = new StampCanvas('stamp-canvas', 150, 150);
-
-	    this.size = 30;
-	    this.color = "#000";
-	    this.drawingCanvas.setSize(this.size);
-	    this.drawingCanvas.setColor(this.color);
-	    this.addRecentColor(this.color);
-
-	    this.strokeSample.pickSample(this.color, this.size);
-
-	    this.colorPicking = false;
-	    this.sizePicking = false;
-
-	    this.token = StampStore.addListener(this.selectStamp);
-	    this.myStampStoreListener = MyStampStore.addListener(this.turnStampingOn);
-
-	    // if (window.wholeDamnTour.currentStep && window.wholeDamnTour.currentStep.id === "done_choosing_stamps"){
-	    //   window.setTimeout(function() {
-	    //     window.wholeDamnTour.next();
-	    //   }, 200);
-	    // }
-
-	    $.ajax({
-	      url: 'users/1',
-	      method: 'GET',
-	      success: function (user) {
-	        if (user.tour_one_completed === false) {
-	          ApiUtil.addInitialStamps();
-	          window.wholeDamnTour.start();
-	          ApiUtil.completeTourOne();
-	        }
-	      }.bind(this),
-	      error: function () {}
-	    });
-	  },
-	  componentWillUnmount: function () {
-	    this.token.remove();
-	    this.myStampStoreListener.remove();
-	  },
-	  selectStamp: function () {
-	    this.setState({
-	      stamp: StampStore.single()
-	    });
-	    if (this.state.stamp) {
-	      this.stampCanvas.clear();
-	      var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_500,h_500/" + this.state.stamp.image_url + ".png";
-	      this.stampCanvas.loadImage(url, this.setStamp);
-	    }
-	  },
-	  colorBar: function () {
-	    if (window.innerHeight > 699) {
-	      var squareSize = "50px";
-	    } else {
-	      var squareSize = "40px";
-	    }
-
-	    return this.state.recentColors.map(function (color, idx) {
-	      var squareStyle = {
-	        background: color,
-	        width: squareSize,
-	        height: squareSize
-	      };
-	      return React.createElement('div', {
-	        key: idx,
-	        className: 'color-square',
-	        style: squareStyle,
-	        onClick: this.pickRecentColor });
-	    }.bind(this)).reverse();
-	  },
-	  saveDrawing: function () {
-	    var img = this.drawingCanvas.toData();
-	    this.setState({ saveStarted: true });
-	    $.ajax({
-	      url: "api/images",
-	      method: "POST",
-	      data: { img: img },
-	      success: function (imageReceived) {
-	        ApiUtil.createDrawing({
-	          caption: this.state.caption,
-	          image_url: imageReceived.public_id
-	        });
-	        ApiUtil.useStamps(this.state.stampsUsed);
-	        this.setState({ saved: true });
-	        this.history.push("drawings/" + imageReceived.id);
-	      }.bind(this),
-	      error: function () {
-	        this.setState({ saveStarted: false });
-	      }
-	    });
-	  },
-	  setStamp: function () {
-	    this.stampImg = this.stampCanvas.toData();
-	    this.stampSize = this.stampCanvas.width();
-	    this.drawingCanvas.setStamp(this.stampImg, this.stampSize);
-	  },
-	  stampingText: function () {
-	    var text = this.state.stamping ? "Turn Stamping Off" : "Turn Stamping On";
-	    return text;
-	  },
-	  toggleStamping: function () {
-	    this.drawingCanvas.toggleStamping();
-	    this.setState({ stamping: !this.state.stamping });
-	    this.setStamp();
-	    this.selectStamp();
-	  },
-	  turnStampingOn: function () {
-	    this.drawingCanvas.turnStampingOn();
-	    this.setState({ stamping: true });
-	    this.setStamp();
-	    this.selectStamp();
-	  },
-	  saveText: function () {
-	    var text;
-	    this.state.saveStarted ? text = "Saving" : text = "Save Drawing";
-	    return text;
-	  },
-	  saveDisabled: function () {
-	    var text;
-	    this.state.saveStarted ? text = true : text = false;
-	    return text;
-	  },
-
-	  // Methods for changing Color
-	  downColorPicker: function (e) {
-	    if (!this.state.stamping) {
-	      this.colorPicking = true;
-	      var color = this.colorPicker.pickColor(e);
-	      this.strokeSample.pickSample(color, this.size);
-	    }
-	  },
-	  upColorPicker: function (e) {
-	    if (!this.state.stamping) {
-	      if (this.colorPicking) {
-	        this.pickColor();
-	      }
-	      this.colorPicking = false;
-	    }
-	  },
-	  moveColorPicker: function (e) {
-	    if (!this.state.stamping) {
-	      if (this.colorPicking) {
-	        var color = this.colorPicker.pickColor(e);
-	        this.strokeSample.pickSample(color, this.size);
-	      }
-	    }
-	  },
-	  outColorPicker: function (e) {
-	    if (!this.state.stamping) {
-	      if (this.colorPicking) {
-	        this.pickColor();
-	      }
-	      this.colorPicking = false;
-	    }
-	  },
-	  pickColor: function (e) {
-	    if (this.colorPicking) {
-	      this.color = this.colorPicker.color();
-	      this.addRecentColor();
-	      this.drawingCanvas.setColor(this.color);
-	    }
-	  },
-	  pickRecentColor: function (e) {
-	    this.color = e.target.style.background;
-	    this.strokeSample.pickSample(this.color, this.size);
-	    this.drawingCanvas.setColor(this.color);
-	  },
-	  addRecentColor: function () {
-	    var recentColors = this.state.recentColors.slice(1, 10);
-	    recentColors.push(this.color);
-	    this.setState({ recentColors: recentColors });
-	  },
-
-	  // Methods for picking size
-	  onSizePicking: function (e) {
-	    if (!this.state.stamping) {
-	      this.sizePicking = true;
-	      this.pickSize(e);
-	    }
-	  },
-	  offSizePicking: function () {
-	    if (!this.state.stamping) {
-	      this.sizePicking = false;
-	    }
-	  },
-	  pickSize: function (e) {
-	    if (!this.state.stamping) {
-	      if (this.sizePicking) {
-	        this.size = this.sizePicker.pickSize(e);
-	        this.strokeSample.pickSample(this.color, this.size);
-	        this.drawingCanvas.setSize(this.size);
-	      }
-	    }
-	  },
-
-	  // Methods for drawing
-	  clearDrawingCanvas: function () {
-	    this.drawingCanvas.hardReset();
-	  },
-	  clearStamp: function () {
-	    this.stampCanvas.clear();
-	    this.setStamp();
-	  },
-	  mouseDownHandler: function (e) {
-	    this.drawingCanvas.mouseDown(e, this.color, this.size);
-
-	    if (this.state.stamping) {
-	      var currentStamp = this.state.stamp.id;
-	      if (this.state.stampsUsed.indexOf(currentStamp) === -1) {
-	        var stampsUsed = this.state.stampsUsed;
-	        stampsUsed.push(currentStamp);
-	        this.setState({ stampsUsed: stampsUsed });
-	      }
-	    }
-	  },
-	  mouseUpHandler: function (e) {
-	    this.drawingCanvas.mouseUp(e, this.color, this.size);
-	  },
-	  mouseOutHandler: function (e) {
-	    this.drawingCanvas.mouseOut(e, this.color, this.size);
-	  },
-
-	  mouseMoveHandler: function (e) {
-	    this.drawingCanvas.mouseMove(e, this.color, this.size);
-	  },
-	  onWheelHandler: function (e) {
-	    e.preventDefault();
-	    if (this.state.stamping) {
-	      if (e.deltaY < 0) {
-	        this.stampCanvas.scaleUp();
-	      } else {
-	        this.stampCanvas.scaleDown();
-	      }
-	      this.setStamp();
-	      this.drawingCanvas.mouseMove(e);
-	    } else {
-	      if (e.deltaY < 0) {
-	        this.size = this.size * 1.2;
-	        this.strokeSample.pickSample(this.color, this.size);
-	        this.drawingCanvas.setSize(this.size);
-	      } else {
-	        this.size = this.size / 1.2;
-	        this.strokeSample.pickSample(this.color, this.size);
-	        this.drawingCanvas.setSize(this.size);
-	      }
-	      this.drawingCanvas.mouseMove(e);
-	    }
-	  },
-	  undo: function (e) {
-	    this.drawingCanvas.undo();
-	  },
-
-	  render: function () {
-
-	    return React.createElement(
-	      'div',
-	      { className: 'drawing-page-with-header' },
-	      React.createElement(
-	        'h1',
-	        { className: 'drawing-header' },
-	        React.createElement(
-	          'span',
-	          { className: 'drawing-header-text' },
-	          React.createElement(
-	            'span',
-	            null,
-	            'Make a Drawing'
-	          )
-	        )
-	      ),
-	      React.createElement(
-	        'div',
-	        { id: 'entire-drawing-page' },
-	        React.createElement(
-	          'span',
-	          { className: 'drawing-buttons',
-	            id: 'left-buttons' },
-	          React.createElement(
-	            'button',
-	            {
-	              className: 'clear-drawing-canvas',
-	              onClick: this.clearDrawingCanvas },
-	            'Clear Canvas'
-	          ),
-	          React.createElement(
-	            'button',
-	            {
-	              className: 'undo',
-	              onClick: this.undo },
-	            'Undo'
-	          )
-	        ),
-	        React.createElement(
-	          'span',
-	          { id: 'drawing-page' },
-	          React.createElement(
-	            'div',
-	            { id: 'drawing' },
-	            React.createElement(
-	              'div',
-	              { id: 'main-square' },
-	              React.createElement(
-	                'span',
-	                { className: 'left-side' },
-	                React.createElement('canvas', {
-	                  id: 'size-picker',
-	                  onClick: this.pickSize,
-	                  onMouseDown: this.onSizePicking,
-	                  onMouseUp: this.offSizePicking,
-	                  onMouseMove: this.pickSize,
-	                  onMouseOut: this.offSizePicking }),
-	                React.createElement('canvas', {
-	                  id: 'stroke-sample' })
-	              ),
-	              React.createElement('canvas', {
-	                id: 'drawing-canvas',
-	                onMouseDown: this.mouseDownHandler,
-	                onMouseUp: this.mouseUpHandler,
-	                onMouseMove: this.mouseMoveHandler,
-	                onMouseOut: this.mouseOutHandler,
-	                onMouseOver: this.mouseOverHandler,
-	                onWheel: this.onWheelHandler }),
-	              React.createElement('canvas', {
-	                id: 'color-picker',
-	                width: '80',
-	                height: '500',
-	                onMouseDown: this.downColorPicker,
-	                onMouseUp: this.upColorPicker,
-	                onMouseMove: this.moveColorPicker,
-	                onMouseOut: this.outColorPicker })
-	            ),
-	            React.createElement(
-	              'div',
-	              {
-	                id: 'color-bar' },
-	              this.colorBar()
-	            )
-	          )
-	        ),
-	        React.createElement(
-	          'span',
-	          { className: 'drawing-buttons',
-	            id: 'right-buttons' },
-	          React.createElement(
-	            'button',
-	            {
-	              id: 'toggle-stamping',
-	              onMouseDown: this.toggleStamping },
-	            this.stampingText()
-	          ),
-	          React.createElement(
-	            'button',
-	            {
-	              className: 'save-drawing',
-	              onClick: this.saveDrawing,
-	              disabled: this.saveDisabled() },
-	            this.saveText()
-	          )
-	        )
-	      ),
-	      React.createElement(
-	        'div',
-	        {
-	          className: 'stamp-canvas' },
-	        React.createElement('canvas', {
-	          id: 'stamp-canvas',
-	          width: '150',
-	          height: '150',
-	          onMouseDown: this.mouseDownHandler,
-	          onMouseUp: this.mouseUpHandler,
-	          onMouseMove: this.mouseMoveHandler })
-	      )
-	    );
-	  }
-	});
-
-	module.exports = CanvasTest;
-
-/***/ },
+/* 244 */,
 /* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -32961,6 +32551,10 @@
 
 	DrawingCanvas.prototype.turnStampingOn = function () {
 	  this.stamping = true;
+	};
+
+	DrawingCanvas.prototype.turnStampingOff = function () {
+	  this.stamping = false;
 	};
 
 	DrawingCanvas.prototype.toData = function () {
@@ -33411,603 +33005,7 @@
 /* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var React = __webpack_require__(1);
-	var DrawingStore = __webpack_require__(241);
-	var ApiUtil = __webpack_require__(210);
-	var History = __webpack_require__(159).History;
-
-	var DrawingDetail = React.createClass({
-	  displayName: 'DrawingDetail',
-
-	  mixins: [History],
-
-	  getInitialState: function () {
-	    return {
-	      drawing: null
-	    };
-	  },
-	  componentWillMount: function () {
-	    this.token = DrawingStore.addListener(this._onChange);
-	    ApiUtil.fetchDrawing(parseInt(this.props.params.drawingId));
-	  },
-	  componentWillUnmount: function () {
-	    this.token.remove();
-	  },
-	  _onChange: function () {
-	    this.setState({ drawing: DrawingStore.single(this.props.params.drawingId) });
-	  },
-	  goToProfile: function () {
-	    this.history.push('/users/' + this.state.drawing.username);
-	  },
-	  goBack: function () {
-	    this.history.goBack();
-	  },
-	  render: function () {
-	    var contents = "";
-	    var profileUrl;
-	    if (this.state.drawing) {
-	      profileUrl = '#/users/' + this.state.drawing.username;
-	    }
-	    if (this.state.drawing) {
-	      var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_500,h_500/" + this.state.drawing.image_url + ".png";
-	      contents = React.createElement(
-	        'div',
-	        null,
-	        React.createElement(
-	          'div',
-	          {
-	            className: 'index-element' },
-	          React.createElement('img', { src: url,
-	            onClick: this.goBack })
-	        ),
-	        React.createElement(
-	          'div',
-	          null,
-	          'Drawn by ',
-	          React.createElement(
-	            'a',
-	            { href: profileUrl },
-	            this.state.drawing.username
-	          ),
-	          React.createElement('br', null),
-	          this.state.drawing.time_ago + " ago"
-	        )
-	      );
-	    }
-	    return React.createElement(
-	      'div',
-	      { className: 'drawing-detail' },
-	      contents
-	    );
-	  }
-
-	});
-
-	module.exports = DrawingDetail;
-
-/***/ },
-/* 255 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var DrawingStore = __webpack_require__(241);
-	var ApiUtil = __webpack_require__(210);
-	var DrawingListItem = __webpack_require__(242);
-	var StampStore = __webpack_require__(217);
-	var StampListItem = __webpack_require__(216);
-
-	var ProfilePage = React.createClass({
-	  displayName: 'ProfilePage',
-
-	  getInitialState: function () {
-	    return {
-	      drawings: null,
-	      stamps: null
-	    };
-	  },
-	  componentDidMount: function () {
-	    this.drawingToken = DrawingStore.addListener(this._drawingsChanged);
-	    this.stampToken = StampStore.addListener(this._stampsChanged);
-	    ApiUtil.fetchUserDrawings(this.props.params.username);
-	    ApiUtil.fetchUserStamps(this.props.params.username);
-	  },
-	  componentWillUnmount: function () {
-	    this.drawingToken.remove();
-	    this.stampToken.remove();
-	  },
-	  _drawingsChanged: function () {
-	    this.setState({
-	      drawings: DrawingStore.all().reverse()
-	    });
-	  },
-	  _stampsChanged: function () {
-	    this.setState({
-	      stamps: StampStore.all().reverse()
-	    });
-	  },
-
-	  render: function () {
-	    var drawingsList = "";
-	    if (this.state.drawings) {
-	      drawingsList = this.state.drawings.map(function (drawing, idx) {
-	        return React.createElement(DrawingListItem, {
-	          key: idx,
-	          drawingId: drawing.id,
-	          imageUrl: drawing.image_url,
-	          drawing: drawing });
-	      });
-	    }
-	    var stampsList = "";
-	    if (this.state.stamps) {
-	      stampsList = this.state.stamps.map(function (stamp, idx) {
-	        return React.createElement(StampListItem, {
-	          key: idx,
-	          stampId: stamp.id,
-	          imageUrl: stamp.image_url,
-	          size: 100,
-	          stamp: stamp });
-	      });
-	    }
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(
-	        'div',
-	        { className: 'index' },
-	        React.createElement(
-	          'h2',
-	          { className: 'index-header' },
-	          React.createElement(
-	            'span',
-	            {
-	              className: 'index-tab',
-	              id: 'selected-tab' },
-	            this.props.params.username + "'s Drawings"
-	          )
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'index-contents' },
-	          drawingsList
-	        )
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'index' },
-	        React.createElement(
-	          'h2',
-	          { className: 'index-header' },
-	          React.createElement(
-	            'span',
-	            {
-	              className: 'index-tab',
-	              id: 'selected-tab' },
-	            this.props.params.username + "'s Stamps"
-	          )
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'index-contents' },
-	          stampsList
-	        )
-	      )
-	    );
-	  }
-	});
-
-	module.exports = ProfilePage;
-
-/***/ },
-/* 256 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var StampStore = __webpack_require__(217);
-	var ApiUtil = __webpack_require__(210);
-	var History = __webpack_require__(159).History;
-
-	var StampDetail = React.createClass({
-	  displayName: 'StampDetail',
-
-	  mixins: [History],
-
-	  getInitialState: function () {
-	    return {
-	      stamp: null
-	    };
-	  },
-	  componentWillMount: function () {
-	    this.token = StampStore.addListener(this._onChange);
-	    ApiUtil.fetchStamp(parseInt(this.props.params.stampId));
-	  },
-	  componentWillUnmount: function () {
-	    this.token.remove();
-	  },
-	  _onChange: function () {
-	    this.setState({ stamp: StampStore.single(this.props.params.stampId) });
-	  },
-	  goToProfile: function () {
-	    this.history.push('/users/' + this.state.stamp.username);
-	  },
-	  render: function () {
-	    var contents = "";
-	    if (this.state.stamp) {
-	      var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + this.state.stamp.image_url + ".png";
-	      contents = React.createElement(
-	        'div',
-	        null,
-	        React.createElement('img', { src: url }),
-	        React.createElement(
-	          'div',
-	          {
-	            className: 'username',
-	            onClick: this.goToProfile },
-	          this.state.stamp.username
-	        )
-	      );
-	    }
-	    return React.createElement(
-	      'div',
-	      null,
-	      contents
-	    );
-	  }
-
-	});
-
-	module.exports = StampDetail;
-
-/***/ },
-/* 257 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var ApiUtil = __webpack_require__(210);
-	var DrawingCanvas = __webpack_require__(245);
-	var StampCanvas = __webpack_require__(246);
-	var ColorPicker = __webpack_require__(247);
-	var SizePicker = __webpack_require__(248);
-	var StrokeSample = __webpack_require__(249);
-	var LinkedStateMixin = __webpack_require__(250);
-	var StampIndex = __webpack_require__(209);
-	var StampStore = __webpack_require__(217);
-	window.wholeDamnTour = __webpack_require__(258);
-
-	var CanvasTest = React.createClass({
-	  displayName: 'CanvasTest',
-
-	  mixins: [LinkedStateMixin],
-
-	  // Methods that set state
-	  getInitialState: function () {
-	    return {
-	      caption: "caption",
-	      stamping: false,
-	      recentColors: ["#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff"],
-	      saveStarted: false,
-	      saved: false
-	    };
-	  },
-	  componentDidMount: function () {
-	    if (window.innerHeight > 699) {
-	      this.drawingCanvas = new DrawingCanvas('drawing-canvas', 500, 500);
-	      this.sizePicker = new SizePicker('size-picker', 80, 420);
-	      this.colorPicker = new ColorPicker('color-picker', 80, 500);
-	      this.strokeSample = new StrokeSample('stroke-sample', 80, 80);
-	    } else {
-	      this.drawingCanvas = new DrawingCanvas('drawing-canvas', 400, 400);
-	      this.sizePicker = new SizePicker('size-picker', 64, 336);
-	      this.colorPicker = new ColorPicker('color-picker', 64, 400);
-	      this.strokeSample = new StrokeSample('stroke-sample', 64, 64);
-	    }
-
-	    this.size = 30;
-	    this.color = "#000";
-	    this.drawingCanvas.setSize(this.size);
-	    this.drawingCanvas.setColor(this.color);
-
-	    this.strokeSample.pickSample(this.color, this.size);
-	    this.addRecentColor();
-
-	    this.colorPicking = false;
-	    this.sizePicking = false;
-
-	    // $.ajax({
-	    //   url: 'users/1',
-	    //   method: 'GET',
-	    //   success: function(user) {
-	    //     if (user.tour_one_completed === false) {
-	    //       ApiUtil.addInitialStamps();
-	    //       window.wholeDamnTour.start();
-	    //       ApiUtil.completeTourOne();
-	    //     }
-	    //   }.bind(this),
-	    //   error: function() {
-	    //   }
-	    // });
-	  },
-
-	  colorBar: function () {
-	    if (window.innerHeight > 699) {
-	      var squareSize = "50px";
-	    } else {
-	      var squareSize = "40px";
-	    }
-
-	    return this.state.recentColors.map(function (color, idx) {
-	      var squareStyle = {
-	        background: color,
-	        width: squareSize,
-	        height: squareSize
-	      };
-	      return React.createElement('div', {
-	        key: idx,
-	        className: 'color-square',
-	        style: squareStyle,
-	        onClick: this.pickRecentColor });
-	    }.bind(this)).reverse();
-	  },
-	  saveStamp: function () {
-	    var img = this.drawingCanvas.toData();
-	    this.setState({ saveStarted: true });
-	    $.ajax({
-	      url: "api/images",
-	      method: "POST",
-	      data: { img: img },
-	      success: function (imageReceived) {
-	        ApiUtil.createStamp({
-	          name: "default name",
-	          image_url: imageReceived.public_id
-	        });
-	        this.setState({ saved: true });
-	      }.bind(this),
-	      error: function () {
-	        this.setState({ saveStarted: false });
-	      }.bind(this)
-	    });
-	  },
-	  saveToMyStamps: function () {
-	    var img = this.drawingCanvas.toData();
-	    this.setState({ saveStarted: true });
-	    $.ajax({
-	      url: "api/images",
-	      method: "POST",
-	      data: { img: img },
-	      success: function (imageReceived) {
-	        ApiUtil.createMyStamp({
-	          name: "default name",
-	          image_url: imageReceived.public_id
-	        });
-	        this.setState({ saved: true });
-	      }.bind(this),
-	      error: function () {
-	        this.setState({ saveStarted: false });
-	      }.bind(this)
-	    });
-	  },
-	  saveText: function () {
-	    var text;
-	    this.state.saved ? text = "Saved" : text = "Save Stamp";
-	    return text;
-	  },
-	  saveDisabled: function () {
-	    var text;
-	    this.state.saveStarted ? text = true : text = false;
-	    return text;
-	  },
-
-	  // Methods for changing Color
-	  downColorPicker: function (e) {
-	    this.colorPicking = true;
-	    var color = this.colorPicker.pickColor(e);
-	    this.strokeSample.pickSample(color, this.size);
-	  },
-	  upColorPicker: function (e) {
-	    if (this.colorPicking) {
-	      this.pickColor();
-	    }
-	    this.colorPicking = false;
-	  },
-	  moveColorPicker: function (e) {
-	    if (this.colorPicking) {
-	      var color = this.colorPicker.pickColor(e);
-	      this.strokeSample.pickSample(color, this.size);
-	    }
-	  },
-	  outColorPicker: function (e) {
-	    if (this.colorPicking) {
-	      this.pickColor();
-	    }
-	    this.colorPicking = false;
-	  },
-	  pickColor: function (e) {
-	    if (this.colorPicking) {
-	      this.color = this.colorPicker.color();
-	      this.addRecentColor();
-	      this.drawingCanvas.setColor(this.color);
-	    }
-	  },
-	  pickRecentColor: function (e) {
-	    this.color = e.target.style.background;
-	    this.strokeSample.pickSample(this.color, this.size);
-	    this.drawingCanvas.setColor(this.color);
-	  },
-	  addRecentColor: function () {
-	    var recentColors = this.state.recentColors.slice(1, 10);
-	    recentColors.push(this.color);
-	    this.setState({ recentColors: recentColors });
-	  },
-
-	  // Methods for picking size
-	  onSizePicking: function (e) {
-	    this.sizePicking = true;
-	    this.pickSize(e);
-	  },
-	  offSizePicking: function () {
-	    this.sizePicking = false;
-	  },
-	  pickSize: function (e) {
-	    if (this.sizePicking) {
-	      this.size = this.sizePicker.pickSize(e);
-	      this.strokeSample.pickSample(this.color, this.size);
-	      this.drawingCanvas.setSize(this.size);
-	    }
-	  },
-
-	  // Methods for drawing
-	  clearDrawingCanvas: function () {
-	    this.drawingCanvas.hardReset();
-	    this.setState({
-	      saveStarted: false,
-	      saved: false
-	    });
-	  },
-	  mouseDownHandler: function (e) {
-	    this.drawingCanvas.mouseDown(e, this.color, this.size);
-	  },
-	  mouseUpHandler: function (e) {
-	    this.drawingCanvas.mouseUp(e, this.color, this.size);
-	  },
-	  mouseOutHandler: function (e) {
-	    this.drawingCanvas.mouseOut(e, this.color, this.size);
-	  },
-	  mouseMoveHandler: function (e) {
-	    this.drawingCanvas.mouseMove(e, this.color, this.size);
-	  },
-	  onWheelHandler: function (e) {
-	    e.preventDefault();
-	    if (e.deltaY < 0) {
-	      this.size = this.size * 1.2;
-	      this.strokeSample.pickSample(this.color, this.size);
-	      this.drawingCanvas.setSize(this.size);
-	    } else {
-	      this.size = this.size / 1.2;
-	      this.strokeSample.pickSample(this.color, this.size);
-	      this.drawingCanvas.setSize(this.size);
-	    }
-	    this.drawingCanvas.mouseMove(e);
-	  },
-	  undo: function (e) {
-	    this.drawingCanvas.undo();
-	  },
-
-	  render: function () {
-	    return React.createElement(
-	      'div',
-	      { className: 'drawing-page-with-header' },
-	      React.createElement(
-	        'h1',
-	        { className: 'drawing-header' },
-	        React.createElement(
-	          'span',
-	          { className: 'drawing-header-text' },
-	          React.createElement(
-	            'span',
-	            null,
-	            'Make a Stamp'
-	          )
-	        )
-	      ),
-	      React.createElement(
-	        'div',
-	        { id: 'entire-drawing-page' },
-	        React.createElement(
-	          'span',
-	          { className: 'drawing-buttons',
-	            id: 'left-buttons' },
-	          React.createElement(
-	            'button',
-	            {
-	              className: 'clear-drawing-canvas',
-	              onClick: this.clearDrawingCanvas },
-	            'Clear Canvas'
-	          ),
-	          React.createElement(
-	            'button',
-	            {
-	              className: 'undo',
-	              onClick: this.undo },
-	            'Undo'
-	          )
-	        ),
-	        React.createElement(
-	          'span',
-	          { id: 'drawing-page' },
-	          React.createElement(
-	            'div',
-	            { id: 'drawing' },
-	            React.createElement(
-	              'div',
-	              { id: 'main-square' },
-	              React.createElement(
-	                'span',
-	                { className: 'left-side' },
-	                React.createElement('canvas', {
-	                  id: 'size-picker',
-	                  onClick: this.pickSize,
-	                  onMouseDown: this.onSizePicking,
-	                  onMouseUp: this.offSizePicking,
-	                  onMouseMove: this.pickSize,
-	                  onMouseOut: this.offSizePicking }),
-	                React.createElement('canvas', {
-	                  id: 'stroke-sample' })
-	              ),
-	              React.createElement('canvas', {
-	                id: 'drawing-canvas',
-	                onMouseDown: this.mouseDownHandler,
-	                onMouseUp: this.mouseUpHandler,
-	                onMouseMove: this.mouseMoveHandler,
-	                onMouseOut: this.mouseOutHandler,
-	                onMouseOver: this.mouseOverHandler,
-	                onWheel: this.onWheelHandler }),
-	              React.createElement('canvas', {
-	                id: 'color-picker',
-	                onMouseDown: this.downColorPicker,
-	                onMouseUp: this.upColorPicker,
-	                onMouseMove: this.moveColorPicker,
-	                onMouseOut: this.outColorPicker })
-	            ),
-	            React.createElement(
-	              'div',
-	              {
-	                id: 'color-bar' },
-	              this.colorBar()
-	            )
-	          )
-	        ),
-	        React.createElement(
-	          'span',
-	          { className: 'drawing-buttons',
-	            id: 'right-buttons' },
-	          React.createElement(
-	            'button',
-	            {
-	              className: 'save-stamp',
-	              onClick: this.saveStamp,
-	              disabled: this.saveDisabled() },
-	            this.saveText()
-	          ),
-	          React.createElement(
-	            'button',
-	            {
-	              className: 'save-to-my-stamps',
-	              onClick: this.saveToMyStamps,
-	              disabled: this.saveDisabled() },
-	            'Save To My Stamps'
-	          )
-	        )
-	      )
-	    );
-	  }
-	});
-
-	module.exports = CanvasTest;
-
-/***/ },
-/* 258 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Shepherd = __webpack_require__(259);
+	var Shepherd = __webpack_require__(255);
 
 	var makeStampTour = new Shepherd.Tour({
 	  defaults: {
@@ -34254,7 +33252,7 @@
 	});
 
 	makeStampTour.addStep('drawing-index', {
-	  text: ["Feel free to check out other users' drawings, see who has been liking", "what, and visit other users' profile pages."],
+	  text: ["Feel free to check out other users' drawings, see who has been liking", "what, and visit other users' profile pages.", "You can also make your own stamps, and browse other users' stamps."],
 	  showCancelLink: true,
 	  buttons: [{
 	    text: 'Finish',
@@ -34267,14 +33265,14 @@
 	module.exports = makeStampTour;
 
 /***/ },
-/* 259 */
+/* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! tether-shepherd 1.6.0 */
+	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! tether-shepherd 1.7.0 */
 
 	(function(root, factory) {
 	  if (true) {
-	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(260)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(256)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	  } else if (typeof exports === 'object') {
 	    module.exports = factory(require('tether'));
 	  } else {
@@ -34304,6 +33302,22 @@
 
 	var Shepherd = new Evented();
 
+	function isUndefined(obj) {
+	  return typeof obj === 'undefined';
+	};
+
+	function isArray(obj) {
+	  return obj && obj.constructor === Array;
+	};
+
+	function isObject(obj) {
+	  return obj && obj.constructor === Object;
+	};
+
+	function isObjectLoose(obj) {
+	  return typeof obj === 'object';
+	};
+
 	var ATTACHMENT = {
 	  'top': 'bottom center',
 	  'left': 'middle right',
@@ -34320,17 +33334,17 @@
 
 	function matchesSelector(el, sel) {
 	  var matches = undefined;
-	  if (typeof el.matches !== 'undefined') {
+	  if (!isUndefined(el.matches)) {
 	    matches = el.matches;
-	  } else if (typeof el.matchesSelector !== 'undefined') {
+	  } else if (!isUndefined(el.matchesSelector)) {
 	    matches = el.matchesSelector;
-	  } else if (typeof el.msMatchesSelector !== 'undefined') {
+	  } else if (!isUndefined(el.msMatchesSelector)) {
 	    matches = el.msMatchesSelector;
-	  } else if (typeof el.webkitMatchesSelector !== 'undefined') {
+	  } else if (!isUndefined(el.webkitMatchesSelector)) {
 	    matches = el.webkitMatchesSelector;
-	  } else if (typeof el.mozMatchesSelector !== 'undefined') {
+	  } else if (!isUndefined(el.mozMatchesSelector)) {
 	    matches = el.mozMatchesSelector;
-	  } else if (typeof el.oMatchesSelector !== 'undefined') {
+	  } else if (!isUndefined(el.oMatchesSelector)) {
 	    matches = el.oMatchesSelector;
 	  }
 	  return matches.call(el, sel);
@@ -34339,7 +33353,7 @@
 	var positionRe = /^(.+) (top|left|right|bottom|center|\[[a-z ]+\])$/;
 
 	function parsePosition(str) {
-	  if (typeof str === 'object') {
+	  if (isObjectLoose(str)) {
 	    if (str.hasOwnProperty("element") && str.hasOwnProperty("on")) {
 	      return str;
 	    }
@@ -34363,9 +33377,9 @@
 	}
 
 	function parseShorthand(obj, props) {
-	  if (obj === null || typeof obj === 'undefined') {
+	  if (obj === null || isUndefined(obj)) {
 	    return obj;
-	  } else if (typeof obj === 'object') {
+	  } else if (isObjectLoose(obj)) {
 	    return obj;
 	  }
 
@@ -34429,12 +33443,33 @@
 	        }
 	      }
 
-	      if (!this.options.buttons) {
+	      // Button configuration
+
+	      var buttonsJson = JSON.stringify(this.options.buttons);
+	      var buttonsAreDefault = isUndefined(buttonsJson) || buttonsJson === "true";
+
+	      var buttonsAreEmpty = buttonsJson === "{}" || buttonsJson === "[]" || buttonsJson === "null" || buttonsJson === "false";
+
+	      var buttonsAreArray = !buttonsAreDefault && isArray(this.options.buttons);
+
+	      var buttonsAreObject = !buttonsAreDefault && isObject(this.options.buttons);
+
+	      // Show default button if undefined or 'true'
+	      if (buttonsAreDefault) {
 	        this.options.buttons = [{
 	          text: 'Next',
-	          action: this.tour.next
+	          action: this.tour.next,
+	          classes: 'btn'
 	        }];
-	      }
+
+	        // Can pass in an object which will assume asingle button
+	      } else if (!buttonsAreEmpty && buttonsAreObject) {
+	          this.options.buttons = [this.options.buttons];
+
+	          // Falsey/empty values or non-object values prevent buttons from rendering
+	        } else if (buttonsAreEmpty || !buttonsAreArray) {
+	            this.options.buttons = false;
+	          }
 	    }
 	  }, {
 	    key: 'getTour',
@@ -34458,7 +33493,7 @@
 	          return;
 	        }
 
-	        if (typeof selector !== 'undefined') {
+	        if (!isUndefined(selector)) {
 	          if (matchesSelector(e.target, selector)) {
 	            _this2.tour.next();
 	          }
@@ -34495,13 +33530,13 @@
 	  }, {
 	    key: 'setupTether',
 	    value: function setupTether() {
-	      if (typeof Tether === 'undefined') {
+	      if (isUndefined(Tether)) {
 	        throw new Error("Using the attachment feature of Shepherd requires the Tether library");
 	      }
 
 	      var opts = this.getAttachTo();
 	      var attachment = ATTACHMENT[opts.on || 'right'] || opts.on;
-	      if (typeof opts.element === 'undefined') {
+	      if (isUndefined(opts.element)) {
 	        opts.element = 'viewport';
 	        attachment = 'middle center';
 	      }
@@ -34530,9 +33565,9 @@
 	    value: function show() {
 	      var _this3 = this;
 
-	      if (typeof this.options.beforeShowPromise !== 'undefined') {
+	      if (!isUndefined(this.options.beforeShowPromise)) {
 	        var beforeShowPromise = this.options.beforeShowPromise();
-	        if (typeof beforeShowPromise !== 'undefined') {
+	        if (!isUndefined(beforeShowPromise)) {
 	          return beforeShowPromise.then(function () {
 	            return _this3._show();
 	          });
@@ -34605,16 +33640,16 @@
 
 	      var element = _getAttachTo.element;
 
-	      if (typeof this.options.scrollToHandler !== 'undefined') {
+	      if (!isUndefined(this.options.scrollToHandler)) {
 	        this.options.scrollToHandler(element);
-	      } else if (typeof element !== 'undefined') {
+	      } else if (!isUndefined(element)) {
 	        element.scrollIntoView();
 	      }
 	    }
 	  }, {
 	    key: 'destroy',
 	    value: function destroy() {
-	      if (typeof this.el !== 'undefined' && this.el.parentNode) {
+	      if (!isUndefined(this.el) && this.el.parentNode) {
 	        this.el.parentNode.removeChild(this.el);
 	        delete this.el;
 	      }
@@ -34631,7 +33666,7 @@
 	    value: function render() {
 	      var _this5 = this;
 
-	      if (typeof this.el !== 'undefined') {
+	      if (!isUndefined(this.el)) {
 	        this.destroy();
 	      }
 
@@ -34658,7 +33693,7 @@
 	        this.bindCancelLink(link);
 	      }
 
-	      if (typeof this.options.text !== 'undefined') {
+	      if (!isUndefined(this.options.text)) {
 	        (function () {
 	          var text = createFromHTML("<div class='shepherd-text'></div>");
 	          var paragraphs = _this5.options.text;
@@ -34683,10 +33718,9 @@
 	        })();
 	      }
 
-	      var footer = document.createElement('footer');
-
 	      if (this.options.buttons) {
 	        (function () {
+	          var footer = document.createElement('footer');
 	          var buttons = createFromHTML("<ul class='shepherd-buttons'></ul>");
 
 	          _this5.options.buttons.map(function (cfg) {
@@ -34696,10 +33730,9 @@
 	          });
 
 	          footer.appendChild(buttons);
+	          content.appendChild(footer);
 	        })();
 	      }
-
-	      content.appendChild(footer);
 
 	      document.body.appendChild(this.el);
 
@@ -34725,7 +33758,7 @@
 	      var _this7 = this;
 
 	      cfg.events = cfg.events || {};
-	      if (typeof cfg.action !== 'undefined') {
+	      if (!isUndefined(cfg.action)) {
 	        // Including both a click event and an action is not supported
 	        cfg.events.click = cfg.action;
 	      }
@@ -34802,7 +33835,7 @@
 	  }, {
 	    key: 'addStep',
 	    value: function addStep(name, step) {
-	      if (typeof step === 'undefined') {
+	      if (isUndefined(step)) {
 	        step = name;
 	      }
 
@@ -34932,7 +33965,7 @@
 	      }
 
 	      if (next) {
-	        if (typeof next.options.showOn !== 'undefined' && !next.options.showOn()) {
+	        if (!isUndefined(next.options.showOn) && !next.options.showOn()) {
 	          var index = this.steps.indexOf(next);
 	          var nextIndex = forward ? index + 1 : index - 1;
 	          this.show(nextIndex, forward);
@@ -34971,10 +34004,10 @@
 
 
 /***/ },
-/* 260 */
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! tether 1.1.0 */
+	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! tether 1.2.0 */
 
 	(function(root, factory) {
 	  if (true) {
@@ -34998,9 +34031,10 @@
 	}
 
 	function getScrollParent(el) {
-	  var _getComputedStyle = getComputedStyle(el);
-
-	  var position = _getComputedStyle.position;
+	  // In firefox if the el is inside an iframe with display: none; window.getComputedStyle() will return null;
+	  // https://bugzilla.mozilla.org/show_bug.cgi?id=548397
+	  var computedStyle = getComputedStyle(el) || {};
+	  var position = computedStyle.position;
 
 	  if (position === 'fixed') {
 	    return el;
@@ -36452,14 +35486,24 @@
 	      }
 
 	      if (changeAttachX === 'element' || changeAttachX === 'both') {
-	        if (left < bounds[0] && eAttachment.left === 'right') {
-	          left += width;
-	          eAttachment.left = 'left';
+	        if (left < bounds[0]) {
+	          if (eAttachment.left === 'right') {
+	            left += width;
+	            eAttachment.left = 'left';
+	          } else if (eAttachment.left === 'center') {
+	            left += width / 2;
+	            eAttachment.left = 'left';
+	          }
 	        }
 
-	        if (left + width > bounds[2] && eAttachment.left === 'left') {
-	          left -= width;
-	          eAttachment.left = 'right';
+	        if (left + width > bounds[2]) {
+	          if (eAttachment.left === 'left') {
+	            left -= width;
+	            eAttachment.left = 'right';
+	          } else if (eAttachment.left === 'center') {
+	            left -= width / 2;
+	            eAttachment.left = 'right';
+	          }
 	        }
 	      }
 
@@ -36692,6 +35736,602 @@
 
 
 /***/ },
+/* 257 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var DrawingStore = __webpack_require__(241);
+	var ApiUtil = __webpack_require__(210);
+	var History = __webpack_require__(159).History;
+
+	var DrawingDetail = React.createClass({
+	  displayName: 'DrawingDetail',
+
+	  mixins: [History],
+
+	  getInitialState: function () {
+	    return {
+	      drawing: null
+	    };
+	  },
+	  componentWillMount: function () {
+	    this.token = DrawingStore.addListener(this._onChange);
+	    ApiUtil.fetchDrawing(parseInt(this.props.params.drawingId));
+	  },
+	  componentWillUnmount: function () {
+	    this.token.remove();
+	  },
+	  _onChange: function () {
+	    this.setState({ drawing: DrawingStore.single(this.props.params.drawingId) });
+	  },
+	  goToProfile: function () {
+	    this.history.push('/users/' + this.state.drawing.username);
+	  },
+	  goBack: function () {
+	    this.history.goBack();
+	  },
+	  render: function () {
+	    var contents = "";
+	    var profileUrl;
+	    if (this.state.drawing) {
+	      profileUrl = '#/users/' + this.state.drawing.username;
+	    }
+	    if (this.state.drawing) {
+	      var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_500,h_500/" + this.state.drawing.image_url + ".png";
+	      contents = React.createElement(
+	        'div',
+	        null,
+	        React.createElement(
+	          'div',
+	          {
+	            className: 'index-element' },
+	          React.createElement('img', { src: url,
+	            onClick: this.goBack })
+	        ),
+	        React.createElement(
+	          'div',
+	          null,
+	          'Drawn by ',
+	          React.createElement(
+	            'a',
+	            { href: profileUrl },
+	            this.state.drawing.username
+	          ),
+	          React.createElement('br', null),
+	          this.state.drawing.time_ago + " ago"
+	        )
+	      );
+	    }
+	    return React.createElement(
+	      'div',
+	      { className: 'drawing-detail' },
+	      contents
+	    );
+	  }
+
+	});
+
+	module.exports = DrawingDetail;
+
+/***/ },
+/* 258 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var DrawingStore = __webpack_require__(241);
+	var ApiUtil = __webpack_require__(210);
+	var DrawingListItem = __webpack_require__(242);
+	var StampStore = __webpack_require__(217);
+	var StampListItem = __webpack_require__(216);
+
+	var ProfilePage = React.createClass({
+	  displayName: 'ProfilePage',
+
+	  getInitialState: function () {
+	    return {
+	      drawings: null,
+	      stamps: null
+	    };
+	  },
+	  componentDidMount: function () {
+	    this.drawingToken = DrawingStore.addListener(this._drawingsChanged);
+	    this.stampToken = StampStore.addListener(this._stampsChanged);
+	    ApiUtil.fetchUserDrawings(this.props.params.username);
+	    ApiUtil.fetchUserStamps(this.props.params.username);
+	  },
+	  componentWillUnmount: function () {
+	    this.drawingToken.remove();
+	    this.stampToken.remove();
+	  },
+	  _drawingsChanged: function () {
+	    this.setState({
+	      drawings: DrawingStore.all().reverse()
+	    });
+	  },
+	  _stampsChanged: function () {
+	    this.setState({
+	      stamps: StampStore.all().reverse()
+	    });
+	  },
+
+	  render: function () {
+	    var drawingsList = "";
+	    if (this.state.drawings) {
+	      drawingsList = this.state.drawings.map(function (drawing, idx) {
+	        return React.createElement(DrawingListItem, {
+	          key: idx,
+	          drawingId: drawing.id,
+	          imageUrl: drawing.image_url,
+	          drawing: drawing });
+	      });
+	    }
+	    var stampsList = "";
+	    if (this.state.stamps) {
+	      stampsList = this.state.stamps.map(function (stamp, idx) {
+	        return React.createElement(StampListItem, {
+	          key: idx,
+	          stampId: stamp.id,
+	          imageUrl: stamp.image_url,
+	          size: 100,
+	          stamp: stamp });
+	      });
+	    }
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'div',
+	        { className: 'index' },
+	        React.createElement(
+	          'h2',
+	          { className: 'index-header' },
+	          React.createElement(
+	            'span',
+	            {
+	              className: 'index-tab',
+	              id: 'selected-tab' },
+	            this.props.params.username + "'s Drawings"
+	          )
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'index-contents' },
+	          drawingsList
+	        )
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'index' },
+	        React.createElement(
+	          'h2',
+	          { className: 'index-header' },
+	          React.createElement(
+	            'span',
+	            {
+	              className: 'index-tab',
+	              id: 'selected-tab' },
+	            this.props.params.username + "'s Stamps"
+	          )
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'index-contents' },
+	          stampsList
+	        )
+	      )
+	    );
+	  }
+	});
+
+	module.exports = ProfilePage;
+
+/***/ },
+/* 259 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var StampStore = __webpack_require__(217);
+	var ApiUtil = __webpack_require__(210);
+	var History = __webpack_require__(159).History;
+
+	var StampDetail = React.createClass({
+	  displayName: 'StampDetail',
+
+	  mixins: [History],
+
+	  getInitialState: function () {
+	    return {
+	      stamp: null
+	    };
+	  },
+	  componentWillMount: function () {
+	    this.token = StampStore.addListener(this._onChange);
+	    ApiUtil.fetchStamp(parseInt(this.props.params.stampId));
+	  },
+	  componentWillUnmount: function () {
+	    this.token.remove();
+	  },
+	  _onChange: function () {
+	    this.setState({ stamp: StampStore.single(this.props.params.stampId) });
+	  },
+	  goToProfile: function () {
+	    this.history.push('/users/' + this.state.stamp.username);
+	  },
+	  render: function () {
+	    var contents = "";
+	    if (this.state.stamp) {
+	      var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/" + this.state.stamp.image_url + ".png";
+	      contents = React.createElement(
+	        'div',
+	        null,
+	        React.createElement('img', { src: url }),
+	        React.createElement(
+	          'div',
+	          {
+	            className: 'username',
+	            onClick: this.goToProfile },
+	          this.state.stamp.username
+	        )
+	      );
+	    }
+	    return React.createElement(
+	      'div',
+	      null,
+	      contents
+	    );
+	  }
+
+	});
+
+	module.exports = StampDetail;
+
+/***/ },
+/* 260 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var ApiUtil = __webpack_require__(210);
+	var DrawingCanvas = __webpack_require__(245);
+	var StampCanvas = __webpack_require__(246);
+	var ColorPicker = __webpack_require__(247);
+	var SizePicker = __webpack_require__(248);
+	var StrokeSample = __webpack_require__(249);
+	var LinkedStateMixin = __webpack_require__(250);
+	var StampIndex = __webpack_require__(209);
+	var StampStore = __webpack_require__(217);
+	window.wholeDamnTour = __webpack_require__(254);
+
+	var NewDrawing = React.createClass({
+	  displayName: 'NewDrawing',
+
+	  mixins: [LinkedStateMixin],
+
+	  // Methods that set state
+	  getInitialState: function () {
+	    return {
+	      caption: "caption",
+	      stamping: false,
+	      recentColors: ["#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff"],
+	      saveStarted: false,
+	      saved: false
+	    };
+	  },
+	  componentDidMount: function () {
+	    if (window.innerHeight > 699) {
+	      this.drawingCanvas = new DrawingCanvas('drawing-canvas', 500, 500);
+	      this.sizePicker = new SizePicker('size-picker', 80, 420);
+	      this.colorPicker = new ColorPicker('color-picker', 80, 500);
+	      this.strokeSample = new StrokeSample('stroke-sample', 80, 80);
+	    } else {
+	      this.drawingCanvas = new DrawingCanvas('drawing-canvas', 400, 400);
+	      this.sizePicker = new SizePicker('size-picker', 64, 336);
+	      this.colorPicker = new ColorPicker('color-picker', 64, 400);
+	      this.strokeSample = new StrokeSample('stroke-sample', 64, 64);
+	    }
+
+	    this.size = 30;
+	    this.color = "#000";
+	    this.drawingCanvas.setSize(this.size);
+	    this.drawingCanvas.setColor(this.color);
+
+	    this.strokeSample.pickSample(this.color, this.size);
+	    this.addRecentColor();
+
+	    this.colorPicking = false;
+	    this.sizePicking = false;
+
+	    // $.ajax({
+	    //   url: 'users/1',
+	    //   method: 'GET',
+	    //   success: function(user) {
+	    //     if (user.tour_one_completed === false) {
+	    //       ApiUtil.addInitialStamps();
+	    //       window.wholeDamnTour.start();
+	    //       ApiUtil.completeTourOne();
+	    //     }
+	    //   }.bind(this),
+	    //   error: function() {
+	    //   }
+	    // });
+	  },
+
+	  colorBar: function () {
+	    if (window.innerHeight > 699) {
+	      var squareSize = "50px";
+	    } else {
+	      var squareSize = "40px";
+	    }
+
+	    return this.state.recentColors.map(function (color, idx) {
+	      var squareStyle = {
+	        background: color,
+	        width: squareSize,
+	        height: squareSize
+	      };
+	      return React.createElement('div', {
+	        key: idx,
+	        className: 'color-square',
+	        style: squareStyle,
+	        onClick: this.pickRecentColor });
+	    }.bind(this)).reverse();
+	  },
+	  saveStamp: function () {
+	    var img = this.drawingCanvas.toData();
+	    this.setState({ saveStarted: true });
+	    $.ajax({
+	      url: "api/images",
+	      method: "POST",
+	      data: { img: img },
+	      success: function (imageReceived) {
+	        ApiUtil.createStamp({
+	          name: "default name",
+	          image_url: imageReceived.public_id
+	        });
+	        this.setState({ saved: true });
+	      }.bind(this),
+	      error: function () {
+	        this.setState({ saveStarted: false });
+	      }.bind(this)
+	    });
+	  },
+	  saveToMyStamps: function () {
+	    var img = this.drawingCanvas.toData();
+	    this.setState({ saveStarted: true });
+	    $.ajax({
+	      url: "api/images",
+	      method: "POST",
+	      data: { img: img },
+	      success: function (imageReceived) {
+	        ApiUtil.createMyStamp({
+	          name: "default name",
+	          image_url: imageReceived.public_id
+	        });
+	        this.setState({ saved: true });
+	      }.bind(this),
+	      error: function () {
+	        this.setState({ saveStarted: false });
+	      }.bind(this)
+	    });
+	  },
+	  saveText: function () {
+	    var text;
+	    this.state.saved ? text = "Saved" : text = "Save Stamp";
+	    return text;
+	  },
+	  saveDisabled: function () {
+	    var text;
+	    this.state.saveStarted ? text = true : text = false;
+	    return text;
+	  },
+
+	  // Methods for changing Color
+	  downColorPicker: function (e) {
+	    this.colorPicking = true;
+	    var color = this.colorPicker.pickColor(e);
+	    this.strokeSample.pickSample(color, this.size);
+	  },
+	  upColorPicker: function (e) {
+	    if (this.colorPicking) {
+	      this.pickColor();
+	    }
+	    this.colorPicking = false;
+	  },
+	  moveColorPicker: function (e) {
+	    if (this.colorPicking) {
+	      var color = this.colorPicker.pickColor(e);
+	      this.strokeSample.pickSample(color, this.size);
+	    }
+	  },
+	  outColorPicker: function (e) {
+	    if (this.colorPicking) {
+	      this.pickColor();
+	    }
+	    this.colorPicking = false;
+	  },
+	  pickColor: function (e) {
+	    if (this.colorPicking) {
+	      this.color = this.colorPicker.color();
+	      this.addRecentColor();
+	      this.drawingCanvas.setColor(this.color);
+	    }
+	  },
+	  pickRecentColor: function (e) {
+	    this.color = e.target.style.background;
+	    this.strokeSample.pickSample(this.color, this.size);
+	    this.drawingCanvas.setColor(this.color);
+	  },
+	  addRecentColor: function () {
+	    var recentColors = this.state.recentColors.slice(1, 10);
+	    recentColors.push(this.color);
+	    this.setState({ recentColors: recentColors });
+	  },
+
+	  // Methods for picking size
+	  onSizePicking: function (e) {
+	    this.sizePicking = true;
+	    this.pickSize(e);
+	  },
+	  offSizePicking: function () {
+	    this.sizePicking = false;
+	  },
+	  pickSize: function (e) {
+	    if (this.sizePicking) {
+	      this.size = this.sizePicker.pickSize(e);
+	      this.strokeSample.pickSample(this.color, this.size);
+	      this.drawingCanvas.setSize(this.size);
+	    }
+	  },
+
+	  // Methods for drawing
+	  clearDrawingCanvas: function () {
+	    this.drawingCanvas.hardReset();
+	    this.setState({
+	      saveStarted: false,
+	      saved: false
+	    });
+	  },
+	  mouseDownHandler: function (e) {
+	    this.drawingCanvas.mouseDown(e, this.color, this.size);
+	  },
+	  mouseUpHandler: function (e) {
+	    this.drawingCanvas.mouseUp(e, this.color, this.size);
+	  },
+	  mouseOutHandler: function (e) {
+	    this.drawingCanvas.mouseOut(e, this.color, this.size);
+	  },
+	  mouseMoveHandler: function (e) {
+	    this.drawingCanvas.mouseMove(e, this.color, this.size);
+	  },
+	  onWheelHandler: function (e) {
+	    e.preventDefault();
+	    if (e.deltaY < 0) {
+	      this.size = this.size * 1.2;
+	      this.strokeSample.pickSample(this.color, this.size);
+	      this.drawingCanvas.setSize(this.size);
+	    } else {
+	      this.size = this.size / 1.2;
+	      this.strokeSample.pickSample(this.color, this.size);
+	      this.drawingCanvas.setSize(this.size);
+	    }
+	    this.drawingCanvas.mouseMove(e);
+	  },
+	  undo: function (e) {
+	    this.drawingCanvas.undo();
+	  },
+
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'drawing-page-with-header' },
+	      React.createElement(
+	        'h1',
+	        { className: 'drawing-header' },
+	        React.createElement(
+	          'span',
+	          { className: 'drawing-header-text' },
+	          React.createElement(
+	            'span',
+	            null,
+	            'Make a Stamp'
+	          )
+	        )
+	      ),
+	      React.createElement(
+	        'div',
+	        { id: 'entire-drawing-page' },
+	        React.createElement(
+	          'span',
+	          { className: 'drawing-buttons',
+	            id: 'left-buttons' },
+	          React.createElement(
+	            'button',
+	            {
+	              className: 'clear-drawing-canvas',
+	              onClick: this.clearDrawingCanvas },
+	            'Clear Canvas'
+	          ),
+	          React.createElement(
+	            'button',
+	            {
+	              className: 'undo',
+	              onClick: this.undo },
+	            'Undo'
+	          )
+	        ),
+	        React.createElement(
+	          'span',
+	          { id: 'drawing-page' },
+	          React.createElement(
+	            'div',
+	            { id: 'drawing' },
+	            React.createElement(
+	              'div',
+	              { id: 'main-square' },
+	              React.createElement(
+	                'span',
+	                { className: 'left-side' },
+	                React.createElement('canvas', {
+	                  id: 'size-picker',
+	                  onClick: this.pickSize,
+	                  onMouseDown: this.onSizePicking,
+	                  onMouseUp: this.offSizePicking,
+	                  onMouseMove: this.pickSize,
+	                  onMouseOut: this.offSizePicking }),
+	                React.createElement('canvas', {
+	                  id: 'stroke-sample' })
+	              ),
+	              React.createElement('canvas', {
+	                id: 'drawing-canvas',
+	                onMouseDown: this.mouseDownHandler,
+	                onMouseUp: this.mouseUpHandler,
+	                onMouseMove: this.mouseMoveHandler,
+	                onMouseOut: this.mouseOutHandler,
+	                onMouseOver: this.mouseOverHandler,
+	                onWheel: this.onWheelHandler }),
+	              React.createElement('canvas', {
+	                id: 'color-picker',
+	                onMouseDown: this.downColorPicker,
+	                onMouseUp: this.upColorPicker,
+	                onMouseMove: this.moveColorPicker,
+	                onMouseOut: this.outColorPicker })
+	            ),
+	            React.createElement(
+	              'div',
+	              {
+	                id: 'color-bar' },
+	              this.colorBar()
+	            )
+	          )
+	        ),
+	        React.createElement(
+	          'span',
+	          { className: 'drawing-buttons',
+	            id: 'right-buttons' },
+	          React.createElement(
+	            'button',
+	            {
+	              className: 'save-stamp',
+	              onClick: this.saveStamp,
+	              disabled: this.saveDisabled() },
+	            this.saveText()
+	          ),
+	          React.createElement(
+	            'button',
+	            {
+	              className: 'save-to-my-stamps',
+	              onClick: this.saveToMyStamps,
+	              disabled: this.saveDisabled() },
+	            'Save To My Stamps'
+	          )
+	        )
+	      )
+	    );
+	  }
+	});
+
+	module.exports = NewDrawing;
+
+/***/ },
 /* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -36707,6 +36347,419 @@
 	});
 
 	module.exports = Home;
+
+/***/ },
+/* 262 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var ApiUtil = __webpack_require__(210);
+	var DrawingCanvas = __webpack_require__(245);
+	var StampCanvas = __webpack_require__(246);
+	var ColorPicker = __webpack_require__(247);
+	var SizePicker = __webpack_require__(248);
+	var StrokeSample = __webpack_require__(249);
+	var LinkedStateMixin = __webpack_require__(250);
+	var StampIndex = __webpack_require__(209);
+	var StampStore = __webpack_require__(217);
+	var History = __webpack_require__(159).History;
+	var MyStampStore = __webpack_require__(239);
+	window.wholeDamnTour = __webpack_require__(254);
+
+	var NewDrawing = React.createClass({
+	  displayName: 'NewDrawing',
+
+	  mixins: [LinkedStateMixin, History],
+
+	  // Methods that set state
+	  getInitialState: function () {
+	    return {
+	      caption: "caption",
+	      stamping: false,
+	      recentColors: ["#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff", "#fff"],
+	      stamp: StampStore.single(),
+	      stampSize: 150,
+	      saveStarted: false,
+	      saved: false,
+	      stampsUsed: []
+	    };
+	  },
+	  componentDidMount: function () {
+
+	    if (window.innerHeight > 699) {
+	      this.drawingCanvas = new DrawingCanvas('drawing-canvas', 500, 500);
+	      this.sizePicker = new SizePicker('size-picker', 80, 420);
+	      this.colorPicker = new ColorPicker('color-picker', 80, 500);
+	      this.strokeSample = new StrokeSample('stroke-sample', 80, 80);
+	    } else {
+	      this.drawingCanvas = new DrawingCanvas('drawing-canvas', 400, 400);
+	      this.sizePicker = new SizePicker('size-picker', 64, 336);
+	      this.colorPicker = new ColorPicker('color-picker', 64, 400);
+	      this.strokeSample = new StrokeSample('stroke-sample', 64, 64);
+	    }
+	    this.stampCanvas = new StampCanvas('stamp-canvas', 150, 150);
+
+	    this.size = 30;
+	    this.color = "#000";
+	    this.drawingCanvas.setSize(this.size);
+	    this.drawingCanvas.setColor(this.color);
+	    this.addRecentColor(this.color);
+
+	    this.strokeSample.pickSample(this.color, this.size);
+
+	    this.colorPicking = false;
+	    this.sizePicking = false;
+
+	    this.token = StampStore.addListener(this.selectStamp);
+	    this.myStampStoreListener = MyStampStore.addListener(this.turnStampingOn);
+
+	    ApiUtil.startTour(this.turnStampingOff);
+	  },
+	  componentWillUnmount: function () {
+	    this.token.remove();
+	    this.myStampStoreListener.remove();
+	  },
+	  selectStamp: function () {
+	    this.setState({
+	      stamp: StampStore.single()
+	    });
+	    if (this.state.stamp) {
+	      this.stampCanvas.clear();
+	      var url = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_500,h_500/" + this.state.stamp.image_url + ".png";
+	      this.stampCanvas.loadImage(url, this.setStamp);
+	    }
+	  },
+	  colorBar: function () {
+	    if (window.innerHeight > 699) {
+	      var squareSize = "50px";
+	    } else {
+	      var squareSize = "40px";
+	    }
+
+	    return this.state.recentColors.map(function (color, idx) {
+	      var squareStyle = {
+	        background: color,
+	        width: squareSize,
+	        height: squareSize
+	      };
+	      return React.createElement('div', {
+	        key: idx,
+	        className: 'color-square',
+	        style: squareStyle,
+	        onClick: this.pickRecentColor });
+	    }.bind(this)).reverse();
+	  },
+	  saveDrawing: function () {
+	    var img = this.drawingCanvas.toData();
+	    this.setState({ saveStarted: true });
+	    $.ajax({
+	      url: "api/images",
+	      method: "POST",
+	      data: { img: img },
+	      success: function (imageReceived) {
+	        ApiUtil.createDrawing({
+	          caption: this.state.caption,
+	          image_url: imageReceived.public_id
+	        });
+	        ApiUtil.useStamps(this.state.stampsUsed);
+	        this.setState({ saved: true });
+	        this.history.push("drawings/" + imageReceived.id);
+	      }.bind(this),
+	      error: function () {
+	        this.setState({ saveStarted: false });
+	      }
+	    });
+	  },
+	  setStamp: function () {
+	    this.stampImg = this.stampCanvas.toData();
+	    this.stampSize = this.stampCanvas.width();
+	    this.drawingCanvas.setStamp(this.stampImg, this.stampSize);
+	  },
+	  stampingText: function () {
+	    var text = this.state.stamping ? "Turn Stamping Off" : "Turn Stamping On";
+	    return text;
+	  },
+	  toggleStamping: function () {
+	    this.drawingCanvas.toggleStamping();
+	    this.setState({ stamping: !this.state.stamping });
+	    this.setStamp();
+	    this.selectStamp();
+	  },
+	  turnStampingOn: function () {
+	    this.drawingCanvas.turnStampingOn();
+	    this.setState({ stamping: true });
+	    this.setStamp();
+	    this.selectStamp();
+	  },
+	  turnStampingOff: function () {
+	    this.drawingCanvas.turnStampingOff();
+	    this.setState({ stamping: false });
+	  },
+	  saveText: function () {
+	    var text;
+	    this.state.saveStarted ? text = "Saving" : text = "Save Drawing";
+	    return text;
+	  },
+	  saveDisabled: function () {
+	    var text;
+	    this.state.saveStarted ? text = true : text = false;
+	    return text;
+	  },
+
+	  // Methods for changing Color
+	  downColorPicker: function (e) {
+	    if (!this.state.stamping) {
+	      this.colorPicking = true;
+	      var color = this.colorPicker.pickColor(e);
+	      this.strokeSample.pickSample(color, this.size);
+	    }
+	  },
+	  upColorPicker: function (e) {
+	    if (!this.state.stamping) {
+	      if (this.colorPicking) {
+	        this.pickColor();
+	      }
+	      this.colorPicking = false;
+	    }
+	  },
+	  moveColorPicker: function (e) {
+	    if (!this.state.stamping) {
+	      if (this.colorPicking) {
+	        var color = this.colorPicker.pickColor(e);
+	        this.strokeSample.pickSample(color, this.size);
+	      }
+	    }
+	  },
+	  outColorPicker: function (e) {
+	    if (!this.state.stamping) {
+	      if (this.colorPicking) {
+	        this.pickColor();
+	      }
+	      this.colorPicking = false;
+	    }
+	  },
+	  pickColor: function (e) {
+	    if (this.colorPicking) {
+	      this.color = this.colorPicker.color();
+	      this.addRecentColor();
+	      this.drawingCanvas.setColor(this.color);
+	    }
+	  },
+	  pickRecentColor: function (e) {
+	    this.color = e.target.style.background;
+	    this.strokeSample.pickSample(this.color, this.size);
+	    this.drawingCanvas.setColor(this.color);
+	  },
+	  addRecentColor: function () {
+	    var recentColors = this.state.recentColors.slice(1, 10);
+	    recentColors.push(this.color);
+	    this.setState({ recentColors: recentColors });
+	  },
+
+	  // Methods for picking size
+	  onSizePicking: function (e) {
+	    if (!this.state.stamping) {
+	      this.sizePicking = true;
+	      this.pickSize(e);
+	    }
+	  },
+	  offSizePicking: function () {
+	    if (!this.state.stamping) {
+	      this.sizePicking = false;
+	    }
+	  },
+	  pickSize: function (e) {
+	    if (!this.state.stamping) {
+	      if (this.sizePicking) {
+	        this.size = this.sizePicker.pickSize(e);
+	        this.strokeSample.pickSample(this.color, this.size);
+	        this.drawingCanvas.setSize(this.size);
+	      }
+	    }
+	  },
+
+	  // Methods for drawing
+	  clearDrawingCanvas: function () {
+	    this.drawingCanvas.hardReset();
+	  },
+	  clearStamp: function () {
+	    this.stampCanvas.clear();
+	    this.setStamp();
+	  },
+	  mouseDownHandler: function (e) {
+	    this.drawingCanvas.mouseDown(e, this.color, this.size);
+
+	    if (this.state.stamping) {
+	      var currentStamp = this.state.stamp.id;
+	      if (this.state.stampsUsed.indexOf(currentStamp) === -1) {
+	        var stampsUsed = this.state.stampsUsed;
+	        stampsUsed.push(currentStamp);
+	        this.setState({ stampsUsed: stampsUsed });
+	      }
+	    }
+	  },
+	  mouseUpHandler: function (e) {
+	    this.drawingCanvas.mouseUp(e, this.color, this.size);
+	  },
+	  mouseOutHandler: function (e) {
+	    this.drawingCanvas.mouseOut(e, this.color, this.size);
+	  },
+
+	  mouseMoveHandler: function (e) {
+	    this.drawingCanvas.mouseMove(e, this.color, this.size);
+	  },
+	  onWheelHandler: function (e) {
+	    e.preventDefault();
+	    if (this.state.stamping) {
+	      if (e.deltaY < 0) {
+	        this.stampCanvas.scaleUp();
+	      } else {
+	        this.stampCanvas.scaleDown();
+	      }
+	      this.setStamp();
+	      this.drawingCanvas.mouseMove(e);
+	    } else {
+	      if (e.deltaY < 0) {
+	        this.size = this.size * 1.2;
+	        this.strokeSample.pickSample(this.color, this.size);
+	        this.drawingCanvas.setSize(this.size);
+	      } else {
+	        this.size = this.size / 1.2;
+	        this.strokeSample.pickSample(this.color, this.size);
+	        this.drawingCanvas.setSize(this.size);
+	      }
+	      this.drawingCanvas.mouseMove(e);
+	    }
+	  },
+	  undo: function (e) {
+	    this.drawingCanvas.undo();
+	  },
+
+	  render: function () {
+
+	    return React.createElement(
+	      'div',
+	      { className: 'drawing-page-with-header' },
+	      React.createElement(
+	        'h1',
+	        { className: 'drawing-header' },
+	        React.createElement(
+	          'span',
+	          { className: 'drawing-header-text' },
+	          React.createElement(
+	            'span',
+	            null,
+	            'Make a Drawing'
+	          )
+	        )
+	      ),
+	      React.createElement(
+	        'div',
+	        { id: 'entire-drawing-page' },
+	        React.createElement(
+	          'span',
+	          { className: 'drawing-buttons',
+	            id: 'left-buttons' },
+	          React.createElement(
+	            'button',
+	            {
+	              className: 'clear-drawing-canvas',
+	              onClick: this.clearDrawingCanvas },
+	            'Clear Canvas'
+	          ),
+	          React.createElement(
+	            'button',
+	            {
+	              className: 'undo',
+	              onClick: this.undo },
+	            'Undo'
+	          )
+	        ),
+	        React.createElement(
+	          'span',
+	          { id: 'drawing-page' },
+	          React.createElement(
+	            'div',
+	            { id: 'drawing' },
+	            React.createElement(
+	              'div',
+	              { id: 'main-square' },
+	              React.createElement(
+	                'span',
+	                { className: 'left-side' },
+	                React.createElement('canvas', {
+	                  id: 'size-picker',
+	                  onClick: this.pickSize,
+	                  onMouseDown: this.onSizePicking,
+	                  onMouseUp: this.offSizePicking,
+	                  onMouseMove: this.pickSize,
+	                  onMouseOut: this.offSizePicking }),
+	                React.createElement('canvas', {
+	                  id: 'stroke-sample' })
+	              ),
+	              React.createElement('canvas', {
+	                id: 'drawing-canvas',
+	                onMouseDown: this.mouseDownHandler,
+	                onMouseUp: this.mouseUpHandler,
+	                onMouseMove: this.mouseMoveHandler,
+	                onMouseOut: this.mouseOutHandler,
+	                onMouseOver: this.mouseOverHandler,
+	                onWheel: this.onWheelHandler }),
+	              React.createElement('canvas', {
+	                id: 'color-picker',
+	                width: '80',
+	                height: '500',
+	                onMouseDown: this.downColorPicker,
+	                onMouseUp: this.upColorPicker,
+	                onMouseMove: this.moveColorPicker,
+	                onMouseOut: this.outColorPicker })
+	            ),
+	            React.createElement(
+	              'div',
+	              {
+	                id: 'color-bar' },
+	              this.colorBar()
+	            )
+	          )
+	        ),
+	        React.createElement(
+	          'span',
+	          { className: 'drawing-buttons',
+	            id: 'right-buttons' },
+	          React.createElement(
+	            'button',
+	            {
+	              id: 'toggle-stamping',
+	              onMouseDown: this.toggleStamping },
+	            this.stampingText()
+	          ),
+	          React.createElement(
+	            'button',
+	            {
+	              className: 'save-drawing',
+	              onClick: this.saveDrawing,
+	              disabled: this.saveDisabled() },
+	            this.saveText()
+	          )
+	        )
+	      ),
+	      React.createElement(
+	        'div',
+	        {
+	          className: 'stamp-canvas' },
+	        React.createElement('canvas', {
+	          id: 'stamp-canvas',
+	          width: '150',
+	          height: '150',
+	          onMouseDown: this.mouseDownHandler,
+	          onMouseUp: this.mouseUpHandler,
+	          onMouseMove: this.mouseMoveHandler })
+	      )
+	    );
+	  }
+	});
+
+	module.exports = NewDrawing;
 
 /***/ }
 /******/ ]);

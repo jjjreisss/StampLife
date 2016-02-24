@@ -4,7 +4,7 @@ var Router = require('react-router').Router;
 var Route = require('react-router').Route;
 var App = require('./components/app');
 var DrawingIndex = require('./components/drawingIndex');
-var CanvasTest = require('./components/canvasTest');
+var NewDrawing = require('./components/newDrawing');
 var DrawingDetail = require('./components/drawingDetail');
 var ProfilePage = require('./components/profilePage');
 var StampIndex = require('./components/stampIndex');
@@ -17,8 +17,8 @@ var Shepherd = require('tether-shepherd');
 
 var routes = (
   <Route path="/" component={App}>
-    <IndexRoute component={CanvasTest}/>
-    <Route path="/new" component={CanvasTest}/>
+    <IndexRoute component={NewDrawing}/>
+    <Route path="/new" component={NewDrawing}/>
     <Route path="/stamps" component={StampIndex}/>
     <Route path="/drawings" component={DrawingIndex}/>
     <Route path="/drawings/:drawingId" component={DrawingDetail}/>

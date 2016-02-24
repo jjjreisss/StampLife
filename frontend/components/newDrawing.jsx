@@ -13,7 +13,7 @@ var MyStampStore = require('../stores/myStampStore');
 window.wholeDamnTour = require('../util/wholeDamnTour');
 
 
-var CanvasTest = React.createClass({
+var NewDrawing = React.createClass({
   mixins: [LinkedStateMixin, History],
 
 // Methods that set state
@@ -59,25 +59,7 @@ var CanvasTest = React.createClass({
     this.token = StampStore.addListener(this.selectStamp);
     this.myStampStoreListener = MyStampStore.addListener(this.turnStampingOn);
 
-    // if (window.wholeDamnTour.currentStep && window.wholeDamnTour.currentStep.id === "done_choosing_stamps"){
-    //   window.setTimeout(function() {
-    //     window.wholeDamnTour.next();
-    //   }, 200);
-    // }
-
-    $.ajax({
-      url: 'users/1',
-      method: 'GET',
-      success: function(user) {
-        if (user.tour_one_completed === false) {
-          window.wholeDamnTour.start();
-          ApiUtil.addInitialStamps(this.turnStampingOff.bind(this));
-          ApiUtil.completeTourOne();
-        }
-      }.bind(this),
-      error: function() {
-      }
-    });
+    ApiUtil.startTour(this.turnStampingOff);
   },
   componentWillUnmount: function() {
     this.token.remove();
@@ -412,4 +394,4 @@ var CanvasTest = React.createClass({
   }
 });
 
-module.exports = CanvasTest;
+module.exports = NewDrawing;
