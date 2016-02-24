@@ -65,7 +65,6 @@ var DrawingIndex = React.createClass({
     });
     this.setState({drawingsList: drawingsList})
   },
-
   loader: function() {
     return (
       <div className="cssload-loading">
@@ -74,20 +73,23 @@ var DrawingIndex = React.createClass({
       </div>
     )
   },
+  displayAttributes: function() {
+    return ({
+      popularitySelected:
+        this.state.selectedTab === "popularity" ? "selected-tab" : "",
+      newnessSelected:
+        this.state.selectedTab === "newness" ? "selected-tab" : "",
+    })
+  },
 
   render: function() {
-    var popularitySelected =
-      this.state.selectedTab === "popularity" ? "selected-tab" : "";
-    var newnessSelected =
-      this.state.selectedTab === "newness" ? "selected-tab" : "";
-
     return(
       <div className="index">
         <h1 className="index-header">
           <span
             className="index-tab"
             onClick={this.sortByPopularity}
-            id={popularitySelected}>
+            id={this.displayAttributes().popularitySelected}>
             <span>
               Most Popular Drawings
             </span>
@@ -95,7 +97,7 @@ var DrawingIndex = React.createClass({
           <span
             className="index-tab"
             onClick={this.sortByNewness}
-            id={newnessSelected}>
+            id={this.displayAttributes().newnessSelected}>
             <span>
               Newest Drawings
             </span>

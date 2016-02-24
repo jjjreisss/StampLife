@@ -211,7 +211,7 @@ var NewDrawing = React.createClass({
       saveText: this.state.saved ? "Saved" : text = "Save Stamp",
       saveDisabled: this.state.saveStarted ? true : false,
     })
-  }
+  },
 
   render: function() {
     return(
@@ -290,7 +290,7 @@ var NewDrawing = React.createClass({
             <button
               className="save-stamp"
               onClick={this.saveStamp}
-              disabled={this.saveDisabled()}>
+              disabled={this.displayAttributes().saveDisabled}>
               {this.displayAttributes().saveText}
             </button>
             <button
