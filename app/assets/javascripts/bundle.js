@@ -32250,9 +32250,6 @@
 	  goToShow: function () {
 	    this.history.push('drawings/' + this.state.drawing.id);
 	  },
-	  deleteDrawing: function () {
-	    ApiUtil.deleteDrawing(this.state.drawing.id);
-	  },
 	  enhover: function () {
 	    this.setState({ hover: true });
 	  },
@@ -32349,12 +32346,6 @@
 	            onClick: this.toggleLike },
 	          this.displayAttributes().likeText
 	        )
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'delete',
-	          onClick: this.deleteDrawing },
-	        'Delete'
 	      )
 	    );
 	  }

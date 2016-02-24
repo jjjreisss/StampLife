@@ -33,9 +33,6 @@ var DrawingListItem = React.createClass({
   goToShow: function() {
     this.history.push('drawings/' + this.state.drawing.id);
   },
-  deleteDrawing: function() {
-    ApiUtil.deleteDrawing(this.state.drawing.id);
-  },
   enhover: function() {
     this.setState({hover: true});
   },
@@ -121,11 +118,6 @@ var DrawingListItem = React.createClass({
             onClick={this.toggleLike}>
             {this.displayAttributes().likeText}
           </div>
-        </div>
-
-        <div className="delete"
-          onClick={this.deleteDrawing}>
-          Delete
         </div>
       </div>
     );
