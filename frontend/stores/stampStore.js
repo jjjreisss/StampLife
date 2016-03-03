@@ -15,6 +15,7 @@ var resetStamp = function(stamp) {
 
 var receiveStamp = function(stamp) {
   _stamps.push(stamp);
+  _stamp = stamp;
 };
 
 StampStore.single = function() {

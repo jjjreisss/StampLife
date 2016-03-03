@@ -31,17 +31,18 @@ var NewDrawing = React.createClass({
     });
   },
   componentDidMount: function() {
-
-    if (window.innerHeight > 699) {
+    if (window.innerHeight > 799 && window.innerWidth > 999) {
       this.drawingCanvas = new DrawingCanvas('drawing-canvas', 500, 500);
       this.sizePicker = new SizePicker('size-picker', 80, 420);
       this.colorPicker = new ColorPicker('color-picker', 80, 500);
       this.strokeSample = new StrokeSample('stroke-sample', 80, 80);
+      this.colorSquareSize = "50px";
     } else {
-      this.drawingCanvas = new DrawingCanvas('drawing-canvas', 400, 400);
-      this.sizePicker = new SizePicker('size-picker', 64, 336);
-      this.colorPicker = new ColorPicker('color-picker', 64, 400);
-      this.strokeSample = new StrokeSample('stroke-sample', 64, 64);
+      this.drawingCanvas = new DrawingCanvas('drawing-canvas', 375, 375);
+      this.sizePicker = new SizePicker('size-picker', 60, 315);
+      this.colorPicker = new ColorPicker('color-picker', 60, 375);
+      this.strokeSample = new StrokeSample('stroke-sample', 60, 60);
+      this.colorSquareSize = "37.5px";
     }
     this.stampCanvas = new StampCanvas('stamp-canvas', 150, 150);
 
@@ -76,17 +77,11 @@ var NewDrawing = React.createClass({
     }
   },
   colorBar: function() {
-    if (window.innerHeight > 699) {
-      var squareSize = "50px";
-    } else {
-      var squareSize = "40px";
-    }
-
     return this.state.recentColors.map(function(color, idx){
       var squareStyle = {
         background: color,
-        width: squareSize,
-        height: squareSize
+        width: this.colorSquareSize,
+        height: this.colorSquareSize
       };
       return (
         <div

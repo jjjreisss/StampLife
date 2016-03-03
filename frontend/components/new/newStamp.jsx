@@ -1,5 +1,6 @@
 var React = require('react');
 var ApiUtil = require('../../util/apiUtil');
+var ApiActions = require('../../actions/apiActions');
 var DrawingCanvas = require('../../util/drawing/drawingCanvas');
 var StampCanvas = require('../../util/drawing/stampCanvas');
 var ColorPicker = require('../../util/drawing/colorPicker');
@@ -21,20 +22,23 @@ var NewDrawing = React.createClass({
       recentColors: ["#fff","#fff","#fff","#fff","#fff",
                       "#fff","#fff","#fff","#fff","#fff",],
       saveStarted: false,
-      saved: false
+      saved: false,
+      stamp: null
     });
   },
   componentDidMount: function() {
-    if (window.innerHeight > 699) {
+    if (window.innerHeight > 799 && window.innerWidth > 999) {
       this.drawingCanvas = new DrawingCanvas('drawing-canvas', 500, 500);
       this.sizePicker = new SizePicker('size-picker', 80, 420);
       this.colorPicker = new ColorPicker('color-picker', 80, 500);
       this.strokeSample = new StrokeSample('stroke-sample', 80, 80);
+      this.colorSquareSize = "50px";
     } else {
-      this.drawingCanvas = new DrawingCanvas('drawing-canvas', 400, 400);
-      this.sizePicker = new SizePicker('size-picker', 64, 336);
-      this.colorPicker = new ColorPicker('color-picker', 64, 400);
-      this.strokeSample = new StrokeSample('stroke-sample', 64, 64);
+      this.drawingCanvas = new DrawingCanvas('drawing-canvas', 375, 375);
+      this.sizePicker = new SizePicker('size-picker', 60, 315);
+      this.colorPicker = new ColorPicker('color-picker', 60, 375);
+      this.strokeSample = new StrokeSample('stroke-sample', 60, 60);
+      this.colorSquareSize = "37.5px";
     }
 
     this.size = 30;
@@ -47,20 +51,26 @@ var NewDrawing = React.createClass({
 
     this.colorPicking = false;
     this.sizePicking = false;
+
+    this.stampStoreListener = StampStore.addListener(this.updateStamp);
+  },
+
+  componentWillUnmount: function() {
+    this.stampStoreListener.remove();
+  },
+
+  updateStamp: function() {
+    this.setState({
+      stamp: StampStore.single()
+    })
   },
 
   colorBar: function() {
-    if (window.innerHeight > 699) {
-      var squareSize = "50px";
-    } else {
-      var squareSize = "40px";
-    }
-
     return this.state.recentColors.map(function(color, idx){
       var squareStyle = {
         background: color,
-        width: squareSize,
-        height: squareSize
+        width: this.colorSquareSize,
+        height: this.colorSquareSize
       };
       return (
         <div
@@ -94,22 +104,27 @@ var NewDrawing = React.createClass({
   },
   saveToMyStamps: function() {
     var img = this.drawingCanvas.toData();
-    this.setState({saveStarted: true});
-    $.ajax({
-      url: "api/images",
-      method: "POST",
-      data: {img: img},
-      success: function(imageReceived) {
-        ApiUtil.createMyStamp({
-          name: "default name",
-          image_url: imageReceived.public_id
-        });
-        this.setState({saved: true});
-      }.bind(this),
-      error: function() {
-        this.setState({saveStarted: false});
-      }.bind(this)
-    });
+
+    if (!this.state.saved) {
+      this.setState({saveStarted: true});
+      $.ajax({
+        url: "api/images",
+        method: "POST",
+        data: {img: img},
+        success: function(imageReceived) {
+          ApiUtil.createMyStamp({
+            name: "default name",
+            image_url: imageReceived.public_id
+          });
+          this.setState({saved: true});
+        }.bind(this),
+        error: function() {
+          this.setState({saveStarted: false});
+        }.bind(this)
+      });
+    } else {
+      ApiActions.addToMyStamp(this.state.stamp)
+    }
   },
 
 // Methods for changing Color
@@ -209,7 +224,9 @@ var NewDrawing = React.createClass({
   displayAttributes: function() {
     return ({
       saveText: this.state.saved ? "Saved" : text = "Save Stamp",
-      saveDisabled: this.state.saveStarted ? true : false,
+      saveToMyStampsText: this.state.saved ? "Add To My Stamps" : "Save To My Stamps",
+      undoDisabled: this.state.saved ? true : false,
+      saveDisabled: this.state.saveStarted ? true : false
     })
   },
 
@@ -234,7 +251,8 @@ var NewDrawing = React.createClass({
             </button>
             <button
               className="undo"
-              onClick={this.undo}>
+              onClick={this.undo}
+              disabled={this.displayAttributes().undoDisabled}>
               Undo
             </button>
           </span>
@@ -295,9 +313,8 @@ var NewDrawing = React.createClass({
             </button>
             <button
               className="save-to-my-stamps"
-              onClick={this.saveToMyStamps}
-              disabled={this.displayAttributes().saveDisabled}>
-              Save To My Stamps
+              onClick={this.saveToMyStamps}>
+              {this.displayAttributes().saveToMyStampsText}
             </button>
           </span>
 
