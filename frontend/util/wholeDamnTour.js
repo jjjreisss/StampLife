@@ -8,7 +8,7 @@ var makeStampTour = new Shepherd.Tour({
 
 makeStampTour.addStep('example', {
   text: [
-    "Welcome to Salamander. This app lets you make your own stamps,",
+    "Welcome to StampLife. This app lets you make your own stamps,",
     "which you can use to draw with and share with other users."
   ],
   showCancelLink: true,
