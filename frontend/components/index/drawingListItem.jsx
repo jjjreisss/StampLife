@@ -1,8 +1,8 @@
 var React = require('react');
 var History = require('react-router').History;
 var ApiUtil = require('../../util/apiUtil');
-// var ChangedDrawingStore = require('../../stores/changedDrawingStore');
-var DrawingStore = require('../../stores/drawingStore');
+var ChangedDrawingStore = require('../../stores/changedDrawingStore');
+// var DrawingStore = require('../../stores/drawingStore');
 
 var DrawingListItem = React.createClass({
   mixins: [History],
@@ -15,12 +15,12 @@ var DrawingListItem = React.createClass({
     });
   },
   componentDidMount: function() {
-    // this.changedDrawingStoreListener = ChangedDrawingStore.addListener(this._onChange);
-    this.drawingStoreListener = DrawingStore.addListener(this._onChange);
+    this.changedDrawingStoreListener = ChangedDrawingStore.addListener(this._onChange);
+    // this.drawingStoreListener = DrawingStore.addListener(this._onChange);
   },
   componentWillUnmount: function() {
-    // this.changedDrawingStoreListener.remove();
-    this.drawingStoreListener.remove();
+    this.changedDrawingStoreListener.remove();
+    // this.drawingStoreListener.remove();
   },
   componentWillReceiveProps: function(newProps) {
     if(newProps.drawing.id != this.state.drawing.id) {
@@ -28,14 +28,14 @@ var DrawingListItem = React.createClass({
     }
   },
   _onChange: function() {
-    // var changedDrawing = ChangedDrawingStore.drawing();
-    // if (changedDrawing && changedDrawing.id === this.state.drawing.id) {
-    //   this.setState({drawing: changedDrawing});
-    // }
-    var newDrawing = DrawingStore.single();
-    if (newDrawing && newDrawing.id === this.state.drawing.id) {
-      this.setState({drawing: newDrawing});
+    var changedDrawing = ChangedDrawingStore.drawing();
+    if (changedDrawing && changedDrawing.id === this.state.drawing.id) {
+      this.setState({drawing: changedDrawing});
     }
+    // var newDrawing = DrawingStore.single();
+    // if (newDrawing && newDrawing.id === this.state.drawing.id) {
+    //   this.setState({drawing: newDrawing});
+    // }
   },
   goToShow: function() {
     this.history.push('drawings/' + this.state.drawing.id);
