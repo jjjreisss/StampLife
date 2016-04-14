@@ -1,7 +1,7 @@
 var Store = require('flux/utils').Store;
 var AppDispatcher = require('../dispatcher/dispatcher');
 
-// var ChangedDrawingStore = new Store(AppDispatcher);
+var ChangedDrawingStore = new Store(AppDispatcher);
 // var _changedDrawing;
 //
 //
