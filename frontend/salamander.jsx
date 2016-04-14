@@ -8,7 +8,6 @@ var NewDrawing = require('./components/new/newDrawing');
 var DrawingDetail = require('./components/show/drawingDetail');
 var ProfilePage = require('./components/show/profilePage');
 var StampIndex = require('./components/index/stampIndex');
-var StampDetail = require('./components/show/stampDetail');
 var NewStamp = require('./components/new/newStamp');
 var IndexRoute = require('react-router').IndexRoute;
 var Shepherd = require('tether-shepherd');
@@ -22,7 +21,6 @@ var routes = (
     <Route path="/drawings" component={DrawingIndex}/>
     <Route path="/drawings/:drawingId" component={DrawingDetail}/>
     <Route path="/users/:username" component={ProfilePage}/>
-    <Route path="stamps/:stampId" component={StampDetail}/>
     <Route path="stamp/new" component={NewStamp}/>
   </Route>
 );
