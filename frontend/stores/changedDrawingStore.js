@@ -13,13 +13,13 @@ var ChangedDrawingStore = new Store(AppDispatcher);
 //   return _changedDrawing;
 // };
 //
-// ChangedDrawingStore.__onDispatch = function(payload) {
+ChangedDrawingStore.__onDispatch = function(payload) {
 //   switch(payload.actionType) {
 //     case "CHANGED_DRAWING_RECEIVED":
 //       receiveChangedDrawing(payload.changedDrawing);
 //       ChangedDrawingStore.__emitChange();
 //       break;
 //   }
-// };
+};
 
 module.exports = ChangedDrawingStore;
