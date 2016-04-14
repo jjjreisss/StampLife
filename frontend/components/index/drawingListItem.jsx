@@ -14,10 +14,12 @@ var DrawingListItem = React.createClass({
     });
   },
   componentDidMount: function() {
-    this.changedDrawingStoreListener = ChangedDrawingStore.addListener(this._onChange);
+    // this.changedDrawingStoreListener = ChangedDrawingStore.addListener(this._onChange);
+    this.drawingStoreListener = DrawingStore.addListener(this._onChange);
   },
   componentWillUnmount: function() {
-    this.changedDrawingStoreListener.remove();
+    // this.changedDrawingStoreListener.remove();
+    this.drawingStoreListener.remove();
   },
   componentWillReceiveProps: function(newProps) {
     if(newProps.drawing.id != this.state.drawing.id) {
@@ -25,9 +27,13 @@ var DrawingListItem = React.createClass({
     }
   },
   _onChange: function() {
-    var changedDrawing = ChangedDrawingStore.drawing();
-    if (changedDrawing && changedDrawing.id === this.state.drawing.id) {
-      this.setState({drawing: changedDrawing});
+    // var changedDrawing = ChangedDrawingStore.drawing();
+    // if (changedDrawing && changedDrawing.id === this.state.drawing.id) {
+    //   this.setState({drawing: changedDrawing});
+    // }
+    var newDrawing = DrawingStore.single();
+    if (newDrawing && newDrawing.id === this.state.drawing.id) {
+      this.setState({drawing: newDrawing});
     }
   },
   goToShow: function() {

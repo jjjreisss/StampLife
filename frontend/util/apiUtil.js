@@ -203,7 +203,8 @@ var ApiUtil = {
       method: "POST",
       data: {drawing_id: drawingId},
       success: function() {
-        ApiUtil.fetchChangedDrawing(drawingId);
+        // ApiUtil.fetchChangedDrawing(drawingId);
+        ApiUtil.fetchDrawing(drawingId);
       },
     });
   },
@@ -213,7 +214,8 @@ var ApiUtil = {
       url: "api/likes/" + likeId,
       method: "DELETE",
       success: function() {
-        ApiUtil.fetchChangedDrawing(drawingId);
+        // ApiUtil.fetchChangedDrawing(drawingId);
+        ApiUtil.fetchDrawing(drawingId);
       },
     });
   },
